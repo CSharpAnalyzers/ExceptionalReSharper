@@ -102,11 +102,17 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Highlightings\CatchAllClauseHighlighting.cs" />
+    <Compile Include="Highlightings\ThrowFromCatchWithNoInnerExceptionHighlighting.cs" />
     <Compile Include="MethodExceptionData.cs" />
     <Compile Include="Model\CatchAllClauseModel.cs" />
     <Compile Include="Model\ExceptionDocCommentModel.cs" />
     <Compile Include="Model\IModel.cs" />
     <Compile Include="Model\ThrowStatementModel.cs" />
+    <Compile Include="Resources.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Resources.resx</DependentUpon>
+    </Compile>
     <Compile Include="XmlDocCommentHelper.cs" />
     <Compile Include="ExceptionalDaemonStageProcess.cs" />
     <Compile Include="ExceptionalDemonStage.cs" />
@@ -114,6 +120,12 @@
     <Compile Include="Highlightings\ExceptionNotThrownHighlighting.cs" />
     <Compile Include="ExceptionsAnalyzer.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Resources.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

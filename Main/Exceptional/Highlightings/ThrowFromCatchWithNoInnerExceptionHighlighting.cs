@@ -4,7 +4,7 @@ using JetBrains.ReSharper.Daemon;
 namespace CodeGears.ReSharper.Exceptional.Highlightings
 {
     [StaticSeverityHighlighting(Severity.WARNING)]
-    public class CatchAllClauseHighlighting : IHighlighting
+    public class ThrowFromCatchWithNoInnerExceptionHighlighting : IHighlighting
     {
         public string ToolTip
         {
@@ -16,9 +16,9 @@ namespace CodeGears.ReSharper.Exceptional.Highlightings
             get { return Message; }
         }
 
-        private static string Message
+        private string Message
         {
-            get { return String.Format(Resources.HighLightSwallowingExceptions); }
+            get { return String.Format("While throwing from catch clause include substituted exception as inner exception. [Exceptional]"); }
         }
 
         public int NavigationOffsetPatch

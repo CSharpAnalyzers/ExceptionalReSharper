@@ -11,6 +11,7 @@ namespace CodeGears.ReSharper.Exceptional.Model
         public bool IsValid { get; private set; }
         public bool IsCatched { get; set; }
         public bool IsDocumented { get; set; }
+        public bool ContainsInnerException { get; set; }
 
         public IThrowStatement ThrowStatement { get; set; }
 
@@ -56,6 +57,12 @@ namespace CodeGears.ReSharper.Exceptional.Model
             {
                 process.AddHighlighting(this.DocumentRange,
                     new ExceptionNotDocumentedHighlighting(this.ThrowStatement));
+            }
+
+            if(this.ContainsInnerException == false)
+            {
+                process.AddHighlighting(this.DocumentRange,
+                    new ThrowFromCatchWithNoInnerExceptionHighlighting());
             }
         }
     }

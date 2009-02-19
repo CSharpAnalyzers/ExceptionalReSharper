@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Linq;
 using CodeGears.ReSharper.Exceptional.Model;
 using JetBrains.ReSharper.Psi;
 using JetBrains.ReSharper.Psi.CSharp.Tree;
@@ -11,13 +12,8 @@ namespace CodeGears.ReSharper.Exceptional
         private readonly List<ThrowStatementModel> _thrownExceptions;
         private readonly List<ExceptionDocCommentModel> _documentedExceptions;
         private readonly List<IModel> _models;
-
-        private readonly List<List<IDeclaredType>> _tryStack;
-
-        private List<IDeclaredType> TryStackTop
-        {
-            get { return this._tryStack[this._tryStack.Count - 1]; }
-        }
+        private readonly Stack<ICatchClause> _catchClauseStack;
+        private readonly Stack<List<IDeclaredType>> _tryBlockStack;
 
         internal IEnumerable<IModel> Result
         {
@@ -46,7 +42,9 @@ namespace CodeGears.ReSharper.Exceptional
             this._thrownExceptions = new List<ThrowStatementModel>();
             this._documentedExceptions = new List<ExceptionDocCommentModel>();
             this._models = new List<IModel>();
-            this._tryStack = new List<List<IDeclaredType>>();
+
+            this._tryBlockStack = new Stack<List<IDeclaredType>>();
+            this._catchClauseStack = new Stack<ICatchClause>();
         }
 
         public bool IsDefinedFor(IMethodDeclaration methodDeclaration)
@@ -57,7 +55,37 @@ namespace CodeGears.ReSharper.Exceptional
         internal void AddThrownException(ThrowStatementModel throwStatement)
         {
             throwStatement.IsCatched = IsCatched(throwStatement.ThrowStatement);
+            throwStatement.ContainsInnerException = ContainsOuterException(throwStatement.ThrowStatement);
             this._thrownExceptions.Add(throwStatement);
+        }
+
+        private bool ContainsOuterException(IThrowStatement throwStatement)
+        {
+            if(this._catchClauseStack.Count == 0) return true;
+
+            var outerCatch = this._catchClauseStack.Peek() as ILocalScope;
+            if(outerCatch == null) return false;
+
+            //Catch clause with no named parameter
+            if(outerCatch.LocalVariables.Count == 0) return false;
+
+            var list = new List<IDeclaredElement>(outerCatch.LocalVariables);
+            var catchVariable = list.Find(element => element is ICatchVariableDeclaration);
+            if(catchVariable == null) return false;
+
+            var exception = throwStatement.Exception as IObjectCreationExpressionNode;
+            if (exception == null) return false;
+
+            var arguments = new List<ICSharpArgumentNode>(exception.ArgumentList.Arguments);
+            var match = arguments.Find(arg =>
+                                           {
+                                               var reference = arg.ValueNode as IReferenceExpressionNode;
+                                               if (reference == null) return false;
+
+                                               return reference.NameIdentifier.Name.Equals(catchVariable.ShortName);
+                                           });
+
+            return match != null;
         }
 
         private bool IsExceptionThrownOutside(string exception)
@@ -95,7 +123,7 @@ namespace CodeGears.ReSharper.Exceptional
             var exception = throwStatement.Exception.GetExpressionType() as IDeclaredType;
             if (exception == null) return false;
 
-            foreach (var list in _tryStack)
+            foreach (var list in this._tryBlockStack)
             {
                 foreach (var type in list)
                 {
@@ -107,19 +135,30 @@ namespace CodeGears.ReSharper.Exceptional
             return false;
         }
 
-        public void BeginTry(ITryStatement tryStatement)
+        public void EnterTryBlock(ITryStatement tryStatement)
         {
-            this._tryStack.Add(new List<IDeclaredType>());
+            var newLevel = new List<IDeclaredType>();
+            this._tryBlockStack.Push(newLevel);
 
             foreach (var catchClause in tryStatement.Catches)
             {
-                this.TryStackTop.Add(catchClause.ExceptionType);
+                newLevel.Add(catchClause.ExceptionType);
             }
         }
 
-        public void EndTry(ITryStatement tryStatement)
+        public void LeaveTryBlock()
         {
-            this._tryStack.Remove(this.TryStackTop);
+            this._tryBlockStack.Pop();
+        }
+
+        public void EnterCatchClause(ICatchClause catchClause)
+        {
+            this._catchClauseStack.Push(catchClause);
+        }
+
+        public void LeaveCatchClause()
+        {
+            this._catchClauseStack.Pop();
         }
 
         public void AddModel(IModel model)

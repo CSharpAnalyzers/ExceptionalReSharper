@@ -102,18 +102,40 @@ namespace ExceptionalSandBox
         //    }
         //}
 
-        /// <summary></summary>
-        /// <exception cref="InvalidOperationException">...</exception>
-        public void MethodThrowingFromCatchHidingSourceException()
+        /// <exception cref="InvalidOperationException">sss</exception>
+        public void Test01()
         {
             try
             {
                 throw new OperationCanceledException();
             }
+            //All ecxeptions thrown from inside of catch clause that do not 
+            //have a variable defined are reported as missing inner exception.
             catch (OperationCanceledException)
             {
                 //We should include a catched exception as inner exception
                 throw new InvalidOperationException("sss");
+            }
+        }
+
+        /// <exception cref="InvalidOperationException">sss</exception>
+        public void Test02(bool flag, bool flag2)
+        {
+            try
+            {
+                Console.WriteLine();
+            }
+            //All ecxeptions thrown from inside of catch clause that do not
+            //include that exception as inner exceptions are reported.
+            catch (OperationCanceledException e)
+            {
+                if(flag)
+                    throw new InvalidOperationException("sss", e);//OK
+
+                if(flag2)
+                    throw new InvalidOperationException("sss");//BAD
+
+                throw new InvalidOperationException();//BAD
             }
         }
 

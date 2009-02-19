@@ -57,6 +57,8 @@ namespace CodeGears.ReSharper.Exceptional
                 var model = CatchAllClauseModel.Create(catchClause);
                 this._methodExceptionData.AddModel(model);
             }
+
+
         }
 
         public void Process(IGeneralCatchClause catchClause)
@@ -91,14 +93,24 @@ namespace CodeGears.ReSharper.Exceptional
             this._methodExceptionData = null;
         }
 
-        public void BeginTry(ITryStatement tryStatement)
+        public void EnterTryBlock(ITryStatement tryStatement)
         {
-            this._methodExceptionData.BeginTry(tryStatement);
+            this._methodExceptionData.EnterTryBlock(tryStatement);
         }
 
-        public void EndTry(ITryStatement tryStatement)
+        public void LeaveTryBlock()
         {
-            this._methodExceptionData.EndTry(tryStatement);
+            this._methodExceptionData.LeaveTryBlock();
+        }
+
+        public void EnterCatchClause(ICatchClause catchClause)
+        {
+            this._methodExceptionData.EnterCatchClause(catchClause);
+        }
+
+        public void LeaveCatchClause()
+        {
+            this._methodExceptionData.LeaveCatchClause();
         }
     }
 }

@@ -7,7 +7,6 @@ namespace CodeGears.ReSharper.Exceptional.Highlightings
     public class ExceptionNotThrownHighlighting : IHighlighting
     {
         private readonly string _excetionType;
-        private const string MESSAGE = "The '{0}' exception is not thrown from documented method.";
 
         public ExceptionNotThrownHighlighting(string excetionType)
         {
@@ -16,17 +15,17 @@ namespace CodeGears.ReSharper.Exceptional.Highlightings
 
         public string ToolTip
         {
-            get { return GetMessage(); }
+            get { return Message; }
         }
 
         public string ErrorStripeToolTip
         {
-            get { return GetMessage(); }
+            get { return Message; }
         }
 
-        private string GetMessage()
+        private string Message
         {
-            return String.Format(MESSAGE, _excetionType);
+            get { return String.Format(Resources.HighLightNotThrownDocumentedExceptions, _excetionType); }
         }
 
         public int NavigationOffsetPatch

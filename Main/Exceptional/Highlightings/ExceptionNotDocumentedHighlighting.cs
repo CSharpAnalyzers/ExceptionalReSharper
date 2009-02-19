@@ -9,7 +9,6 @@ namespace CodeGears.ReSharper.Exceptional.Highlightings
     public class ExceptionNotDocumentedHighlighting : IHighlighting
     {
         private readonly IThrowStatement _throwStatement;
-        private const string MESSAGE = "The '{0}' exception is not documented in xml documentation.";
 
         private IDeclaredType Exception
         {
@@ -23,20 +22,23 @@ namespace CodeGears.ReSharper.Exceptional.Highlightings
 
         public string ToolTip
         {
-            get { return GetMessage(); }
+            get { return Message; }
         }
 
         public string ErrorStripeToolTip
         {
-            get { return GetMessage(); }
+            get { return Message; }
         }
 
-        private string GetMessage()
+        private string Message
         {
-            if (this.Exception == null)
-                throw new InvalidOperationException("The given exception was null.");
+            get
+            {
+                if (this.Exception == null)
+                    throw new InvalidOperationException("The given exception was null.");
 
-            return String.Format(MESSAGE, this.Exception.GetCLRName());
+                return String.Format(Resources.HighLightNotDocumentedExceptions, this.Exception.GetCLRName());
+            }
         }
 
         public int NavigationOffsetPatch

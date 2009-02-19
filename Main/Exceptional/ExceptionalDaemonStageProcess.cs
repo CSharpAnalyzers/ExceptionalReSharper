@@ -40,7 +40,11 @@ namespace CodeGears.ReSharper.Exceptional
             }
             else if (element is ITryStatement)
             {
-                this._exceptionsAnalyzer.BeginTry(element as ITryStatement);
+                this._exceptionsAnalyzer.EnterTryBlock(element as ITryStatement);
+            }
+            else if(element is ICatchClause)
+            {
+                this._exceptionsAnalyzer.EnterCatchClause(element as ICatchClause);
             }
         }
 
@@ -57,7 +61,11 @@ namespace CodeGears.ReSharper.Exceptional
             }
             else if (element is ITryStatement)
             {
-                this._exceptionsAnalyzer.EndTry(element as ITryStatement);
+                this._exceptionsAnalyzer.LeaveTryBlock();
+            }
+            else if (element is ICatchClause)
+            {
+                this._exceptionsAnalyzer.LeaveCatchClause();
             }
         }
 
