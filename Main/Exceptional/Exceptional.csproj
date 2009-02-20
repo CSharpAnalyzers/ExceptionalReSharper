@@ -101,13 +101,20 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Analyzers\HasInnerExceptionFromOuterCatchClauseAnalyzer.cs" />
+    <Compile Include="Analyzers\IsDocumentedExceptionThrownAnalyzer.cs" />
+    <Compile Include="Analyzers\IsThrownExceptionCatchedAnalyzer.cs" />
+    <Compile Include="Analyzers\IsThrownExceptionDocumentedExceptionAnalyzer.cs" />
     <Compile Include="Highlightings\CatchAllClauseHighlighting.cs" />
     <Compile Include="Highlightings\ThrowFromCatchWithNoInnerExceptionHighlighting.cs" />
-    <Compile Include="MethodExceptionData.cs" />
+    <Compile Include="MethodContext.cs" />
     <Compile Include="Model\CatchAllClauseModel.cs" />
     <Compile Include="Model\ExceptionDocCommentModel.cs" />
+    <Compile Include="Model\DocumentedExceptionsModel.cs" />
     <Compile Include="Model\IModel.cs" />
+    <Compile Include="Model\ThrownExceptionsModel.cs" />
     <Compile Include="Model\ThrowStatementModel.cs" />
+    <Compile Include="Analyzers\Visitor.cs" />
     <Compile Include="Resources.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
@@ -118,7 +125,6 @@
     <Compile Include="ExceptionalDemonStage.cs" />
     <Compile Include="Highlightings\ExceptionNotDocumentedHighlighting.cs" />
     <Compile Include="Highlightings\ExceptionNotThrownHighlighting.cs" />
-    <Compile Include="ExceptionsAnalyzer.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

@@ -4,77 +4,92 @@ namespace ExceptionalSandBox
 {
     public class SandBox
     {
-        //public void NotThrowingMethod()
-        //{
+        public void Test01() {} //OK
 
-        //}
+        public void Test02()
+        {
+            throw new InvalidOperationException();//BAD
+        }
 
-        //public void ThrowingMethodWithNoComment()
-        //{
-        //    throw new InvalidOperationException();
-        //}
+        /// <summary>This method...</summary>
+        public void Test03()
+        {
+            throw new InvalidOperationException();//BAD
+        }
 
-        ///// <summary>This method...</summary>
-        //public void ThrowingMethodWithPartialComment()
-        //{
-        //    throw new InvalidOperationException();
-        //}
+        /// <summary>This method...</summary>
+        /// <exception cref="InvalidOperationException">Thrown when....</exception>
+        public void Test04()
+        {
+            throw new InvalidOperationException();//OK
+        }
 
-        ///// <summary>This method...</summary>
-        ///// <exception cref="InvalidOperationException">Thrown when....</exception>
-        //public void ThrowingMethodWithComment()
-        //{
-        //    throw new InvalidOperationException();
-        //}
+        /// <summary>This method...</summary>
+        /// <exception cref="InvalidOperationException">Thrown when....</exception>
+        public void Test05()
+        {
+            var ex = new InvalidOperationException();
+            throw ex;//OK
+        }
 
-        ///// <summary>This method...</summary>
-        ///// <exception cref="InvalidOperationException">Thrown when...</exception>
-        //public void NotThrowingMethodWithComment()
-        //{
-        //    //look I'm not throwing
-        //}
+        /// <summary>This method...</summary>
+        /// <exception cref="InvalidOperationException">Thrown when....</exception>//BAD
+        public void Test06()
+        {
+            Exception ex = new InvalidOperationException();
+            throw ex;//BAD
+        }
 
-        //public void MethodWIthTryCatch()
-        //{
-        //    try
-        //    {
-        //        Console.WriteLine("TRY");
-        //    }
-        //    catch (Exception)
-        //    {
-        //        Console.WriteLine("CATCH");
-        //    }
-        //}
+        /// <summary>This method...</summary>
+        /// <exception cref="InvalidOperationException">Thrown when...</exception> //BAD
+        public void Test07()
+        {
+            //look I'm not throwing
+        }
 
-        //public void MethodThrowingFromCatch()
-        //{
-        //    try
-        //    {
-        //        Console.WriteLine("TRY");
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        throw new InvalidOperationException("sss", ex);
-        //    }
-        //}
+        public void Test08()
+        {
+            try
+            {
+                Console.WriteLine("TRY");
+            }
+            //Swallowing excepions is not recommended.
+            catch (Exception)//BAD
+            {
+                Console.WriteLine("CATCH");
+            }
+        }
 
-        //public void MethodThrowingFromCatchWithTry()
-        //{
-        //    try
-        //    {
-        //        Console.WriteLine("TRY");
-        //    }
-        //    catch (OperationCanceledException ex)
-        //    {
-        //        try
-        //        {
-        //            throw new InvalidOperationException("sss", ex);
-        //        }
-        //        catch(InvalidOperationException) {}
-        //    }
-        //}
+        /// <exception cref="InvalidOperationException">Test</exception>
+        public void Test09()
+        {
+            try
+            {
+                Console.WriteLine("TRY");
+            }
+            catch (Exception ex)//OK - check if it is thrown as inner exception or rethrown
+            {
+                throw new InvalidOperationException("Test", ex);
+            }
+        }
 
-        //public void MethodWithCatchAll()
+        public void Test10()
+        {
+            try
+            {
+                Console.WriteLine("TRY");
+            }
+            catch (OperationCanceledException ex)
+            {
+                try
+                {
+                    throw new InvalidOperationException("Test", ex);//OK
+                }
+                catch (InvalidOperationException) { }
+            }
+        }
+
+        //public void Test11()
         //{
         //    try
         //    {
@@ -86,7 +101,7 @@ namespace ExceptionalSandBox
         //    }
         //}
 
-        //public void MethodWithCatchAllExplicit()
+        //public void Test12()
         //{
         //    try
         //    {
@@ -102,54 +117,54 @@ namespace ExceptionalSandBox
         //    }
         //}
 
-        /// <exception cref="InvalidOperationException">sss</exception>
-        public void Test01()
-        {
-            try
-            {
-                throw new OperationCanceledException();
-            }
-            //All ecxeptions thrown from inside of catch clause that do not 
-            //have a variable defined are reported as missing inner exception.
-            catch (OperationCanceledException)
-            {
-                //We should include a catched exception as inner exception
-                throw new InvalidOperationException("sss");
-            }
-        }
+//        /// <exception cref="InvalidOperationException">sss</exception>
+//        public void Test13()
+//        {
+//            try
+//            {
+//                throw new OperationCanceledException();
+//            }
+//            //All ecxeptions thrown from inside of catch clause that do not 
+//            //have a variable defined are reported as missing inner exception.
+//            catch (OperationCanceledException)
+//            {
+//                //We should include a catched exception as inner exception
+//                throw new InvalidOperationException("sss");
+//            }
+//        }
+//
+//        /// <exception cref="InvalidOperationException">sss</exception>
+//        public void Test14(bool flag, bool flag2)
+//        {
+//            try
+//            {
+//                Console.WriteLine();
+//            }
+//            //All ecxeptions thrown from inside of catch clause that do not
+//            //include that exception as inner exceptions are reported.
+//            catch (OperationCanceledException e)
+//            {
+//                if(flag)
+//                    throw new InvalidOperationException("sss", e);//OK
+//
+//                if(flag2)
+//                    throw new InvalidOperationException("sss");//BAD
+//
+//                throw new InvalidOperationException();//BAD
+//            }
+//        }
 
-        /// <exception cref="InvalidOperationException">sss</exception>
-        public void Test02(bool flag, bool flag2)
-        {
-            try
-            {
-                Console.WriteLine();
-            }
-            //All ecxeptions thrown from inside of catch clause that do not
-            //include that exception as inner exceptions are reported.
-            catch (OperationCanceledException e)
-            {
-                if(flag)
-                    throw new InvalidOperationException("sss", e);//OK
-
-                if(flag2)
-                    throw new InvalidOperationException("sss");//BAD
-
-                throw new InvalidOperationException();//BAD
-            }
-        }
-
-        //public void MethodUsingMethodThrowingExceptionWithNoComment()
+        //public void Test15()
         //{
         //    ThrowingMethodWithNoComment();
         //}
 
-        //public void MethodUsingMethodThrowingExceptionWithComment()
+        //public void Test16()
         //{
         //    ThrowingMethodWithComment();
         //}
 
-        //public void MethodUsingCatchingMethodThrowingExceptionWithNoComment()
+        //public void Test17()
         //{
         //    try
         //    {
@@ -161,7 +176,7 @@ namespace ExceptionalSandBox
         //    }
         //}
 
-        //public void MethodUsingCatchingMethodThrowingExceptionWithComment()
+        //public void Test18()
         //{
         //    try
         //    {
@@ -173,7 +188,7 @@ namespace ExceptionalSandBox
         //    }
         //}
 
-        //public void MethodThrowingFromTryWithProperCatch()
+        //public void Test19()
         //{
         //    try
         //    {

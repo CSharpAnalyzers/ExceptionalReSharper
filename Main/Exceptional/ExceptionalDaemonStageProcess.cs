@@ -1,4 +1,5 @@
-using System.Diagnostics;
+using System;
+using CodeGears.ReSharper.Exceptional.Model;
 using JetBrains.ReSharper.Daemon;
 using JetBrains.ReSharper.Daemon.CSharp.Stages;
 using JetBrains.ReSharper.Psi.CSharp.Tree;
@@ -8,23 +9,17 @@ namespace CodeGears.ReSharper.Exceptional
 {
     /// <summary>This process is executed by the ReSharper's Daemon</summary>
     /// <remarks>The instance of this class is constructed each time the daemon
-    /// needs to rehighlight a given file. This object is short-lived. It executes
+    /// needs to re highlight a given file. This object is short-lived. It executes
     /// the target highlighting logic.</remarks>
     public class ExceptionalDaemonStageProcess : CSharpErrorStageProcessBase
     {
-        private readonly ExceptionsAnalyzer _exceptionsAnalyzer;
-        private ICSharpFile _file;
+        private MethodContext _methodContext;
 
-        public ExceptionalDaemonStageProcess(IDaemonProcess process) : base(process)
-        {
-            this._exceptionsAnalyzer = new ExceptionsAnalyzer(this);
-        }
+        public ExceptionalDaemonStageProcess(IDaemonProcess process) : base(process) { }
 
         public override void ProcessFile(ICSharpFile file)
         {
-            this._file = file;
-
-            if (this.DaemonProcess.FullRehighlightingRequired)
+            //if (this.DaemonProcess.FullRehighlightingRequired)
             {
                 file.ProcessDescendants(this);
                 this.FullyRehighlighted = true;
@@ -36,15 +31,19 @@ namespace CodeGears.ReSharper.Exceptional
             if (element is IMethodDeclaration)
             {
                 var method = element as IMethodDeclaration;
-                this._exceptionsAnalyzer.BeginProcess(method);
+
+                if (this._methodContext != null)
+                    throw new InvalidOperationException("The analyzed method has not been computed.");
+
+                this._methodContext = new MethodContext(method);
             }
             else if (element is ITryStatement)
             {
-                this._exceptionsAnalyzer.EnterTryBlock(element as ITryStatement);
+                this._methodContext.EnterTryBlock(element as ITryStatement);
             }
             else if(element is ICatchClause)
             {
-                this._exceptionsAnalyzer.EnterCatchClause(element as ICatchClause);
+                this._methodContext.EnterCatchClause(element as ICatchClause);
             }
         }
 
@@ -57,46 +56,55 @@ namespace CodeGears.ReSharper.Exceptional
             if(element is IMethodDeclaration)
             {
                 var method = element as IMethodDeclaration;
-                this._exceptionsAnalyzer.Compute(method);
+
+                if (this._methodContext == null)
+                    throw new InvalidOperationException("You have to first begin the process.");
+                if (this._methodContext.IsDefinedFor(method) == false)
+                    throw new InvalidOperationException("The given method does not match processed method.");
+
+                this._methodContext.ComputeResult(this);
+                this._methodContext = null;
             }
             else if (element is ITryStatement)
             {
-                this._exceptionsAnalyzer.LeaveTryBlock();
+                this._methodContext.LeaveTryBlock();
             }
             else if (element is ICatchClause)
             {
-                this._exceptionsAnalyzer.LeaveCatchClause();
+                this._methodContext.LeaveCatchClause();
             }
         }
 
-        public override void VisitMethodDeclaration(IMethodDeclaration methodDeclarationParam)
+        public override void VisitMethodDeclaration(IMethodDeclaration methodDeclaration)
         {
-            this._exceptionsAnalyzer.Process(methodDeclarationParam);
+            var exceptionsDocumentation = DocumentedExceptionsModel.Create(methodDeclaration);
+            this._methodContext.Add(exceptionsDocumentation);
         }
 
-        public override void VisitThrowStatement(IThrowStatement throwStatementParam)
+        public override void VisitThrowStatement(IThrowStatement throwStatement)
         {
-            this._exceptionsAnalyzer.Process(throwStatementParam);
+            var model = ThrowStatementModel.Create(throwStatement);
+            this._methodContext.Add(model);
         }
 
-        public override void VisitCatchVariableDeclaration(ICatchVariableDeclaration catchVariableDeclarationParam)
+        public override void VisitGeneralCatchClause(IGeneralCatchClause generalCatchClause)
         {
-            this._exceptionsAnalyzer.Process(catchVariableDeclarationParam);
+            var model = CatchAllClauseModel.Create(generalCatchClause);
+            this._methodContext.Add(model);
         }
 
-        public override void VisitSpecificCatchClause(ISpecificCatchClause specificCatchClauseParam)
+        public override void VisitSpecificCatchClause(ISpecificCatchClause specificCatchClause)
         {
-            this._exceptionsAnalyzer.Process(specificCatchClauseParam);
+            var model = CatchAllClauseModel.Create(specificCatchClause);
+            this._methodContext.Add(model);
         }
 
-        public override void VisitGeneralCatchClause(IGeneralCatchClause generalCatchClauseParam)
+        public override void VisitCatchVariableDeclaration(ICatchVariableDeclaration catchVariableDeclaration)
         {
-            this._exceptionsAnalyzer.Process(generalCatchClauseParam);
         }
 
-        public override void VisitTryStatement(ITryStatement tryStatementParam)
+        public override void VisitTryStatement(ITryStatement tryStatement)
         {
-            this._exceptionsAnalyzer.Process(tryStatementParam);
         }
     }
 }

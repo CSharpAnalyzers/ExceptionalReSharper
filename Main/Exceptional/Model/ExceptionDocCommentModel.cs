@@ -1,5 +1,6 @@
 using System;
 using System.Xml;
+using CodeGears.ReSharper.Exceptional.Analyzers;
 using CodeGears.ReSharper.Exceptional.Highlightings;
 using JetBrains.DocumentModel;
 using JetBrains.ReSharper.Daemon.CSharp.Stages;
@@ -8,7 +9,7 @@ using JetBrains.ReSharper.Psi.Tree;
 
 namespace CodeGears.ReSharper.Exceptional.Model
 {
-    internal class ExceptionDocCommentModel : IModel
+    public class ExceptionDocCommentModel : IModel
     {
         public bool IsValid { get; private set; }
         public bool IsDocumentedExceptionThrown { get; set; }
@@ -67,6 +68,11 @@ namespace CodeGears.ReSharper.Exceptional.Model
                 process.AddHighlighting(this.DocumentRange,
                     new ExceptionNotThrownHighlighting(this.ExceptionType));
             }
+        }
+
+        public void Accept(Visitor visitor)
+        {
+            visitor.Visit(this);
         }
     }
 }

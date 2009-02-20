@@ -1,3 +1,4 @@
+using CodeGears.ReSharper.Exceptional.Analyzers;
 using CodeGears.ReSharper.Exceptional.Highlightings;
 using JetBrains.DocumentModel;
 using JetBrains.ReSharper.Daemon.CSharp.Stages;
@@ -6,12 +7,12 @@ using JetBrains.ReSharper.Psi.CSharp.Tree;
 
 namespace CodeGears.ReSharper.Exceptional.Model
 {
-    internal class ThrowStatementModel : IModel
+    public class ThrowStatementModel : IModel
     {
         public bool IsValid { get; private set; }
         public bool IsCatched { get; set; }
         public bool IsDocumented { get; set; }
-        public bool ContainsInnerException { get; set; }
+        public bool ThrowsWithInnerException { get; set; }
 
         public IThrowStatement ThrowStatement { get; set; }
 
@@ -26,6 +27,7 @@ namespace CodeGears.ReSharper.Exceptional.Model
             IsValid = false;
             IsCatched = false;
             IsDocumented = false;
+            ThrowsWithInnerException = true;
         }
 
         public static ThrowStatementModel Create(IThrowStatement throwStatement)
@@ -33,7 +35,7 @@ namespace CodeGears.ReSharper.Exceptional.Model
             var model = new ThrowStatementModel(throwStatement);
             model.Initialize();
 
-            return model;
+            return model.IsValid ? model : null;
         }
 
         private void Initialize()
@@ -59,11 +61,16 @@ namespace CodeGears.ReSharper.Exceptional.Model
                     new ExceptionNotDocumentedHighlighting(this.ThrowStatement));
             }
 
-            if(this.ContainsInnerException == false)
+            if(this.ThrowsWithInnerException == false)
             {
                 process.AddHighlighting(this.DocumentRange,
                     new ThrowFromCatchWithNoInnerExceptionHighlighting());
             }
+        }
+
+        public void Accept(Visitor visitor)
+        {
+            visitor.Visit(this);
         }
     }
 }
