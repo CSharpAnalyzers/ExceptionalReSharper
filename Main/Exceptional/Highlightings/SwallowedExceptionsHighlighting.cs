@@ -4,7 +4,7 @@ using JetBrains.ReSharper.Daemon;
 namespace CodeGears.ReSharper.Exceptional.Highlightings
 {
     [StaticSeverityHighlighting(Severity.WARNING)]
-    public class CatchAllClauseHighlighting : IHighlighting
+    public class SwallowedExceptionsHighlighting : IHighlighting
     {
         public string ToolTip
         {
@@ -18,7 +18,7 @@ namespace CodeGears.ReSharper.Exceptional.Highlightings
 
         private static string Message
         {
-            get { return String.Format(Resources.HighLiightCatchAllClauses); }
+            get { return String.Format(Resources.HighLightSwallowingExceptions); }
         }
 
         public int NavigationOffsetPatch

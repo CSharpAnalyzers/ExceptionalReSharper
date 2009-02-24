@@ -7,10 +7,12 @@ namespace CodeGears.ReSharper.Exceptional.Analyzers
     public class IsThrownExceptionCatchedAnalyzer : Visitor
     {
         private Stack<List<IDeclaredType>> TryBlockStack { get; set; }
+        private Stack<CatchClauseModel> CatchClauses { get; set; }
 
-        public IsThrownExceptionCatchedAnalyzer(Stack<List<IDeclaredType>> tryBlockStack)
+        public IsThrownExceptionCatchedAnalyzer(Stack<List<IDeclaredType>> tryBlockStack, Stack<CatchClauseModel> catchClauses)
         {
             TryBlockStack = tryBlockStack;
+            CatchClauses = catchClauses;
         }
 
         public override void Visit(ThrowStatementModel throwStatementModel)
@@ -20,7 +22,7 @@ namespace CodeGears.ReSharper.Exceptional.Analyzers
 
         private bool Analyze(ThrowStatementModel throwStatementModel)
         {
-            var exception = throwStatementModel.ThrowStatement.Exception.GetExpressionType() as IDeclaredType;
+            var exception = GetThrownExceptionType(throwStatementModel);
             if (exception == null) return false;
 
             foreach (var list in this.TryBlockStack)
@@ -33,6 +35,19 @@ namespace CodeGears.ReSharper.Exceptional.Analyzers
             }
 
             return false;
+        }
+
+        private IDeclaredType GetThrownExceptionType(ThrowStatementModel throwStatementModel)
+        {
+            if (throwStatementModel.IsRethrow)
+            {
+                if (this.CatchClauses.Count == 0) return null;
+                var outerCatchClause = this.CatchClauses.Peek();
+
+                return outerCatchClause.CatchClause.ExceptionType;
+            }
+
+            return throwStatementModel.ExceptionType;
         }
     }
 }

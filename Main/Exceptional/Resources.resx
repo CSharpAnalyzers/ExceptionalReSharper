@@ -126,4 +126,7 @@
   <data name="HighLightSwallowingExceptions" xml:space="preserve">
     <value>Swallowing exceptions in catch-all clause is not recommended. [Exceptional]</value>
   </data>
+  <data name="HighLiightCatchAllClauses" xml:space="preserve">
+    <value>Usage of catch-all clauses is not recommended. [Exceptional]</value>
+  </data>
 </root>

@@ -106,9 +106,10 @@
     <Compile Include="Analyzers\IsThrownExceptionCatchedAnalyzer.cs" />
     <Compile Include="Analyzers\IsThrownExceptionDocumentedExceptionAnalyzer.cs" />
     <Compile Include="Highlightings\CatchAllClauseHighlighting.cs" />
+    <Compile Include="Highlightings\SwallowedExceptionsHighlighting.cs" />
     <Compile Include="Highlightings\ThrowFromCatchWithNoInnerExceptionHighlighting.cs" />
     <Compile Include="MethodContext.cs" />
-    <Compile Include="Model\CatchAllClauseModel.cs" />
+    <Compile Include="Model\CatchClauseModel.cs" />
     <Compile Include="Model\ExceptionDocCommentModel.cs" />
     <Compile Include="Model\DocumentedExceptionsModel.cs" />
     <Compile Include="Model\IModel.cs" />

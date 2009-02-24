@@ -7,9 +7,9 @@ namespace CodeGears.ReSharper.Exceptional.Analyzers
 {
     public class HasInnerExceptionFromOuterCatchClauseAnalyzer : Visitor
     {
-        private Stack<ICatchClause> OuterCatchClauses { get; set; }
+        private Stack<CatchClauseModel> OuterCatchClauses { get; set; }
 
-        public HasInnerExceptionFromOuterCatchClauseAnalyzer(Stack<ICatchClause> outerCatchClauses)
+        public HasInnerExceptionFromOuterCatchClauseAnalyzer(Stack<CatchClauseModel> outerCatchClauses)
         {
             OuterCatchClauses = outerCatchClauses;
         }
@@ -24,8 +24,16 @@ namespace CodeGears.ReSharper.Exceptional.Analyzers
             if (this.OuterCatchClauses == null) return true;
             if (this.OuterCatchClauses.Count == 0) return true;
 
-            var outerCatch = this.OuterCatchClauses.Peek() as ILocalScope;
+            var catchModel = this.OuterCatchClauses.Peek();
+            var outerCatch = catchModel.CatchClause as ILocalScope;
             if (outerCatch == null) return false;
+
+            if(throwStatementModel.IsRethrow)//rethrow case
+            {
+                catchModel.IsRethrown = true;
+                throwStatementModel.ExceptionType = catchModel.CatchClause.ExceptionType;
+                return true;
+            }
 
             //Catch clause with no named parameter
             if (outerCatch.LocalVariables.Count == 0) return false;
@@ -46,7 +54,11 @@ namespace CodeGears.ReSharper.Exceptional.Analyzers
                 return reference.NameIdentifier.Name.Equals(catchVariable.ShortName);
             });
 
-            return match != null;
+            var result = match != null;
+
+            catchModel.IsRethrown = result;
+
+            return result;
         }
     }
 }

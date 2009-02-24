@@ -39,11 +39,17 @@ namespace CodeGears.ReSharper.Exceptional
             }
             else if (element is ITryStatement)
             {
-                this._methodContext.EnterTryBlock(element as ITryStatement);
+                if(this._methodContext != null)
+                    this._methodContext.EnterTryBlock(element as ITryStatement);
             }
             else if(element is ICatchClause)
             {
-                this._methodContext.EnterCatchClause(element as ICatchClause);
+                if (this._methodContext != null)
+                {
+                    var model = CatchClauseModel.Create(element as ICatchClause);
+                    this._methodContext.Add(model);
+                    this._methodContext.EnterCatchClause(model);
+                }
             }
         }
 
@@ -67,11 +73,13 @@ namespace CodeGears.ReSharper.Exceptional
             }
             else if (element is ITryStatement)
             {
-                this._methodContext.LeaveTryBlock();
+                if (this._methodContext != null)
+                    this._methodContext.LeaveTryBlock();
             }
             else if (element is ICatchClause)
             {
-                this._methodContext.LeaveCatchClause();
+                if (this._methodContext != null)
+                    this._methodContext.LeaveCatchClause();
             }
         }
 
@@ -83,20 +91,18 @@ namespace CodeGears.ReSharper.Exceptional
 
         public override void VisitThrowStatement(IThrowStatement throwStatement)
         {
+            if(this._methodContext == null) return;
+
             var model = ThrowStatementModel.Create(throwStatement);
             this._methodContext.Add(model);
         }
 
         public override void VisitGeneralCatchClause(IGeneralCatchClause generalCatchClause)
         {
-            var model = CatchAllClauseModel.Create(generalCatchClause);
-            this._methodContext.Add(model);
         }
 
         public override void VisitSpecificCatchClause(ISpecificCatchClause specificCatchClause)
         {
-            var model = CatchAllClauseModel.Create(specificCatchClause);
-            this._methodContext.Add(model);
         }
 
         public override void VisitCatchVariableDeclaration(ICatchVariableDeclaration catchVariableDeclaration)

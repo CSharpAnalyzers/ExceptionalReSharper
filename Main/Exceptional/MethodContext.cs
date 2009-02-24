@@ -12,12 +12,13 @@ namespace CodeGears.ReSharper.Exceptional
     {
         private readonly IMethodDeclaration _methodDeclaration;
         private readonly List<IModel> _models;
-        private readonly Stack<ICatchClause> _catchClauseStack;
+        private readonly Stack<CatchClauseModel> _catchClauseStack;
         private readonly Stack<List<IDeclaredType>> _tryBlockStack;
         private DocumentedExceptionsModel _documentedExceptionsModel;
         private readonly ThrownExceptionsModel _thrownExceptionsModel;
+        private readonly List<CatchClauseModel> _catchClauses;
 
-        internal IEnumerable<IModel> Result
+        private IEnumerable<IModel> Result
         {
             get
             {
@@ -34,6 +35,11 @@ namespace CodeGears.ReSharper.Exceptional
                     }
                 }
 
+                foreach (var model in this._catchClauses)
+                {
+                    yield return model;
+                }
+
                 foreach (var exception in _models)
                 {
                     yield return exception;
@@ -47,7 +53,8 @@ namespace CodeGears.ReSharper.Exceptional
             this._models = new List<IModel>();
 
             this._tryBlockStack = new Stack<List<IDeclaredType>>();
-            this._catchClauseStack = new Stack<ICatchClause>();
+            this._catchClauseStack = new Stack<CatchClauseModel>();
+            this._catchClauses = new List<CatchClauseModel>();
 
             this._thrownExceptionsModel = new ThrownExceptionsModel();
         }
@@ -73,9 +80,9 @@ namespace CodeGears.ReSharper.Exceptional
             this._tryBlockStack.Pop();
         }
 
-        public void EnterCatchClause(ICatchClause catchClause)
+        public void EnterCatchClause(CatchClauseModel catchClauseModel)
         {
-            this._catchClauseStack.Push(catchClause);
+            this._catchClauseStack.Push(catchClauseModel);
         }
 
         public void LeaveCatchClause()
@@ -103,18 +110,13 @@ namespace CodeGears.ReSharper.Exceptional
         {
             if(throwStatementModel == null) return;
 
-            var catchedVisitor = new IsThrownExceptionCatchedAnalyzer(this._tryBlockStack);
+            var catchedVisitor = new IsThrownExceptionCatchedAnalyzer(this._tryBlockStack, this._catchClauseStack);
             throwStatementModel.Accept(catchedVisitor);
 
             var visitor = new HasInnerExceptionFromOuterCatchClauseAnalyzer(this._catchClauseStack);
             throwStatementModel.Accept(visitor);
 
             this._thrownExceptionsModel.ThrownExceptions.Add(throwStatementModel);
-        }
-
-        public void Add(CatchAllClauseModel catchAllClauseModel)
-        {
-            this._models.Add(catchAllClauseModel);
         }
 
         public void ComputeResult(CSharpErrorStageProcessBase process)
@@ -125,6 +127,11 @@ namespace CodeGears.ReSharper.Exceptional
 
                 model.AssignHighlights(process);
             }
+        }
+
+        public void Add(CatchClauseModel catchClauseModel)
+        {
+            this._catchClauses.Add(catchClauseModel);
         }
     }
 }
