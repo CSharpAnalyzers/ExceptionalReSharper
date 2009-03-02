@@ -9,18 +9,18 @@ namespace ExceptionalSandBox
 //            //We do not throw and there is no documentation of exceptions.    
 //        }
 //
-//        public void Test02()
-//        {
-//            //We throw but there is no documentation for the exception thrown.
-//            throw new InvalidOperationException("Message");//BAD
-//        }
-//
-//        /// <summary>This method...</summary>
-//        public void Test03()
-//        {
-//            //We throw and there is some documentation but still the exception thrown is not documented.
-//            throw new InvalidOperationException("Message");//BAD
-//        }
+        public void Test02()
+        {
+            //We throw but there is no documentation for the exception thrown.
+            throw new InvalidOperationException("Message");//BAD
+        }
+
+        /// <summary>This method...</summary>
+        public void Test03()
+        {
+            //We throw and there is some documentation but still the exception thrown is not documented.
+            throw new InvalidOperationException("Message");//BAD
+        }
 //
 //        /// <summary>This method...</summary>
 //        /// <exception cref="InvalidOperationException">Thrown when....</exception>//OK
@@ -114,33 +114,33 @@ namespace ExceptionalSandBox
 //                Console.WriteLine("TRY");
 //            }
 //        }
-
-        public void Test12()
-        {
-            try
-            {
-                Console.WriteLine("TRY");
-            }
-            catch(InvalidOperationException)//OK
-            {
-                Console.WriteLine("TRY");
-                //We are rethrowing, but the exception is not documented.
-                throw;//BAD
-            }
-        }
-
-        public void Test13()
-        {
-            try
-            {
-                Console.WriteLine("TRY");
-            }
-            catch (InvalidOperationException ex)//OK
-            {
-                //We are throwing but the exception is not documented.
-                throw new InvalidOperationException("Message", ex);//BAD
-            }
-        }
+//
+//        public void Test12()
+//        {
+//            try
+//            {
+//                Console.WriteLine("TRY");
+//            }
+//            catch(InvalidOperationException)//OK
+//            {
+//                Console.WriteLine("TRY");
+//                //We are rethrowing, but the exception is not documented.
+//                throw;//BAD
+//            }
+//        }
+//
+//        public void Test13()
+//        {
+//            try
+//            {
+//                Console.WriteLine("TRY");
+//            }
+//            catch (InvalidOperationException ex)//OK
+//            {
+//                //We are throwing but the exception is not documented.
+//                throw new InvalidOperationException("Message", ex);//BAD
+//            }
+//        }
 
 //        /// <summary></summary>
 //        /// <exception cref="InvalidOperationException">Test</exception>

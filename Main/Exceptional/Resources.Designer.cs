@@ -95,5 +95,14 @@ namespace CodeGears.ReSharper.Exceptional {
                 return ResourceManager.GetString("HighLiightCatchAllClauses", resourceCulture);
             }
         }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Add documentation for exception [Exceptional].
+        /// </summary>
+        internal static string QuickFixInsertExceptionDocumentation {
+            get {
+                return ResourceManager.GetString("QuickFixInsertExceptionDocumentation", resourceCulture);
+            }
+        }
     }
 }

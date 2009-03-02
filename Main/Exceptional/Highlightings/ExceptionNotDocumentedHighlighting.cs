@@ -8,16 +8,16 @@ namespace CodeGears.ReSharper.Exceptional.Highlightings
     [StaticSeverityHighlighting(Severity.WARNING)]
     public class ExceptionNotDocumentedHighlighting : IHighlighting
     {
-        private readonly IThrowStatement _throwStatement;
+        public IThrowStatement ThrowStatement { get; private set; }
 
-        private IDeclaredType Exception
+        public IDeclaredType Exception
         {
-            get { return this._throwStatement.Exception.GetExpressionType() as IDeclaredType; }
+            get { return this.ThrowStatement.Exception.GetExpressionType() as IDeclaredType; }
         }
 
         public ExceptionNotDocumentedHighlighting(IThrowStatement throwStatement)
         {
-            _throwStatement = throwStatement;
+            ThrowStatement = throwStatement;
         }
 
         public string ToolTip

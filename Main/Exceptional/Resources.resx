@@ -129,4 +129,7 @@
   <data name="HighLiightCatchAllClauses" xml:space="preserve">
     <value>Usage of catch-all clauses is not recommended. [Exceptional]</value>
   </data>
+  <data name="QuickFixInsertExceptionDocumentation" xml:space="preserve">
+    <value>Add documentation for exception [Exceptional]</value>
+  </data>
 </root>

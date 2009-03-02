@@ -14,6 +14,7 @@ namespace CodeGears.ReSharper.Exceptional.Model
         public bool IsCatched { get; set; }
         public bool IsDocumented { get; set; }
         public bool ThrowsWithInnerException { get; set; }
+
         public bool IsRethrow
         {
             get { return this.ThrowStatement.Exception == null; }
