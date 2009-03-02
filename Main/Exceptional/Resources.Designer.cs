@@ -104,5 +104,14 @@ namespace CodeGears.ReSharper.Exceptional {
                 return ResourceManager.GetString("QuickFixInsertExceptionDocumentation", resourceCulture);
             }
         }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Remove redundant exception documentation [Exceptional].
+        /// </summary>
+        internal static string QuickFixRemoveExceptionDocumentation {
+            get {
+                return ResourceManager.GetString("QuickFixRemoveExceptionDocumentation", resourceCulture);
+            }
+        }
     }
 }

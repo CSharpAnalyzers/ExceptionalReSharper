@@ -10,11 +10,11 @@ using JetBrains.Util;
 namespace CodeGears.ReSharper.Exceptional.QuickFixes
 {
     [QuickFix]
-    internal class InsertExceptionDocumentationFix : OneItemBulbActionImpl, IBulbItem, IQuickFix
+    internal class RemoveExceptionDocumentationFix : OneItemBulbActionImpl, IBulbItem, IQuickFix
     {
-        private ExceptionNotDocumentedHighlighting Error { get; set; }
+        private ExceptionNotThrownHighlighting Error { get; set; }
 
-        public InsertExceptionDocumentationFix(ExceptionNotDocumentedHighlighting error)
+        public RemoveExceptionDocumentationFix(ExceptionNotThrownHighlighting error)
         {
             Error = error;
         }
@@ -26,20 +26,21 @@ namespace CodeGears.ReSharper.Exceptional.QuickFixes
 
         public void Execute(ISolution solution, ITextControl textControl)
         {
-            using (CommandCookie.Create(Resources.QuickFixInsertExceptionDocumentation))
+            using (CommandCookie.Create(Resources.QuickFixRemoveExceptionDocumentation))
             {
                 PsiManager.GetInstance(solution).DoTransaction(
                     delegate
-                        {
-                            var declaratiopnTreeNode = this.Error.ThrowStatement.GetContainingTypeMemberDeclaration().ToTreeNode();
-                            XmlDocCommentHelper.InsertExceptionDocumentation(declaratiopnTreeNode, this.Error.Exception.GetCLRName());
-                        });
+                    {
+                        var declaratiopnTreeNode = this.Error.MemberDeclaration.ToTreeNode();
+                        var commentText = textControl.Document.GetText(this.Error.DocumentRange.TextRange);
+                        XmlDocCommentHelper.RemoveExceptionDocumentation(declaratiopnTreeNode, commentText);
+                    });
             }
         }
 
         public string Text
         {
-            get { return Resources.QuickFixInsertExceptionDocumentation; }
+            get { return Resources.QuickFixRemoveExceptionDocumentation; }
         }
     }
 }

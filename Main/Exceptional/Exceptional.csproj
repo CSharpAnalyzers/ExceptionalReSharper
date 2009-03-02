@@ -118,6 +118,7 @@
     <Compile Include="Model\ThrowStatementModel.cs" />
     <Compile Include="Analyzers\Visitor.cs" />
     <Compile Include="QuickFixes\InsertExceptionDocumentationFix.cs" />
+    <Compile Include="QuickFixes\RemoveExceptionDocumentationFix.cs" />
     <Compile Include="Resources.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>

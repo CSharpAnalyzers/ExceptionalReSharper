@@ -1,7 +1,6 @@
 using System;
 using System.Xml;
 using JetBrains.DocumentModel;
-using JetBrains.ProjectModel;
 using JetBrains.ReSharper.Psi.CSharp;
 using JetBrains.ReSharper.Psi.CSharp.Tree;
 using JetBrains.ReSharper.Psi.ExtensionsAPI;
@@ -32,7 +31,7 @@ namespace CodeGears.ReSharper.Exceptional
             return DocumentRange.InvalidRange;
         }
 
-        public static void AddExceptionDocumentation(ICSharpTypeMemberDeclarationNode memberDeclaration, string exceptionName, IProject project)
+        public static void InsertExceptionDocumentation(ICSharpTypeMemberDeclarationNode memberDeclaration, string exceptionName)
         {
             var comment = SharedImplUtil.GetDocCommentBlockNode(memberDeclaration);
             var text = comment != null ? comment.GetText() + Environment.NewLine : String.Empty;
@@ -40,9 +39,23 @@ namespace CodeGears.ReSharper.Exceptional
             text += String.Format("/// <exception cref=\"{0}\"></exception>", exceptionName) + Environment.NewLine +
                     " public void foo() {}";
 
-            var commentOwner = CSharpElementFactory.GetInstance(project).CreateTypeMemberDeclaration(text) as IDocCommentBlockOwnerNode;
+            var commentOwner = CSharpElementFactory.GetInstance(memberDeclaration.GetProject()).CreateTypeMemberDeclaration(text) as IDocCommentBlockOwnerNode;
 
             SharedImplUtil.SetDocCommentBlockNode(memberDeclaration, commentOwner.GetDocCommentBlockNode());
+        }
+
+        public static void RemoveExceptionDocumentation(ICSharpTypeMemberDeclarationNode memberDeclaration, string documentationText)
+        {
+            var comment = SharedImplUtil.GetDocCommentBlockNode(memberDeclaration);
+            var commentText = comment.GetText();
+
+            var result = commentText.Replace(documentationText, String.Empty);
+
+            result += Environment.NewLine + " public void foo() {}";
+
+            var commentResult = CSharpElementFactory.GetInstance(memberDeclaration.GetProject()).CreateTypeMemberDeclaration(result) as IDocCommentBlockOwnerNode;
+
+            SharedImplUtil.SetDocCommentBlockNode(memberDeclaration, commentResult.GetDocCommentBlockNode());
         }
     }
 }

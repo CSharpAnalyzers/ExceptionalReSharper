@@ -1,16 +1,22 @@
 using System;
+using JetBrains.DocumentModel;
 using JetBrains.ReSharper.Daemon;
+using JetBrains.ReSharper.Psi.CSharp.Tree;
 
 namespace CodeGears.ReSharper.Exceptional.Highlightings
 {
     [StaticSeverityHighlighting(Severity.WARNING)]
     public class ExceptionNotThrownHighlighting : IHighlighting
     {
+        public ICSharpTypeMemberDeclaration MemberDeclaration { get; private set; }
+        public DocumentRange DocumentRange { get; private set; }
         private readonly string _excetionType;
 
-        public ExceptionNotThrownHighlighting(string excetionType)
+        public ExceptionNotThrownHighlighting(ICSharpTypeMemberDeclaration memberDeclaration, DocumentRange documentRange, string exceptionType)
         {
-            _excetionType = excetionType;
+            MemberDeclaration = memberDeclaration;
+            DocumentRange = documentRange;
+            _excetionType = exceptionType;
         }
 
         public string ToolTip

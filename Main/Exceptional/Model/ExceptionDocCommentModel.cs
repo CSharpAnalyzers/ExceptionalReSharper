@@ -66,7 +66,7 @@ namespace CodeGears.ReSharper.Exceptional.Model
             if (this.IsDocumentedExceptionThrown == false)
             {
                 process.AddHighlighting(this.DocumentRange,
-                    new ExceptionNotThrownHighlighting(this.ExceptionType));
+                    new ExceptionNotThrownHighlighting(this.MethodDeclaration, this.DocumentRange, this.ExceptionType));
             }
         }
 

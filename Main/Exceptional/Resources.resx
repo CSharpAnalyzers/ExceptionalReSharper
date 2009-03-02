@@ -132,4 +132,7 @@
   <data name="QuickFixInsertExceptionDocumentation" xml:space="preserve">
     <value>Add documentation for exception [Exceptional]</value>
   </data>
+  <data name="QuickFixRemoveExceptionDocumentation" xml:space="preserve">
+    <value>Remove redundant exception documentation [Exceptional]</value>
+  </data>
 </root>
