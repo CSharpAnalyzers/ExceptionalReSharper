@@ -2,15 +2,8 @@ using CodeGears.ReSharper.Exceptional.Model;
 
 namespace CodeGears.ReSharper.Exceptional.Analyzers
 {
-    public class IsThrownExceptionDocumentedExceptionAnalyzer : Visitor
+    internal class IsThrownExceptionDocumentedExceptionAnalyzer : AnalyzerBase
     {
-        private DocumentedExceptionsModel DocumentedExceptionsModel { get; set; }
-
-        public IsThrownExceptionDocumentedExceptionAnalyzer(DocumentedExceptionsModel documentedExceptionsModel)
-        {
-            DocumentedExceptionsModel = documentedExceptionsModel;
-        }
-
         public override void Visit(ThrowStatementModel throwStatementModel)
         {
             throwStatementModel.IsDocumented = Analyze(throwStatementModel);
@@ -18,9 +11,14 @@ namespace CodeGears.ReSharper.Exceptional.Analyzers
 
         private bool Analyze(ThrowStatementModel throwStatementModel)
         {
-            foreach (var documentedException in this.DocumentedExceptionsModel.DocumentedExceptions)
+            ProcessContext.Instance.AssertMethodDeclaration();
+
+            var docCommentBlockNode = ProcessContext.Instance.MethodDeclarationModel.DocCommentBlockModel;
+            if(docCommentBlockNode == null) return false;
+
+            foreach (var documentedException in docCommentBlockNode.Exceptions)
             {
-                if(throwStatementModel.Throws(documentedException.ExceptionType))
+                if(throwStatementModel.Throws(documentedException.ExceptionTypeName))
                 {
                     return true;
                 }

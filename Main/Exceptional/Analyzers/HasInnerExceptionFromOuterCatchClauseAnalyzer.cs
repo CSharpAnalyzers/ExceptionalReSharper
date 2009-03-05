@@ -5,15 +5,8 @@ using JetBrains.ReSharper.Psi.CSharp.Tree;
 
 namespace CodeGears.ReSharper.Exceptional.Analyzers
 {
-    public class HasInnerExceptionFromOuterCatchClauseAnalyzer : Visitor
+    internal class HasInnerExceptionFromOuterCatchClauseAnalyzer : AnalyzerBase
     {
-        private Stack<CatchClauseModel> OuterCatchClauses { get; set; }
-
-        public HasInnerExceptionFromOuterCatchClauseAnalyzer(Stack<CatchClauseModel> outerCatchClauses)
-        {
-            OuterCatchClauses = outerCatchClauses;
-        }
-
         public override void Visit(ThrowStatementModel throwStatementModel)
         {
             throwStatementModel.ThrowsWithInnerException = Analyze(throwStatementModel);
@@ -21,22 +14,36 @@ namespace CodeGears.ReSharper.Exceptional.Analyzers
 
         private bool Analyze(ThrowStatementModel throwStatementModel)
         {
-            if (this.OuterCatchClauses == null) return true;
-            if (this.OuterCatchClauses.Count == 0) return true;
+            ProcessContext.Instance.AssertMethodDeclaration();
 
-            var catchModel = this.OuterCatchClauses.Peek();
+            var catchClauseModelsStack =  ProcessContext.Instance.CatchClauseModelsStack;
+            
+            if (catchClauseModelsStack.Count == 0) return true;
+
+            var catchModel = catchClauseModelsStack.Peek();
+
+            throwStatementModel.OuterCatchClauseModel = catchModel;
+            throwStatementModel.ExceptionType = catchModel.CatchClause.ExceptionType;
+            catchModel.IsRethrown = throwStatementModel.IsRethrow;
+
             var outerCatch = catchModel.CatchClause as ILocalScope;
-            if (outerCatch == null) return false;
+
+            //catch clause with no exception defined = Exception
+            if (outerCatch == null)
+            {
+                return throwStatementModel.IsRethrow;
+            }
 
             if(throwStatementModel.IsRethrow)//rethrow case
             {
-                catchModel.IsRethrown = true;
-                throwStatementModel.ExceptionType = catchModel.CatchClause.ExceptionType;
                 return true;
             }
 
             //Catch clause with no named parameter
-            if (outerCatch.LocalVariables.Count == 0) return false;
+            if (outerCatch.LocalVariables.Count == 0)
+            {
+                return false;
+            }
 
             var list = new List<IDeclaredElement>(outerCatch.LocalVariables);
             var catchVariable = list.Find(element => element is ICatchVariableDeclaration);

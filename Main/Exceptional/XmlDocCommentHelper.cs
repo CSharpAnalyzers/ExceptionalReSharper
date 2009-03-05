@@ -1,3 +1,7 @@
+/// <copyright file="XmlDocCommentHelper.cs" manufacturer="CodeGears">
+///   Copyright (c) CodeGears. All rights reserved.
+/// </copyright>
+
 using System;
 using System.Xml;
 using JetBrains.DocumentModel;
@@ -5,6 +9,7 @@ using JetBrains.ReSharper.Psi.CSharp;
 using JetBrains.ReSharper.Psi.CSharp.Tree;
 using JetBrains.ReSharper.Psi.ExtensionsAPI;
 using JetBrains.ReSharper.Psi.Tree;
+using JetBrains.Util;
 
 namespace CodeGears.ReSharper.Exceptional
 {
@@ -31,7 +36,7 @@ namespace CodeGears.ReSharper.Exceptional
             return DocumentRange.InvalidRange;
         }
 
-        public static void InsertExceptionDocumentation(ICSharpTypeMemberDeclarationNode memberDeclaration, string exceptionName)
+        public static TextRange InsertExceptionDocumentation(ICSharpTypeMemberDeclarationNode memberDeclaration, string exceptionName)
         {
             var comment = SharedImplUtil.GetDocCommentBlockNode(memberDeclaration);
             var text = comment != null ? comment.GetText() + Environment.NewLine : String.Empty;
@@ -40,8 +45,10 @@ namespace CodeGears.ReSharper.Exceptional
                     " public void foo() {}";
 
             var commentOwner = CSharpElementFactory.GetInstance(memberDeclaration.GetProject()).CreateTypeMemberDeclaration(text) as IDocCommentBlockOwnerNode;
+            var docCommentNode = commentOwner.GetDocCommentBlockNode();
+            SharedImplUtil.SetDocCommentBlockNode(memberDeclaration, docCommentNode);
 
-            SharedImplUtil.SetDocCommentBlockNode(memberDeclaration, commentOwner.GetDocCommentBlockNode());
+            return TextRange.InvalidRange;
         }
 
         public static void RemoveExceptionDocumentation(ICSharpTypeMemberDeclarationNode memberDeclaration, string documentationText)

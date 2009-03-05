@@ -7,7 +7,7 @@ using JetBrains.ReSharper.Psi.CSharp.Tree;
 
 namespace CodeGears.ReSharper.Exceptional.Model
 {
-    public class ThrowStatementModel : IModel
+    public class ThrowStatementModel : ModelBase
     {
         private IDeclaredType _exceptionType;
         public bool IsValid { get; private set; }
@@ -21,11 +21,14 @@ namespace CodeGears.ReSharper.Exceptional.Model
         }
 
         public IThrowStatement ThrowStatement { get; set; }
+        public CatchClauseModel OuterCatchClauseModel { get; set; }
 
         private DocumentRange DocumentRange
         {
             get { return this.ThrowStatement.GetDocumentRange(); }
         }
+
+        public ExceptionCreationModel ExceptionCreationModel { get; set; }
 
         public IDeclaredType ExceptionType
         {
@@ -37,47 +40,47 @@ namespace CodeGears.ReSharper.Exceptional.Model
             set { _exceptionType = value; }
         }
 
-        private ThrowStatementModel(IThrowStatement throwStatement)
+        public ThrowStatementModel(IThrowStatement throwStatement)
         {
             ThrowStatement = throwStatement;
             IsValid = false;
             IsCatched = false;
             IsDocumented = false;
             ThrowsWithInnerException = true;
-        }
-
-        public static ThrowStatementModel Create(IThrowStatement throwStatement)
-        {
-            var model = new ThrowStatementModel(throwStatement);
-
-            return model;
+            this.ExceptionCreationModel = new ExceptionCreationModel(this.ThrowStatement.Exception as IObjectCreationExpression);
         }
 
         public bool Throws(string exception)
         {
             if (this.ExceptionType == null) return false;
 
-            return this.ExceptionType.GetCLRName().Equals(exception);
+            //TODO: We must compare by full name!
+            var fullName = this.ExceptionType.GetCLRName();
+            var index = fullName.LastIndexOf('.');
+            if(index >= 0)
+                fullName = fullName.Substring(index + 1);
+
+            return fullName.Equals(exception);
         }
 
-        public void AssignHighlights(CSharpDaemonStageProcessBase process)
+        public override void AssignHighlights(CSharpDaemonStageProcessBase process)
         {
             if (this.IsCatched == false && this.IsDocumented == false)
             {
                 process.AddHighlighting(this.DocumentRange,
-                    new ExceptionNotDocumentedHighlighting(this.ThrowStatement));
+                    new ExceptionNotDocumentedHighlighting(this));
             }
 
             if(this.ThrowsWithInnerException == false)
             {
                 process.AddHighlighting(this.DocumentRange,
-                    new ThrowFromCatchWithNoInnerExceptionHighlighting());
+                    new ThrowFromCatchWithNoInnerExceptionHighlighting(this));
             }
         }
 
-        public void Accept(Visitor visitor)
+        public override void Accept(AnalyzerBase analyzerBase)
         {
-            visitor.Visit(this);
+            analyzerBase.Visit(this);
         }
     }
 }

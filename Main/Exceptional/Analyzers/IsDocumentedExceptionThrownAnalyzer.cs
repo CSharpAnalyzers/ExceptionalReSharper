@@ -2,25 +2,21 @@ using CodeGears.ReSharper.Exceptional.Model;
 
 namespace CodeGears.ReSharper.Exceptional.Analyzers
 {
-    public class IsDocumentedExceptionThrownAnalyzer : Visitor
+    internal class IsDocumentedExceptionThrownAnalyzer : AnalyzerBase
     {
-        private ThrownExceptionsModel ThrownExceptionsModel { get; set; }
-
-        public IsDocumentedExceptionThrownAnalyzer(ThrownExceptionsModel thrownExceptionsModel)
+        public override void Visit(ExceptionDocumentationModel exceptionDocumentationModel)
         {
-            ThrownExceptionsModel = thrownExceptionsModel;
+            exceptionDocumentationModel.IsThrown = Analyze(exceptionDocumentationModel);
         }
 
-        public override void Visit(ExceptionDocCommentModel exceptionDocumentationModel)
+        private bool Analyze(ExceptionDocumentationModel exceptionDocCommentModel)
         {
-            exceptionDocumentationModel.IsDocumentedExceptionThrown = Analyze(exceptionDocumentationModel);
-        }
+            ProcessContext.Instance.AssertMethodDeclaration();
+            var throwStatementModels = ProcessContext.Instance.MethodDeclarationModel.ThrowStatementModels;
 
-        private bool Analyze(ExceptionDocCommentModel exceptionDocCommentModel)
-        {
-            foreach (var throwStatement in this.ThrownExceptionsModel.ThrownExceptions)
+            foreach (var throwStatement in throwStatementModels)
             {
-                if (throwStatement.Throws(exceptionDocCommentModel.ExceptionType) == false) continue;
+                if (throwStatement.Throws(exceptionDocCommentModel.ExceptionTypeName) == false) continue;
 
                 if (throwStatement.IsCatched) continue;
 

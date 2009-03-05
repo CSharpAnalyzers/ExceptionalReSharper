@@ -4,58 +4,7 @@ namespace ExceptionalSandBox
 {
     public class SandBox
     {
-        public void Test01()//OK
-        {
-            //We do not throw and there is no documentation of exceptions.    
-        }
 
-        public void Test02()
-        {
-            //We throw but there is no documentation for the exception thrown.
-            throw new InvalidOperationException("Message");//BAD
-        }
-
-        /// <summary>This method...</summary>
-        public void Test03()
-        {
-            //We throw and there is some documentation but still the exception thrown is not documented.
-            throw new InvalidOperationException("Message");//BAD
-        }
-
-        /// <summary>This method...</summary>
-        /// <exception cref="InvalidOperationException">Thrown when....</exception>//OK
-        public void Test04()
-        {
-            //We are good. Thrown exception is documented.
-            throw new InvalidOperationException("Message");//OK
-        }
-
-        /// <summary>This method...</summary>
-        /// <exception cref="InvalidOperationException">Thrown when....</exception>//OK
-        public void Test05()
-        {
-            //We are good. Thrown exception is documented.
-            var ex = new InvalidOperationException("Message");
-            throw ex;//OK
-        }
-
-        /// <summary>This method...</summary>
-        /// <exception cref="InvalidOperationException">Thrown when....</exception>//BAD
-        public void Test06()
-        {
-            //Despite of the fact that we are creating an InvalidOperationException we are throwing Exception.
-            //So in fact we are throwing Exception and the documentation contains entry that is not valid.
-            Exception ex = new InvalidOperationException();
-            throw ex;//BAD
-        }
-
-        /// <summary>This method...</summary>
-        /// <exception cref="InvalidOperationException">Thrown when...</exception> //BAD
-        /// <remarks>Test</remarks>
-        public void Test07()
-        {
-            //We are not throwing so the exception documentation is invalid.
-        }
 //
 //        public void Test08()
 //        {
@@ -175,19 +124,64 @@ namespace ExceptionalSandBox
 //            }
 //        }
 //
-//        /// <exception cref="InvalidOperationException">Test</exception>//OK
-//        public void Test16()
+        /// <exception cref="InvalidOperationException">Test</exception>//OK
+        public void Test16()
+        {
+            try
+            {
+                throw new OperationCanceledException();//OK
+            }
+            //All ecxeptions thrown from inside of catch clause that do not 
+            //have a variable defined are reported as missing inner exception.
+            catch (OperationCanceledException)//BAD
+            {
+                throw new InvalidOperationException();//BAD
+            }
+        }
+
+        /// <exception cref="InvalidOperationException">Test</exception>//OK
+        public void Test17()
+        {
+            try
+            {
+                throw new OperationCanceledException();//OK
+            }
+            //All ecxeptions thrown from inside of catch clause that do not 
+            //have a variable defined are reported as missing inner exception.
+            catch (OperationCanceledException exmy)//BAD
+            {
+                throw new InvalidOperationException();//BAD
+            }
+        }
+
+        /// <exception cref="InvalidOperationException">Test</exception>//OK
+        public void Test18()
+        {
+            try
+            {
+                throw new OperationCanceledException();//OK
+            }
+            //All ecxeptions thrown from inside of catch clause that do not 
+            //have a variable defined are reported as missing inner exception.
+            catch//BAD
+            {
+                //FIX: should add (Exception e) to the catch an proper parameters to throw.
+                throw new InvalidOperationException();//BAD
+            }
+        }
+
+//        /// <exception cref="Exception">Test</exception>//OK
+//        public void Test17()
 //        {
 //            try
 //            {
-//                throw new OperationCanceledException();//OK
+//                Console.WriteLine();
 //            }
-//            //All ecxeptions thrown from inside of catch clause that do not 
-//            //have a variable defined are reported as missing inner exception.
-//            catch (OperationCanceledException)//BAD
+//            //Rethrow from general clause
+//            catch//BAD
 //            {
-//                //We should include a catched exception as inner exception
-//                throw new InvalidOperationException("sss");//BAD
+//                Console.WriteLine();
+//                throw;//OK
 //            }
 //        }
 //

@@ -1,23 +1,17 @@
 using System;
+using CodeGears.ReSharper.Exceptional.Model;
 using JetBrains.ReSharper.Daemon;
-using JetBrains.ReSharper.Psi;
-using JetBrains.ReSharper.Psi.CSharp.Tree;
 
 namespace CodeGears.ReSharper.Exceptional.Highlightings
 {
     [StaticSeverityHighlighting(Severity.WARNING)]
     public class ExceptionNotDocumentedHighlighting : IHighlighting
     {
-        public IThrowStatement ThrowStatement { get; private set; }
+        public ThrowStatementModel ThrowStatementModel { get; set; }
 
-        public IDeclaredType Exception
+        public ExceptionNotDocumentedHighlighting(ThrowStatementModel throwStatement)
         {
-            get { return this.ThrowStatement.Exception.GetExpressionType() as IDeclaredType; }
-        }
-
-        public ExceptionNotDocumentedHighlighting(IThrowStatement throwStatement)
-        {
-            ThrowStatement = throwStatement;
+            ThrowStatementModel = throwStatement;
         }
 
         public string ToolTip
@@ -34,10 +28,10 @@ namespace CodeGears.ReSharper.Exceptional.Highlightings
         {
             get
             {
-                if (this.Exception == null)
+                if (this.ThrowStatementModel.ExceptionType == null)
                     throw new InvalidOperationException("The given exception was null.");
 
-                return String.Format(Resources.HighLightNotDocumentedExceptions, this.Exception.GetCLRName());
+                return String.Format(Resources.HighLightNotDocumentedExceptions, this.ThrowStatementModel.ExceptionType.GetCLRName());
             }
         }
 

@@ -2,15 +2,13 @@ using CodeGears.ReSharper.Exceptional.Highlightings;
 using JetBrains.Application;
 using JetBrains.ProjectModel;
 using JetBrains.ReSharper.Daemon;
-using JetBrains.ReSharper.Intentions.Base2;
 using JetBrains.ReSharper.Psi;
 using JetBrains.TextControl;
-using JetBrains.Util;
 
 namespace CodeGears.ReSharper.Exceptional.QuickFixes
 {
     [QuickFix]
-    internal class RemoveExceptionDocumentationFix : OneItemBulbActionImpl, IBulbItem, IQuickFix
+    internal class RemoveExceptionDocumentationFix : SingleActionFix
     {
         private ExceptionNotThrownHighlighting Error { get; set; }
 
@@ -19,26 +17,21 @@ namespace CodeGears.ReSharper.Exceptional.QuickFixes
             Error = error;
         }
 
-        protected override IBulbItem GetBulbItem(IUserDataHolder cache)
-        {
-            return this;
-        }
-
-        public void Execute(ISolution solution, ITextControl textControl)
+        public override void Execute(ISolution solution, ITextControl textControl)
         {
             using (CommandCookie.Create(Resources.QuickFixRemoveExceptionDocumentation))
             {
                 PsiManager.GetInstance(solution).DoTransaction(
                     delegate
                     {
-                        var declaratiopnTreeNode = this.Error.MemberDeclaration.ToTreeNode();
-                        var commentText = textControl.Document.GetText(this.Error.DocumentRange.TextRange);
-                        XmlDocCommentHelper.RemoveExceptionDocumentation(declaratiopnTreeNode, commentText);
+//                        var documentRange = this.Error.ExceptionDocumentationModel.DocumentRange;
+//                        var commentText = textControl.Document.GetText(documentRange.TextRange);
+//                        XmlDocCommentHelper.RemoveExceptionDocumentation(declaratiopnTreeNode, commentText);
                     });
             }
         }
 
-        public string Text
+        public override string Text
         {
             get { return Resources.QuickFixRemoveExceptionDocumentation; }
         }

@@ -1,4 +1,7 @@
-using System;
+/// <copyright file="ExceptionalDaemonStageProcess.cs" manufacturer="CodeGears">
+///   Copyright (c) CodeGears. All rights reserved.
+/// </copyright>
+
 using CodeGears.ReSharper.Exceptional.Model;
 using JetBrains.ReSharper.Daemon;
 using JetBrains.ReSharper.Daemon.CSharp.Stages;
@@ -13,8 +16,6 @@ namespace CodeGears.ReSharper.Exceptional
     /// the target highlighting logic.</remarks>
     public class ExceptionalDaemonStageProcess : CSharpErrorStageProcessBase
     {
-        private MethodContext _methodContext;
-
         public ExceptionalDaemonStageProcess(IDaemonProcess process) : base(process) { }
 
         public override void ProcessFile(ICSharpFile file)
@@ -30,26 +31,18 @@ namespace CodeGears.ReSharper.Exceptional
         {
             if (element is IMethodDeclaration)
             {
-                var method = element as IMethodDeclaration;
+                var methodDeclaration = element as IMethodDeclaration;
 
-                if (this._methodContext != null)
-                    throw new InvalidOperationException("The analyzed method has not been computed.");
-
-                this._methodContext = new MethodContext(method);
+                ProcessContext.Instance.MethodDeclarationModel = new MethodDeclarationModel(methodDeclaration);
+                ProcessContext.Instance.MethodDeclarationModel.Initialize();
             }
             else if (element is ITryStatement)
             {
-                if(this._methodContext != null)
-                    this._methodContext.EnterTryBlock(element as ITryStatement);
+                ProcessContext.Instance.EnterTryBlock(element as ITryStatement);
             }
             else if(element is ICatchClause)
             {
-                if (this._methodContext != null)
-                {
-                    var model = CatchClauseModel.Create(element as ICatchClause);
-                    this._methodContext.Add(model);
-                    this._methodContext.EnterCatchClause(model);
-                }
+                ProcessContext.Instance.EnterCatchClause(element as ICatchClause);
             }
         }
 
@@ -61,40 +54,32 @@ namespace CodeGears.ReSharper.Exceptional
 
             if(element is IMethodDeclaration)
             {
-                var method = element as IMethodDeclaration;
-
-                if (this._methodContext == null)
-                    throw new InvalidOperationException("You have to first begin the process.");
-                if (this._methodContext.IsDefinedFor(method) == false)
-                    throw new InvalidOperationException("The given method does not match processed method.");
-
-                this._methodContext.ComputeResult(this);
-                this._methodContext = null;
+                ProcessContext.Instance.EndProcess(this);
             }
             else if (element is ITryStatement)
             {
-                if (this._methodContext != null)
-                    this._methodContext.LeaveTryBlock();
+                ProcessContext.Instance.LeaveTryBlock();
             }
             else if (element is ICatchClause)
             {
-                if (this._methodContext != null)
-                    this._methodContext.LeaveCatchClause();
+                ProcessContext.Instance.LeaveCatchClause();
             }
-        }
-
-        public override void VisitMethodDeclaration(IMethodDeclaration methodDeclaration)
-        {
-            var exceptionsDocumentation = DocumentedExceptionsModel.Create(methodDeclaration);
-            this._methodContext.Add(exceptionsDocumentation);
         }
 
         public override void VisitThrowStatement(IThrowStatement throwStatement)
         {
-            if(this._methodContext == null) return;
+            var model = new ThrowStatementModel(throwStatement);
+            ProcessContext.Instance.Process(model);
+        }
 
-            var model = ThrowStatementModel.Create(throwStatement);
-            this._methodContext.Add(model);
+        public override void VisitCatchVariableDeclaration(ICatchVariableDeclaration catchVariableDeclaration)
+        {
+            var model = new CatchVariableModel(catchVariableDeclaration);
+            ProcessContext.Instance.Process(model);
+        }
+
+        public override void VisitMethodDeclaration(IMethodDeclaration methodDeclaration)
+        {
         }
 
         public override void VisitGeneralCatchClause(IGeneralCatchClause generalCatchClause)
@@ -102,10 +87,6 @@ namespace CodeGears.ReSharper.Exceptional
         }
 
         public override void VisitSpecificCatchClause(ISpecificCatchClause specificCatchClause)
-        {
-        }
-
-        public override void VisitCatchVariableDeclaration(ICatchVariableDeclaration catchVariableDeclaration)
         {
         }
 

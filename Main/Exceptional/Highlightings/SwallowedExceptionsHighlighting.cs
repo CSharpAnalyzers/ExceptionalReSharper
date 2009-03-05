@@ -1,4 +1,5 @@
 using System;
+using CodeGears.ReSharper.Exceptional.Model;
 using JetBrains.ReSharper.Daemon;
 
 namespace CodeGears.ReSharper.Exceptional.Highlightings
@@ -6,6 +7,13 @@ namespace CodeGears.ReSharper.Exceptional.Highlightings
     [StaticSeverityHighlighting(Severity.WARNING)]
     public class SwallowedExceptionsHighlighting : IHighlighting
     {
+        public CatchClauseModel CatchClauseModel { get; set; }
+
+        public SwallowedExceptionsHighlighting(CatchClauseModel catchClauseModel)
+        {
+            CatchClauseModel = catchClauseModel;
+        }
+
         public string ToolTip
         {
             get { return Message; }

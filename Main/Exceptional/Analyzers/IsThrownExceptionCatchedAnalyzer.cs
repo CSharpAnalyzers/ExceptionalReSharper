@@ -1,20 +1,10 @@
-using System.Collections.Generic;
 using CodeGears.ReSharper.Exceptional.Model;
 using JetBrains.ReSharper.Psi;
 
 namespace CodeGears.ReSharper.Exceptional.Analyzers
 {
-    public class IsThrownExceptionCatchedAnalyzer : Visitor
+    internal class IsThrownExceptionCatchedAnalyzer : AnalyzerBase
     {
-        private Stack<List<IDeclaredType>> TryBlockStack { get; set; }
-        private Stack<CatchClauseModel> CatchClauses { get; set; }
-
-        public IsThrownExceptionCatchedAnalyzer(Stack<List<IDeclaredType>> tryBlockStack, Stack<CatchClauseModel> catchClauses)
-        {
-            TryBlockStack = tryBlockStack;
-            CatchClauses = catchClauses;
-        }
-
         public override void Visit(ThrowStatementModel throwStatementModel)
         {
             throwStatementModel.IsCatched = Analyze(throwStatementModel);
@@ -22,27 +12,32 @@ namespace CodeGears.ReSharper.Exceptional.Analyzers
 
         private bool Analyze(ThrowStatementModel throwStatementModel)
         {
+            ProcessContext.Instance.AssertMethodDeclaration();
+
             var exception = GetThrownExceptionType(throwStatementModel);
             if (exception == null) return false;
 
-            foreach (var list in this.TryBlockStack)
+            var tryStatementModelsStack =  ProcessContext.Instance.TryStatementModelsStack;
+
+            foreach (var tryStatementModel in tryStatementModelsStack)
             {
-                foreach (var type in list)
+                if (tryStatementModel.Catches(exception))
                 {
-                    if (type.Equals(exception))
-                        return true;
+                    return true;
                 }
             }
 
             return false;
         }
 
-        private IDeclaredType GetThrownExceptionType(ThrowStatementModel throwStatementModel)
+        private static IDeclaredType GetThrownExceptionType(ThrowStatementModel throwStatementModel)
         {
             if (throwStatementModel.IsRethrow)
             {
-                if (this.CatchClauses.Count == 0) return null;
-                var outerCatchClause = this.CatchClauses.Peek();
+                var catchClauseModelsStack = ProcessContext.Instance.CatchClauseModelsStack;
+
+                if (catchClauseModelsStack.Count == 0) return null;
+                var outerCatchClause = catchClauseModelsStack.Peek();
 
                 return outerCatchClause.CatchClause.ExceptionType;
             }
