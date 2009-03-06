@@ -14,58 +14,46 @@ namespace CodeGears.ReSharper.Exceptional.Analyzers
 
         private bool Analyze(ThrowStatementModel throwStatementModel)
         {
-            ProcessContext.Instance.AssertMethodDeclaration();
+            if (ProcessContext.Instance.IsValid() == false) return true;
 
-            var catchClauseModelsStack =  ProcessContext.Instance.CatchClauseModelsStack;
-            
-            if (catchClauseModelsStack.Count == 0) return true;
+            var outerCatchClause = throwStatementModel.FindOuterCatchClause();
+            if (outerCatchClause == null) return true;
 
-            var catchModel = catchClauseModelsStack.Peek();
+            outerCatchClause.IsRethrown = throwStatementModel.IsRethrow;
 
-            throwStatementModel.OuterCatchClauseModel = catchModel;
-            throwStatementModel.ExceptionType = catchModel.CatchClause.ExceptionType;
-            catchModel.IsRethrown = throwStatementModel.IsRethrow;
-
-            var outerCatch = catchModel.CatchClause as ILocalScope;
-
-            //catch clause with no exception defined = Exception
-            if (outerCatch == null)
+            if (outerCatchClause.HasExceptionType == false || throwStatementModel.IsRethrow)
             {
+                //There is no variable decaration or there is no exception creation
                 return throwStatementModel.IsRethrow;
             }
 
-            if(throwStatementModel.IsRethrow)//rethrow case
-            {
-                return true;
-            }
-
-            //Catch clause with no named parameter
-            if (outerCatch.LocalVariables.Count == 0)
+            if(outerCatchClause.HasVariable == false)
             {
                 return false;
             }
 
-            var list = new List<IDeclaredElement>(outerCatch.LocalVariables);
-            var catchVariable = list.Find(element => element is ICatchVariableDeclaration);
-            if (catchVariable == null) return false;
-
-            var exception = throwStatementModel.ThrowStatement.Exception as IObjectCreationExpressionNode;
-            if (exception == null) return false;
-
-            var arguments = new List<ICSharpArgumentNode>(exception.ArgumentList.Arguments);
-            var match = arguments.Find(arg =>
-            {
-                var reference = arg.ValueNode as IReferenceExpressionNode;
-                if (reference == null) return false;
-
-                return reference.NameIdentifier.Name.Equals(catchVariable.ShortName);
-            });
-
-            var result = match != null;
-
-            catchModel.IsRethrown = result;
-
-            return result;
+            return false;
+//            var list = new List<IDeclaredElement>(outerCatch.LocalVariables);
+//            var catchVariable = list.Find(element => element is ICatchVariableDeclaration);
+//            if (catchVariable == null) return false;
+//
+//            var exception = throwStatementModel.ThrowStatement.Exception as IObjectCreationExpressionNode;
+//            if (exception == null) return false;
+//
+//            var arguments = new List<ICSharpArgumentNode>(exception.ArgumentList.Arguments);
+//            var match = arguments.Find(arg =>
+//            {
+//                var reference = arg.ValueNode as IReferenceExpressionNode;
+//                if (reference == null) return false;
+//
+//                return reference.NameIdentifier.Name.Equals(catchVariable.ShortName);
+//            });
+//
+//            var result = match != null;
+//
+//            catchModel.IsRethrown = result;
+//
+//            return result;
         }
     }
 }

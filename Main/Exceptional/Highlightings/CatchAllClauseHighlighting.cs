@@ -7,9 +7,9 @@ namespace CodeGears.ReSharper.Exceptional.Highlightings
     [StaticSeverityHighlighting(Severity.WARNING)]
     public class CatchAllClauseHighlighting : IHighlighting
     {
-        public CatchClauseModel CatchClauseModel { get; set; }
+        internal CatchClauseModel CatchClauseModel { get; set; }
 
-        public CatchAllClauseHighlighting(CatchClauseModel catchClauseModel)
+        internal CatchAllClauseHighlighting(CatchClauseModel catchClauseModel)
         {
             CatchClauseModel = catchClauseModel;
         }

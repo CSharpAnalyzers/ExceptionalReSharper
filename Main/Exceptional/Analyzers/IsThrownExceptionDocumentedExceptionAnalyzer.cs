@@ -11,14 +11,14 @@ namespace CodeGears.ReSharper.Exceptional.Analyzers
 
         private bool Analyze(ThrowStatementModel throwStatementModel)
         {
-            ProcessContext.Instance.AssertMethodDeclaration();
+            if (ProcessContext.Instance.IsValid() == false) return false;
 
             var docCommentBlockNode = ProcessContext.Instance.MethodDeclarationModel.DocCommentBlockModel;
             if(docCommentBlockNode == null) return false;
 
             foreach (var documentedException in docCommentBlockNode.Exceptions)
             {
-                if(throwStatementModel.Throws(documentedException.ExceptionTypeName))
+                if(throwStatementModel.Throws(documentedException.ExceptionType))
                 {
                     return true;
                 }

@@ -4,8 +4,25 @@ namespace ExceptionalSandBox
 {
     public class SandBox
     {
+        /// <summary></summary>
+        /// <exception cref="InvalidOperationException">Test</exception>
+        /// <exception cref="ArgumentException">Test</exception>
+        /// <exception cref="ObjectDisposedException">Test</exception>
+        public void Test13()
+        {
+            try
+            {
+                Console.WriteLine("TRY");
+            }
+            catch (OperationCanceledException)//BAD
+            {
+                Console.WriteLine("TRY");
+                throw;//BAD
+            }
+        }
 
-//
+
+
 //        public void Test08()
 //        {
 //            try
@@ -18,22 +35,7 @@ namespace ExceptionalSandBox
 //                Console.WriteLine("CATCH");
 //            }
 //        }
-//
-//        /// <exception cref="InvalidOperationException">Test</exception>//OK
-//        public void Test09()
-//        {
-//            try
-//            {
-//                Console.WriteLine("TRY");
-//            }
-//            //We are catching Exception type and this is not recommended.
-//            catch (Exception ex)//BAD
-//            {
-//                //We are throwing InvalidOperationexception that is correctly documented and contains inner exception.
-//                throw new InvalidOperationException("Test", ex);//OK
-//            }
-//        }
-//
+
 //        public void Test10()
 //        {
 //            try
@@ -42,7 +44,7 @@ namespace ExceptionalSandBox
 //            }
 //            catch (OperationCanceledException ex)//OK
 //            {
-//                try
+//                try 
 //                {
 //                    //We are throwing InvalidOperationexception that is correctly documented and contains inner exception.
 //                    throw new InvalidOperationException("Test", ex);//OK
@@ -51,7 +53,7 @@ namespace ExceptionalSandBox
 //                catch (InvalidOperationException) { }//BAD
 //            }
 //        }
-//
+
 //        public void Test11()
 //        {
 //            try
@@ -78,19 +80,8 @@ namespace ExceptionalSandBox
 //                throw;//BAD
 //            }
 //        }
-//
-//        public void Test13()
-//        {
-//            try
-//            {
-//                Console.WriteLine("TRY");
-//            }
-//            catch (InvalidOperationException ex)//OK
-//            {
-//                //We are throwing but the exception is not documented.
-//                throw new InvalidOperationException("Message", ex);//BAD
-//            }
-//        }
+
+        
 
 //        /// <summary></summary>
 //        /// <exception cref="InvalidOperationException">Test</exception>
@@ -124,51 +115,51 @@ namespace ExceptionalSandBox
 //            }
 //        }
 //
-        /// <exception cref="InvalidOperationException">Test</exception>//OK
-        public void Test16()
-        {
-            try
-            {
-                throw new OperationCanceledException();//OK
-            }
-            //All ecxeptions thrown from inside of catch clause that do not 
-            //have a variable defined are reported as missing inner exception.
-            catch (OperationCanceledException)//BAD
-            {
-                throw new InvalidOperationException();//BAD
-            }
-        }
-
-        /// <exception cref="InvalidOperationException">Test</exception>//OK
-        public void Test17()
-        {
-            try
-            {
-                throw new OperationCanceledException();//OK
-            }
-            //All ecxeptions thrown from inside of catch clause that do not 
-            //have a variable defined are reported as missing inner exception.
-            catch (OperationCanceledException exmy)//BAD
-            {
-                throw new InvalidOperationException();//BAD
-            }
-        }
-
-        /// <exception cref="InvalidOperationException">Test</exception>//OK
-        public void Test18()
-        {
-            try
-            {
-                throw new OperationCanceledException();//OK
-            }
-            //All ecxeptions thrown from inside of catch clause that do not 
-            //have a variable defined are reported as missing inner exception.
-            catch//BAD
-            {
-                //FIX: should add (Exception e) to the catch an proper parameters to throw.
-                throw new InvalidOperationException();//BAD
-            }
-        }
+//        /// <exception cref="InvalidOperationException">Test</exception>//OK
+//        public void Test16() 
+//        {
+//            try
+//            {
+//                throw new OperationCanceledException();//OK
+//            }
+//            //All ecxeptions thrown from inside of catch clause that do not 
+//            //have a variable defined are reported as missing inner exception.
+//            catch (OperationCanceledException)//BAD
+//            {
+//                throw new InvalidOperationException();//BAD
+//            }
+//        }
+//
+//        /// <exception cref="InvalidOperationException">Test</exception>//OK
+//        public void Test17()
+//        {
+//            try
+//            {
+//                throw new OperationCanceledException();//OK
+//            }
+//            //All ecxeptions thrown from inside of catch clause that do not 
+//            //have a variable defined are reported as missing inner exception.
+//            catch (OperationCanceledException exmy)//BAD
+//            {
+//                throw new InvalidOperationException();//BAD
+//            }
+//        }
+//
+//        /// <exception cref="InvalidOperationException">Test</exception>//OK
+//        public void Test18()
+//        {
+//            try
+//            {
+//                throw new OperationCanceledException();//OK
+//            }
+//            //All ecxeptions thrown from inside of catch clause that do not 
+//            //have a variable defined are reported as missing inner exception.
+//            catch//BAD
+//            {
+//                //FIX: should add (Exception e) to the catch an proper parameters to throw.
+//                throw new InvalidOperationException();//BAD
+//            }
+//        }
 
 //        /// <exception cref="Exception">Test</exception>//OK
 //        public void Test17()

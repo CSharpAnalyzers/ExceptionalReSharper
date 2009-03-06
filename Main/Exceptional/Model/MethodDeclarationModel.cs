@@ -5,25 +5,35 @@
 using System.Collections.Generic;
 using CodeGears.ReSharper.Exceptional.Analyzers;
 using JetBrains.ReSharper.Daemon.CSharp.Stages;
+using JetBrains.ReSharper.Psi;
 using JetBrains.ReSharper.Psi.CSharp.Tree;
 using JetBrains.ReSharper.Psi.Tree;
 
 namespace CodeGears.ReSharper.Exceptional.Model
 {
     /// <summary>Stores data about processed <see cref="IMethodDeclaration"/></summary>
-    public class MethodDeclarationModel : ModelBase
+    internal class MethodDeclarationModel : ModelBase, IBlockModel
     {
         public IMethodDeclaration MethodDeclaration { get; set; }
         public DocCommentBlockModel DocCommentBlockModel { get; private set; }
         public List<TryStatementModel> TryStatementModels { get; private set; }
-        public List<CatchClauseModel> CatchClauseModels { get; private set; }
         public List<ThrowStatementModel> ThrowStatementModels { get; private set; }
+        public IBlockModel ParentBlock { get; set; }
 
-        public MethodDeclarationModel(IMethodDeclaration methodDeclaration)
+        public bool CatchesException(IDeclaredType exception)
+        {
+            return false;
+        }
+
+        public IDeclaredType GetCatchedException()
+        {
+            return null;
+        }
+
+        public MethodDeclarationModel(IMethodDeclaration methodDeclaration) : base(null)
         {
             MethodDeclaration = methodDeclaration;
             TryStatementModels = new List<TryStatementModel>();
-            CatchClauseModels = new List<CatchClauseModel>();
             ThrowStatementModels = new List<ThrowStatementModel>();
         }
 
@@ -40,17 +50,14 @@ namespace CodeGears.ReSharper.Exceptional.Model
             var docCommentBlockNode = docCommentBlockOwner.GetDocCommentBlockNode();
             if (docCommentBlockNode == null) return;
             
-            this.DocCommentBlockModel = new DocCommentBlockModel(docCommentBlockNode);
+            this.DocCommentBlockModel = new DocCommentBlockModel(this, docCommentBlockNode);
         }
 
         public override void AssignHighlights(CSharpDaemonStageProcessBase process)
         {
-            if(this.DocCommentBlockModel != null)
-                this.DocCommentBlockModel.AssignHighlights(process);
-
-            foreach (var catchClauseModel in this.CatchClauseModels)
+            foreach (var tryStatementModel in this.TryStatementModels)
             {
-                catchClauseModel.AssignHighlights(process);
+                tryStatementModel.AssignHighlights(process);
             }
 
             foreach (var throwStatementModel in this.ThrowStatementModels)
@@ -58,31 +65,34 @@ namespace CodeGears.ReSharper.Exceptional.Model
                 throwStatementModel.AssignHighlights(process);
             }
 
-            foreach (var tryStatementModel in this.TryStatementModels)
+            if (this.DocCommentBlockModel != null)
             {
-                tryStatementModel.AssignHighlights(process);
+                this.DocCommentBlockModel.AssignHighlights(process);
             }
         }
 
         public override void Accept(AnalyzerBase analyzerBase)
         {
-            if (this.DocCommentBlockModel != null)
-                this.DocCommentBlockModel.Accept(analyzerBase);
-
-            foreach (var catchClauseModel in this.CatchClauseModels)
+            foreach (var tryStatementModel in this.TryStatementModels)
             {
-                catchClauseModel.Accept(analyzerBase);
+                tryStatementModel.Accept(analyzerBase);
             }
-
+            
             foreach (var throwStatementModel in this.ThrowStatementModels)
             {
                 throwStatementModel.Accept(analyzerBase);
             }
 
-            foreach (var tryStatementModel in this.TryStatementModels)
+            if (this.DocCommentBlockModel != null)
             {
-                tryStatementModel.Accept(analyzerBase);
+                this.DocCommentBlockModel.Accept(analyzerBase);
             }
+        }
+
+        public void Add(TryStatementModel tryStatementModel)
+        {
+            this.TryStatementModels.Add(tryStatementModel);
+            tryStatementModel.ParentBlock = this;
         }
     }
 }

@@ -34,28 +34,28 @@ namespace CodeGears.ReSharper.Exceptional.QuickFixes
 //                var executeTemplateForMessage = false;
 //                var executeTemplateForException = false;
 
-                PsiManager.GetInstance(solution).DoTransaction(
-                    delegate
-                    {
-                        if (model.ExceptionCreationModel.HasMessage == false)
-                        {
-                            model.ExceptionCreationModel.AddMessage();
-                        }
+                //PsiManager.GetInstance(solution).DoTransaction(
+                //    delegate
+                //    {
+                //        if (model.ExceptionCreationModel.HasMessage == false)
+                //        {
+                //            model.ExceptionCreationModel.AddMessage();
+                //        }
 
-                        if (model.ExceptionCreationModel.HasInnerException == false)
-                        {
-                            if (model.OuterCatchClauseModel.HasVariable == false)
-                            {
-                                model.ExceptionCreationModel.AddInnerException("e");
-                                model.OuterCatchClauseModel.AddVariable();
-                            }
-                            else
-                            {
-                                var variableModel = model.OuterCatchClauseModel.VariableModel;
-                                model.ExceptionCreationModel.AddInnerException(variableModel.VariableName.Name);
-                            }
-                        }
-                    });
+                //        if (model.ExceptionCreationModel.HasInnerException == false)
+                //        {
+                //            if (model.OuterCatchClauseModel.HasVariable == false)
+                //            {
+                //                model.ExceptionCreationModel.AddInnerException("e");
+                //                model.OuterCatchClauseModel.AddVariable();
+                //            }
+                //            else
+                //            {
+                //                var variableModel = model.OuterCatchClauseModel.VariableModel;
+                //                model.ExceptionCreationModel.AddInnerException(variableModel.VariableName.Name);
+                //            }
+                //        }
+                //    });
 
 //                if (executeTemplateForMessage || executeTemplateForException)
 //                {

@@ -1,5 +1,4 @@
 using CodeGears.ReSharper.Exceptional.Model;
-using JetBrains.ReSharper.Psi;
 
 namespace CodeGears.ReSharper.Exceptional.Analyzers
 {
@@ -7,22 +6,22 @@ namespace CodeGears.ReSharper.Exceptional.Analyzers
     {
         public override void Visit(ThrowStatementModel throwStatementModel)
         {
-            throwStatementModel.IsCatched = Analyze(throwStatementModel);
+            throwStatementModel.IsCatched = AnalyzeIfCatched(throwStatementModel);
+            throwStatementModel.IsDocumented = AnalyzeIfDocumented(throwStatementModel);
         }
 
-        private bool Analyze(ThrowStatementModel throwStatementModel)
+        private static bool AnalyzeIfDocumented(ThrowStatementModel throwStatementModel)
         {
-            ProcessContext.Instance.AssertMethodDeclaration();
+            if (ProcessContext.Instance.IsValid() == false) return false;
 
-            var exception = GetThrownExceptionType(throwStatementModel);
-            if (exception == null) return false;
+            var docCommentBlockNode = ProcessContext.Instance.MethodDeclarationModel.DocCommentBlockModel;
+            if (docCommentBlockNode == null) return false;
 
-            var tryStatementModelsStack =  ProcessContext.Instance.TryStatementModelsStack;
-
-            foreach (var tryStatementModel in tryStatementModelsStack)
+            foreach (var exceptionDocumentationModel in docCommentBlockNode.Exceptions)
             {
-                if (tryStatementModel.Catches(exception))
+                if(throwStatementModel.Throws(exceptionDocumentationModel.ExceptionType))
                 {
+                    exceptionDocumentationModel.IsThrown |= throwStatementModel.IsCatched == false;
                     return true;
                 }
             }
@@ -30,19 +29,14 @@ namespace CodeGears.ReSharper.Exceptional.Analyzers
             return false;
         }
 
-        private static IDeclaredType GetThrownExceptionType(ThrowStatementModel throwStatementModel)
+        private static bool AnalyzeIfCatched(ThrowStatementModel throwStatementModel)
         {
-            if (throwStatementModel.IsRethrow)
-            {
-                var catchClauseModelsStack = ProcessContext.Instance.CatchClauseModelsStack;
+            if (ProcessContext.Instance.IsValid() == false) return false;
 
-                if (catchClauseModelsStack.Count == 0) return null;
-                var outerCatchClause = catchClauseModelsStack.Peek();
+            var exception = throwStatementModel.ExceptionType;
+            if (exception == null) return false;
 
-                return outerCatchClause.CatchClause.ExceptionType;
-            }
-
-            return throwStatementModel.ExceptionType;
+            return throwStatementModel.ContainingBlockModel.CatchesException(exception);
         }
     }
 }

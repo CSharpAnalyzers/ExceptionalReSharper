@@ -7,9 +7,9 @@ namespace CodeGears.ReSharper.Exceptional.Highlightings
     [StaticSeverityHighlighting(Severity.WARNING)]
     public class ExceptionNotThrownHighlighting : IHighlighting
     {
-        public ExceptionDocumentationModel ExceptionDocumentationModel { get; set; }
+        internal ExceptionDocumentationModel ExceptionDocumentationModel { get; set; }
 
-        public ExceptionNotThrownHighlighting(ExceptionDocumentationModel exceptionDocumentationModel)
+        internal ExceptionNotThrownHighlighting(ExceptionDocumentationModel exceptionDocumentationModel)
         {
             ExceptionDocumentationModel = exceptionDocumentationModel;
         }
@@ -26,7 +26,7 @@ namespace CodeGears.ReSharper.Exceptional.Highlightings
 
         private string Message
         {
-            get { return String.Format(Resources.HighLightNotThrownDocumentedExceptions, this.ExceptionDocumentationModel.ExceptionTypeName); }
+            get { return String.Format(Resources.HighLightNotThrownDocumentedExceptions, this.ExceptionDocumentationModel.ExceptionType.GetCLRName()); }
         }
 
         public int NavigationOffsetPatch

@@ -5,6 +5,7 @@
 using System;
 using System.Xml;
 using JetBrains.DocumentModel;
+using JetBrains.ProjectModel;
 using JetBrains.ReSharper.Psi.CSharp;
 using JetBrains.ReSharper.Psi.CSharp.Tree;
 using JetBrains.ReSharper.Psi.ExtensionsAPI;
@@ -63,6 +64,16 @@ namespace CodeGears.ReSharper.Exceptional
             var commentResult = CSharpElementFactory.GetInstance(memberDeclaration.GetProject()).CreateTypeMemberDeclaration(result) as IDocCommentBlockOwnerNode;
 
             SharedImplUtil.SetDocCommentBlockNode(memberDeclaration, commentResult.GetDocCommentBlockNode());
+        }
+
+        public static IDocCommentBlockNode CreateDocComment(string commentText, IProject project)
+        {
+            commentText += Environment.NewLine + " public void foo() {}";
+
+            var commentResult = CSharpElementFactory.GetInstance(project).CreateTypeMemberDeclaration(commentText) as IDocCommentBlockOwnerNode;
+            if(commentResult == null) return null;
+
+            return commentResult.GetDocCommentBlockNode();
         }
     }
 }

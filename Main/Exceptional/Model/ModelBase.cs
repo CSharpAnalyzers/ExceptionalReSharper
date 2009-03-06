@@ -3,11 +3,13 @@ using JetBrains.ReSharper.Daemon.CSharp.Stages;
 
 namespace CodeGears.ReSharper.Exceptional.Model
 {
-    public class ModelBase
+    internal abstract class ModelBase
     {
-        public MethodDeclarationModel Parent
+        public MethodDeclarationModel MethodDeclarationModel { get; private set; }
+
+        protected ModelBase(MethodDeclarationModel methodDeclarationModel)
         {
-            get { return ProcessContext.Instance.MethodDeclarationModel; }
+            MethodDeclarationModel = methodDeclarationModel;
         }
 
         public virtual void AssignHighlights(CSharpDaemonStageProcessBase process) {}

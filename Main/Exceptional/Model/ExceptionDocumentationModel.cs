@@ -1,59 +1,82 @@
 using System;
+using System.Text.RegularExpressions;
 using System.Xml;
 using CodeGears.ReSharper.Exceptional.Analyzers;
 using CodeGears.ReSharper.Exceptional.Highlightings;
 using JetBrains.DocumentModel;
 using JetBrains.ReSharper.Daemon.CSharp.Stages;
+using JetBrains.ReSharper.Psi;
+using JetBrains.ReSharper.Psi.CSharp.Tree;
 using JetBrains.ReSharper.Psi.Tree;
 
 namespace CodeGears.ReSharper.Exceptional.Model
 {
-    public class ExceptionDocumentationModel : ModelBase
+    internal class ExceptionDocumentationModel : ModelBase
     {
-        /// <summary>Containing <see cref="IDocCommentBlockNode"/>.</summary>
-        public IDocCommentBlockNode DocCommentBlockNode { get; private set; }
+        private readonly ICSharpCommentNode _;
+        public DocCommentBlockModel DocCommentBlockModel { get; private set; }
+        public ICSharpCommentNode CommentNode { get; set; }
 
         /// <summary>Exception documentation xml node.</summary>
-        public XmlNode ExceptionNode { get; private set; }
+        //public XmlNode ExceptionNode { get; private set; }
 
-        /// <summary>Exception type name.</summary>
-        public string ExceptionTypeName { get; private set; }
+        /// <summary>Exception type.</summary>
+        public IDeclaredType ExceptionType { get; private set; }
 
         /// <summary>Exception documentation tab <see cref="DocumentRange"/>.</summary>
-        public DocumentRange DocumentRange { get; private set; }
+        public DocumentRange DocumentRange
+        {
+            get { return this.CommentNode.GetDocumentRange(); }
+        }
 
         /// <summary>States that documented exception is actually thrown from documented method.</summary>
         public bool IsThrown { get; set; }
 
-        public ExceptionDocumentationModel(IDocCommentBlockNode docCommentBlockNode, XmlNode exceptionNode) 
+        public ExceptionDocumentationModel(MethodDeclarationModel methodDeclarationModel, ICSharpCommentNode commentNode)
+            : base(methodDeclarationModel)
         {
-            DocCommentBlockNode = docCommentBlockNode;
-            ExceptionNode = exceptionNode;
-            IsThrown = true;
+            DocCommentBlockModel = methodDeclarationModel.DocCommentBlockModel;
+            CommentNode = commentNode;
+            IsThrown = false;
 
             InitializeException();
-            InitializeDocumentRange();
+            //InitializeDocumentRange();
         }
 
-        private void InitializeDocumentRange()
-        {
-            this.DocumentRange = XmlDocCommentHelper.FindRangeOfExceptionTag(this.ExceptionNode, this.ExceptionTypeName, this.DocCommentBlockNode);
-        }
+//        private void InitializeDocumentRange()
+//        {
+//            if(this.ExceptionType != null)
+//            {
+//                this.DocumentRange = XmlDocCommentHelper.FindRangeOfExceptionTag(this.ExceptionNode, this.ExceptionType.GetCLRName(), this.DocCommentBlockModel.DocCommentNode);
+//            }
+//            else
+//            {
+//                this.DocumentRange = DocumentRange.InvalidRange;
+//            }
+//        }
 
         private void InitializeException()
         {
-            var attribute = this.ExceptionNode.Attributes["cref"];
-            if (attribute == null) return;
+            var regEx = new Regex("cref=\"(?<exception>[^\"]+)\"");
+            var match = regEx.Match(this.CommentNode.CommentText);
 
-            if (String.IsNullOrEmpty(attribute.Value)) return;
+            var exceptionType = match.Groups["exception"].Value;
 
-            this.ExceptionTypeName = attribute.Value;
-
-            if (this.ExceptionTypeName.StartsWith("T:") || this.ExceptionTypeName.StartsWith("!:"))
+            if (exceptionType.StartsWith("T:") || exceptionType.StartsWith("!:"))
             {
-                this.ExceptionTypeName = this.ExceptionTypeName.Substring(2);
+                exceptionType = exceptionType.Substring(2);
             }
+
+            this.ExceptionType = GetType(exceptionType);
         }
+
+        private IDeclaredType GetType(string exceptionType)
+        {
+            var solution = this.DocCommentBlockModel.DocCommentNode.GetProject().GetSolution();
+            return TypesFactory.CreateDeclaredType(solution, exceptionType);
+        }
+
+        #region Assings & Accepts
 
         public override void AssignHighlights(CSharpDaemonStageProcessBase process)
         {
@@ -66,6 +89,12 @@ namespace CodeGears.ReSharper.Exceptional.Model
         public override void Accept(AnalyzerBase analyzerBase)
         {
             analyzerBase.Visit(this);
+        }
+        #endregion
+
+        public void Remove()
+        {
+            this.DocCommentBlockModel.Remove(this);
         }
     }
 }

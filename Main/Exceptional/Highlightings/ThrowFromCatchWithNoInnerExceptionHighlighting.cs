@@ -7,9 +7,9 @@ namespace CodeGears.ReSharper.Exceptional.Highlightings
     [StaticSeverityHighlighting(Severity.WARNING)]
     public class ThrowFromCatchWithNoInnerExceptionHighlighting : IHighlighting
     {
-        public ThrowStatementModel ThrowStatementModel { get; set; }
+        internal ThrowStatementModel ThrowStatementModel { get; set; }
 
-        public ThrowFromCatchWithNoInnerExceptionHighlighting(ThrowStatementModel throwStatementModel)
+        internal ThrowFromCatchWithNoInnerExceptionHighlighting(ThrowStatementModel throwStatementModel)
         {
             ThrowStatementModel = throwStatementModel;
         }

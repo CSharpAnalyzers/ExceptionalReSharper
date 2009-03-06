@@ -2,7 +2,6 @@
 ///   Copyright (c) CodeGears. All rights reserved.
 /// </copyright>
 
-using CodeGears.ReSharper.Exceptional.Model;
 using JetBrains.ReSharper.Daemon;
 using JetBrains.ReSharper.Daemon.CSharp.Stages;
 using JetBrains.ReSharper.Psi.CSharp.Tree;
@@ -31,10 +30,7 @@ namespace CodeGears.ReSharper.Exceptional
         {
             if (element is IMethodDeclaration)
             {
-                var methodDeclaration = element as IMethodDeclaration;
-
-                ProcessContext.Instance.MethodDeclarationModel = new MethodDeclarationModel(methodDeclaration);
-                ProcessContext.Instance.MethodDeclarationModel.Initialize();
+                ProcessContext.Instance.StartProcess(element as IMethodDeclaration);
             }
             else if (element is ITryStatement)
             {
@@ -43,6 +39,10 @@ namespace CodeGears.ReSharper.Exceptional
             else if(element is ICatchClause)
             {
                 ProcessContext.Instance.EnterCatchClause(element as ICatchClause);
+            }
+            else if(element is ICSharpCommentNode)
+            {
+                ProcessContext.Instance.Process(element as ICSharpCommentNode);
             }
         }
 
@@ -68,30 +68,12 @@ namespace CodeGears.ReSharper.Exceptional
 
         public override void VisitThrowStatement(IThrowStatement throwStatement)
         {
-            var model = new ThrowStatementModel(throwStatement);
-            ProcessContext.Instance.Process(model);
+            ProcessContext.Instance.Process(throwStatement);
         }
 
         public override void VisitCatchVariableDeclaration(ICatchVariableDeclaration catchVariableDeclaration)
         {
-            var model = new CatchVariableModel(catchVariableDeclaration);
-            ProcessContext.Instance.Process(model);
-        }
-
-        public override void VisitMethodDeclaration(IMethodDeclaration methodDeclaration)
-        {
-        }
-
-        public override void VisitGeneralCatchClause(IGeneralCatchClause generalCatchClause)
-        {
-        }
-
-        public override void VisitSpecificCatchClause(ISpecificCatchClause specificCatchClause)
-        {
-        }
-
-        public override void VisitTryStatement(ITryStatement tryStatement)
-        {
+            ProcessContext.Instance.Process(catchVariableDeclaration);
         }
     }
 }

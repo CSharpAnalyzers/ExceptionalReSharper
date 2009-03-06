@@ -1,39 +1,37 @@
+using System.Collections.Generic;
 using CodeGears.ReSharper.Exceptional.Analyzers;
 using CodeGears.ReSharper.Exceptional.Highlightings;
 using JetBrains.ReSharper.Daemon.CSharp.Stages;
 using JetBrains.ReSharper.Psi;
-using JetBrains.ReSharper.Psi.CSharp;
 using JetBrains.ReSharper.Psi.CSharp.Tree;
-using JetBrains.Util;
 
 namespace CodeGears.ReSharper.Exceptional.Model
 {
-    public class CatchClauseModel : ModelBase
+    internal abstract class CatchClauseModel : ModelBase, IBlockModel
     {
         public CatchVariableModel VariableModel { get; set; }
 
-        public ICatchClause CatchClause { get; private set; }
+        protected ICatchClause CatchClause { get; set; }
 
-        private ICatchClauseNode CatchClauseNode
+        protected ICatchClauseNode CatchClauseNode
         {
             get { return this.CatchClause as ICatchClauseNode; }
         }
 
-        private IGeneralCatchClause GeneralCatchClause
+        public List<ThrowStatementModel> ThrowStatementModels { get; private set; }
+        public List<TryStatementModel> TryStatementModels { get; private set; }
+
+        public IBlockModel ParentBlock { get; set; }
+
+        public bool CatchesException(IDeclaredType exception)
         {
-            get { return this.CatchClause as IGeneralCatchClause; }
+            return this.ParentBlock.CatchesException(exception);
         }
 
-        private ISpecificCatchClause SpecificCatchClause
-        {
-            get { return this.CatchClause as ISpecificCatchClause; }
-        }
-
-        private ISpecificCatchClauseNode SpecificCatchClauseNode
-        {
-            get { return this.CatchClause as ISpecificCatchClauseNode; }
-        }
-
+        public abstract IDeclaredType GetCatchedException();
+        public abstract void AddVariable();
+        public abstract bool Catches(IDeclaredType exception);
+        
         public bool IsCatchAll { get; private set; }
         public bool IsRethrown { get; set; }
 
@@ -42,14 +40,23 @@ namespace CodeGears.ReSharper.Exceptional.Model
             get { return this.VariableModel != null; }
         }
 
-        public CatchClauseModel(ICatchClause catchClause)
+        public abstract bool HasExceptionType { get; }
+
+        protected CatchClauseModel(MethodDeclarationModel methodDeclarationModel, ICatchClause catchClause)
+            : base(methodDeclarationModel)
         {
             CatchClause = catchClause;
+            ThrowStatementModels = new List<ThrowStatementModel>();
+            TryStatementModels = new List<TryStatementModel>();
 
-            this.IsCatchAll = catchClause.ExceptionType == null || catchClause.ExceptionType.GetCLRName().Equals("System.Exception");
+            this.IsCatchAll = false;
+            this.IsRethrown = true;
+            //this.IsCatchAll = catchClause.ExceptionType == null || catchClause.ExceptionType.GetCLRName().Equals("System.Exception");
         }
 
-        public void AssignHighlights(CSharpDaemonStageProcessBase process)
+        #region Assigns & Accepts
+
+        public override void AssignHighlights(CSharpDaemonStageProcessBase process)
         {
             if (this.IsCatchAll)
             {
@@ -62,52 +69,32 @@ namespace CodeGears.ReSharper.Exceptional.Model
                 var treeNode = this.CatchClause.ToTreeNode();
                 process.AddHighlighting(treeNode.CatchKeyword.GetDocumentRange(), new SwallowedExceptionsHighlighting(this));
             }
+
+            foreach (var tryStatementModel in this.TryStatementModels)
+            {
+                tryStatementModel.AssignHighlights(process);
+            }
+
+            foreach (var throwStatementModel in this.ThrowStatementModels)
+            {
+                throwStatementModel.AssignHighlights(process);
+            }
         }
 
-        public void Accept(AnalyzerBase analyzerBase)
+        public override void Accept(AnalyzerBase analyzerBase)
         {
             analyzerBase.Visit(this);
-        }
 
-        public TextRange GetVariableTextRange()
-        {
-            return TextRange.InvalidRange;
-        }
-
-        public void AddVariable()
-        {
-            if (this.HasVariable) return;
-
-            var codeFactory = new CodeElementFactory(this.CatchClause.GetProject());
-
-            if (this.SpecificCatchClause != null)
+            foreach (var tryStatementModel in this.TryStatementModels)
             {
-                var variableDeclaration =
-                    codeFactory.CreateCatchVariableDeclarationNode(this.SpecificCatchClause.ExceptionType);
-
-                this.SpecificCatchClauseNode.SetExceptionDeclarationNode(variableDeclaration);
-                this.VariableModel = new CatchVariableModel(variableDeclaration);
-            }
-            else if(this.GeneralCatchClause != null)
-            {
-                var newCatch = codeFactory.CreateSpecificCatchClause(null, this.CatchClause.Body);
-                if (newCatch == null) return;
-
-                this.GeneralCatchClause.ReplaceBy(newCatch);
-
-                this.CatchClause = newCatch;
-                this.VariableModel = new CatchVariableModel(newCatch.ExceptionDeclaration);
-            }
-        }
-
-        public bool Catches(IDeclaredType exception)
-        {
-            if(this.CatchClause.ExceptionType != null)
-            {
-                return this.CatchClause.ExceptionType.Equals(exception);
+                tryStatementModel.Accept(analyzerBase);
             }
 
-            return exception.GetCLRName().Equals("System.Exception");
+            foreach (var throwStatementModel in this.ThrowStatementModels)
+            {
+                throwStatementModel.Accept(analyzerBase);
+            }
         }
+        #endregion
     }
 }

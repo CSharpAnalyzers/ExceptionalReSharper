@@ -11,7 +11,7 @@ using JetBrains.Util;
 
 namespace CodeGears.ReSharper.Exceptional
 {
-    public class ProcessContext
+    internal class ProcessContext
     {
         private static ProcessContext instance;
         public static ProcessContext Instance
@@ -27,92 +27,121 @@ namespace CodeGears.ReSharper.Exceptional
             }
         }
 
-        public MethodDeclarationModel MethodDeclarationModel { get; set; }
-        public Stack<TryStatementModel> TryStatementModelsStack { get; set; }
-        public Stack<CatchClauseModel> CatchClauseModelsStack { get; set; }
+        private static readonly List<AnalyzerBase> _analyzers = new List<AnalyzerBase>(
+            new AnalyzerBase[]
+                {
+                    new IsThrownExceptionCatchedAnalyzer(),
+                    new IsThrownExceptionDocumentedExceptionAnalyzer(),
+                    new HasInnerExceptionFromOuterCatchClauseAnalyzer(),
+                });
+
+        public MethodDeclarationModel MethodDeclarationModel { get; private set; }
+        public Stack<TryStatementModel> TryStatementModelsStack { get; private set; }
+        public Stack<CatchClauseModel> CatchClauseModelsStack { get; private set; }
+        public Stack<IBlockModel> BlockModelsStack { get; private set; }
 
         private ProcessContext()
         {
             this.TryStatementModelsStack = new Stack<TryStatementModel>();
             this.CatchClauseModelsStack = new Stack<CatchClauseModel>();
+            this.BlockModelsStack = new Stack<IBlockModel>();
         }
 
-        public void EnterTryBlock(ITryStatement tryStatement)
+        public void StartProcess(IMethodDeclaration methodDeclaration)
         {
-            AssertMethodDeclaration();
-            if(this.MethodDeclarationModel == null) return;
-
-            var model = new TryStatementModel(tryStatement);
-            this.MethodDeclarationModel.TryStatementModels.Add(model);
-            this.TryStatementModelsStack.Push(model);
+            this.MethodDeclarationModel = new MethodDeclarationModel(methodDeclaration);
+            this.MethodDeclarationModel.Initialize();
+            this.BlockModelsStack.Push(this.MethodDeclarationModel);
         }
 
         public void EndProcess(CSharpDaemonStageProcessBase process)
         {
-            AssertMethodDeclaration();
-            if (this.MethodDeclarationModel == null) return;
+            if (this.IsValid() == false) return;
 
-            var isThrownExceptionDocumentedExceptionAnalyzer = new IsThrownExceptionDocumentedExceptionAnalyzer();
-            this.MethodDeclarationModel.Accept(isThrownExceptionDocumentedExceptionAnalyzer);
-
-            var isDocumentedExceptionThrownAnalyzer = new IsDocumentedExceptionThrownAnalyzer();
-            this.MethodDeclarationModel.Accept(isDocumentedExceptionThrownAnalyzer);
+            foreach (var analyzerBase in _analyzers)
+            {
+                this.MethodDeclarationModel.Accept(analyzerBase);
+            }
 
             this.MethodDeclarationModel.AssignHighlights(process);
+
             instance = null;
+        }
+
+        public void EnterTryBlock(ITryStatement tryStatement)
+        {
+            if (this.IsValid() == false) return;
+            if (tryStatement == null) return;
+            Logger.Assert(this.BlockModelsStack.Count > 0, "[Exceptional] There is no block for try statement.");
+
+            var model = new TryStatementModel(this.MethodDeclarationModel, tryStatement);
+
+            var blockModel = this.BlockModelsStack.Peek();
+            blockModel.TryStatementModels.Add(model);
+            model.ParentBlock = blockModel;
+
+            this.TryStatementModelsStack.Push(model);
+            this.BlockModelsStack.Push(model);
         }
 
         public void LeaveTryBlock()
         {
             this.TryStatementModelsStack.Pop();
+            this.BlockModelsStack.Pop();
         }
 
         public void EnterCatchClause(ICatchClause catchClause)
         {
-            AssertMethodDeclaration();
-            if (this.MethodDeclarationModel == null) return;
+            if (this.IsValid() == false) return;
+            if (catchClause == null) return;
+            Logger.Assert(this.TryStatementModelsStack.Count > 0, "[Exceptional] There is no try statement for catch declaration.");
 
-            //TODO: Do not create this model. Retrieve if from try statement
-            var model = new CatchClauseModel(catchClause);
-            this.MethodDeclarationModel.CatchClauseModels.Add(model);
+            var tryStatementModel = this.TryStatementModelsStack.Peek();
+
+            var model = (catchClause is ISpecificCatchClauseNode) ? (CatchClauseModel)new SpecificCatchClauseModel(this.MethodDeclarationModel, catchClause) : new GeneralCatchClauseModel(this.MethodDeclarationModel, catchClause);
+            model.ParentBlock = tryStatementModel.ParentBlock;
+            tryStatementModel.CatchClauseModels.Add(model);
             this.CatchClauseModelsStack.Push(model);
+            this.BlockModelsStack.Push(model);
         }
 
         public void LeaveCatchClause()
         {
             this.CatchClauseModelsStack.Pop();
+            this.BlockModelsStack.Pop();
         }
 
-        public void Process(ThrowStatementModel throwStatementModel)
+        public void Process(IThrowStatement throwStatement)
         {
-            AssertMethodDeclaration();
-            if (this.MethodDeclarationModel == null) return;
+            if (this.IsValid() == false) return;
+            if (throwStatement == null) return;
+            Logger.Assert(this.BlockModelsStack.Count > 0, "[Exceptional] There is no block for throw statement.");
 
-            if (throwStatementModel == null) return;
-
-            var catchedVisitor = new IsThrownExceptionCatchedAnalyzer();
-            throwStatementModel.Accept(catchedVisitor);
-
-            var visitor = new HasInnerExceptionFromOuterCatchClauseAnalyzer();
-            throwStatementModel.Accept(visitor);
-
-            this.MethodDeclarationModel.ThrowStatementModels.Add(throwStatementModel);
+            new ThrowStatementModel(this.MethodDeclarationModel, throwStatement, this.BlockModelsStack.Peek());
         }
 
-        public void Process(CatchVariableModel catchVariableModel)
+        public void Process(ICatchVariableDeclaration catchVariableDeclaration)
         {
-            AssertMethodDeclaration();
-            if (this.MethodDeclarationModel == null) return;
+            if (this.IsValid() == false) return;
+            if (catchVariableDeclaration == null) return;
 
             Logger.Assert(this.CatchClauseModelsStack.Count > 0, "[Exceptional] There is no catch clause for catch variable declaration.");
 
             var catchClause = this.CatchClauseModelsStack.Peek();
-            catchClause.VariableModel = catchVariableModel;
+            catchClause.VariableModel = new CatchVariableModel(this.MethodDeclarationModel, catchVariableDeclaration);
         }
 
-        public void AssertMethodDeclaration()
+        public bool IsValid()
         {
-            Logger.Assert(this.MethodDeclarationModel != null, "[Exceptional] Method declaration cannot be null.");
+            return this.MethodDeclarationModel != null;
+        }
+
+        public void Process(ICSharpCommentNode commentNode)
+        {
+            if (commentNode.CommentType != CommentType.DOC_COMMENT) return;
+            if (commentNode.CommentText.Contains("<exception") == false) return;
+
+            new ExceptionDocumentationModel(this.MethodDeclarationModel, commentNode);
         }
     }
 }

@@ -111,7 +111,6 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Analyzers\HasInnerExceptionFromOuterCatchClauseAnalyzer.cs" />
-    <Compile Include="Analyzers\IsDocumentedExceptionThrownAnalyzer.cs" />
     <Compile Include="Analyzers\IsThrownExceptionCatchedAnalyzer.cs" />
     <Compile Include="Analyzers\IsThrownExceptionDocumentedExceptionAnalyzer.cs" />
     <Compile Include="CodeElementFactory.cs" />
@@ -123,8 +122,11 @@
     <Compile Include="Model\DocCommentBlockModel.cs" />
     <Compile Include="Model\ExceptionCreationModel.cs" />
     <Compile Include="Model\ExceptionDocumentationModel.cs" />
+    <Compile Include="Model\GeneralCatchClauseModel.cs" />
+    <Compile Include="Model\IBlockModel.cs" />
     <Compile Include="Model\MethodDeclarationModel.cs" />
     <Compile Include="Model\ModelBase.cs" />
+    <Compile Include="Model\SpecificCatchClauseModel.cs" />
     <Compile Include="Model\ThrowStatementModel.cs" />
     <Compile Include="Analyzers\AnalyzerBase.cs" />
     <Compile Include="Model\TryStatementModel.cs" />
@@ -138,6 +140,7 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
+    <Compile Include="TypesFactory.cs" />
     <Compile Include="XmlDocCommentHelper.cs" />
     <Compile Include="ExceptionalDaemonStageProcess.cs" />
     <Compile Include="ExceptionalDemonStage.cs" />

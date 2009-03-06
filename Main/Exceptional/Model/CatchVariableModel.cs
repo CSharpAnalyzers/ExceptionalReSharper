@@ -2,7 +2,7 @@ using JetBrains.ReSharper.Psi.CSharp.Tree;
 
 namespace CodeGears.ReSharper.Exceptional.Model
 {
-    public class CatchVariableModel : ModelBase
+    internal class CatchVariableModel : ModelBase
     {
         public ICatchVariableDeclaration CatchVariableDeclaration { get; set; }
 
@@ -16,7 +16,8 @@ namespace CodeGears.ReSharper.Exceptional.Model
             get { return this.CatchVariableDeclarationNode.Name; }
         }
 
-        public CatchVariableModel(ICatchVariableDeclaration catchVariableDeclaration)
+        public CatchVariableModel(MethodDeclarationModel methodDeclarationModel, ICatchVariableDeclaration catchVariableDeclaration)
+            : base(methodDeclarationModel)
         {
             CatchVariableDeclaration = catchVariableDeclaration;
         }

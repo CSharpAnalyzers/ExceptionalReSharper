@@ -1,24 +1,32 @@
+/// <copyright file="AnalyzerBase.cs" manufacturer="CodeGears">
+///   Copyright (c) CodeGears. All rights reserved.
+/// </copyright>
+
 using CodeGears.ReSharper.Exceptional.Model;
 
 namespace CodeGears.ReSharper.Exceptional.Analyzers
 {
     /// <summary>A base class for all analyzers.</summary>
-    public abstract class AnalyzerBase
+    internal abstract class AnalyzerBase
     {
-        /// <summary>Perform analyze of throw <paramref name="throwStatementModel"/>.</summary>
-        /// <param name="throwStatementModel">A throw statement model to analyze.</param>
+        /// <summary>Performs analyze of throw <paramref name="throwStatementModel"/>.</summary>
+        /// <param name="throwStatementModel">Throw statement model to analyze.</param>
         public virtual void Visit(ThrowStatementModel throwStatementModel) {}
 
-        /// <summary>Perform analyze of <paramref name="catchAllClauseModel"/>.</summary>
-        /// <param name="catchAllClauseModel">A catch-all clause to analyze.</param>
-        public virtual void Visit(CatchClauseModel catchAllClauseModel) { }
+        /// <summary>Performs analyze of <paramref name="catchClauseModel"/>.</summary>
+        /// <param name="catchClauseModel">Catch clause to analyze.</param>
+        public virtual void Visit(CatchClauseModel catchClauseModel) { }
 
-        /// <summary>Perform analyze of <paramref name="exceptionDocumentationModel"/>.</summary>
+        /// <summary>Performs analyze of <paramref name="exceptionDocumentationModel"/>.</summary>
         /// <param name="exceptionDocumentationModel">Exception documentation to analyze.</param>
         public virtual void Visit(ExceptionDocumentationModel exceptionDocumentationModel) { }
 
-        /// <summary>Perform analyze of <paramref name="docCommentBlockModel"/>.</summary>
+        /// <summary>Performs analyze of <paramref name="docCommentBlockModel"/>.</summary>
         /// <param name="docCommentBlockModel">Documentation to analyze.</param>
         public virtual void Visit(DocCommentBlockModel docCommentBlockModel) { }
+
+        /// <summary>Performs analyze of <paramref name="tryStatementModel"/>.</summary>
+        /// <param name="tryStatementModel">Try statement to analyze.</param>
+        public virtual void Visit(TryStatementModel tryStatementModel) { }
     }
 }

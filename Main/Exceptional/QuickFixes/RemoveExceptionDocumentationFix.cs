@@ -24,9 +24,7 @@ namespace CodeGears.ReSharper.Exceptional.QuickFixes
                 PsiManager.GetInstance(solution).DoTransaction(
                     delegate
                     {
-//                        var documentRange = this.Error.ExceptionDocumentationModel.DocumentRange;
-//                        var commentText = textControl.Document.GetText(documentRange.TextRange);
-//                        XmlDocCommentHelper.RemoveExceptionDocumentation(declaratiopnTreeNode, commentText);
+                        this.Error.ExceptionDocumentationModel.Remove();
                     });
             }
         }

@@ -7,9 +7,9 @@ namespace CodeGears.ReSharper.Exceptional.Highlightings
     [StaticSeverityHighlighting(Severity.WARNING)]
     public class ExceptionNotDocumentedHighlighting : IHighlighting
     {
-        public ThrowStatementModel ThrowStatementModel { get; set; }
+        internal ThrowStatementModel ThrowStatementModel { get; set; }
 
-        public ExceptionNotDocumentedHighlighting(ThrowStatementModel throwStatement)
+        internal ExceptionNotDocumentedHighlighting(ThrowStatementModel throwStatement)
         {
             ThrowStatementModel = throwStatement;
         }
@@ -28,10 +28,9 @@ namespace CodeGears.ReSharper.Exceptional.Highlightings
         {
             get
             {
-                if (this.ThrowStatementModel.ExceptionType == null)
-                    throw new InvalidOperationException("The given exception was null.");
-
-                return String.Format(Resources.HighLightNotDocumentedExceptions, this.ThrowStatementModel.ExceptionType.GetCLRName());
+                var exceptionType = this.ThrowStatementModel.ExceptionType;
+                var exceptionTupeName = exceptionType != null ? exceptionType.GetCLRName() : "[NOT RESOLVED]";
+                return String.Format(Resources.HighLightNotDocumentedExceptions, exceptionTupeName);
             }
         }
 

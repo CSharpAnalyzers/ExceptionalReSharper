@@ -4,7 +4,7 @@ using JetBrains.ReSharper.Psi.CSharp.Tree;
 
 namespace CodeGears.ReSharper.Exceptional.Model
 {
-    public class ExceptionCreationModel : ModelBase
+    internal class ExceptionCreationModel : ModelBase
     {
         public IObjectCreationExpression ObjectCreationExpression { get; set; }
 
@@ -18,7 +18,8 @@ namespace CodeGears.ReSharper.Exceptional.Model
             get { return this.ObjectCreationExpressionNode.ArgumentList.Arguments; }
         }
 
-        public ExceptionCreationModel(IObjectCreationExpression objectCreationExpression)
+        public ExceptionCreationModel(MethodDeclarationModel methodDeclarationModel, IObjectCreationExpression objectCreationExpression)
+            : base(methodDeclarationModel)
         {
             ObjectCreationExpression = objectCreationExpression;
         }
