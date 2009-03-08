@@ -42,38 +42,46 @@ namespace CodeGears.ReSharper.Exceptional.Model
         private void InitializeExceptionsDocumentation()
         {
             DocCommentModel currentModel = null;
+            var exceptionNodeFinished = false;
             for (var currentNode = this.DocCommentNode.FirstChild; currentNode != null; currentNode = currentNode.NextSibling)
             {
-                if ((currentNode is IDocCommentNode) == false) continue;
-                var currentDocCommentNode = currentNode as IDocCommentNode;
+                if(currentNode is IDocCommentNode && exceptionNodeFinished)
+                {
+                    currentModel = null;
+                    exceptionNodeFinished = false;
+                }
+
+                if(currentModel == null)
+                {
+                    currentModel = new GeneralDocCommentModel(this);
+                    this.DocCommentModels.Add(currentModel);
+                }
+
+                if((currentNode is IDocCommentNode) == false)
+                {
+                    currentModel.TreeNodes.Add(currentNode);
+                    continue;
+                }
+
                 var text = currentNode.GetText();
 
                 if (text.Contains("<exception"))
                 {
-                    if (currentModel != null)
-                    {
-                        currentModel.Initialize();
-                    }
+                    currentModel.Initialize();
 
                     currentModel = new ExceptionDocCommentModel(this);
-                    currentModel.AddDocCommentNode(currentDocCommentNode);
                     this.DocCommentModels.Add(currentModel);
+                    currentModel.TreeNodes.Add(currentNode);
                 }
-                else if (text.Contains("</exception>") && currentModel != null)
+                else if (text.Contains("</exception>"))
                 {
-                    currentModel.AddDocCommentNode(currentDocCommentNode);
+                    currentModel.TreeNodes.Add(currentNode);
                     currentModel.Initialize();
-                    currentModel = null;
+                    exceptionNodeFinished = true;
                 }
                 else
                 {
-                    if (currentModel == null)
-                    {
-                        currentModel = new GeneralDocCommentModel(this);
-                        this.DocCommentModels.Add(currentModel);
-                    }
-
-                    currentModel.AddDocCommentNode(currentDocCommentNode);
+                    currentModel.TreeNodes.Add(currentNode);
                 }
             }
 
@@ -124,8 +132,8 @@ namespace CodeGears.ReSharper.Exceptional.Model
             if (exceptionDocCommentModel == null) return;
             if (exceptionDocCommentModel.DocCommentNodes.Count == 0) return;
 
-            var firstNode = exceptionDocCommentModel.DocCommentNodes[0];
-            var lastNode = exceptionDocCommentModel.DocCommentNodes[exceptionDocCommentModel.DocCommentNodes.Count - 1];
+            var firstNode = exceptionDocCommentModel.TreeNodes[0];
+            var lastNode = exceptionDocCommentModel.TreeNodes[exceptionDocCommentModel.TreeNodes.Count - 1];
 
             LowLevelModificationUtil.DeleteChildRange(firstNode, lastNode);
             CSharpCodeFormatter.Instance.Format(this.DocCommentNode, CodeFormatProfile.INDENT);

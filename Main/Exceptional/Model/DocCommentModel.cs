@@ -7,9 +7,10 @@ namespace CodeGears.ReSharper.Exceptional.Model
 {
     internal abstract class DocCommentModel : ModelBase
     {
-        protected DocCommentBlockModel DocCommentBlockModel { get; set; }
-        public List<IDocCommentNode> DocCommentNodes { get; set; }
+        protected DocCommentBlockModel DocCommentBlockModel { get; private set; }
+        public List<IDocCommentNode> DocCommentNodes { get; private set; }
 
+        public List<ITreeNode> TreeNodes { get; private set; }
 
         private DocumentRange _documentRange;
         public override DocumentRange DocumentRange
@@ -21,16 +22,20 @@ namespace CodeGears.ReSharper.Exceptional.Model
             : base(docCommentBlockModel.MethodDeclarationModel)
         {
             DocCommentBlockModel = docCommentBlockModel;
-            this.DocCommentNodes = new List<IDocCommentNode>();
-        }
-
-        public void AddDocCommentNode(IDocCommentNode docCommentNode)
-        {
-            this.DocCommentNodes.Add(docCommentNode);
+            DocCommentNodes = new List<IDocCommentNode>();
+            TreeNodes = new List<ITreeNode>();
         }
 
         public virtual void Initialize()
         {
+            foreach (var treeNode in this.TreeNodes)
+            {
+                if(treeNode is IDocCommentNode)
+                {
+                    this.DocCommentNodes.Add(treeNode as IDocCommentNode);
+                }
+            }
+
             this._documentRange = GetDocCommentRage();
         }
 
