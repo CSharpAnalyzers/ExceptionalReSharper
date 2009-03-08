@@ -41,6 +41,38 @@ namespace CodeGears.ReSharper.Exceptional.Model
             return this.ParentBlock.GetCatchedException();
         }
 
+        public IEnumerable<ThrowStatementModel> ThrowStatementModelsNotCatched
+        {
+            get
+            {
+                foreach (var throwStatementModel in this.ThrowStatementModels)
+                {
+                    if(throwStatementModel.IsCatched == false)
+                    {
+                        yield return throwStatementModel;
+                    }
+                }
+
+                for (var i = 0; i < this.TryStatementModels.Count; i++)
+                {
+                    IBlockModel tryStatementModel = this.TryStatementModels[i];
+                    foreach (var model in tryStatementModel.ThrowStatementModelsNotCatched)
+                    {
+                        yield return model;
+                    }
+                }
+
+                for (var i = 0; i < this.CatchClauseModels.Count; i++)
+                {
+                    IBlockModel catchClauseModel = this.CatchClauseModels[i];
+                    foreach (var model in catchClauseModel.ThrowStatementModelsNotCatched)
+                    {
+                        yield return model;
+                    }
+                }
+            }
+        }
+
         public override void Accept(AnalyzerBase analyzerBase)
         {
             analyzerBase.Visit(this);

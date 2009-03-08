@@ -29,6 +29,29 @@ namespace CodeGears.ReSharper.Exceptional.Model
             return null;
         }
 
+        public IEnumerable<ThrowStatementModel> ThrowStatementModelsNotCatched
+        {
+            get
+            {
+                foreach (var throwStatementModel in this.ThrowStatementModels)
+                {
+                    if(throwStatementModel.IsCatched == false)
+                    {
+                        yield return throwStatementModel;
+                    }
+                }
+
+                for (var i = 0; i < this.TryStatementModels.Count; i++)
+                {
+                    IBlockModel tryStatementModel = this.TryStatementModels[i];
+                    foreach (var model in tryStatementModel.ThrowStatementModelsNotCatched)
+                    {
+                        yield return model;
+                    }
+                }
+            }
+        }
+
         public MethodDeclarationModel(IMethodDeclaration methodDeclaration) : base(null)
         {
             MethodDeclaration = methodDeclaration;

@@ -9,15 +9,22 @@ namespace CodeGears.ReSharper.Exceptional.Analyzers
         public override void Visit(ExceptionDocCommentModel exceptionDocumentationModel)
         {
             if (exceptionDocumentationModel == null) return;
-            if (AnalyzeIfExeptionThrown()) return;
+            if (AnalyzeIfExeptionThrown(exceptionDocumentationModel)) return;
 
             this.Process.AddHighlighting(exceptionDocumentationModel.DocumentRange, new ExceptionNotThrownHighlighting(exceptionDocumentationModel));
         }
 
-        private bool AnalyzeIfExeptionThrown()
+        private static bool AnalyzeIfExeptionThrown(ExceptionDocCommentModel exceptionDocumentationModel)
         {
-            
-            return true;
+            foreach (var throwStatementModel in exceptionDocumentationModel.MethodDeclarationModel.ThrowStatementModelsNotCatched)
+            {
+                if(throwStatementModel.Throws(exceptionDocumentationModel.ExceptionType))
+                {
+                    return true;
+                }
+            }
+
+            return false;
         }
     }
 }

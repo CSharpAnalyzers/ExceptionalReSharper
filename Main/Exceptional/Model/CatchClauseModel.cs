@@ -23,6 +23,30 @@ namespace CodeGears.ReSharper.Exceptional.Model
         public IBlockModel ParentBlock { get; set; }
 
         public abstract IDeclaredType GetCatchedException();
+
+        public IEnumerable<ThrowStatementModel> ThrowStatementModelsNotCatched
+        {
+            get
+            {
+                foreach (var throwStatementModel in this.ThrowStatementModels)
+                {
+                    if (throwStatementModel.IsCatched == false)
+                    {
+                        yield return throwStatementModel;
+                    }
+                }
+
+                for (var i = 0; i < this.TryStatementModels.Count; i++)
+                {
+                    IBlockModel tryStatementModel = this.TryStatementModels[i];
+                    foreach (var model in tryStatementModel.ThrowStatementModelsNotCatched)
+                    {
+                        yield return model;
+                    }
+                }
+            }
+        }
+
         public abstract void AddVariable();
         public abstract bool Catches(IDeclaredType exception);
         
