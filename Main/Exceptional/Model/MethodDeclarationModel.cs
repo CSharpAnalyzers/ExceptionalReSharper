@@ -5,7 +5,9 @@
 using System.Collections.Generic;
 using CodeGears.ReSharper.Exceptional.Analyzers;
 using JetBrains.ReSharper.Psi;
+using JetBrains.ReSharper.Psi.CSharp;
 using JetBrains.ReSharper.Psi.CSharp.Tree;
+using JetBrains.ReSharper.Psi.ExtensionsAPI;
 using JetBrains.ReSharper.Psi.Tree;
 
 namespace CodeGears.ReSharper.Exceptional.Model
@@ -97,6 +99,22 @@ namespace CodeGears.ReSharper.Exceptional.Model
         {
             this.TryStatementModels.Add(tryStatementModel);
             tryStatementModel.ParentBlock = this;
+        }
+
+        private void AddDocComment()
+        {
+            var docCommentBlockNode = CSharpElementFactory.GetInstance(this.MethodDeclaration.GetProject()).CreateDocComment("<summary></summary>");
+            SharedImplUtil.SetDocCommentBlockNode(this.MethodDeclaration.ToTreeNode(), docCommentBlockNode);
+
+            InitializeDocCommentBlockModel();
+        }
+
+        public void EnsureHasDocComment()
+        {
+            if (this.DocCommentBlockModel == null)
+            {
+                AddDocComment();
+            }
         }
     }
 }

@@ -32,8 +32,13 @@ namespace CodeGears.ReSharper.Exceptional.QuickFixes
                 PsiManager.GetInstance(solution).DoTransaction(
                     delegate
                         {
-                            var docCommentModel = this.Error.ThrowStatementModel.MethodDeclarationModel.DocCommentBlockModel;
-                            docCommentModel.AddExceptionDocumentation(this.Error.ThrowStatementModel.ExceptionType);
+                            var methodDeclaration = this.Error.ThrowStatementModel.MethodDeclarationModel;
+                            methodDeclaration.EnsureHasDocComment();
+                            
+                            if(methodDeclaration.DocCommentBlockModel != null)
+                            {
+                                methodDeclaration.DocCommentBlockModel.AddExceptionDocumentation(this.Error.ThrowStatementModel.ExceptionType);   
+                            }
                         });
 
 //                if(exceptionCommentRange == TextRange.InvalidRange) return;
