@@ -15,7 +15,7 @@ using TemplateUtil=JetBrains.ReSharper.Intentions.Util.TemplateUtil;
 
 namespace CodeGears.ReSharper.Exceptional.QuickFixes
 {
-    [QuickFix]
+    //[QuickFix]
     internal class IncludeInnerExceptionFix : SingleActionFix
     {
         public ThrowFromCatchWithNoInnerExceptionHighlighting Error { get; set; }

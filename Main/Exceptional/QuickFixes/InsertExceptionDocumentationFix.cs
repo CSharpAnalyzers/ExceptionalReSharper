@@ -27,32 +27,30 @@ namespace CodeGears.ReSharper.Exceptional.QuickFixes
         {
             using (CommandCookie.Create(Resources.QuickFixInsertExceptionDocumentation))
             {
-                var exceptionCommentRange = TextRange.InvalidRange;
+//                var exceptionCommentRange = TextRange.InvalidRange;
 
                 PsiManager.GetInstance(solution).DoTransaction(
                     delegate
                         {
-                            //TODO: Refactor - insert comment node via tree
-                            var model = this.Error.ThrowStatementModel;
-                            var declaratiopnTreeNode = model.ThrowStatement.GetContainingTypeMemberDeclaration().ToTreeNode();
-                            exceptionCommentRange = XmlDocCommentHelper.InsertExceptionDocumentation(declaratiopnTreeNode, model.ExceptionType.GetCLRName());
+                            var docCommentModel = this.Error.ThrowStatementModel.MethodDeclarationModel.DocCommentBlockModel;
+                            docCommentModel.AddExceptionDocumentation(this.Error.ThrowStatementModel.ExceptionType);
                         });
 
-                if(exceptionCommentRange == TextRange.InvalidRange) return;
-
-                var messageSuggestions = new List<string>(new[] { "Thrown when " });
-                var messageTemplateField = new TemplateFieldInfo(new TemplateField("Comment", new ParamNamesExpression(messageSuggestions, messageSuggestions[0]), 0), new[] { exceptionCommentRange });
-                JetBrains.ReSharper.Intentions.Util.TemplateUtil.ExecuteTemplate(solution, textControl, exceptionCommentRange, new[] { messageTemplateField });
-
-                var currentSession = LiveTemplatesController.Instance.CurrentSession;
-                if(currentSession != null)
-                {
-                    currentSession.TemplateSession.Closed +=
-                        delegate
-                            {
-                                textControl.SelectionModel.RemoveSelection();
-                            };
-                }
+//                if(exceptionCommentRange == TextRange.InvalidRange) return;
+//
+//                var messageSuggestions = new List<string>(new[] { "Thrown when " });
+//                var messageTemplateField = new TemplateFieldInfo(new TemplateField("Comment", new ParamNamesExpression(messageSuggestions, messageSuggestions[0]), 0), new[] { exceptionCommentRange });
+//                JetBrains.ReSharper.Intentions.Util.TemplateUtil.ExecuteTemplate(solution, textControl, exceptionCommentRange, new[] { messageTemplateField });
+//
+//                var currentSession = LiveTemplatesController.Instance.CurrentSession;
+//                if(currentSession != null)
+//                {
+//                    currentSession.TemplateSession.Closed +=
+//                        delegate
+//                            {
+//                                textControl.SelectionModel.RemoveSelection();
+//                            };
+//                }
             }
         }
 

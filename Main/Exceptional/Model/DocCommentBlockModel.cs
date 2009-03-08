@@ -1,6 +1,12 @@
+using System;
 using System.Collections.Generic;
 using CodeGears.ReSharper.Exceptional.Analyzers;
+using JetBrains.ReSharper.Psi;
+using JetBrains.ReSharper.Psi.CodeStyle;
+using JetBrains.ReSharper.Psi.CSharp;
+using JetBrains.ReSharper.Psi.CSharp.CodeStyle;
 using JetBrains.ReSharper.Psi.CSharp.Tree;
+using JetBrains.ReSharper.Psi.ExtensionsAPI;
 using JetBrains.ReSharper.Psi.Tree;
 
 namespace CodeGears.ReSharper.Exceptional.Model
@@ -85,6 +91,44 @@ namespace CodeGears.ReSharper.Exceptional.Model
             {
                 docCommentModel.Accept(analyzerBase);
             }
+        }
+
+        public void AddExceptionDocumentation(IDeclaredType exceptionType)
+        {
+            if(exceptionType == null) return;
+
+            var exceptionDocumentation = String.Format("<exception cref=\"{1}\"></exception>{0}", Environment.NewLine, exceptionType.GetCLRName());
+            exceptionDocumentation += exceptionDocumentation;
+            var docCommentBlockNode = CSharpElementFactory.GetInstance(this.DocCommentNode.GetProject()).CreateDocComment(exceptionDocumentation);
+
+            var commentNode = docCommentBlockNode.FirstChild as IDocCommentNode;
+            
+            if(commentNode == null) return;
+
+            var spaces = commentNode.NextSibling;
+
+            if(this.DocCommentNode.LastChild != null)
+            {
+                LowLevelModificationUtil.AddChildAfter(this.DocCommentNode.LastChild, spaces, commentNode);
+            }
+            else
+            {
+                LowLevelModificationUtil.AddChild(this.DocCommentNode, spaces, commentNode);
+            }
+
+            CSharpCodeFormatter.Instance.Format(this.DocCommentNode, CodeFormatProfile.INDENT);
+        }
+
+        public void RemoveExceptionDocumentation(ExceptionDocCommentModel exceptionDocCommentModel)
+        {
+            if (exceptionDocCommentModel == null) return;
+            if (exceptionDocCommentModel.DocCommentNodes.Count == 0) return;
+
+            var firstNode = exceptionDocCommentModel.DocCommentNodes[0];
+            var lastNode = exceptionDocCommentModel.DocCommentNodes[exceptionDocCommentModel.DocCommentNodes.Count - 1];
+
+            LowLevelModificationUtil.DeleteChildRange(firstNode, lastNode);
+            CSharpCodeFormatter.Instance.Format(this.DocCommentNode, CodeFormatProfile.INDENT);
         }
     }
 }

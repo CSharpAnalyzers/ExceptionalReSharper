@@ -1,13 +1,15 @@
 using System.Collections.Generic;
 using JetBrains.DocumentModel;
 using JetBrains.ReSharper.Psi.CSharp.Tree;
+using JetBrains.ReSharper.Psi.Tree;
 
 namespace CodeGears.ReSharper.Exceptional.Model
 {
     internal abstract class DocCommentModel : ModelBase
     {
         protected DocCommentBlockModel DocCommentBlockModel { get; set; }
-        protected List<IDocCommentNode> DocCommentNodes { get; set; }
+        public List<IDocCommentNode> DocCommentNodes { get; set; }
+
 
         private DocumentRange _documentRange;
         public override DocumentRange DocumentRange
@@ -32,7 +34,7 @@ namespace CodeGears.ReSharper.Exceptional.Model
             this._documentRange = GetDocCommentRage();
         }
 
-        private DocumentRange GetDocCommentRage()
+        protected virtual DocumentRange GetDocCommentRage()
         {
             if (this.DocCommentNodes.Count == 0)
                 return DocumentRange.InvalidRange;
