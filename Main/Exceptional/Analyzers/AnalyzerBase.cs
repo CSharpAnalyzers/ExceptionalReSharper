@@ -3,12 +3,15 @@
 /// </copyright>
 
 using CodeGears.ReSharper.Exceptional.Model;
+using JetBrains.ReSharper.Daemon.CSharp.Stages;
 
 namespace CodeGears.ReSharper.Exceptional.Analyzers
 {
     /// <summary>A base class for all analyzers.</summary>
     internal abstract class AnalyzerBase
     {
+        public CSharpDaemonStageProcessBase Process { get; set; }
+
         /// <summary>Performs analyze of throw <paramref name="throwStatementModel"/>.</summary>
         /// <param name="throwStatementModel">Throw statement model to analyze.</param>
         public virtual void Visit(ThrowStatementModel throwStatementModel) {}
@@ -19,7 +22,7 @@ namespace CodeGears.ReSharper.Exceptional.Analyzers
 
         /// <summary>Performs analyze of <paramref name="exceptionDocumentationModel"/>.</summary>
         /// <param name="exceptionDocumentationModel">Exception documentation to analyze.</param>
-        public virtual void Visit(ExceptionDocumentationModel exceptionDocumentationModel) { }
+        public virtual void Visit(ExceptionDocCommentModel exceptionDocumentationModel) { }
 
         /// <summary>Performs analyze of <paramref name="docCommentBlockModel"/>.</summary>
         /// <param name="docCommentBlockModel">Documentation to analyze.</param>

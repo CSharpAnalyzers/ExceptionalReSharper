@@ -5,7 +5,9 @@ namespace ExceptionalSandBox
     public class SandBox
     {
         /// <summary></summary>
-        /// <exception cref="InvalidOperationException">Test</exception>
+        /// <exception cref="InvalidOperationException">
+        /// Test
+        /// </exception>
         /// <exception cref="ArgumentException">Test</exception>
         /// <exception cref="ObjectDisposedException">Test</exception>
         public void Test13()

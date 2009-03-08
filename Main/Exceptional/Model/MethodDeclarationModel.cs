@@ -4,7 +4,6 @@
 
 using System.Collections.Generic;
 using CodeGears.ReSharper.Exceptional.Analyzers;
-using JetBrains.ReSharper.Daemon.CSharp.Stages;
 using JetBrains.ReSharper.Psi;
 using JetBrains.ReSharper.Psi.CSharp.Tree;
 using JetBrains.ReSharper.Psi.Tree;
@@ -51,24 +50,6 @@ namespace CodeGears.ReSharper.Exceptional.Model
             if (docCommentBlockNode == null) return;
             
             this.DocCommentBlockModel = new DocCommentBlockModel(this, docCommentBlockNode);
-        }
-
-        public override void AssignHighlights(CSharpDaemonStageProcessBase process)
-        {
-            foreach (var tryStatementModel in this.TryStatementModels)
-            {
-                tryStatementModel.AssignHighlights(process);
-            }
-
-            foreach (var throwStatementModel in this.ThrowStatementModels)
-            {
-                throwStatementModel.AssignHighlights(process);
-            }
-
-            if (this.DocCommentBlockModel != null)
-            {
-                this.DocCommentBlockModel.AssignHighlights(process);
-            }
         }
 
         public override void Accept(AnalyzerBase analyzerBase)

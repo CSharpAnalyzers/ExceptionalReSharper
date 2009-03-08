@@ -110,9 +110,10 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Analyzers\CatchAllClauseAnalyzer.cs" />
     <Compile Include="Analyzers\HasInnerExceptionFromOuterCatchClauseAnalyzer.cs" />
-    <Compile Include="Analyzers\IsThrownExceptionCatchedAnalyzer.cs" />
-    <Compile Include="Analyzers\IsThrownExceptionDocumentedExceptionAnalyzer.cs" />
+    <Compile Include="Analyzers\IsDocumentedExceptionThrownAnalyzer.cs" />
+    <Compile Include="Analyzers\IsThrownExceptionDocumentedAnalyzer.cs" />
     <Compile Include="CodeElementFactory.cs" />
     <Compile Include="Highlightings\CatchAllClauseHighlighting.cs" />
     <Compile Include="Highlightings\SwallowedExceptionsHighlighting.cs" />
@@ -120,9 +121,11 @@
     <Compile Include="Model\CatchClauseModel.cs" />
     <Compile Include="Model\CatchVariableModel.cs" />
     <Compile Include="Model\DocCommentBlockModel.cs" />
+    <Compile Include="Model\DocCommentModel.cs" />
     <Compile Include="Model\ExceptionCreationModel.cs" />
-    <Compile Include="Model\ExceptionDocumentationModel.cs" />
+    <Compile Include="Model\ExceptionDocCommentModel.cs" />
     <Compile Include="Model\GeneralCatchClauseModel.cs" />
+    <Compile Include="Model\GeneralDocCommentModel.cs" />
     <Compile Include="Model\IBlockModel.cs" />
     <Compile Include="Model\MethodDeclarationModel.cs" />
     <Compile Include="Model\ModelBase.cs" />

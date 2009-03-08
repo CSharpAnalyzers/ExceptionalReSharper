@@ -1,6 +1,5 @@
 using System.Collections.Generic;
 using CodeGears.ReSharper.Exceptional.Analyzers;
-using JetBrains.ReSharper.Daemon.CSharp.Stages;
 using JetBrains.ReSharper.Psi;
 using JetBrains.ReSharper.Psi.CSharp.Tree;
 
@@ -59,24 +58,6 @@ namespace CodeGears.ReSharper.Exceptional.Model
             foreach (var throwStatementModel in this.ThrowStatementModels)
             {
                 throwStatementModel.Accept(analyzerBase);
-            }
-        }
-
-        public override void AssignHighlights(CSharpDaemonStageProcessBase process)
-        {
-            foreach (var innerTryStatementModel in this.TryStatementModels)
-            {
-                innerTryStatementModel.AssignHighlights(process);
-            }
-
-            foreach (var catchClauseModel in this.CatchClauseModels)
-            {
-                catchClauseModel.AssignHighlights(process);
-            }
-
-            foreach (var throwStatementModel in this.ThrowStatementModels)
-            {
-                throwStatementModel.AssignHighlights(process);
             }
         }
     }

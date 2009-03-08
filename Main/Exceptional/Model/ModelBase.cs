@@ -1,5 +1,5 @@
 using CodeGears.ReSharper.Exceptional.Analyzers;
-using JetBrains.ReSharper.Daemon.CSharp.Stages;
+using JetBrains.DocumentModel;
 
 namespace CodeGears.ReSharper.Exceptional.Model
 {
@@ -7,12 +7,13 @@ namespace CodeGears.ReSharper.Exceptional.Model
     {
         public MethodDeclarationModel MethodDeclarationModel { get; private set; }
 
+        public virtual DocumentRange DocumentRange { get { return DocumentRange.InvalidRange; } }
+
         protected ModelBase(MethodDeclarationModel methodDeclarationModel)
         {
             MethodDeclarationModel = methodDeclarationModel;
         }
 
-        public virtual void AssignHighlights(CSharpDaemonStageProcessBase process) {}
         public virtual void Accept(AnalyzerBase analyzerBase) {}
     }
 }

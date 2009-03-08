@@ -7,9 +7,9 @@ namespace CodeGears.ReSharper.Exceptional.Highlightings
     [StaticSeverityHighlighting(Severity.WARNING)]
     public class ExceptionNotThrownHighlighting : IHighlighting
     {
-        internal ExceptionDocumentationModel ExceptionDocumentationModel { get; set; }
+        internal ExceptionDocCommentModel ExceptionDocumentationModel { get; set; }
 
-        internal ExceptionNotThrownHighlighting(ExceptionDocumentationModel exceptionDocumentationModel)
+        internal ExceptionNotThrownHighlighting(ExceptionDocCommentModel exceptionDocumentationModel)
         {
             ExceptionDocumentationModel = exceptionDocumentationModel;
         }

@@ -26,7 +26,7 @@ namespace CodeGears.ReSharper.Exceptional.Highlightings
 
         private static string Message
         {
-            get { return String.Format(Resources.HighLiightCatchAllClauses); }
+            get { return String.Format(Resources.HighLightCatchAllClauses); }
         }
 
         public int NavigationOffsetPatch

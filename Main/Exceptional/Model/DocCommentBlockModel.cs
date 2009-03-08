@@ -1,10 +1,6 @@
-using System;
 using System.Collections.Generic;
-using System.Xml;
 using CodeGears.ReSharper.Exceptional.Analyzers;
-using JetBrains.ReSharper.Daemon.CSharp.Stages;
 using JetBrains.ReSharper.Psi.CSharp.Tree;
-using JetBrains.ReSharper.Psi.ExtensionsAPI;
 using JetBrains.ReSharper.Psi.Tree;
 
 namespace CodeGears.ReSharper.Exceptional.Model
@@ -13,37 +9,71 @@ namespace CodeGears.ReSharper.Exceptional.Model
     internal class DocCommentBlockModel : ModelBase
     {
         public IDocCommentBlockNode DocCommentNode { get; set; }
-        public List<ExceptionDocumentationModel> Exceptions { get; private set; }
-        private XmlNode DocCommentXmlNode { get; set; }
+        private List<DocCommentModel> DocCommentModels { get; set; }
+
+        public IEnumerable<ExceptionDocCommentModel> ExceptionDocCommentModels
+        {
+            get
+            {
+                foreach (var docCommentModel in this.DocCommentModels)
+                {
+                    if(docCommentModel is ExceptionDocCommentModel)
+                    {
+                        yield return docCommentModel as ExceptionDocCommentModel;
+                    }
+                }
+            }
+        }
 
         public DocCommentBlockModel(MethodDeclarationModel methodDeclarationModel, IDocCommentBlockNode docCommentNode) : base(methodDeclarationModel)
         {
             DocCommentNode = docCommentNode;
-            this.Exceptions = new List<ExceptionDocumentationModel>();
+            DocCommentModels = new List<DocCommentModel>();
 
-            //InitializeExceptionsDocumentation();
+            InitializeExceptionsDocumentation();
         }
 
-//        private void InitializeExceptionsDocumentation()
-//        {
-//            this.DocCommentXmlNode = this.MethodDeclarationModel.MethodDeclaration.GetXMLDoc(false);
-//            if (this.DocCommentXmlNode == null) return;
-//
-//            var exceptionNodeList = this.DocCommentXmlNode.SelectNodes("exception");
-//            if (exceptionNodeList == null || exceptionNodeList.Count == 0) return;
-//
-//            foreach (XmlNode exceptionNode in exceptionNodeList)
-//            {
-//                var model = new ExceptionDocumentationModel(this.MethodDeclarationModel, this, exceptionNode);
-//                this.Exceptions.Add(model);
-//            }
-//        }
-
-        public override void AssignHighlights(CSharpDaemonStageProcessBase process)
+        private void InitializeExceptionsDocumentation()
         {
-            foreach (var exceptionDocumentationModel in this.Exceptions)
+            DocCommentModel currentModel = null;
+            for (var currentNode = this.DocCommentNode.FirstChild; currentNode != null; currentNode = currentNode.NextSibling)
             {
-                exceptionDocumentationModel.AssignHighlights(process);
+                if ((currentNode is IDocCommentNode) == false) continue;
+                var currentDocCommentNode = currentNode as IDocCommentNode;
+                var text = currentNode.GetText();
+
+                if (text.Contains("<exception"))
+                {
+                    if (currentModel != null)
+                    {
+                        currentModel.Initialize();
+                    }
+
+                    currentModel = new ExceptionDocCommentModel(this);
+                    currentModel.AddDocCommentNode(currentDocCommentNode);
+                    this.DocCommentModels.Add(currentModel);
+                }
+                else if (text.Contains("</exception>") && currentModel != null)
+                {
+                    currentModel.AddDocCommentNode(currentDocCommentNode);
+                    currentModel.Initialize();
+                    currentModel = null;
+                }
+                else
+                {
+                    if (currentModel == null)
+                    {
+                        currentModel = new GeneralDocCommentModel(this);
+                        this.DocCommentModels.Add(currentModel);
+                    }
+
+                    currentModel.AddDocCommentNode(currentDocCommentNode);
+                }
+            }
+
+            if (currentModel != null)
+            {
+                currentModel.Initialize();
             }
         }
 
@@ -51,31 +81,10 @@ namespace CodeGears.ReSharper.Exceptional.Model
         {
             analyzerBase.Visit(this);
 
-            foreach (var exceptionDocumentationModel in this.Exceptions)
+            foreach (var docCommentModel in this.DocCommentModels)
             {
-                exceptionDocumentationModel.Accept(analyzerBase);
+                docCommentModel.Accept(analyzerBase);
             }
-        }
-
-        public void Remove(ExceptionDocumentationModel exceptionDocumentationModel)
-        {
-            this.Exceptions.Remove(exceptionDocumentationModel);
-
-            var comment = String.Empty;
-            foreach (XmlNode node in this.DocCommentXmlNode.ChildNodes)
-            {
-                if(node.Name.Equals("exception")) continue;
-
-                comment += "/// " + node.OuterXml + Environment.NewLine;
-            }
-
-            foreach (var exception in this.Exceptions)
-            {
-                //comment += "/// " + exception.ExceptionNode.OuterXml + Environment.NewLine;
-            }
-
-            var newDocComment = XmlDocCommentHelper.CreateDocComment(comment, this.DocCommentNode.GetProject());
-            SharedImplUtil.SetDocCommentBlockNode(this.MethodDeclarationModel.MethodDeclaration as ICSharpTypeMemberDeclarationNode, newDocComment);
         }
     }
 }

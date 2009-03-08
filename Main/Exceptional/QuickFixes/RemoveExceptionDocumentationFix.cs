@@ -24,7 +24,7 @@ namespace CodeGears.ReSharper.Exceptional.QuickFixes
                 PsiManager.GetInstance(solution).DoTransaction(
                     delegate
                     {
-                        this.Error.ExceptionDocumentationModel.Remove();
+                        //this.Error.ExceptionDocumentationModel.Remove();
                     });
             }
         }

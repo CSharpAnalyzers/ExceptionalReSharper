@@ -30,9 +30,8 @@ namespace CodeGears.ReSharper.Exceptional
         private static readonly List<AnalyzerBase> _analyzers = new List<AnalyzerBase>(
             new AnalyzerBase[]
                 {
-                    new IsThrownExceptionCatchedAnalyzer(),
-                    new IsThrownExceptionDocumentedExceptionAnalyzer(),
-                    new HasInnerExceptionFromOuterCatchClauseAnalyzer(),
+                    new IsThrownExceptionDocumentedAnalyzer(),
+                    new IsDocumentedExceptionThrownAnalyzer()
                 });
 
         public MethodDeclarationModel MethodDeclarationModel { get; private set; }
@@ -60,10 +59,9 @@ namespace CodeGears.ReSharper.Exceptional
 
             foreach (var analyzerBase in _analyzers)
             {
+                analyzerBase.Process = process;
                 this.MethodDeclarationModel.Accept(analyzerBase);
             }
-
-            this.MethodDeclarationModel.AssignHighlights(process);
 
             instance = null;
         }
@@ -134,14 +132,6 @@ namespace CodeGears.ReSharper.Exceptional
         public bool IsValid()
         {
             return this.MethodDeclarationModel != null;
-        }
-
-        public void Process(ICSharpCommentNode commentNode)
-        {
-            if (commentNode.CommentType != CommentType.DOC_COMMENT) return;
-            if (commentNode.CommentText.Contains("<exception") == false) return;
-
-            new ExceptionDocumentationModel(this.MethodDeclarationModel, commentNode);
         }
     }
 }

@@ -1,7 +1,6 @@
 using System.Collections.Generic;
 using CodeGears.ReSharper.Exceptional.Analyzers;
-using CodeGears.ReSharper.Exceptional.Highlightings;
-using JetBrains.ReSharper.Daemon.CSharp.Stages;
+using JetBrains.DocumentModel;
 using JetBrains.ReSharper.Psi;
 using JetBrains.ReSharper.Psi.CSharp.Tree;
 
@@ -23,11 +22,6 @@ namespace CodeGears.ReSharper.Exceptional.Model
 
         public IBlockModel ParentBlock { get; set; }
 
-        public bool CatchesException(IDeclaredType exception)
-        {
-            return this.ParentBlock.CatchesException(exception);
-        }
-
         public abstract IDeclaredType GetCatchedException();
         public abstract void AddVariable();
         public abstract bool Catches(IDeclaredType exception);
@@ -40,6 +34,11 @@ namespace CodeGears.ReSharper.Exceptional.Model
             get { return this.VariableModel != null; }
         }
 
+        public override DocumentRange DocumentRange
+        {
+            get { return this.CatchClauseNode.GetDocumentRange(); }
+        }
+
         public abstract bool HasExceptionType { get; }
 
         protected CatchClauseModel(MethodDeclarationModel methodDeclarationModel, ICatchClause catchClause)
@@ -49,37 +48,45 @@ namespace CodeGears.ReSharper.Exceptional.Model
             ThrowStatementModels = new List<ThrowStatementModel>();
             TryStatementModels = new List<TryStatementModel>();
 
-            this.IsCatchAll = false;
-            this.IsRethrown = true;
-            //this.IsCatchAll = catchClause.ExceptionType == null || catchClause.ExceptionType.GetCLRName().Equals("System.Exception");
+            this.IsCatchAll = GetIsCatchAll();
+            this.IsRethrown = GetIsRethrown();
         }
 
-        #region Assigns & Accepts
-
-        public override void AssignHighlights(CSharpDaemonStageProcessBase process)
+        private bool GetIsRethrown()
         {
-            if (this.IsCatchAll)
-            {
-                var treeNode = this.CatchClause.ToTreeNode();
-                process.AddHighlighting(treeNode.CatchKeyword.GetDocumentRange(), new CatchAllClauseHighlighting(this));
-            }
-
-            if(this.IsRethrown == false)
-            {
-                var treeNode = this.CatchClause.ToTreeNode();
-                process.AddHighlighting(treeNode.CatchKeyword.GetDocumentRange(), new SwallowedExceptionsHighlighting(this));
-            }
-
-            foreach (var tryStatementModel in this.TryStatementModels)
-            {
-                tryStatementModel.AssignHighlights(process);
-            }
-
-            foreach (var throwStatementModel in this.ThrowStatementModels)
-            {
-                throwStatementModel.AssignHighlights(process);
-            }
+            //TODO: Implement
+            return true;
         }
+
+        private bool GetIsCatchAll()
+        {
+            //TODO: Implement
+            return false;
+        }
+
+        public bool CatchesException(IDeclaredType exception)
+        {
+            return this.ParentBlock.CatchesException(exception);
+        }
+
+        //public override void AssignHighlights(CSharpDaemonStageProcessBase process)
+        //{
+        //    if(this.IsRethrown == false)
+        //    {
+        //        var treeNode = this.CatchClause.ToTreeNode();
+        //        process.AddHighlighting(treeNode.CatchKeyword.GetDocumentRange(), new SwallowedExceptionsHighlighting(this));
+        //    }
+
+        //    foreach (var tryStatementModel in this.TryStatementModels)
+        //    {
+        //        tryStatementModel.AssignHighlights(process);
+        //    }
+
+        //    foreach (var throwStatementModel in this.ThrowStatementModels)
+        //    {
+        //        throwStatementModel.AssignHighlights(process);
+        //    }
+        //}
 
         public override void Accept(AnalyzerBase analyzerBase)
         {
@@ -95,6 +102,5 @@ namespace CodeGears.ReSharper.Exceptional.Model
                 throwStatementModel.Accept(analyzerBase);
             }
         }
-        #endregion
     }
 }

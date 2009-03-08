@@ -1,18 +1,20 @@
-using System.Collections.Generic;
+using CodeGears.ReSharper.Exceptional.Highlightings;
 using CodeGears.ReSharper.Exceptional.Model;
-using JetBrains.ReSharper.Psi;
-using JetBrains.ReSharper.Psi.CSharp.Tree;
 
 namespace CodeGears.ReSharper.Exceptional.Analyzers
 {
+    /// <summary>Analyzes throw statements and checks if the contain inner exception when thrown from inside a catch clause.</summary>
     internal class HasInnerExceptionFromOuterCatchClauseAnalyzer : AnalyzerBase
     {
         public override void Visit(ThrowStatementModel throwStatementModel)
         {
-            throwStatementModel.ThrowsWithInnerException = Analyze(throwStatementModel);
+            if (throwStatementModel == null) return;
+            if (AnalyzeIfHasInnerException(throwStatementModel) == false) return;
+
+            this.Process.AddHighlighting(throwStatementModel.DocumentRange, new ThrowFromCatchWithNoInnerExceptionHighlighting(throwStatementModel));
         }
 
-        private bool Analyze(ThrowStatementModel throwStatementModel)
+        private static bool AnalyzeIfHasInnerException(ThrowStatementModel throwStatementModel)
         {
             if (ProcessContext.Instance.IsValid() == false) return true;
 

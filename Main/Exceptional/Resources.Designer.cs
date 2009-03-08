@@ -61,6 +61,15 @@ namespace CodeGears.ReSharper.Exceptional {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Usage of catch-all clauses is not recommended. [Exceptional].
+        /// </summary>
+        internal static string HighLightCatchAllClauses {
+            get {
+                return ResourceManager.GetString("HighLightCatchAllClauses", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to The &apos;{0}&apos; exception is not documented in xml documentation. [Exceptional].
         /// </summary>
         internal static string HighLightNotDocumentedExceptions {
@@ -84,15 +93,6 @@ namespace CodeGears.ReSharper.Exceptional {
         internal static string HighLightSwallowingExceptions {
             get {
                 return ResourceManager.GetString("HighLightSwallowingExceptions", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Usage of catch-all clauses is not recommended. [Exceptional].
-        /// </summary>
-        internal static string HighLiightCatchAllClauses {
-            get {
-                return ResourceManager.GetString("HighLiightCatchAllClauses", resourceCulture);
             }
         }
         

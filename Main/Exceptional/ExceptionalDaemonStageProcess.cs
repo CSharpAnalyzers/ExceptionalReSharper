@@ -40,10 +40,6 @@ namespace CodeGears.ReSharper.Exceptional
             {
                 ProcessContext.Instance.EnterCatchClause(element as ICatchClause);
             }
-            else if(element is ICSharpCommentNode)
-            {
-                ProcessContext.Instance.Process(element as ICSharpCommentNode);
-            }
         }
 
         /// <summary>This is executed after processing the contents of a given element.</summary>

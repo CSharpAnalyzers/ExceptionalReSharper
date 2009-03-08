@@ -10,7 +10,6 @@ using JetBrains.ReSharper.LiveTemplates.Execution;
 using JetBrains.ReSharper.Psi;
 using JetBrains.TextControl;
 using JetBrains.Util;
-using TemplateUtil=JetBrains.ReSharper.LiveTemplates.TemplateUtil;
 
 namespace CodeGears.ReSharper.Exceptional.QuickFixes
 {
@@ -33,6 +32,7 @@ namespace CodeGears.ReSharper.Exceptional.QuickFixes
                 PsiManager.GetInstance(solution).DoTransaction(
                     delegate
                         {
+                            //TODO: Refactor - insert comment node via tree
                             var model = this.Error.ThrowStatementModel;
                             var declaratiopnTreeNode = model.ThrowStatement.GetContainingTypeMemberDeclaration().ToTreeNode();
                             exceptionCommentRange = XmlDocCommentHelper.InsertExceptionDocumentation(declaratiopnTreeNode, model.ExceptionType.GetCLRName());

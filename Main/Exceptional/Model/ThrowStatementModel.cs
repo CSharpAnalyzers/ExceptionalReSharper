@@ -1,7 +1,5 @@
 using CodeGears.ReSharper.Exceptional.Analyzers;
-using CodeGears.ReSharper.Exceptional.Highlightings;
 using JetBrains.DocumentModel;
-using JetBrains.ReSharper.Daemon.CSharp.Stages;
 using JetBrains.ReSharper.Psi;
 using JetBrains.ReSharper.Psi.CSharp.Tree;
 
@@ -9,16 +7,14 @@ namespace CodeGears.ReSharper.Exceptional.Model
 {
     internal class ThrowStatementModel : ModelBase
     {
-        public bool IsCatched { get; set; }
-        public bool IsDocumented { get; set; }
-        public bool ThrowsWithInnerException { get; set; }
-
+        public bool IsCatched { get; private set; }
+        public bool IsDocumented { get; private set; }
         public IThrowStatement ThrowStatement { get; private set; }
         public IBlockModel ContainingBlockModel { get; private set; }
         public IDeclaredType ExceptionType { get; private set; }
         public ExceptionCreationModel ExceptionCreationModel { get; private set; }
 
-        private DocumentRange DocumentRange
+        public override DocumentRange DocumentRange
         {
             get { return this.ThrowStatement.GetDocumentRange(); }
         }
@@ -34,12 +30,36 @@ namespace CodeGears.ReSharper.Exceptional.Model
             ContainingBlockModel = containingBlockModel;
             IsCatched = false;
             IsDocumented = false;
-            ThrowsWithInnerException = true;
 
             containingBlockModel.ThrowStatementModels.Add(this);
 
             ExceptionCreationModel = new ExceptionCreationModel(methodDeclarationModel, this.ThrowStatement.Exception as IObjectCreationExpression);
             ExceptionType = GetExceptionType();
+            IsCatched = CheckIfCatched();
+            IsDocumented = CheckIfDocumented();
+        }
+
+        private bool CheckIfDocumented()
+        {
+            var docCommentBlockNode = this.MethodDeclarationModel.DocCommentBlockModel;
+            if (docCommentBlockNode == null) return false;
+
+            foreach (var exceptionDocumentationModel in docCommentBlockNode.ExceptionDocCommentModels)
+            {
+                if (this.Throws(exceptionDocumentationModel.ExceptionType))
+                {
+                    return true;
+                }
+            }
+
+            return false;
+        }
+
+        private bool CheckIfCatched()
+        {
+            if (ExceptionType == null) return false;
+
+            return ContainingBlockModel.CatchesException(ExceptionType);
         }
 
         /// <summary>Checks whether this throw statement throws given <paramref name="exceptionType"/>.</summary>
@@ -74,26 +94,9 @@ namespace CodeGears.ReSharper.Exceptional.Model
             return this.ContainingBlockModel.GetCatchedException();
         }
 
-        #region Assigns & Accepts
-
-        public override void AssignHighlights(CSharpDaemonStageProcessBase process)
-        {
-            if (this.IsCatched == false && this.IsDocumented == false)
-            {
-                process.AddHighlighting(this.DocumentRange, new ExceptionNotDocumentedHighlighting(this));
-            }
-
-            if (this.ThrowsWithInnerException == false)
-            {
-                process.AddHighlighting(this.DocumentRange,
-                    new ThrowFromCatchWithNoInnerExceptionHighlighting(this));
-            }
-        }
-
         public override void Accept(AnalyzerBase analyzerBase)
         {
             analyzerBase.Visit(this);
         }
-        #endregion
     }
 }
