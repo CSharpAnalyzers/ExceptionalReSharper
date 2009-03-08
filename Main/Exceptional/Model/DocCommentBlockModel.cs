@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using CodeGears.ReSharper.Exceptional.Analyzers;
+using JetBrains.DocumentModel;
 using JetBrains.ReSharper.Psi;
 using JetBrains.ReSharper.Psi.CodeStyle;
 using JetBrains.ReSharper.Psi.CSharp;
@@ -101,17 +102,17 @@ namespace CodeGears.ReSharper.Exceptional.Model
             }
         }
 
-        public void AddExceptionDocumentation(IDeclaredType exceptionType)
+        public ExceptionDocCommentModel AddExceptionDocumentation(IDeclaredType exceptionType)
         {
-            if(exceptionType == null) return;
+            if(exceptionType == null) return null;
 
-            var exceptionDocumentation = String.Format("<exception cref=\"{1}\"></exception>{0}", Environment.NewLine, exceptionType.GetCLRName());
+            var exceptionDocumentation = String.Format("<exception cref=\"{1}\">[MARKER]</exception>{0}", Environment.NewLine, exceptionType.GetCLRName());
             exceptionDocumentation += exceptionDocumentation;
             var docCommentBlockNode = CSharpElementFactory.GetInstance(this.DocCommentNode.GetProject()).CreateDocComment(exceptionDocumentation);
 
             var commentNode = docCommentBlockNode.FirstChild as IDocCommentNode;
-            
-            if(commentNode == null) return;
+
+            if (commentNode == null) return null;
 
             var spaces = commentNode.NextSibling;
 
@@ -125,6 +126,13 @@ namespace CodeGears.ReSharper.Exceptional.Model
             }
 
             CSharpCodeFormatter.Instance.Format(this.DocCommentNode, CodeFormatProfile.INDENT);
+
+            var model = new ExceptionDocCommentModel(this);
+            model.TreeNodes.Add(commentNode);
+            model.Initialize();
+            this.DocCommentModels.Add(model);
+
+            return model;
         }
 
         public void RemoveExceptionDocumentation(ExceptionDocCommentModel exceptionDocCommentModel)

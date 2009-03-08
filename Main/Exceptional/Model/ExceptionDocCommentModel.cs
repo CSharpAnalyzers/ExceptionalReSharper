@@ -66,5 +66,26 @@ namespace CodeGears.ReSharper.Exceptional.Model
 
             return DocumentRange.InvalidRange;
         }
+
+        public DocumentRange GetDescriptionDocumentRange()
+        {
+            foreach (var docCommentNode in this.DocCommentNodes)
+            {
+                var text = docCommentNode.GetText();
+                if (text.Contains("[MARKER]") == false) continue;
+
+                var documentRange = docCommentNode.GetDocumentRange();
+                var textRange = documentRange.TextRange;
+                var index = text.IndexOf("[MARKER]");
+                var startOffset = textRange.StartOffset + index;
+                var endOffset = startOffset + 8;
+                var newTextRange = new TextRange(startOffset, endOffset);
+                var newDocumentRange = new DocumentRange(documentRange.Document, newTextRange);
+
+                return newDocumentRange;
+            }
+
+            return DocumentRange.InvalidRange;
+        }
     }
 }

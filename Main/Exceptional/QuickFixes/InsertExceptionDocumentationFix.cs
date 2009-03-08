@@ -1,15 +1,12 @@
-using System.Collections.Generic;
 using CodeGears.ReSharper.Exceptional.Highlightings;
+using CodeGears.ReSharper.Exceptional.Model;
+using CodeGears.ReSharper.Exceptional.Templates;
 using JetBrains.Application;
+using JetBrains.DocumentModel;
 using JetBrains.ProjectModel;
-using JetBrains.ReSharper.CodeInsight.Services.Lookup;
 using JetBrains.ReSharper.Daemon;
-using JetBrains.ReSharper.Intentions.Util;
-using JetBrains.ReSharper.LiveTemplates;
-using JetBrains.ReSharper.LiveTemplates.Execution;
 using JetBrains.ReSharper.Psi;
 using JetBrains.TextControl;
-using JetBrains.Util;
 
 namespace CodeGears.ReSharper.Exceptional.QuickFixes
 {
@@ -27,7 +24,7 @@ namespace CodeGears.ReSharper.Exceptional.QuickFixes
         {
             using (CommandCookie.Create(Resources.QuickFixInsertExceptionDocumentation))
             {
-//                var exceptionCommentRange = TextRange.InvalidRange;
+                ExceptionDocCommentModel insertedExceptionModel = null;
 
                 PsiManager.GetInstance(solution).DoTransaction(
                     delegate
@@ -37,47 +34,25 @@ namespace CodeGears.ReSharper.Exceptional.QuickFixes
                             
                             if(methodDeclaration.DocCommentBlockModel != null)
                             {
-                                methodDeclaration.DocCommentBlockModel.AddExceptionDocumentation(this.Error.ThrowStatementModel.ExceptionType);   
+                                insertedExceptionModel = methodDeclaration.DocCommentBlockModel.AddExceptionDocumentation(this.Error.ThrowStatementModel.ExceptionType);   
                             }
                         });
 
-//                if(exceptionCommentRange == TextRange.InvalidRange) return;
-//
-//                var messageSuggestions = new List<string>(new[] { "Thrown when " });
-//                var messageTemplateField = new TemplateFieldInfo(new TemplateField("Comment", new ParamNamesExpression(messageSuggestions, messageSuggestions[0]), 0), new[] { exceptionCommentRange });
-//                JetBrains.ReSharper.Intentions.Util.TemplateUtil.ExecuteTemplate(solution, textControl, exceptionCommentRange, new[] { messageTemplateField });
-//
-//                var currentSession = LiveTemplatesController.Instance.CurrentSession;
-//                if(currentSession != null)
-//                {
-//                    currentSession.TemplateSession.Closed +=
-//                        delegate
-//                            {
-//                                textControl.SelectionModel.RemoveSelection();
-//                            };
-//                }
+                if (insertedExceptionModel == null) return;
+
+                var exceptionCommentRange = insertedExceptionModel.GetDescriptionDocumentRange();
+                if (exceptionCommentRange == DocumentRange.InvalidRange) return;
+
+                var templateHotSpot = new TemplateHotSpot("Comment", exceptionCommentRange.TextRange);
+                templateHotSpot.Suggestions.Add("Thrown when ");
+                
+                TemplateRunner.Run(solution, textControl, exceptionCommentRange.TextRange, templateHotSpot);
             }
         }
 
         public override string Text
         {
             get { return Resources.QuickFixInsertExceptionDocumentation; }
-        }
-
-        private class ParamNamesExpression : QuickFixTemplateExpression
-        {
-            private readonly List<string> myNames;
-
-            public ParamNamesExpression(List<string> names, string defaultName)
-                : base(defaultName)
-            {
-                this.myNames = names;
-            }
-
-            protected override IList<ILookupItem> GetLookupItems()
-            {
-                return this.myNames.ConvertAll<ILookupItem>(name => new TextLookupItem(name));
-            }
         }
     }
 }

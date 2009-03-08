@@ -143,8 +143,9 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
+    <Compile Include="Templates\TemplateHotSpot.cs" />
+    <Compile Include="Templates\TemplateRunner.cs" />
     <Compile Include="TypesFactory.cs" />
-    <Compile Include="XmlDocCommentHelper.cs" />
     <Compile Include="ExceptionalDaemonStageProcess.cs" />
     <Compile Include="ExceptionalDemonStage.cs" />
     <Compile Include="Highlightings\ExceptionNotDocumentedHighlighting.cs" />
