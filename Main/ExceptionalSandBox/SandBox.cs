@@ -23,20 +23,18 @@ namespace ExceptionalSandBox
             }
         }
 
-
-
-//        public void Test08()
-//        {
-//            try
-//            {
-//                Console.WriteLine("TRY");
-//            }
-//            //We are catching Exception type and this is not recommended.
-//            catch (Exception)//BAD
-//            {
-//                Console.WriteLine("CATCH");
-//            }
-//        }
+        public void Test08()
+        {
+            try
+            {
+                Console.WriteLine("TRY");
+            }
+            //We are catching Exception type and this is not recommended.
+            catch (Exception)//BAD
+            {
+                Console.WriteLine("CATCH");
+            }
+        }
 
 //        public void Test10()
 //        {

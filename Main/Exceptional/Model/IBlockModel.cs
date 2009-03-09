@@ -10,6 +10,6 @@ namespace CodeGears.ReSharper.Exceptional.Model
         IBlockModel ParentBlock { get; set; }
         bool CatchesException(IDeclaredType exception);
         IDeclaredType GetCatchedException();
-        IEnumerable<ThrowStatementModel> ThrowStatementModelsNotCatched { get; }
+        IEnumerable<ThrownExceptionModel> ThrownExceptionModelsNotCatched { get; }
     }
 }

@@ -9,6 +9,8 @@ namespace CodeGears.ReSharper.Exceptional.Model
     internal abstract class CatchClauseModel : ModelBase, IBlockModel
     {
         public CatchVariableModel VariableModel { get; set; }
+        public bool IsCatchAll { get; private set; }
+        public bool IsRethrown { get; set; }
 
         protected ICatchClause CatchClause { get; set; }
 
@@ -17,42 +19,11 @@ namespace CodeGears.ReSharper.Exceptional.Model
             get { return this.CatchClause as ICatchClauseNode; }
         }
 
-        public List<ThrowStatementModel> ThrowStatementModels { get; private set; }
-        public List<TryStatementModel> TryStatementModels { get; private set; }
-
-        public IBlockModel ParentBlock { get; set; }
-
-        public abstract IDeclaredType GetCatchedException();
-
-        public IEnumerable<ThrowStatementModel> ThrowStatementModelsNotCatched
-        {
-            get
-            {
-                foreach (var throwStatementModel in this.ThrowStatementModels)
-                {
-                    if (throwStatementModel.IsCatched == false)
-                    {
-                        yield return throwStatementModel;
-                    }
-                }
-
-                for (var i = 0; i < this.TryStatementModels.Count; i++)
-                {
-                    IBlockModel tryStatementModel = this.TryStatementModels[i];
-                    foreach (var model in tryStatementModel.ThrowStatementModelsNotCatched)
-                    {
-                        yield return model;
-                    }
-                }
-            }
-        }
 
         public abstract void AddVariable();
         public abstract bool Catches(IDeclaredType exception);
+        public abstract bool HasExceptionType { get; }
         
-        public bool IsCatchAll { get; private set; }
-        public bool IsRethrown { get; set; }
-
         public bool HasVariable
         {
             get { return this.VariableModel != null; }
@@ -60,10 +31,8 @@ namespace CodeGears.ReSharper.Exceptional.Model
 
         public override DocumentRange DocumentRange
         {
-            get { return this.CatchClauseNode.GetDocumentRange(); }
+            get { return this.CatchClauseNode.CatchKeyword.GetDocumentRange(); }
         }
-
-        public abstract bool HasExceptionType { get; }
 
         protected CatchClauseModel(MethodDeclarationModel methodDeclarationModel, ICatchClause catchClause)
             : base(methodDeclarationModel)
@@ -84,14 +53,12 @@ namespace CodeGears.ReSharper.Exceptional.Model
 
         private bool GetIsCatchAll()
         {
-            //TODO: Implement
-            return false;
+            if(this.CatchClause.ExceptionType == null) return false;
+
+            return this.CatchClause.ExceptionType.GetCLRName().Equals("System.Exception");
         }
 
-        public bool CatchesException(IDeclaredType exception)
-        {
-            return this.ParentBlock.CatchesException(exception);
-        }
+       
 
         //public override void AssignHighlights(CSharpDaemonStageProcessBase process)
         //{
@@ -126,5 +93,45 @@ namespace CodeGears.ReSharper.Exceptional.Model
                 throwStatementModel.Accept(analyzerBase);
             }
         }
+
+        #region IBlockModel implementation
+
+        public List<ThrowStatementModel> ThrowStatementModels { get; private set; }
+        public List<TryStatementModel> TryStatementModels { get; private set; }
+        public IBlockModel ParentBlock { get; set; }
+
+        public abstract IDeclaredType GetCatchedException();
+
+        public IEnumerable<ThrownExceptionModel> ThrownExceptionModelsNotCatched
+        {
+            get
+            {
+                foreach (var throwStatementModel in this.ThrowStatementModels)
+                {
+                    foreach (var thrownExceptionModel in throwStatementModel.ThrownExceptions)
+                    {
+                        if (thrownExceptionModel.IsCatched == false)
+                        {
+                            yield return thrownExceptionModel;
+                        }
+                    }
+                }
+
+                for (var i = 0; i < this.TryStatementModels.Count; i++)
+                {
+                    IBlockModel tryStatementModel = this.TryStatementModels[i];
+                    foreach (var model in tryStatementModel.ThrownExceptionModelsNotCatched)
+                    {
+                        yield return model;
+                    }
+                }
+            }
+        }
+
+        public bool CatchesException(IDeclaredType exception)
+        {
+            return this.ParentBlock.CatchesException(exception);
+        }
+        #endregion
     }
 }

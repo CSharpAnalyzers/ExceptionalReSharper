@@ -16,7 +16,7 @@ namespace CodeGears.ReSharper.Exceptional.Analyzers
 
         private static bool AnalyzeIfExeptionThrown(ExceptionDocCommentModel exceptionDocumentationModel)
         {
-            foreach (var throwStatementModel in exceptionDocumentationModel.MethodDeclarationModel.ThrowStatementModelsNotCatched)
+            foreach (var throwStatementModel in exceptionDocumentationModel.MethodDeclarationModel.ThrownExceptionModelsNotCatched)
             {
                 if(throwStatementModel.Throws(exceptionDocumentationModel.ExceptionType))
                 {

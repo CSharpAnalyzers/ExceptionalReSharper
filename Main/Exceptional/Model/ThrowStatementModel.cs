@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using CodeGears.ReSharper.Exceptional.Analyzers;
 using JetBrains.DocumentModel;
 using JetBrains.ReSharper.Psi;
@@ -5,18 +6,24 @@ using JetBrains.ReSharper.Psi.CSharp.Tree;
 
 namespace CodeGears.ReSharper.Exceptional.Model
 {
-    internal class ThrowStatementModel : ModelBase
+    internal class ThrowStatementModel : ModelBase, IExceptionsOrigin
     {
-        public bool IsCatched { get; private set; }
-        public bool IsDocumented { get; private set; }
+        public ThrownExceptionModel ThrownExceptionModel { get; private set; }
         public IThrowStatement ThrowStatement { get; private set; }
-        public IBlockModel ContainingBlockModel { get; private set; }
-        public IDeclaredType ExceptionType { get; private set; }
-        public ExceptionCreationModel ExceptionCreationModel { get; private set; }
 
         public override DocumentRange DocumentRange
         {
-            get { return this.ThrowStatement.GetDocumentRange(); }
+            get
+            {
+                var node = this.ThrowStatement.ToTreeNode();
+
+                if(node.ExceptionNode != null)
+                {
+                    return node.ExceptionNode.GetDocumentRange();
+                }
+
+                return node.ThrowKeyword.GetDocumentRange();
+            }
         }
 
         public bool IsRethrow
@@ -28,47 +35,10 @@ namespace CodeGears.ReSharper.Exceptional.Model
         {
             ThrowStatement = throwStatement;
             ContainingBlockModel = containingBlockModel;
-            IsCatched = false;
-            IsDocumented = false;
+
+            ThrownExceptionModel = new ThrownExceptionModel(methodDeclarationModel, GetExceptionType(), this);
 
             containingBlockModel.ThrowStatementModels.Add(this);
-
-            ExceptionCreationModel = new ExceptionCreationModel(methodDeclarationModel, this.ThrowStatement.Exception as IObjectCreationExpression);
-            ExceptionType = GetExceptionType();
-            IsCatched = CheckIfCatched();
-            IsDocumented = CheckIfDocumented();
-        }
-
-        private bool CheckIfDocumented()
-        {
-            var docCommentBlockNode = this.MethodDeclarationModel.DocCommentBlockModel;
-            if (docCommentBlockNode == null) return false;
-
-            foreach (var exceptionDocumentationModel in docCommentBlockNode.ExceptionDocCommentModels)
-            {
-                if (this.Throws(exceptionDocumentationModel.ExceptionType))
-                {
-                    return true;
-                }
-            }
-
-            return false;
-        }
-
-        private bool CheckIfCatched()
-        {
-            if (ExceptionType == null) return false;
-
-            return ContainingBlockModel.CatchesException(ExceptionType);
-        }
-
-        /// <summary>Checks whether this throw statement throws given <paramref name="exceptionType"/>.</summary>
-        public bool Throws(IDeclaredType exceptionType)
-        {
-            if (this.ExceptionType == null) return false;
-            if (exceptionType == null) return false;
-
-            return this.ExceptionType.GetCLRName().Equals(exceptionType.GetCLRName());
         }
 
         /// <summary>Searches for the nearest containing catch clause.</summary>
@@ -97,6 +67,21 @@ namespace CodeGears.ReSharper.Exceptional.Model
         public override void Accept(AnalyzerBase analyzerBase)
         {
             analyzerBase.Visit(this);
+
+            this.ThrownExceptionModel.Accept(analyzerBase);
+        }
+
+        public List<ThrownExceptionModel> ThrownExceptions
+        {
+            get { return new List<ThrownExceptionModel>(new[] { ThrownExceptionModel }); }
+        }
+
+        public IBlockModel ContainingBlockModel { get; private set; }
+
+        /// <summary>Checks whether this throw statement throws given <paramref name="exceptionType"/>.</summary>
+        public bool Throws(IDeclaredType exceptionType)
+        {
+            return this.ThrownExceptionModel.Throws(exceptionType);
         }
     }
 }

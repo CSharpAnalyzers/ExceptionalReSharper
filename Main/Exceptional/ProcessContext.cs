@@ -31,7 +31,8 @@ namespace CodeGears.ReSharper.Exceptional
             new AnalyzerBase[]
                 {
                     new IsThrownExceptionDocumentedAnalyzer(),
-                    new IsDocumentedExceptionThrownAnalyzer()
+                    new IsDocumentedExceptionThrownAnalyzer(),
+                    new CatchAllClauseAnalyzer()
                 });
 
         public MethodDeclarationModel MethodDeclarationModel { get; private set; }
@@ -127,6 +128,16 @@ namespace CodeGears.ReSharper.Exceptional
 
             var catchClause = this.CatchClauseModelsStack.Peek();
             catchClause.VariableModel = new CatchVariableModel(this.MethodDeclarationModel, catchVariableDeclaration);
+        }
+
+        public void Process(IInvocationExpression invocationExpression)
+        {
+            if (this.IsValid() == false) return;
+            if (invocationExpression == null) return;
+
+            Logger.Assert(this.BlockModelsStack.Count > 0, "[Exceptional] There is no block for invocation statement.");
+
+            new InvocationModel(this.MethodDeclarationModel, invocationExpression, this.BlockModelsStack.Peek());
         }
 
         public bool IsValid()

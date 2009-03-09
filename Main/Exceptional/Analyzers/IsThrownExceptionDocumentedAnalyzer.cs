@@ -6,13 +6,13 @@ namespace CodeGears.ReSharper.Exceptional.Analyzers
     /// <summary>Analyzes throw statements and checks that exceptions thrown outside are documented.</summary>
     internal class IsThrownExceptionDocumentedAnalyzer : AnalyzerBase
     {
-        public override void Visit(ThrowStatementModel throwStatementModel)
+        public override void Visit(ThrownExceptionModel thrownExceptionModel)
         {
-            if (throwStatementModel == null) return;
-            if (throwStatementModel.IsCatched) return;
-            if (throwStatementModel.IsDocumented) return;
+            if (thrownExceptionModel == null) return;
+            if (thrownExceptionModel.IsCatched) return;
+            if (thrownExceptionModel.IsDocumented) return;
 
-            this.Process.AddHighlighting(throwStatementModel.DocumentRange, new ExceptionNotDocumentedHighlighting(throwStatementModel));
+            this.Process.AddHighlighting(thrownExceptionModel.DocumentRange, new ExceptionNotDocumentedHighlighting(thrownExceptionModel));
         }
     }
 }

@@ -31,22 +31,25 @@ namespace CodeGears.ReSharper.Exceptional.Model
             return null;
         }
 
-        public IEnumerable<ThrowStatementModel> ThrowStatementModelsNotCatched
+        public IEnumerable<ThrownExceptionModel> ThrownExceptionModelsNotCatched
         {
             get
             {
                 foreach (var throwStatementModel in this.ThrowStatementModels)
                 {
-                    if(throwStatementModel.IsCatched == false)
+                    foreach (var thrownExceptionModel in throwStatementModel.ThrownExceptions)
                     {
-                        yield return throwStatementModel;
+                        if (thrownExceptionModel.IsCatched == false)
+                        {
+                            yield return thrownExceptionModel;
+                        }
                     }
                 }
 
                 for (var i = 0; i < this.TryStatementModels.Count; i++)
                 {
                     IBlockModel tryStatementModel = this.TryStatementModels[i];
-                    foreach (var model in tryStatementModel.ThrowStatementModelsNotCatched)
+                    foreach (var model in tryStatementModel.ThrownExceptionModelsNotCatched)
                     {
                         yield return model;
                     }

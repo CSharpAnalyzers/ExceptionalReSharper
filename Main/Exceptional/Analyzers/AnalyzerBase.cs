@@ -31,5 +31,9 @@ namespace CodeGears.ReSharper.Exceptional.Analyzers
         /// <summary>Performs analyze of <paramref name="tryStatementModel"/>.</summary>
         /// <param name="tryStatementModel">Try statement to analyze.</param>
         public virtual void Visit(TryStatementModel tryStatementModel) { }
+
+        /// <summary>Performs analyze of <paramref name="thrownExceptionModel"/>.</summary>
+        /// <param name="thrownExceptionModel">Thrown exception to analyze.</param>
+        public virtual void Visit(ThrownExceptionModel thrownExceptionModel) { }
     }
 }

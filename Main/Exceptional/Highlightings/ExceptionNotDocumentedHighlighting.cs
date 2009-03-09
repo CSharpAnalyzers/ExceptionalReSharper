@@ -7,11 +7,11 @@ namespace CodeGears.ReSharper.Exceptional.Highlightings
     [StaticSeverityHighlighting(Severity.WARNING)]
     public class ExceptionNotDocumentedHighlighting : IHighlighting
     {
-        internal ThrowStatementModel ThrowStatementModel { get; set; }
+        internal ThrownExceptionModel ThrownExceptionModel { get; private set; }
 
-        internal ExceptionNotDocumentedHighlighting(ThrowStatementModel throwStatement)
+        internal ExceptionNotDocumentedHighlighting(ThrownExceptionModel thrownExceptionModel)
         {
-            ThrowStatementModel = throwStatement;
+            ThrownExceptionModel = thrownExceptionModel;
         }
 
         public string ToolTip
@@ -28,7 +28,7 @@ namespace CodeGears.ReSharper.Exceptional.Highlightings
         {
             get
             {
-                var exceptionType = this.ThrowStatementModel.ExceptionType;
+                var exceptionType = this.ThrownExceptionModel.ExceptionType;
                 var exceptionTupeName = exceptionType != null ? exceptionType.GetCLRName() : "[NOT RESOLVED]";
                 return String.Format(Resources.HighLightNotDocumentedExceptions, exceptionTupeName);
             }

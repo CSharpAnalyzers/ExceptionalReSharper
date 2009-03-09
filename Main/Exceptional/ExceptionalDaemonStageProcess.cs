@@ -71,5 +71,10 @@ namespace CodeGears.ReSharper.Exceptional
         {
             ProcessContext.Instance.Process(catchVariableDeclaration);
         }
+
+        public override void VisitInvocationExpression(IInvocationExpression invocationExpression)
+        {
+            ProcessContext.Instance.Process(invocationExpression);
+        }
     }
 }
