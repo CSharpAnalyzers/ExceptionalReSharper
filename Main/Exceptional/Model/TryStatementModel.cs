@@ -78,8 +78,6 @@ namespace CodeGears.ReSharper.Exceptional.Model
 
         public override void Accept(AnalyzerBase analyzerBase)
         {
-            analyzerBase.Visit(this);
-
             foreach (var innerTryStatementModel in this.TryStatementModels)
             {
                 innerTryStatementModel.Accept(analyzerBase);

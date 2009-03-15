@@ -1,17 +1,29 @@
 using System;
 using CodeGears.ReSharper.Exceptional.Model;
+using JetBrains.DocumentModel;
 using JetBrains.ReSharper.Daemon;
+using JetBrains.ReSharper.Daemon.CSharp.Stages;
 
 namespace CodeGears.ReSharper.Exceptional.Highlightings
 {
     [StaticSeverityHighlighting(Severity.WARNING)]
-    public class ExceptionNotThrownHighlighting : IHighlighting
+    public class ExceptionNotThrownHighlighting : CSharpHighlightingBase, IHighlighting
     {
         internal ExceptionDocCommentModel ExceptionDocumentationModel { get; set; }
 
         internal ExceptionNotThrownHighlighting(ExceptionDocCommentModel exceptionDocumentationModel)
         {
             ExceptionDocumentationModel = exceptionDocumentationModel;
+        }
+
+        public override bool IsValid()
+        {
+            return true;
+        }
+
+        public override DocumentRange Range
+        {
+            get { return this.ExceptionDocumentationModel.DocumentRange; }
         }
 
         public string ToolTip

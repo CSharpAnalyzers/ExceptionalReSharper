@@ -24,14 +24,6 @@ namespace CodeGears.ReSharper.Exceptional.Analyzers
         /// <param name="exceptionDocumentationModel">Exception documentation to analyze.</param>
         public virtual void Visit(ExceptionDocCommentModel exceptionDocumentationModel) { }
 
-        /// <summary>Performs analyze of <paramref name="docCommentBlockModel"/>.</summary>
-        /// <param name="docCommentBlockModel">Documentation to analyze.</param>
-        public virtual void Visit(DocCommentBlockModel docCommentBlockModel) { }
-
-        /// <summary>Performs analyze of <paramref name="tryStatementModel"/>.</summary>
-        /// <param name="tryStatementModel">Try statement to analyze.</param>
-        public virtual void Visit(TryStatementModel tryStatementModel) { }
-
         /// <summary>Performs analyze of <paramref name="thrownExceptionModel"/>.</summary>
         /// <param name="thrownExceptionModel">Thrown exception to analyze.</param>
         public virtual void Visit(ThrownExceptionModel thrownExceptionModel) { }

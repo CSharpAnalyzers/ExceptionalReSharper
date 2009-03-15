@@ -22,7 +22,7 @@ namespace CodeGears.ReSharper.Exceptional.Model
         {
             if (this.HasVariable) return;
 
-            var codeFactory = new CodeElementFactory(this.CatchClause.GetProject());
+            var codeFactory = new CodeElementFactory(this.CatchClause.GetPsiModule());
 
             var variableDeclaration =
                 codeFactory.CreateCatchVariableDeclarationNode(this.SpecificCatchClause.ExceptionType);

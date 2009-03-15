@@ -7,6 +7,7 @@ using CodeGears.ReSharper.Exceptional.Analyzers;
 using CodeGears.ReSharper.Exceptional.Model;
 using JetBrains.ReSharper.Daemon.CSharp.Stages;
 using JetBrains.ReSharper.Psi.CSharp.Tree;
+using JetBrains.ReSharper.Psi.Tree;
 using JetBrains.Util;
 
 namespace CodeGears.ReSharper.Exceptional
@@ -35,10 +36,10 @@ namespace CodeGears.ReSharper.Exceptional
                     new CatchAllClauseAnalyzer()
                 });
 
-        public MethodDeclarationModel MethodDeclarationModel { get; private set; }
-        public Stack<TryStatementModel> TryStatementModelsStack { get; private set; }
-        public Stack<CatchClauseModel> CatchClauseModelsStack { get; private set; }
-        public Stack<IBlockModel> BlockModelsStack { get; private set; }
+        private MethodDeclarationModel MethodDeclarationModel { get; set; }
+        private Stack<TryStatementModel> TryStatementModelsStack { get; set; }
+        private Stack<CatchClauseModel> CatchClauseModelsStack { get; set; }
+        private Stack<IBlockModel> BlockModelsStack { get; set; }
 
         private ProcessContext()
         {
@@ -50,7 +51,6 @@ namespace CodeGears.ReSharper.Exceptional
         public void StartProcess(IMethodDeclaration methodDeclaration)
         {
             this.MethodDeclarationModel = new MethodDeclarationModel(methodDeclaration);
-            this.MethodDeclarationModel.Initialize();
             this.BlockModelsStack.Push(this.MethodDeclarationModel);
         }
 
@@ -143,6 +143,11 @@ namespace CodeGears.ReSharper.Exceptional
         public bool IsValid()
         {
             return this.MethodDeclarationModel != null;
+        }
+
+        public void Process(IDocCommentBlockNode docCommentBlockNode)
+        {
+            this.MethodDeclarationModel.SetDocCommentBlockNode(docCommentBlockNode);
         }
     }
 }

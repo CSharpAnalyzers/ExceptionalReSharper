@@ -1,5 +1,6 @@
 using JetBrains.ReSharper.Psi;
 using JetBrains.ReSharper.Psi.CSharp.Tree;
+using JetBrains.ReSharper.Psi.Tree;
 
 namespace CodeGears.ReSharper.Exceptional.Model
 {
@@ -22,7 +23,7 @@ namespace CodeGears.ReSharper.Exceptional.Model
         {
             if (this.HasVariable) return;
 
-            var codeFactory = new CodeElementFactory(this.CatchClause.GetProject());
+            var codeFactory = new CodeElementFactory(this.CatchClause.GetPsiModule());
 
             var newCatch = codeFactory.CreateSpecificCatchClause(null, this.CatchClause.Body);
             if (newCatch == null) return;
@@ -35,7 +36,7 @@ namespace CodeGears.ReSharper.Exceptional.Model
 
         public override IDeclaredType GetCatchedException()
         {
-            return TypesFactory.CreateDeclaredType(this.CatchClause.GetProject().GetSolution(), "System.Exception");
+            return TypeFactory.CreateTypeByCLRName("System.Exception", this.CatchClause.GetPsiModule());
         }
 
         public override bool Catches(IDeclaredType exception)

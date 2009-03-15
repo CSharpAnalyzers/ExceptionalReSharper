@@ -1,17 +1,33 @@
+/// <copyright file="ExceptionNotDocumentedHighlighting.cs" manufacturer="CodeGears">
+///   Copyright (c) CodeGears. All rights reserved.
+/// </copyright>
+
 using System;
 using CodeGears.ReSharper.Exceptional.Model;
+using JetBrains.DocumentModel;
 using JetBrains.ReSharper.Daemon;
+using JetBrains.ReSharper.Daemon.CSharp.Stages;
 
 namespace CodeGears.ReSharper.Exceptional.Highlightings
 {
     [StaticSeverityHighlighting(Severity.WARNING)]
-    public class ExceptionNotDocumentedHighlighting : IHighlighting
+    public class ExceptionNotDocumentedHighlighting : CSharpHighlightingBase, IHighlighting
     {
         internal ThrownExceptionModel ThrownExceptionModel { get; private set; }
 
         internal ExceptionNotDocumentedHighlighting(ThrownExceptionModel thrownExceptionModel)
         {
             ThrownExceptionModel = thrownExceptionModel;
+        }
+
+        public override bool IsValid()
+        {
+            return true;
+        }
+
+        public override DocumentRange Range
+        {
+            get { return this.ThrownExceptionModel.DocumentRange; }
         }
 
         public string ToolTip
@@ -29,8 +45,8 @@ namespace CodeGears.ReSharper.Exceptional.Highlightings
             get
             {
                 var exceptionType = this.ThrownExceptionModel.ExceptionType;
-                var exceptionTupeName = exceptionType != null ? exceptionType.GetCLRName() : "[NOT RESOLVED]";
-                return String.Format(Resources.HighLightNotDocumentedExceptions, exceptionTupeName);
+                var exceptionTypeName = exceptionType != null ? exceptionType.GetCLRName() : "[NOT RESOLVED]";
+                return String.Format(Resources.HighLightNotDocumentedExceptions, exceptionTypeName);
             }
         }
 

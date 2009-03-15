@@ -21,6 +21,18 @@ namespace CodeGears.ReSharper.Exceptional.Model
         public List<ThrowStatementModel> ThrowStatementModels { get; private set; }
         public IBlockModel ParentBlock { get; set; }
 
+        public bool IsPublicOrInternal
+        {
+            get
+            {
+                if(this.MethodDeclaration == null) return false;
+                var rights = this.MethodDeclaration.GetAccessRights();
+                return rights == AccessRights.PUBLIC ||
+                       rights == AccessRights.INTERNAL ||
+                       rights == AccessRights.PROTECTED;
+            }
+        }
+
         public bool CatchesException(IDeclaredType exception)
         {
             return false;
@@ -64,22 +76,6 @@ namespace CodeGears.ReSharper.Exceptional.Model
             ThrowStatementModels = new List<ThrowStatementModel>();
         }
 
-        public void Initialize()
-        {
-            InitializeDocCommentBlockModel();
-        }
-
-        private void InitializeDocCommentBlockModel()
-        {
-            var docCommentBlockOwner = this.MethodDeclaration as IDocCommentBlockOwnerNode;
-            if (docCommentBlockOwner == null) return;
-
-            var docCommentBlockNode = docCommentBlockOwner.GetDocCommentBlockNode();
-            if (docCommentBlockNode == null) return;
-            
-            this.DocCommentBlockModel = new DocCommentBlockModel(this, docCommentBlockNode);
-        }
-
         public override void Accept(AnalyzerBase analyzerBase)
         {
             foreach (var tryStatementModel in this.TryStatementModels)
@@ -98,18 +94,12 @@ namespace CodeGears.ReSharper.Exceptional.Model
             }
         }
 
-        public void Add(TryStatementModel tryStatementModel)
-        {
-            this.TryStatementModels.Add(tryStatementModel);
-            tryStatementModel.ParentBlock = this;
-        }
-
         private void AddDocComment()
         {
-            var docCommentBlockNode = CSharpElementFactory.GetInstance(this.MethodDeclaration.GetProject()).CreateDocComment("<summary></summary>");
+            var docCommentBlockNode = CSharpElementFactory.GetInstance(this.MethodDeclaration.GetPsiModule()).CreateDocComment("<summary></summary>");
             SharedImplUtil.SetDocCommentBlockNode(this.MethodDeclaration.ToTreeNode(), docCommentBlockNode);
 
-            InitializeDocCommentBlockModel();
+            SetDocCommentBlockNode(docCommentBlockNode);
         }
 
         public void EnsureHasDocComment()
@@ -118,6 +108,11 @@ namespace CodeGears.ReSharper.Exceptional.Model
             {
                 AddDocComment();
             }
+        }
+
+        public void SetDocCommentBlockNode(IDocCommentBlockNode docCommentBlockNode)
+        {
+            this.DocCommentBlockModel = new DocCommentBlockModel(this, docCommentBlockNode);
         }
     }
 }

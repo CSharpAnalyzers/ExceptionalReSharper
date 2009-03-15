@@ -15,11 +15,11 @@ namespace CodeGears.ReSharper.Exceptional
     {
         public CSharpElementFactory Factory { get; set; }
 
-        public CodeElementFactory(IProject project)
+        public CodeElementFactory(IPsiModule psiModule)
         {
-            Logger.Assert(project != null, "[Exceptional] Project cannot be null.");
+            Logger.Assert(psiModule != null, "[Exceptional] Psi module cannot be null.");
 
-            this.Factory = CSharpElementFactory.GetInstance(project);
+            this.Factory = CSharpElementFactory.GetInstance(psiModule);
         }
 
         /// <summary>Creates a variable declaration for catch clause.</summary>

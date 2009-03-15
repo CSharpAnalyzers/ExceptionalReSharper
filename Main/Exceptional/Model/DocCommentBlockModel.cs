@@ -1,13 +1,13 @@
 using System;
 using System.Collections.Generic;
 using CodeGears.ReSharper.Exceptional.Analyzers;
-using JetBrains.DocumentModel;
 using JetBrains.ReSharper.Psi;
 using JetBrains.ReSharper.Psi.CodeStyle;
 using JetBrains.ReSharper.Psi.CSharp;
 using JetBrains.ReSharper.Psi.CSharp.CodeStyle;
 using JetBrains.ReSharper.Psi.CSharp.Tree;
 using JetBrains.ReSharper.Psi.ExtensionsAPI;
+using JetBrains.ReSharper.Psi.Resolve;
 using JetBrains.ReSharper.Psi.Tree;
 
 namespace CodeGears.ReSharper.Exceptional.Model
@@ -32,20 +32,32 @@ namespace CodeGears.ReSharper.Exceptional.Model
             }
         }
 
+        public List<IReference> References { get; private set; }
+
         public DocCommentBlockModel(MethodDeclarationModel methodDeclarationModel, IDocCommentBlockNode docCommentNode) : base(methodDeclarationModel)
         {
             DocCommentNode = docCommentNode;
             DocCommentModels = new List<DocCommentModel>();
+
+            this.References = new List<IReference>(this.DocCommentNode.GetFirstClassReferences());
 
             InitializeExceptionsDocumentation();
         }
 
         private void InitializeExceptionsDocumentation()
         {
+            var whitespaceNodes = new List<ITreeNode>();
             DocCommentModel currentModel = null;
             var exceptionNodeFinished = false;
+
             for (var currentNode = this.DocCommentNode.FirstChild; currentNode != null; currentNode = currentNode.NextSibling)
             {
+                if(currentNode is IWhitespaceNode)
+                {
+                    whitespaceNodes.Add(currentNode);
+                    continue;
+                }
+
                 if(currentNode is IDocCommentNode && exceptionNodeFinished)
                 {
                     currentModel = null;
@@ -72,16 +84,22 @@ namespace CodeGears.ReSharper.Exceptional.Model
 
                     currentModel = new ExceptionDocCommentModel(this);
                     this.DocCommentModels.Add(currentModel);
+                    currentModel.TreeNodes.AddRange(whitespaceNodes);
+                    whitespaceNodes.Clear();
                     currentModel.TreeNodes.Add(currentNode);
                 }
                 else if (text.Contains("</exception>"))
                 {
+                    currentModel.TreeNodes.AddRange(whitespaceNodes);
+                    whitespaceNodes.Clear();
                     currentModel.TreeNodes.Add(currentNode);
                     currentModel.Initialize();
                     exceptionNodeFinished = true;
                 }
                 else
                 {
+                    currentModel.TreeNodes.AddRange(whitespaceNodes);
+                    whitespaceNodes.Clear();
                     currentModel.TreeNodes.Add(currentNode);
                 }
             }
@@ -94,8 +112,6 @@ namespace CodeGears.ReSharper.Exceptional.Model
 
         public override void Accept(AnalyzerBase analyzerBase)
         {
-            analyzerBase.Visit(this);
-
             foreach (var docCommentModel in this.DocCommentModels)
             {
                 docCommentModel.Accept(analyzerBase);
@@ -108,7 +124,7 @@ namespace CodeGears.ReSharper.Exceptional.Model
 
             var exceptionDocumentation = String.Format("<exception cref=\"{1}\">[MARKER]</exception>{0}", Environment.NewLine, exceptionType.GetCLRName());
             exceptionDocumentation += exceptionDocumentation;
-            var docCommentBlockNode = CSharpElementFactory.GetInstance(this.DocCommentNode.GetProject()).CreateDocComment(exceptionDocumentation);
+            var docCommentBlockNode = CSharpElementFactory.GetInstance(this.DocCommentNode.GetPsiModule()).CreateDocComment(exceptionDocumentation);
 
             var commentNode = docCommentBlockNode.FirstChild as IDocCommentNode;
 
@@ -144,7 +160,7 @@ namespace CodeGears.ReSharper.Exceptional.Model
             var lastNode = exceptionDocCommentModel.TreeNodes[exceptionDocCommentModel.TreeNodes.Count - 1];
 
             LowLevelModificationUtil.DeleteChildRange(firstNode, lastNode);
-            CSharpCodeFormatter.Instance.Format(this.DocCommentNode, CodeFormatProfile.INDENT);
+            CSharpCodeFormatter.Instance.Format(this.DocCommentNode, CodeFormatProfile.SOFT);
         }
     }
 }

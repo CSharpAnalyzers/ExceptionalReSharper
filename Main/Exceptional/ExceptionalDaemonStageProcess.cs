@@ -2,6 +2,7 @@
 ///   Copyright (c) CodeGears. All rights reserved.
 /// </copyright>
 
+using System;
 using JetBrains.ReSharper.Daemon;
 using JetBrains.ReSharper.Daemon.CSharp.Stages;
 using JetBrains.ReSharper.Psi.CSharp.Tree;
@@ -13,24 +14,28 @@ namespace CodeGears.ReSharper.Exceptional
     /// <remarks>The instance of this class is constructed each time the daemon
     /// needs to re highlight a given file. This object is short-lived. It executes
     /// the target highlighting logic.</remarks>
-    public class ExceptionalDaemonStageProcess : CSharpErrorStageProcessBase
+    public class ExceptionalDaemonStageProcess : CSharpDaemonStageProcessBase
     {
         public ExceptionalDaemonStageProcess(IDaemonProcess process) : base(process) { }
 
-        public override void ProcessFile(ICSharpFile file)
+        public override void Execute(Action<DaemonStageResult> commiter)
         {
-            //if (this.DaemonProcess.FullRehighlightingRequired)
-            {
-                file.ProcessDescendants(this);
-                this.FullyRehighlighted = true;
-            }
+            HighlightInFile(file => file.ProcessDescendants(this), commiter);
         }
 
         public override void ProcessBeforeInterior(IElement element)
         {
             if (element is IMethodDeclaration)
             {
-                ProcessContext.Instance.StartProcess(element as IMethodDeclaration);
+                var methodDeclaration = element as IMethodDeclaration;
+                if(ShouldProcessMethod(methodDeclaration))
+                {
+                    ProcessContext.Instance.StartProcess(element as IMethodDeclaration);
+                }
+            }
+            else if (element is IDocCommentBlockNode)
+            {
+                ProcessContext.Instance.Process(element as IDocCommentBlockNode);
             }
             else if (element is ITryStatement)
             {
@@ -42,6 +47,11 @@ namespace CodeGears.ReSharper.Exceptional
             }
         }
 
+        private static bool ShouldProcessMethod(IMethodDeclaration methodDeclaration)
+        {
+            return methodDeclaration.Body != null;
+        }
+
         /// <summary>This is executed after processing the contents of a given element.</summary>
         public override void ProcessAfterInterior(IElement element)
         {
@@ -50,7 +60,11 @@ namespace CodeGears.ReSharper.Exceptional
 
             if(element is IMethodDeclaration)
             {
-                ProcessContext.Instance.EndProcess(this);
+                var methodDeclaration = element as IMethodDeclaration;
+                if(ShouldProcessMethod(methodDeclaration))
+                {
+                    ProcessContext.Instance.EndProcess(this);
+                }
             }
             else if (element is ITryStatement)
             {

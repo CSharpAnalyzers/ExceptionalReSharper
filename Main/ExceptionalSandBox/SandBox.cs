@@ -4,37 +4,31 @@ namespace ExceptionalSandBox
 {
     public class SandBox
     {
-        /// <summary></summary>
-        /// <exception cref="InvalidOperationException">
-        /// Test
-        /// </exception>
-        /// <exception cref="ArgumentException">Test</exception>
-        /// <exception cref="ObjectDisposedException">Test</exception>
         public void Test13()
         {
             try
             {
                 Console.WriteLine("TRY");
             }
-            catch (OperationCanceledException)//BAD
+            catch (OperationCanceledException)//BAD 
             {
                 Console.WriteLine("TRY");
                 throw;//BAD
             }
         }
 
-        public void Test08()
-        {
-            try
-            {
-                Console.WriteLine("TRY");
-            }
-            //We are catching Exception type and this is not recommended.
-            catch (Exception)//BAD
-            {
-                Console.WriteLine("CATCH");
-            }
-        }
+//        public void Test08()
+//        {
+//            try
+//            {
+//                Console.WriteLine("TRY");
+//            }
+//            //We are catching Exception type and this is not recommended.
+//            catch (Exception)//BAD
+//            {
+//                Console.WriteLine("CATCH");
+//            }
+//        }
 
 //        public void Test10()
 //        {

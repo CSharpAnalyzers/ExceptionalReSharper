@@ -50,6 +50,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="CommentsTests.cs" />
+    <Compile Include="ITest.cs" />
     <Compile Include="SandBox.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

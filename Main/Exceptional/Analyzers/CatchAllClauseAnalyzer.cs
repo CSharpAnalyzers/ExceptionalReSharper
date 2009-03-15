@@ -1,3 +1,7 @@
+/// <copyright file="CatchAllClauseAnalyzer.cs" manufacturer="CodeGears">
+///   Copyright (c) CodeGears. All rights reserved.
+/// </copyright>
+
 using CodeGears.ReSharper.Exceptional.Highlightings;
 using CodeGears.ReSharper.Exceptional.Model;
 
@@ -11,7 +15,7 @@ namespace CodeGears.ReSharper.Exceptional.Analyzers
             if (catchClauseModel == null) return;
             if (catchClauseModel.IsCatchAll == false) return;
 
-            this.Process.AddHighlighting(catchClauseModel.DocumentRange, new CatchAllClauseHighlighting(catchClauseModel));
+            this.Process.AddHighlighting(new CatchAllClauseHighlighting(catchClauseModel));
         }
     }
 }

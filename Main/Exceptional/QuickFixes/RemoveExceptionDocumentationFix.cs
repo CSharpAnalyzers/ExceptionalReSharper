@@ -1,8 +1,8 @@
+using System;
 using CodeGears.ReSharper.Exceptional.Highlightings;
-using JetBrains.Application;
+using JetBrains.Application.Progress;
 using JetBrains.ProjectModel;
-using JetBrains.ReSharper.Daemon;
-using JetBrains.ReSharper.Psi;
+using JetBrains.ReSharper.Intentions;
 using JetBrains.TextControl;
 
 namespace CodeGears.ReSharper.Exceptional.QuickFixes
@@ -17,17 +17,12 @@ namespace CodeGears.ReSharper.Exceptional.QuickFixes
             Error = error;
         }
 
-        public override void Execute(ISolution solution, ITextControl textControl)
+        protected override Action<ITextControl> ExecuteTransaction(ISolution solution, IProgressIndicator progress)
         {
-            using (CommandCookie.Create(Resources.QuickFixRemoveExceptionDocumentation))
-            {
-                PsiManager.GetInstance(solution).DoTransaction(
-                    delegate
-                    {
-                        var docCommentModel = this.Error.ExceptionDocumentationModel.MethodDeclarationModel.DocCommentBlockModel;
-                        docCommentModel.RemoveExceptionDocumentation(this.Error.ExceptionDocumentationModel);
-                    });
-            }
+            var docCommentModel = this.Error.ExceptionDocumentationModel.MethodDeclarationModel.DocCommentBlockModel;
+            docCommentModel.RemoveExceptionDocumentation(this.Error.ExceptionDocumentationModel);
+
+            return null;
         }
 
         public override string Text

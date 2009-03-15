@@ -1,12 +1,15 @@
+using System;
 using CodeGears.ReSharper.Exceptional.Highlightings;
 using CodeGears.ReSharper.Exceptional.Model;
-using CodeGears.ReSharper.Exceptional.Templates;
-using JetBrains.Application;
+using JetBrains.Application.Progress;
 using JetBrains.DocumentModel;
 using JetBrains.ProjectModel;
-using JetBrains.ReSharper.Daemon;
-using JetBrains.ReSharper.Psi;
+using JetBrains.ReSharper.Feature.Services.LiveTemplates.Hotspots;
+using JetBrains.ReSharper.Feature.Services.LiveTemplates.LiveTemplates;
+using JetBrains.ReSharper.Intentions;
+using JetBrains.ReSharper.LiveTemplates;
 using JetBrains.TextControl;
+using JetBrains.Util;
 
 namespace CodeGears.ReSharper.Exceptional.QuickFixes
 {
@@ -20,34 +23,44 @@ namespace CodeGears.ReSharper.Exceptional.QuickFixes
             Error = error;
         }
 
-        public override void Execute(ISolution solution, ITextControl textControl)
+        protected override Action<ITextControl> ExecuteTransaction(ISolution solution, IProgressIndicator progress)
         {
-            using (CommandCookie.Create(Resources.QuickFixInsertExceptionDocumentation))
-            {
-                ExceptionDocCommentModel insertedExceptionModel = null;
-
-                PsiManager.GetInstance(solution).DoTransaction(
-                    delegate
-                        {
-                            var methodDeclaration = this.Error.ThrownExceptionModel.MethodDeclarationModel;
-                            methodDeclaration.EnsureHasDocComment();
+            ExceptionDocCommentModel insertedExceptionModel = null;
+            var methodDeclaration = this.Error.ThrownExceptionModel.MethodDeclarationModel;
+            methodDeclaration.EnsureHasDocComment();
                             
-                            if(methodDeclaration.DocCommentBlockModel != null)
-                            {
-                                insertedExceptionModel = methodDeclaration.DocCommentBlockModel.AddExceptionDocumentation(this.Error.ThrownExceptionModel.ExceptionType);   
-                            }
-                        });
-
-                if (insertedExceptionModel == null) return;
-
-                var exceptionCommentRange = insertedExceptionModel.GetDescriptionDocumentRange();
-                if (exceptionCommentRange == DocumentRange.InvalidRange) return;
-
-                var templateHotSpot = new TemplateHotSpot("Comment", exceptionCommentRange.TextRange);
-                templateHotSpot.Suggestions.Add("Thrown when ");
-                
-                TemplateRunner.Run(solution, textControl, exceptionCommentRange.TextRange, templateHotSpot);
+            if(methodDeclaration.DocCommentBlockModel != null)
+            {
+                insertedExceptionModel = methodDeclaration.DocCommentBlockModel.AddExceptionDocumentation(this.Error.ThrownExceptionModel.ExceptionType);   
             }
+
+            if (insertedExceptionModel == null) return null;
+
+            var exceptionCommentRange = insertedExceptionModel.GetDescriptionDocumentRange();
+            if (exceptionCommentRange == DocumentRange.InvalidRange) return null;
+
+
+            var nameSuggestionsExpression = new NameSuggestionsExpression(new[] {"Thrown when "});
+            var field = new TemplateField("name", nameSuggestionsExpression, 0);
+            var fieldInfo = new HotspotInfo(field, exceptionCommentRange.TextRange);
+
+            return textControl =>
+                       {
+                           var hotspotSession = LiveTemplatesManager.CreateHotpotSessionAtopExistingText(
+                               this.Error.ThrownExceptionModel.ExceptionType.GetManager().Solution,
+                               TextRange.InvalidRange,
+                               textControl, 
+                               LiveTemplatesManager.EscapeAction.LeaveTextAndCaret,
+                               new[] {fieldInfo});
+
+                           hotspotSession.Execute(null);
+
+                           hotspotSession.Closed += new HotspotSessionClosedHandler(
+                               delegate
+                                   {
+                                       textControl.SelectionModel.RemoveSelection();
+                                   });
+                       };
         }
 
         public override string Text

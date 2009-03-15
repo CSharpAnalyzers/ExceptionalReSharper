@@ -1,3 +1,7 @@
+/// <copyright file="HasInnerExceptionFromOuterCatchClauseAnalyzer.cs" manufacturer="CodeGears">
+///   Copyright (c) CodeGears. All rights reserved.
+/// </copyright>
+
 using CodeGears.ReSharper.Exceptional.Highlightings;
 using CodeGears.ReSharper.Exceptional.Model;
 
@@ -11,7 +15,7 @@ namespace CodeGears.ReSharper.Exceptional.Analyzers
             if (throwStatementModel == null) return;
             if (AnalyzeIfHasInnerException(throwStatementModel) == false) return;
 
-            this.Process.AddHighlighting(throwStatementModel.DocumentRange, new ThrowFromCatchWithNoInnerExceptionHighlighting(throwStatementModel));
+            this.Process.AddHighlighting(new ThrowFromCatchWithNoInnerExceptionHighlighting(throwStatementModel));
         }
 
         private static bool AnalyzeIfHasInnerException(ThrowStatementModel throwStatementModel)

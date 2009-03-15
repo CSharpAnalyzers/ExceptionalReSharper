@@ -8,7 +8,7 @@ namespace CodeGears.ReSharper.Exceptional.Model
 {
     internal class ExceptionDocCommentModel : DocCommentModel
     {
-        public IDeclaredType ExceptionType { get; set; }
+        public IDeclaredType ExceptionType { get; private set; }
 
         public ExceptionDocCommentModel(DocCommentBlockModel docCommentBlockModel) 
             : base(docCommentBlockModel) { }
@@ -31,7 +31,15 @@ namespace CodeGears.ReSharper.Exceptional.Model
                 if (match.Success == false) continue;
 
                 var exceptionType = match.Groups["exception"].Value;
-                return TypeFactory.CreateTypeByCLRName(exceptionType, docCommentNode.GetProject());
+
+                var exceptionReference = this.DocCommentBlockModel.References.Find(reference => reference.GetName().Equals(exceptionType));
+                if (exceptionReference == null) return TypeFactory.CreateTypeByCLRName(exceptionType, docCommentNode.GetPsiModule());
+
+                var resolveResult = exceptionReference.Resolve();
+                var declaredType = resolveResult.DeclaredElement as ITypeElement;
+                if (declaredType == null) return TypeFactory.CreateTypeByCLRName(exceptionType, docCommentNode.GetPsiModule()); ;
+
+                return TypeFactory.CreateTypeByCLRName(declaredType.CLRName, docCommentNode.GetPsiModule());
             }
 
             return null;
