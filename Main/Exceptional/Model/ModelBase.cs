@@ -1,5 +1,6 @@
 using CodeGears.ReSharper.Exceptional.Analyzers;
 using JetBrains.DocumentModel;
+using JetBrains.ReSharper.Psi;
 
 namespace CodeGears.ReSharper.Exceptional.Model
 {
@@ -15,5 +16,10 @@ namespace CodeGears.ReSharper.Exceptional.Model
         }
 
         public virtual void Accept(AnalyzerBase analyzerBase) {}
+
+        protected IPsiModule GetPsiModule()
+        {
+            return this.MethodDeclarationModel.MethodDeclaration.GetPsiModule();
+        }
     }
 }

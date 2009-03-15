@@ -9,6 +9,7 @@ using JetBrains.ReSharper.Psi.CSharp;
 using JetBrains.ReSharper.Psi.CSharp.Tree;
 using JetBrains.ReSharper.Psi.ExtensionsAPI;
 using JetBrains.ReSharper.Psi.Tree;
+using JetBrains.ReSharper.Psi.Util;
 
 namespace CodeGears.ReSharper.Exceptional.Model
 {
@@ -16,7 +17,7 @@ namespace CodeGears.ReSharper.Exceptional.Model
     internal class MethodDeclarationModel : ModelBase, IBlockModel
     {
         public IMethodDeclaration MethodDeclaration { get; set; }
-        public DocCommentBlockModel DocCommentBlockModel { get; private set; }
+        public DocCommentBlockModel DocCommentBlockModel { get; set; }
         public List<TryStatementModel> TryStatementModels { get; private set; }
         public List<ThrowStatementModel> ThrowStatementModels { get; private set; }
         public IBlockModel ParentBlock { get; set; }
@@ -74,6 +75,7 @@ namespace CodeGears.ReSharper.Exceptional.Model
             MethodDeclaration = methodDeclaration;
             TryStatementModels = new List<TryStatementModel>();
             ThrowStatementModels = new List<ThrowStatementModel>();
+            DocCommentBlockModel = new DocCommentBlockModel(this);
         }
 
         public override void Accept(AnalyzerBase analyzerBase)
@@ -94,25 +96,9 @@ namespace CodeGears.ReSharper.Exceptional.Model
             }
         }
 
-        private void AddDocComment()
-        {
-            var docCommentBlockNode = CSharpElementFactory.GetInstance(this.MethodDeclaration.GetPsiModule()).CreateDocComment("<summary></summary>");
-            SharedImplUtil.SetDocCommentBlockNode(this.MethodDeclaration.ToTreeNode(), docCommentBlockNode);
-
-            SetDocCommentBlockNode(docCommentBlockNode);
-        }
-
-        public void EnsureHasDocComment()
-        {
-            if (this.DocCommentBlockModel == null)
-            {
-                AddDocComment();
-            }
-        }
-
         public void SetDocCommentBlockNode(IDocCommentBlockNode docCommentBlockNode)
         {
-            this.DocCommentBlockModel = new DocCommentBlockModel(this, docCommentBlockNode);
+            SharedImplUtil.SetDocCommentBlockNode(this.MethodDeclaration.ToTreeNode(), docCommentBlockNode);
         }
     }
 }

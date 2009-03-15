@@ -1,12 +1,14 @@
 using System;
 using System.Collections.Generic;
 using CodeGears.ReSharper.Exceptional.Analyzers;
+using JetBrains.Application;
 using JetBrains.ReSharper.Psi;
 using JetBrains.ReSharper.Psi.CodeStyle;
 using JetBrains.ReSharper.Psi.CSharp;
 using JetBrains.ReSharper.Psi.CSharp.CodeStyle;
 using JetBrains.ReSharper.Psi.CSharp.Tree;
 using JetBrains.ReSharper.Psi.ExtensionsAPI;
+using JetBrains.ReSharper.Psi.ExtensionsAPI.Tree;
 using JetBrains.ReSharper.Psi.Resolve;
 using JetBrains.ReSharper.Psi.Tree;
 
@@ -17,6 +19,11 @@ namespace CodeGears.ReSharper.Exceptional.Model
     {
         public IDocCommentBlockNode DocCommentNode { get; set; }
         private List<DocCommentModel> DocCommentModels { get; set; }
+
+        private bool IsReal
+        {
+            get { return this.DocCommentNode != null; }
+        }
 
         public IEnumerable<ExceptionDocCommentModel> ExceptionDocCommentModels
         {
@@ -34,13 +41,23 @@ namespace CodeGears.ReSharper.Exceptional.Model
 
         public List<IReference> References { get; private set; }
 
+        public DocCommentBlockModel(MethodDeclarationModel methodDeclarationModel) : this(methodDeclarationModel, null)
+        { }
+
         public DocCommentBlockModel(MethodDeclarationModel methodDeclarationModel, IDocCommentBlockNode docCommentNode) : base(methodDeclarationModel)
         {
             DocCommentNode = docCommentNode;
             DocCommentModels = new List<DocCommentModel>();
+            References = new List<IReference>();
 
-            this.References = new List<IReference>(this.DocCommentNode.GetFirstClassReferences());
+            Preprocess();
+        }
 
+        private void Preprocess()
+        {
+            if (this.DocCommentNode == null) return;
+
+            this.References.AddRange(this.DocCommentNode.GetFirstClassReferences());
             InitializeExceptionsDocumentation();
         }
 
@@ -122,33 +139,55 @@ namespace CodeGears.ReSharper.Exceptional.Model
         {
             if(exceptionType == null) return null;
 
+            Shell.Instance.Locks.AcquireWriteLock();
+
+            ExceptionDocCommentModel result;
+
             var exceptionDocumentation = String.Format("<exception cref=\"{1}\">[MARKER]</exception>{0}", Environment.NewLine, exceptionType.GetCLRName());
-            exceptionDocumentation += exceptionDocumentation;
-            var docCommentBlockNode = CSharpElementFactory.GetInstance(this.DocCommentNode.GetPsiModule()).CreateDocComment(exceptionDocumentation);
 
-            var commentNode = docCommentBlockNode.FirstChild as IDocCommentNode;
-
-            if (commentNode == null) return null;
-
-            var spaces = commentNode.NextSibling;
-
-            if(this.DocCommentNode.LastChild != null)
+            if (this.IsReal == false)
             {
-                LowLevelModificationUtil.AddChildAfter(this.DocCommentNode.LastChild, spaces, commentNode);
+                var docCommentBlockNode = CSharpElementFactory.GetInstance(this.GetPsiModule()).CreateDocComment(exceptionDocumentation);
+                var methodDeclaretionNode = this.MethodDeclarationModel.MethodDeclaration as IMethodDeclarationNode;
+                docCommentBlockNode = ModificationUtil.AddChildBefore(methodDeclaretionNode, methodDeclaretionNode.FirstChild, docCommentBlockNode);
+                this.DocCommentNode = docCommentBlockNode;
+                Preprocess();
+
+                CSharpCodeFormatter.Instance.Format(this.DocCommentNode, CodeFormatProfile.INDENT);
+
+                result = this.DocCommentModels[1] as ExceptionDocCommentModel;
             }
             else
             {
-                LowLevelModificationUtil.AddChild(this.DocCommentNode, spaces, commentNode);
+                exceptionDocumentation += exceptionDocumentation;
+                var docCommentBlockNode = CSharpElementFactory.GetInstance(this.GetPsiModule()).CreateDocComment(exceptionDocumentation);
+
+                var commentNode = docCommentBlockNode.FirstChild as IDocCommentNode;
+
+                if (commentNode == null) return null;
+
+                var spaces = commentNode.NextSibling;
+
+                if (this.DocCommentNode.LastChild != null)
+                {
+                    LowLevelModificationUtil.AddChildAfter(this.DocCommentNode.LastChild, spaces, commentNode);
+                }
+                else
+                {
+                    LowLevelModificationUtil.AddChild(this.DocCommentNode, spaces, commentNode);
+                }
+
+                CSharpCodeFormatter.Instance.Format(this.DocCommentNode, CodeFormatProfile.INDENT);
+
+                result = new ExceptionDocCommentModel(this);
+                result.TreeNodes.Add(commentNode);
+                result.Initialize();
+                this.DocCommentModels.Add(result);
             }
 
-            CSharpCodeFormatter.Instance.Format(this.DocCommentNode, CodeFormatProfile.INDENT);
+            Shell.Instance.Locks.ReleaseWriteLock();
 
-            var model = new ExceptionDocCommentModel(this);
-            model.TreeNodes.Add(commentNode);
-            model.Initialize();
-            this.DocCommentModels.Add(model);
-
-            return model;
+            return result;
         }
 
         public void RemoveExceptionDocumentation(ExceptionDocCommentModel exceptionDocCommentModel)

@@ -147,7 +147,7 @@ namespace CodeGears.ReSharper.Exceptional
 
         public void Process(IDocCommentBlockNode docCommentBlockNode)
         {
-            this.MethodDeclarationModel.SetDocCommentBlockNode(docCommentBlockNode);
+            this.MethodDeclarationModel.DocCommentBlockModel = new DocCommentBlockModel(this.MethodDeclarationModel, docCommentBlockNode);
         }
     }
 }

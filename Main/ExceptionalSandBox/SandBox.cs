@@ -2,7 +2,7 @@
 
 namespace ExceptionalSandBox
 {
-    public class SandBox
+    class SandBox
     {
         public void Test13()
         {

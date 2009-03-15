@@ -1,6 +1,5 @@
 using System;
 using CodeGears.ReSharper.Exceptional.Highlightings;
-using CodeGears.ReSharper.Exceptional.Model;
 using JetBrains.Application.Progress;
 using JetBrains.DocumentModel;
 using JetBrains.ProjectModel;
@@ -25,20 +24,13 @@ namespace CodeGears.ReSharper.Exceptional.QuickFixes
 
         protected override Action<ITextControl> ExecuteTransaction(ISolution solution, IProgressIndicator progress)
         {
-            ExceptionDocCommentModel insertedExceptionModel = null;
             var methodDeclaration = this.Error.ThrownExceptionModel.MethodDeclarationModel;
-            methodDeclaration.EnsureHasDocComment();
-                            
-            if(methodDeclaration.DocCommentBlockModel != null)
-            {
-                insertedExceptionModel = methodDeclaration.DocCommentBlockModel.AddExceptionDocumentation(this.Error.ThrownExceptionModel.ExceptionType);   
-            }
 
+            var insertedExceptionModel = methodDeclaration.DocCommentBlockModel.AddExceptionDocumentation(this.Error.ThrownExceptionModel.ExceptionType);
             if (insertedExceptionModel == null) return null;
 
             var exceptionCommentRange = insertedExceptionModel.GetDescriptionDocumentRange();
             if (exceptionCommentRange == DocumentRange.InvalidRange) return null;
-
 
             var nameSuggestionsExpression = new NameSuggestionsExpression(new[] {"Thrown when "});
             var field = new TemplateField("name", nameSuggestionsExpression, 0);
@@ -49,17 +41,11 @@ namespace CodeGears.ReSharper.Exceptional.QuickFixes
                            var hotspotSession = LiveTemplatesManager.CreateHotpotSessionAtopExistingText(
                                this.Error.ThrownExceptionModel.ExceptionType.GetManager().Solution,
                                TextRange.InvalidRange,
-                               textControl, 
+                               textControl,
                                LiveTemplatesManager.EscapeAction.LeaveTextAndCaret,
                                new[] {fieldInfo});
 
-                           hotspotSession.Execute(null);
-
-                           hotspotSession.Closed += new HotspotSessionClosedHandler(
-                               delegate
-                                   {
-                                       textControl.SelectionModel.RemoveSelection();
-                                   });
+                           hotspotSession.Execute();
                        };
         }
 
