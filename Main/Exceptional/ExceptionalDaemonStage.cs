@@ -1,4 +1,4 @@
-/// <copyright file="ExceptionalDemonStage.cs" manufacturer="CodeGears">
+/// <copyright file="ExceptionalDaemonStage.cs" manufacturer="CodeGears">
 ///   Copyright (c) CodeGears. All rights reserved.
 /// </copyright>
 
@@ -9,20 +9,17 @@ using JetBrains.ReSharper.Daemon.CSharp.Stages;
 namespace CodeGears.ReSharper.Exceptional
 {
     /// <summary>Daemon stage that is responsible for creating daemon stage process.</summary>
-    /// <remarks>The deamon stage is needed to plugin into a ReSharper's highlighting infrastucture.
+    /// <remarks>The daemon stage is needed to plug-in into a ReSharper's highlighting infrastructure.
     /// It is responsible for creating daemon stage process. The <see cref="DaemonStageAttribute"/>
-    /// marks this type so that it will be automatycally loaded by ReSharper. To work properely the
+    /// marks this type so that it will be automatically loaded by ReSharper. To work properly the
     /// marked type must implement <see cref="IDaemonStage"/> interface.</remarks>
     [DaemonStage]
-    public class ExceptionalDemonStage : CSharpDaemonStageBase
+    public class ExceptionalDaemonStage : CSharpDaemonStageBase
     {
-        public override IDaemonStageProcess CreateProcess(IDaemonProcess process)
+        public override IDaemonStageProcess CreateProcess(IDaemonProcess process, DaemonProcessKind processKind)
         {
             if (process == null) return null;
-            if (IsSupported(process.ProjectFile) == false)
-            {
-                return null;
-            }
+            if (IsSupported(process.ProjectFile) == false) return null;
 
             return new ExceptionalDaemonStageProcess(process);
         }
