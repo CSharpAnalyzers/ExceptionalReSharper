@@ -1,42 +1,42 @@
+using System;
 using JetBrains.ReSharper.Psi;
 using JetBrains.ReSharper.Psi.CSharp.Tree;
-using JetBrains.ReSharper.Psi.Tree;
 
 namespace CodeGears.ReSharper.Exceptional.Model
 {
     internal class GeneralCatchClauseModel : CatchClauseModel
     {
-        public IGeneralCatchClause GeneralCatchClause
+        private IGeneralCatchClauseNode GeneralCatchClauseNode
         {
-            get { return this.CatchClause as IGeneralCatchClause; }
+            get { return this.CatchClauseNode as IGeneralCatchClauseNode; }
         }
 
-        public IGeneralCatchClauseNode GeneralCatchClauseNode
-        {
-            get { return this.CatchClause as IGeneralCatchClauseNode; }
-        }
-
-        public GeneralCatchClauseModel(MethodDeclarationModel methodDeclarationModel, ICatchClause catchClause) 
+        public GeneralCatchClauseModel(MethodDeclarationModel methodDeclarationModel, ICatchClauseNode catchClause) 
             : base(methodDeclarationModel, catchClause) { }
 
-        public override void AddVariable()
+        public override void AddCatchVariable(string variableName)
         {
             if (this.HasVariable) return;
+            if (String.IsNullOrEmpty(variableName))
+            {
+                variableName = SuggestVariableName();
+            }
 
-            var codeFactory = new CodeElementFactory(this.CatchClause.GetPsiModule());
+            var codeFactory = new CodeElementFactory(this.GetPsiModule());
 
-            var newCatch = codeFactory.CreateSpecificCatchClause(null, this.CatchClause.Body);
+
+            var newCatch = codeFactory.CreateSpecificCatchClause(null, this.CatchClauseNode.Body, variableName);
             if (newCatch == null) return;
 
-            this.GeneralCatchClause.ReplaceBy(newCatch);
+            this.GeneralCatchClauseNode.ReplaceBy(newCatch);
 
-            this.CatchClause = newCatch;
+            this.CatchClauseNode = newCatch;
             this.VariableModel = new CatchVariableModel(this.MethodDeclarationModel, newCatch.ExceptionDeclaration);
         }
 
         public override IDeclaredType GetCatchedException()
         {
-            return TypeFactory.CreateTypeByCLRName("System.Exception", this.CatchClause.GetPsiModule());
+            return TypeFactory.CreateTypeByCLRName("System.Exception", this.GetPsiModule());
         }
 
         public override bool Catches(IDeclaredType exception)

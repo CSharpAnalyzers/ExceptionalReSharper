@@ -1,8 +1,16 @@
+using System;
 using System.Collections.Generic;
 using CodeGears.ReSharper.Exceptional.Analyzers;
 using JetBrains.DocumentModel;
 using JetBrains.ReSharper.Psi;
+using JetBrains.ReSharper.Psi.CSharp;
+using JetBrains.ReSharper.Psi.CSharp.Parsing;
 using JetBrains.ReSharper.Psi.CSharp.Tree;
+using JetBrains.ReSharper.Psi.ExtensionsAPI;
+using JetBrains.ReSharper.Psi.ExtensionsAPI.Tree;
+using JetBrains.ReSharper.Psi.Parsing;
+using JetBrains.ReSharper.Psi.Tree;
+using JetBrains.Util;
 
 namespace CodeGears.ReSharper.Exceptional.Model
 {
@@ -82,6 +90,49 @@ namespace CodeGears.ReSharper.Exceptional.Model
         public bool Throws(IDeclaredType exceptionType)
         {
             return this.ThrownExceptionModel.Throws(exceptionType);
+        }
+
+        public TextRange[] AddInnerException(string variableName)
+        {
+            var ranges = new List<TextRange>();
+
+            var objectCreationExpressionNode = this.ThrowStatement.Exception as IObjectCreationExpressionNode;
+            if (objectCreationExpressionNode == null) return new TextRange[0];
+
+            if (objectCreationExpressionNode.Arguments.Count == 0)
+            {
+                var messageExpression = CSharpElementFactory.GetInstance(this.GetPsiModule()).CreateExpressionAsIs(
+                    "\"See inner exception for details.\"");
+
+                var messageArgument = CSharpElementFactory.GetInstance(this.GetPsiModule()).CreateArgument(ParameterKind.VALUE, messageExpression);
+                
+                messageArgument = objectCreationExpressionNode.AddArgumentAfter(messageArgument, null);
+                ranges.Add(messageArgument.GetDocumentRange().TextRange);
+            }
+
+            if (objectCreationExpressionNode.Arguments.Count == 1)
+            {
+                var messageArgument = objectCreationExpressionNode.ArgumentList.Arguments[0];
+
+                var innerExceptionExpression = CSharpElementFactory.GetInstance(this.GetPsiModule()).CreateExpressionAsIs(variableName);
+                var innerExpressionArgument = CSharpElementFactory.GetInstance(this.GetPsiModule()).CreateArgument(ParameterKind.VALUE, innerExceptionExpression);
+
+                innerExpressionArgument = objectCreationExpressionNode.AddArgumentAfter(innerExpressionArgument, messageArgument);
+                ranges.Add(innerExpressionArgument.GetDocumentRange().TextRange);
+            }
+
+            return ranges.ToArray();
+        }
+
+        public bool HasInnerException(string variableName)
+        {
+            var objectCreationExpressionNode = this.ThrowStatement.Exception as IObjectCreationExpressionNode;
+            if (objectCreationExpressionNode == null) return false;
+            if (objectCreationExpressionNode.Arguments.Count < 2) return false;
+
+            var secondArgument = objectCreationExpressionNode.Arguments[1];
+            return secondArgument.GetText().Equals(variableName);
+
         }
     }
 }

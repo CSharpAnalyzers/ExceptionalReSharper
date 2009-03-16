@@ -31,9 +31,10 @@ namespace CodeGears.ReSharper.Exceptional
         private static readonly List<AnalyzerBase> _analyzers = new List<AnalyzerBase>(
             new AnalyzerBase[]
                 {
-                    new IsThrownExceptionDocumentedAnalyzer(),
-                    new IsDocumentedExceptionThrownAnalyzer(),
-                    new CatchAllClauseAnalyzer()
+                    //new IsThrownExceptionDocumentedAnalyzer()
+                    //, new IsDocumentedExceptionThrownAnalyzer()
+                    //, new CatchAllClauseAnalyzer()
+                    new HasInnerExceptionFromOuterCatchClauseAnalyzer()
                 });
 
         private MethodDeclarationModel MethodDeclarationModel { get; set; }
@@ -97,7 +98,7 @@ namespace CodeGears.ReSharper.Exceptional
 
             var tryStatementModel = this.TryStatementModelsStack.Peek();
 
-            var model = (catchClause is ISpecificCatchClauseNode) ? (CatchClauseModel)new SpecificCatchClauseModel(this.MethodDeclarationModel, catchClause) : new GeneralCatchClauseModel(this.MethodDeclarationModel, catchClause);
+            var model = (catchClause is ISpecificCatchClauseNode) ? (CatchClauseModel)new SpecificCatchClauseModel(this.MethodDeclarationModel, catchClause as ICatchClauseNode) : new GeneralCatchClauseModel(this.MethodDeclarationModel, catchClause as ICatchClauseNode);
             model.ParentBlock = tryStatementModel.ParentBlock;
             tryStatementModel.CatchClauseModels.Add(model);
             this.CatchClauseModelsStack.Push(model);

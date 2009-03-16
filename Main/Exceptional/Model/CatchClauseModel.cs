@@ -3,24 +3,21 @@ using CodeGears.ReSharper.Exceptional.Analyzers;
 using JetBrains.DocumentModel;
 using JetBrains.ReSharper.Psi;
 using JetBrains.ReSharper.Psi.CSharp.Tree;
+using JetBrains.ReSharper.Psi.Naming;
+using JetBrains.ReSharper.Psi.Naming.Extentions;
+using JetBrains.ReSharper.Psi.Naming.Settings;
+using JetBrains.ReSharper.Psi.Tree;
+using JetBrains.Util;
 
 namespace CodeGears.ReSharper.Exceptional.Model
 {
     internal abstract class CatchClauseModel : ModelBase, IBlockModel
     {
+        protected ICatchClauseNode CatchClauseNode { get; set; }
         public CatchVariableModel VariableModel { get; set; }
         public bool IsCatchAll { get; private set; }
         public bool IsRethrown { get; set; }
 
-        protected ICatchClause CatchClause { get; set; }
-
-        protected ICatchClauseNode CatchClauseNode
-        {
-            get { return this.CatchClause as ICatchClauseNode; }
-        }
-
-
-        public abstract void AddVariable();
         public abstract bool Catches(IDeclaredType exception);
         public abstract bool HasExceptionType { get; }
         
@@ -34,10 +31,10 @@ namespace CodeGears.ReSharper.Exceptional.Model
             get { return this.CatchClauseNode.CatchKeyword.GetDocumentRange(); }
         }
 
-        protected CatchClauseModel(MethodDeclarationModel methodDeclarationModel, ICatchClause catchClause)
+        protected CatchClauseModel(MethodDeclarationModel methodDeclarationModel, ICatchClauseNode catchClauseNode)
             : base(methodDeclarationModel)
         {
-            CatchClause = catchClause;
+            CatchClauseNode = catchClauseNode;
             ThrowStatementModels = new List<ThrowStatementModel>();
             TryStatementModels = new List<TryStatementModel>();
 
@@ -53,12 +50,10 @@ namespace CodeGears.ReSharper.Exceptional.Model
 
         private bool GetIsCatchAll()
         {
-            if(this.CatchClause.ExceptionType == null) return false;
+            if(this.CatchClauseNode.ExceptionType == null) return false;
 
-            return this.CatchClause.ExceptionType.GetCLRName().Equals("System.Exception");
+            return this.CatchClauseNode.ExceptionType.GetCLRName().Equals("System.Exception");
         }
-
-       
 
         //public override void AssignHighlights(CSharpDaemonStageProcessBase process)
         //{
@@ -133,5 +128,19 @@ namespace CodeGears.ReSharper.Exceptional.Model
             return this.ParentBlock.CatchesException(exception);
         }
         #endregion
+
+        public abstract void AddCatchVariable(string variableName);
+
+        public string SuggestVariableName()
+        {
+            var namesCollection = NameSuggestionUtil.CreateEmptyCollection(
+                this.CatchClauseNode.Language, PluralityKinds.Single, true, this.CatchClauseNode.GetSolution());
+            namesCollection.Add(this.GetCatchedException(), PluralityKinds.Single);
+
+            var roots = new List<NameRoot>(namesCollection.GetRoots("e", PredefinedPrefixPolicy.Preserve));
+            var newNames = new List<string>(NamingManager.SuggestUniqueShortNames(roots, this.CatchClauseNode, NamedElementKinds.Locals, ScopeKind.LocalSelfScoped));
+
+            return newNames.Count > 0 ? newNames.GetLast() : "exception";
+        }
     }
 }

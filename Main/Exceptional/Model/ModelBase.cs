@@ -1,6 +1,7 @@
 using CodeGears.ReSharper.Exceptional.Analyzers;
 using JetBrains.DocumentModel;
 using JetBrains.ReSharper.Psi;
+using JetBrains.ReSharper.Psi.CSharp;
 
 namespace CodeGears.ReSharper.Exceptional.Model
 {
@@ -20,6 +21,11 @@ namespace CodeGears.ReSharper.Exceptional.Model
         protected IPsiModule GetPsiModule()
         {
             return this.MethodDeclarationModel.MethodDeclaration.GetPsiModule();
+        }
+
+        protected CSharpElementFactory GetElementFactory()
+        {
+            return CSharpElementFactory.GetInstance(this.GetPsiModule());
         }
     }
 }

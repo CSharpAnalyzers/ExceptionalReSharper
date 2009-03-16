@@ -13,7 +13,7 @@ namespace CodeGears.ReSharper.Exceptional.Analyzers
         public override void Visit(ThrowStatementModel throwStatementModel)
         {
             if (throwStatementModel == null) return;
-            if (AnalyzeIfHasInnerException(throwStatementModel) == false) return;
+            if (AnalyzeIfHasInnerException(throwStatementModel)) return;
 
             this.Process.AddHighlighting(new ThrowFromCatchWithNoInnerExceptionHighlighting(throwStatementModel));
         }
@@ -38,28 +38,7 @@ namespace CodeGears.ReSharper.Exceptional.Analyzers
                 return false;
             }
 
-            return false;
-//            var list = new List<IDeclaredElement>(outerCatch.LocalVariables);
-//            var catchVariable = list.Find(element => element is ICatchVariableDeclaration);
-//            if (catchVariable == null) return false;
-//
-//            var exception = throwStatementModel.ThrowStatement.Exception as IObjectCreationExpressionNode;
-//            if (exception == null) return false;
-//
-//            var arguments = new List<ICSharpArgumentNode>(exception.ArgumentList.Arguments);
-//            var match = arguments.Find(arg =>
-//            {
-//                var reference = arg.ValueNode as IReferenceExpressionNode;
-//                if (reference == null) return false;
-//
-//                return reference.NameIdentifier.Name.Equals(catchVariable.ShortName);
-//            });
-//
-//            var result = match != null;
-//
-//            catchModel.IsRethrown = result;
-//
-//            return result;
+            return throwStatementModel.HasInnerException(outerCatchClause.VariableModel.VariableName.Name);
         }
     }
 }

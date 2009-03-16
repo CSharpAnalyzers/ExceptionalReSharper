@@ -10,10 +10,11 @@ namespace ExceptionalSandBox
             {
                 Console.WriteLine("TRY");
             }
-            catch (OperationCanceledException)//BAD 
+            catch
             {
-                Console.WriteLine("TRY");
-                throw;//BAD
+                var ex = "test";
+                Console.WriteLine(ex);
+                throw new InvalidOperationException();//BAD
             }
         }
 

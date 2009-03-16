@@ -56,12 +56,12 @@ namespace CodeGears.ReSharper.Exceptional
         /// <param name="exceptionType">Type of the exception to catch.</param>
         /// <param name="catchBody">Body of the created catch.</param>
         /// <returns></returns>
-        public ISpecificCatchClause CreateSpecificCatchClause(IDeclaredType exceptionType, IBlock catchBody)
+        public ISpecificCatchClauseNode CreateSpecificCatchClause(IDeclaredType exceptionType, IBlock catchBody, string variableName)
         {
-            var tryStatement = this.Factory.CreateStatement("try {} catch(Exception e) {}") as ITryStatement;
+            var tryStatement = this.Factory.CreateStatement("try {} catch(Exception $0) {}", variableName) as ITryStatement;
             if (tryStatement == null) return null;
 
-            var catchClause = tryStatement.Catches[0] as ISpecificCatchClause;
+            var catchClause = tryStatement.Catches[0] as ISpecificCatchClauseNode;
             if (catchClause == null) return null;
 
             if (exceptionType != null)
