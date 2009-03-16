@@ -31,10 +31,10 @@ namespace CodeGears.ReSharper.Exceptional
         private static readonly List<AnalyzerBase> _analyzers = new List<AnalyzerBase>(
             new AnalyzerBase[]
                 {
-                    //new IsThrownExceptionDocumentedAnalyzer()
-                    //, new IsDocumentedExceptionThrownAnalyzer()
-                    //, new CatchAllClauseAnalyzer()
-                    new HasInnerExceptionFromOuterCatchClauseAnalyzer()
+                    new IsThrownExceptionDocumentedAnalyzer()
+                    , new IsDocumentedExceptionThrownAnalyzer()
+                    , new CatchAllClauseAnalyzer()
+                    , new HasInnerExceptionFromOuterCatchClauseAnalyzer()
                 });
 
         private MethodDeclarationModel MethodDeclarationModel { get; set; }
@@ -148,6 +148,8 @@ namespace CodeGears.ReSharper.Exceptional
 
         public void Process(IDocCommentBlockNode docCommentBlockNode)
         {
+            if (this.IsValid() == false) return;
+
             this.MethodDeclarationModel.DocCommentBlockModel = new DocCommentBlockModel(this.MethodDeclarationModel, docCommentBlockNode);
         }
     }

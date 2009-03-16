@@ -4,20 +4,6 @@ namespace ExceptionalSandBox
 {
     class SandBox
     {
-        public void Test13()
-        {
-            try
-            {
-                Console.WriteLine("TRY");
-            }
-            catch
-            {
-                var ex = "test";
-                Console.WriteLine(ex);
-                throw new InvalidOperationException();//BAD
-            }
-        }
-
 //        public void Test08()
 //        {
 //            try

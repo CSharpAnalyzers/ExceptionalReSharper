@@ -10,10 +10,10 @@ using JetBrains.ReSharper.Daemon.CSharp.Stages;
 
 namespace CodeGears.ReSharper.Exceptional.Highlightings
 {
-    [StaticSeverityHighlighting(Severity.WARNING)]
+    [StaticSeverityHighlighting(Severity.SUGGESTION)]
     public class CatchAllClauseHighlighting : CSharpHighlightingBase, IHighlighting
     {
-        internal CatchClauseModel CatchClauseModel { get; set; }
+        private CatchClauseModel CatchClauseModel { get; set; }
 
         internal CatchAllClauseHighlighting(CatchClauseModel catchClauseModel)
         {
