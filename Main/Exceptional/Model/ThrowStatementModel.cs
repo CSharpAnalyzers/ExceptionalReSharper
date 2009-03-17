@@ -1,23 +1,21 @@
-using System;
+/// <copyright file="ThrowStatementModel.cs" manufacturer="CodeGears">
+///   Copyright (c) CodeGears. All rights reserved.
+/// </copyright>
+
 using System.Collections.Generic;
 using CodeGears.ReSharper.Exceptional.Analyzers;
 using JetBrains.DocumentModel;
 using JetBrains.ReSharper.Psi;
 using JetBrains.ReSharper.Psi.CSharp;
-using JetBrains.ReSharper.Psi.CSharp.Parsing;
 using JetBrains.ReSharper.Psi.CSharp.Tree;
-using JetBrains.ReSharper.Psi.ExtensionsAPI;
-using JetBrains.ReSharper.Psi.ExtensionsAPI.Tree;
-using JetBrains.ReSharper.Psi.Parsing;
-using JetBrains.ReSharper.Psi.Tree;
 using JetBrains.Util;
 
 namespace CodeGears.ReSharper.Exceptional.Model
 {
     internal class ThrowStatementModel : ModelBase, IExceptionsOrigin
     {
-        public ThrownExceptionModel ThrownExceptionModel { get; private set; }
-        public IThrowStatement ThrowStatement { get; private set; }
+        private ThrownExceptionModel ThrownExceptionModel { get; set; }
+        private IThrowStatement ThrowStatement { get; set; }
 
         public override DocumentRange DocumentRange
         {

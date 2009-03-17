@@ -2,7 +2,6 @@
 ///   Copyright (c) CodeGears. All rights reserved.
 /// </copyright>
 
-using System;
 using CodeGears.ReSharper.Exceptional.Model;
 using JetBrains.DocumentModel;
 using JetBrains.ReSharper.Daemon;
@@ -13,7 +12,7 @@ namespace CodeGears.ReSharper.Exceptional.Highlightings
     [StaticSeverityHighlighting(Severity.WARNING)]
     public class ThrowFromCatchWithNoInnerExceptionHighlighting : CSharpHighlightingBase, IHighlighting
     {
-        internal ThrowStatementModel ThrowStatementModel { get; set; }
+        internal ThrowStatementModel ThrowStatementModel { get; private set; }
 
         internal ThrowFromCatchWithNoInnerExceptionHighlighting(ThrowStatementModel throwStatementModel)
         {
@@ -42,7 +41,7 @@ namespace CodeGears.ReSharper.Exceptional.Highlightings
 
         private string Message
         {
-            get { return String.Format("While throwing from catch clause include substituted exception as inner exception. [Exceptional]"); }
+            get { return Resources.HighLightThrowingFromCatchWithoutInnerException; }
         }
 
         public int NavigationOffsetPatch

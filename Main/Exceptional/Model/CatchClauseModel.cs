@@ -1,3 +1,7 @@
+/// <copyright file="CatchClauseModel.cs" manufacturer="CodeGears">
+///   Copyright (c) CodeGears. All rights reserved.
+/// </copyright>
+
 using System.Collections.Generic;
 using CodeGears.ReSharper.Exceptional.Analyzers;
 using JetBrains.DocumentModel;
@@ -61,16 +65,6 @@ namespace CodeGears.ReSharper.Exceptional.Model
         //    {
         //        var treeNode = this.CatchClause.ToTreeNode();
         //        process.AddHighlighting(treeNode.CatchKeyword.GetDocumentRange(), new SwallowedExceptionsHighlighting(this));
-        //    }
-
-        //    foreach (var tryStatementModel in this.TryStatementModels)
-        //    {
-        //        tryStatementModel.AssignHighlights(process);
-        //    }
-
-        //    foreach (var throwStatementModel in this.ThrowStatementModels)
-        //    {
-        //        throwStatementModel.AssignHighlights(process);
         //    }
         //}
 

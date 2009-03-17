@@ -50,9 +50,10 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="CatchAllTests.cs" />
-    <Compile Include="CommentsTests.cs" />
+    <Compile Include="MethodsCommentsTests.cs" />
     <Compile Include="InnerExceptionTests.cs" />
     <Compile Include="ITest.cs" />
+    <Compile Include="PropertiesCommentsTests.cs" />
     <Compile Include="SandBox.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

@@ -97,6 +97,15 @@ namespace CodeGears.ReSharper.Exceptional {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to While throwing from catch clause include substituted exception as inner exception. [Exceptional].
+        /// </summary>
+        internal static string HighLightThrowingFromCatchWithoutInnerException {
+            get {
+                return ResourceManager.GetString("HighLightThrowingFromCatchWithoutInnerException", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Include catched exception as inner exception [Exceptional].
         /// </summary>
         internal static string QuickFixIncludeInnerException {

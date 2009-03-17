@@ -2,7 +2,7 @@ using System;
 
 namespace ExceptionalSandBox
 {
-    public class CommentsTests
+    public class MethodsCommentsTests
     {
         public void Test01()//OK
         {

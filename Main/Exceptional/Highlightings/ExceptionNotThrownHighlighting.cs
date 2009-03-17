@@ -1,3 +1,7 @@
+/// <copyright file="ExceptionNotThrownHighlighting.cs" manufacturer="CodeGears">
+///   Copyright (c) CodeGears. All rights reserved.
+/// </copyright>
+
 using System;
 using CodeGears.ReSharper.Exceptional.Model;
 using JetBrains.DocumentModel;
@@ -9,7 +13,7 @@ namespace CodeGears.ReSharper.Exceptional.Highlightings
     [StaticSeverityHighlighting(Severity.WARNING)]
     public class ExceptionNotThrownHighlighting : CSharpHighlightingBase, IHighlighting
     {
-        internal ExceptionDocCommentModel ExceptionDocumentationModel { get; set; }
+        internal ExceptionDocCommentModel ExceptionDocumentationModel { get; private set; }
 
         internal ExceptionNotThrownHighlighting(ExceptionDocCommentModel exceptionDocumentationModel)
         {

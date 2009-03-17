@@ -1,3 +1,7 @@
+/// <copyright file="DocCommentModel.cs" manufacturer="CodeGears">
+///   Copyright (c) CodeGears. All rights reserved.
+/// </copyright>
+
 using System.Collections.Generic;
 using JetBrains.DocumentModel;
 using JetBrains.ReSharper.Psi.CSharp.Tree;

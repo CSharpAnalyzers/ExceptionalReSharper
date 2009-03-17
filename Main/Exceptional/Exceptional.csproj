@@ -145,7 +145,6 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
-    <Compile Include="TypesFactory.cs" />
     <Compile Include="ExceptionalDaemonStageProcess.cs" />
     <Compile Include="ExceptionalDaemonStage.cs" />
     <Compile Include="Highlightings\ExceptionNotDocumentedHighlighting.cs" />

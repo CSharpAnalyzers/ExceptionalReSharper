@@ -1,3 +1,7 @@
+/// <copyright file="DocCommentBlockModel.cs" manufacturer="CodeGears">
+///   Copyright (c) CodeGears. All rights reserved.
+/// </copyright>
+
 using System;
 using System.Collections.Generic;
 using CodeGears.ReSharper.Exceptional.Analyzers;
@@ -17,7 +21,7 @@ namespace CodeGears.ReSharper.Exceptional.Model
     /// <summary>Stores data about processed <see cref="IDocCommentBlockNode"/>.</summary>
     internal class DocCommentBlockModel : ModelBase
     {
-        public IDocCommentBlockNode DocCommentNode { get; set; }
+        public IDocCommentBlockNode DocCommentNode { get; private set; }
         private List<DocCommentModel> DocCommentModels { get; set; }
 
         private bool IsReal

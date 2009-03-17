@@ -1,3 +1,7 @@
+/// <copyright file="ExceptionDocCommentModel.cs" manufacturer="CodeGears">
+///   Copyright (c) CodeGears. All rights reserved.
+/// </copyright>
+
 using System.Text.RegularExpressions;
 using CodeGears.ReSharper.Exceptional.Analyzers;
 using JetBrains.DocumentModel;

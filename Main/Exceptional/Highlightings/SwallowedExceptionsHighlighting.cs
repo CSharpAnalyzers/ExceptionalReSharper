@@ -13,7 +13,7 @@ namespace CodeGears.ReSharper.Exceptional.Highlightings
     [StaticSeverityHighlighting(Severity.WARNING)]
     public class SwallowedExceptionsHighlighting : CSharpHighlightingBase, IHighlighting
     {
-        internal CatchClauseModel CatchClauseModel { get; set; }
+        private CatchClauseModel CatchClauseModel { get; set; }
 
         internal SwallowedExceptionsHighlighting(CatchClauseModel catchClauseModel)
         {

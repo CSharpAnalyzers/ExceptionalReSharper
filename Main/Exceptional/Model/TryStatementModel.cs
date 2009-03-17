@@ -1,3 +1,7 @@
+/// <copyright file="TryStatementModel.cs" manufacturer="CodeGears">
+///   Copyright (c) CodeGears. All rights reserved.
+/// </copyright>
+
 using System.Collections.Generic;
 using CodeGears.ReSharper.Exceptional.Analyzers;
 using JetBrains.ReSharper.Psi;
@@ -7,7 +11,7 @@ namespace CodeGears.ReSharper.Exceptional.Model
 {
     internal class TryStatementModel : ModelBase, IBlockModel
     {
-        public ITryStatement TryStatement { get; private set; }
+        private ITryStatement TryStatement { get; set; }
         
         public List<CatchClauseModel> CatchClauseModels { get; private set; }
         public List<ThrowStatementModel> ThrowStatementModels { get; private set; }

@@ -2,7 +2,6 @@
 ///   Copyright (c) CodeGears. All rights reserved.
 /// </copyright>
 
-using JetBrains.ProjectModel;
 using JetBrains.ReSharper.Psi;
 using JetBrains.ReSharper.Psi.CSharp;
 using JetBrains.ReSharper.Psi.CSharp.Tree;
@@ -13,7 +12,7 @@ namespace CodeGears.ReSharper.Exceptional
     /// <summary>Provides services to create various code elements.</summary>
     public class CodeElementFactory
     {
-        public CSharpElementFactory Factory { get; set; }
+        private CSharpElementFactory Factory { get; set; }
 
         public CodeElementFactory(IPsiModule psiModule)
         {

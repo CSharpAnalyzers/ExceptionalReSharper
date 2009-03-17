@@ -129,6 +129,9 @@
   <data name="HighLightSwallowingExceptions" xml:space="preserve">
     <value>Swallowing exceptions in catch-all clause is not recommended. [Exceptional]</value>
   </data>
+  <data name="HighLightThrowingFromCatchWithoutInnerException" xml:space="preserve">
+    <value>While throwing from catch clause include substituted exception as inner exception. [Exceptional]</value>
+  </data>
   <data name="QuickFixIncludeInnerException" xml:space="preserve">
     <value>Include catched exception as inner exception [Exceptional]</value>
   </data>

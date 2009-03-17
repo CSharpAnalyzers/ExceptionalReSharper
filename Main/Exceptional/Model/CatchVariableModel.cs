@@ -1,10 +1,14 @@
+/// <copyright file="CatchVariableModel.cs" manufacturer="CodeGears">
+///   Copyright (c) CodeGears. All rights reserved.
+/// </copyright>
+
 using JetBrains.ReSharper.Psi.CSharp.Tree;
 
 namespace CodeGears.ReSharper.Exceptional.Model
 {
     internal class CatchVariableModel : ModelBase
     {
-        public ICatchVariableDeclaration CatchVariableDeclaration { get; set; }
+        private ICatchVariableDeclaration CatchVariableDeclaration { get; set; }
 
         private ICatchVariableDeclarationNode CatchVariableDeclarationNode
         {
