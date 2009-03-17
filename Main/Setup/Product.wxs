@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- PowerToy Installer File. -->
+<!-- This is a part of the JetBrains ReSharper PowerToys pack. -->
+<!-- The file can be used for building an installer for your own R# Plugins. -->
+<!-- To do that, do not modify this file; instead, see how the “Setup.Proj” files are organized inside the PowerToy folders. -->
+<Wix xmlns="http://schemas.microsoft.com/wix/2006/wi">
+  <!-- The “Dyn”-prefixed variables are coming from the project file. This way you can build a typical R# plugin installer without touching the installer sources themselves, just modify the settings file (Setup.Proj). -->
+  <Product Id="*" Name="$(var.DynProductName) ReSharper $(var.DynReSharperVersion2) Plugin" Language="1033" Version="$(var.DynProductVersion)" Manufacturer="$(var.DynCompanyName)" UpgradeCode="$(var.DynUpgradeCode)">
+    <Package InstallerVersion="200" Compressed="yes" />
+
+    <!-- Defines the pack of source files. -->
+    <Media Id="1" Cabinet="ExceptionalSetup.cab" EmbedCab="yes" />
+
+    <!-- Name of the innermost application folder; used by the stock WiX template, we're using it just for legacy. -->
+    <Property Id="ApplicationFolderName" Value="$(var.DynProductName)" />
+
+    <!-- This includes the whole fragment with property declarations. -->
+    <PropertyRef Id="RESHARPERVERSION2"/>
+
+    <Property Id="RESHARPERFORVS80INSTALLDIR" Secure="yes">
+      <RegistrySearch Id="AS.ReSharperForVs80BinariesDir" Root="HKLM" Key="Software\JetBrains\ReSharper\v[RESHARPERVERSION2]\vs8.0" Name="InstallDir" Type="raw" />
+    </Property>
+
+    <Property Id="RESHARPERFORVS90INSTALLDIR" Secure="yes">
+      <RegistrySearch Id="AS.ReSharperForVs90BinariesDir" Root="HKLM" Key="Software\JetBrains\ReSharper\v[RESHARPERVERSION2]\vs9.0" Name="InstallDir" Type="raw" />
+    </Property>
+
+
+    <Upgrade Id="$(var.DynUpgradeCode)">
+      <UpgradeVersion Property="PATCHFOUND" IncludeMinimum="yes" IncludeMaximum='no' Minimum="0.0.0" Maximum="$(var.DynProductVersion)" />
+      <UpgradeVersion Property="CANNOTUPGRADENEWER" IncludeMaximum="yes" Minimum="$(var.DynProductVersion)" Maximum="127.0.0" OnlyDetect='yes' />
+    </Upgrade>
+
+
+    <!-- Directory structure for the plugin. -->
+    <Directory Id="TARGETDIR" Name="SourceDir">
+      <Directory Id="RESHARPERROOT">
+        <Directory Id="Plugins" Name="Plugins">
+          <Directory Id="APPLICATIONFOLDER" Name="$(var.DynProductName)">
+            <!-- Install the plugin assembly. -->
+            <Component Id="C.ProductAssembly" Guid="$(var.DynMsiComponentGuid00)" Location="local">
+              <File Id="F.ProductAssembly" Checksum="yes" DiskId="1" KeyPath="yes" Name="CodeGears.ReSharper.Exceptional.dll" ReadOnly="yes" Source="$(var.DynAssemblyFile)" Vital="yes"/>
+            </Component>
+            <Component Id="C.ProductAssemblyPdb" Guid="{7B112E39-1735-42fc-95D4-A25D4694565D}" Location="local">
+              <File Id="F.ProductAssemblyPdb" Checksum="yes" DiskId="1" KeyPath="yes" Name="CodeGears.ReSharper.Exceptional.pdb" ReadOnly="yes" Source="$(var.DynPdbFile)" Vital="yes" />
+            </Component>
+
+            <!-- Cause the one-time-init to happen in R# after the plugin is installed, either per-user or all-users. -->
+            <Component Id="C.OneTimeInit" Guid="$(var.DynMsiComponentGuid01)" Location="local">
+              <RegistryValue Id="R.OneTimeInit" Root="HKMU" Key="Software\JetBrains\ReSharper\v[RESHARPERVERSION2]\vs[VSVERSION][VSROOTSUFFIX]" Name="One-Time Initialization Generation" Value="[Date]T[Time]" Type="string" Action="write" KeyPath="yes" />
+            </Component>
+          </Directory>
+        </Directory>
+      </Directory>
+    </Directory>
+
+    <!-- Feature tree: just mount the components. -->
+    <Feature Id="ProductFeature" Title="Everything" Level="1" AllowAdvertise="no"
+                                              Description="Installs the [ProductName] either under the R# directory, or into the user's Local Applocation Data folder.">
+
+      <ComponentRef Id="C.ProductAssembly" />
+      <ComponentRef Id="C.ProductAssemblyPdb" />
+      <ComponentRef Id="C.OneTimeInit" />
+    </Feature>
+
+    <!-- Mount the WiX Wizard Dialogs. -->
+    <Property Id="WIXUI_INSTALLDIR" Value="APPLICATIONFOLDER"/>
+    <UIRef Id="WixUI_InstallDir" />
+
+    <!-- Specify the license agreement text to be shown in the UI. -->
+    <WixVariable Id="WixUILicenseRtf" Value="$(var.DynSetupFilesDir)/License.rtf" />
+
+    <!-- Wizard clipart. -->
+    <!-- <WixVariable Id="WixUIBannerBmp" Value="$(var.DynSetupFilesDir)/ExceptionalSetup.Banner.bmp"/> -->
+    <!-- <WixVariable Id="WixUIDialogBmp" Value="$(var.DynSetupFilesDir)/ExceptionalSetup.Dialog.bmp"/> -->
+
+    <!-- Assign the installation folder for the all users / current user scenarios. -->
+    <CustomAction Id="WixSetInstallFolder.NoResharperInstalled" Property="RESHARPERROOT" Value="[ProgramFilesFolder]JetBrains\ReSharper\v[RESHARPERVERSION2]\vs[VSVERSION][VSROOTSUFFIX]\Bin" Execute="immediate" />
+
+    <CustomAction Id="WixSetInstallFolder.ResharperForVs80Installed" Property="RESHARPERROOT" Value="[RESHARPERFORVS80INSTALLDIR]" Execute="immediate"/>
+    <CustomAction Id="WixSetInstallFolder.ResharperForVs90Installed" Property="RESHARPERROOT" Value="[RESHARPERFORVS90INSTALLDIR]" Execute="immediate"/>
+
+    <CustomAction Id='CANNOTUPGRADENEWERACTION' Error='Setup has detected that a newer version of [ProductName] is already installed on your system. The installer can only upgrade from older versions. You should manually uninstall the conflicting product and then run the installation again.' />
+
+
+    <InstallExecuteSequence>
+      <FindRelatedProducts Before="LaunchConditions" />
+      <Custom Action='CANNOTUPGRADENEWERACTION' After='FindRelatedProducts'>CANNOTUPGRADENEWER AND NOT NOUPGRADE</Custom>
+      <Custom Action="WixSetInstallFolder.NoResharperInstalled" Before="LaunchConditions">Not RESHARPERFORVS80INSTALLDIR and Not RESHARPERFORVS90INSTALLDIR</Custom>
+      <Custom Action="WixSetInstallFolder.ResharperForVs80Installed" Before="LaunchConditions">RESHARPERFORVS80INSTALLDIR</Custom>
+      <Custom Action="WixSetInstallFolder.ResharperForVs90Installed" Before="LaunchConditions">RESHARPERFORVS90INSTALLDIR AND NOT RESHARPERFORVS80INSTALLDIR</Custom>
+      <RemoveExistingProducts After="InstallValidate" />
+    </InstallExecuteSequence>
+
+    <InstallUISequence>
+      <FindRelatedProducts Before="LaunchConditions" />
+      <Custom Action='CANNOTUPGRADENEWERACTION' After='FindRelatedProducts'>CANNOTUPGRADENEWER AND NOT NOUPGRADE</Custom>
+      <Custom Action="WixSetInstallFolder.NoResharperInstalled" Before="LaunchConditions">Not RESHARPERFORVS80INSTALLDIR and Not RESHARPERFORVS90INSTALLDIR</Custom>
+      <Custom Action="WixSetInstallFolder.ResharperForVs80Installed" Before="LaunchConditions">RESHARPERFORVS80INSTALLDIR</Custom>
+      <Custom Action="WixSetInstallFolder.ResharperForVs90Installed" Before="LaunchConditions">RESHARPERFORVS90INSTALLDIR and Not RESHARPERFORVS80INSTALLDIR</Custom>
+    </InstallUISequence>
+
+  </Product>
+</Wix>

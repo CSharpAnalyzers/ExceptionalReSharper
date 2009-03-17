@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- This is a secondary file, see “Main” for comments. -->
+<Wix xmlns="http://schemas.microsoft.com/wix/2006/wi">
+  <!-- The “Dyn”-prefixed variables are coming from the project file. This way you can build a typical R# plugin installer without touching the installer sources themselves, just modify the settings file (Setup.Proj). -->
+  <Fragment>
+    <!-- Try a per-user installation by default. -->
+    <!--<Property Id="ALLUSERS" Secure="yes" />-->
+
+    <!-- Directory selectable by the user as the installation target, public prop. -->
+    <Property Id="INSTALLDIR" Secure="yes"/>
+
+    <!-- When upgrading, gets populated with old products IDs. -->
+    <Property Id="EXISTINGPRODUCTS" Secure="yes" />
+
+    <!-- Prompt for the missing install source. -->
+    <Property Id="DiskPrompt" Value="ReSharper Plugin installation package, [1]." />
+
+    <!-- Set to disable the generation the specific shortcuts that support installation-on-demand. -->
+    <Property Id="DISABLEADVTSHORTCUTS" Secure="yes">1</Property>
+
+    <!-- Instructs the WiX UI on which installdir to chose. -->
+    <!--<Property Id="WIXUI_INSTALLDIR" Value="INSTALLDIR" Secure="yes" /> TODO -->
+
+    <!-- A two-component version of R# we're targeting. -->
+    <Property Id="RESHARPERVERSION2" Value="$(var.DynReSharperVersion2)" Secure="yes" />
+
+    <!-- Version of the Visual Studio we install under. -->
+    <Property Id="VSVERSION" Value="$(var.DynVsVersion)" Secure="yes" />
+
+    <!-- Root Suffix that together with VSVERSION defines the hive of the Visual Studio we install under. Allows to use an experimental hive. -->
+    <!-- Set this property on the command-line to install for another root suffix. -->
+    <Property Id="VSROOTSUFFIX" Secure="yes" />
+
+    <!-- Set this property if you'd like to prevent the installation from uninstalling any other versions of the same product, for example, if you'd like to install a few versions side-by-side for different VS Hives. -->
+    <!-- <Property Id="NOUPGRADE" Secure="yes">1</Property> -->
+
+    <!-- If an installed product of the same version is detected, abort the installation. -->
+    <!-- <Property Id="CANNOTUPGRADESAME" Secure="yes">1</Property> -->
+
+    <!-- If a newer version of the product is detected, abort the installation. -->
+    <!-- <Property Id="CANNOTUPGRADENEWER" Secure="yes"/>		-->
+
+    <!---->
+    <!---->
+    <!-- AddRemovePrograms props. -->
+    <!---->
+    <!-- Provides Comments for the Add or Remove Programs in Control Panel. -->
+    <Property Id="ARPCOMMENTS">$(var.DynProductName)</Property>
+
+    <!-- Provides Contact for the Add or Remove Programs in Control Panel. -->
+    <Property Id="ARPCONTACT">$(var.DynCompanyName)</Property>
+
+    <!-- Internet address or URL for technical support. -->
+    <Property Id="ARPHELPLINK">http://exceptionalplugin.codeplex.com/</Property>
+
+    <!-- URL for the home page of an application. -->
+    <Property Id="ARPURLINFOABOUT">http://exceptionalplugin.codeplex.com/</Property>
+
+    <!-- URL for application update information. -->
+    <Property Id="ARPURLUPDATEINFO">http://exceptionalplugin.codeplex.com/</Property>
+
+    <!-- Specifies the primary icon for the installation package. -->
+    <Property Id="ARPPRODUCTICON">F.ProductIcon.ico</Property>
+    <Icon Id="F.ProductIcon.ico" SourceFile="$(var.DynSetupFilesDir)/Exceptional.ico" />
+
+  </Fragment>
+</Wix>

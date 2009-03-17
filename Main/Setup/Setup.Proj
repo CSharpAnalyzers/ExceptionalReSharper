@@ -1,0 +1,39 @@
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+	<PropertyGroup>
+		<!-- Home folder for the PowerToys build site. -->
+		<ExceptionalHomeDir>$(MSBuildProjectDirectory)/..</ExceptionalHomeDir>
+		<!-- Binaries dir; redirect the build output by setting it externally. -->
+		<ExceptionalBinariesDir Condition="'$(ExceptionalBinariesDir)'==''">$(ExceptionalHomeDir)/Exceptional/bin/Debug</ExceptionalBinariesDir>
+	</PropertyGroup>
+	
+	<PropertyGroup>
+		 
+		<!-- Name of the plugin product and of the plugin folder in the R# plugins store, as well. -->
+		<ProductName>Exceptional</ProductName>
+		
+		<!-- Version of R# (two components only) that the plugin is targeting. -->
+		<ReSharperVersion2>4.5</ReSharperVersion2>
+		
+		<!-- Plugin vendor name. -->
+		<CompanyName>CodeGears.net</CompanyName>
+		
+		<!-- Upgrade code for the plugin. -->
+		<!-- Should be unique for each of the plugins, but should not change within the plugin lifetime. All of the plugin versions should feature the same Upgrade Code. -->
+		<UpgradeCode>{da0a9e0a-83af-4049-a41e-e381179e6199}</UpgradeCode>
+		
+		<!-- Version of Visual Studio we're installing for. -->
+		<!-- Can be overridden on the command line when running the installation. -->
+		<VsVersion>9.0</VsVersion>
+
+		<!-- The plugin assembly file. -->
+		<AssemblyFile>$(ExceptionalBinariesDir)/CodeGears.ReSharper.Exceptional.dll</AssemblyFile>
+		<PdbFile>$(ExceptionalBinariesDir)/CodeGears.ReSharper.Exceptional.pdb</PdbFile>
+
+		<!-- The GUIDs that must be unique for each of the plugins. -->
+		<MsiComponentGuid00>{307e4c32-53af-46be-b9e5-a61d78224c3f}</MsiComponentGuid00>
+		<MsiComponentGuid01>{419df3f4-e6f3-4d80-b283-19f6453a45d9}</MsiComponentGuid01>
+    <DefineSolutionProperties>false</DefineSolutionProperties>
+    </PropertyGroup>
+
+	<Import Project="$(ExceptionalHomeDir)/Setup/Setup.Targets"/>
+</Project>

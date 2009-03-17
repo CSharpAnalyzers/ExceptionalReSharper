@@ -1,0 +1,67 @@
+<Project InitialTargets="CheckExceptionalHomeDir" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <!-- The ExceptionalDir and ExceptionalBinariesDir properties must be defined externally. -->
+
+  <!-- WiX Paths. -->
+  <PropertyGroup>
+    <!-- Path for the WiX build tasks to locate the DLLs and EXEs. -->
+    <!-- If you're building on machines with WiX installed by an installer, and its EXEs are added to the %PATH%, you may delete the following line. -->
+    <!-- <WixToolPath>"C:\Program Files (x86)\Windows Installer XML v3\bin"</WixToolPath> -->
+    <!-- Path for the WiX Targets file to locate the tasks and their DLLs. -->
+    <!-- If you're building on machines with WiX installed by an installer, and its tasks are added to the system MSBuild Extensions folder, delete the following line. -->
+    <!--MSBuildExtensionsPath>$(ExceptionalHomeDir)\tools\</MSBuildExtensionsPath>-->
+  </PropertyGroup>
+
+  <!-- Outputs. -->
+  <PropertyGroup>
+    <OutputPath>$(ExceptionalHomeDir)\Setup\bin</OutputPath>
+    <IntermediateOutputPath>$(ExceptionalBinariesDir)\..\Obj\$(MSBuildProjectName)\$(Configuration)\</IntermediateOutputPath>
+    <SetupFilesDir>$(ExceptionalHomeDir)/Setup</SetupFilesDir>
+  </PropertyGroup>
+
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <ProductVersion>0.1.0</ProductVersion>
+    <ProjectGuid>{5e53cf6b-8786-413b-b49b-cd11f48770ed}</ProjectGuid>
+    <SchemaVersion>2.0</SchemaVersion>
+    <OutputName>$(ProductName) $(ProductVersion) Setup (R# $(ReSharperVersion2))</OutputName>
+    <OutputType>Package</OutputType>
+    <DefineConstants Condition=" '$(Configuration)' == 'Debug' ">Debug</DefineConstants>
+    <Cultures>en-us</Cultures>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <!-- Source files. -->
+    <Compile Include="$(SetupFilesDir)/Product.wxs" />
+    <Compile Include="$(SetupFilesDir)/Properties.wxs" />
+    <!-- Support for the Wizard dialogs. -->
+    <WixExtension Include="WixUIExtension" />
+  </ItemGroup>
+
+  <!-- Set the external properties for use in the Wxs source files. -->
+  <PropertyGroup>
+    <DefineConstants>
+      $(DefineConstants);
+      DynProductName=$(ProductName);
+      DynProductVersion=$(ProductVersion);
+      DynCompanyName=$(CompanyName);
+      DynUpgradeCode=$(UpgradeCode);
+      DynVsVersion=$(VsVersion);
+      DynSetupFilesDir=$(SetupFilesDir);
+      DynAssemblyFile=$(AssemblyFile);
+      DynPdbFile=$(PdbFile);
+      DynReSharperVersion2=$(ReSharperVersion2);
+      DynMsiComponentGuid00=$(MsiComponentGuid00);
+      DynMsiComponentGuid01=$(MsiComponentGuid01);
+    </DefineConstants>
+
+  </PropertyGroup>
+
+  <Import Project="$(MSBuildExtensionsPath)\Microsoft\wix\v3.0\Wix.targets" />
+
+  <!-- Checks for the mandatory properties. -->
+  <Target Name="CheckExceptionalHomeDir">
+    <Error Condition="'$(ExceptionalHomeDir)'==''" Text="The “ExceptionalHomeDir” property must be defined, pointing to the root Exceptional folder."/>
+    <Error Condition="'$(ExceptionalBinariesDir)'==''" Text="The “ExceptionalBinariesDir” property must be defined, pointing to the Exceptional Bin folder."/>
+  </Target>
+
+</Project>
