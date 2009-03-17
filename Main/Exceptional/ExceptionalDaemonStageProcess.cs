@@ -37,13 +37,13 @@ namespace CodeGears.ReSharper.Exceptional
             {
                 ProcessContext.Instance.Process(element as IDocCommentBlockNode);
             }
-            else if (element is ITryStatement)
+            else if (element is ITryStatementNode)
             {
-                ProcessContext.Instance.EnterTryBlock(element as ITryStatement);
+                ProcessContext.Instance.EnterTryBlock(element as ITryStatementNode);
             }
-            else if(element is ICatchClause)
+            else if(element is ICatchClauseNode)
             {
-                ProcessContext.Instance.EnterCatchClause(element as ICatchClause);
+                ProcessContext.Instance.EnterCatchClause(element as ICatchClauseNode);
             }
         }
 
@@ -58,19 +58,19 @@ namespace CodeGears.ReSharper.Exceptional
             //This call triggers visiting so it must be called first.
             base.ProcessAfterInterior(element);
 
-            if(element is IMethodDeclaration)
+            if(element is IMethodDeclarationNode)
             {
-                var methodDeclaration = element as IMethodDeclaration;
+                var methodDeclaration = element as IMethodDeclarationNode;
                 if(ShouldProcessMethod(methodDeclaration))
                 {
                     ProcessContext.Instance.EndProcess(this);
                 }
             }
-            else if (element is ITryStatement)
+            else if (element is ITryStatementNode)
             {
                 ProcessContext.Instance.LeaveTryBlock();
             }
-            else if (element is ICatchClause)
+            else if (element is ICatchClauseNode)
             {
                 ProcessContext.Instance.LeaveCatchClause();
             }
@@ -83,12 +83,12 @@ namespace CodeGears.ReSharper.Exceptional
 
         public override void VisitCatchVariableDeclaration(ICatchVariableDeclaration catchVariableDeclaration)
         {
-            ProcessContext.Instance.Process(catchVariableDeclaration);
+            ProcessContext.Instance.Process(catchVariableDeclaration as ICatchVariableDeclarationNode);
         }
 
         public override void VisitInvocationExpression(IInvocationExpression invocationExpression)
         {
-            ProcessContext.Instance.Process(invocationExpression);
+            ProcessContext.Instance.Process(invocationExpression as IInvocationExpressionNode);
         }
     }
 }

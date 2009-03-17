@@ -6,15 +6,14 @@ using System.Collections.Generic;
 using CodeGears.ReSharper.Exceptional.Analyzers;
 using JetBrains.ReSharper.Psi;
 using JetBrains.ReSharper.Psi.CSharp.Tree;
-using JetBrains.ReSharper.Psi.ExtensionsAPI;
+using JetBrains.ReSharper.Psi.ExtensionsAPI.Tree;
 using JetBrains.ReSharper.Psi.Tree;
 
 namespace CodeGears.ReSharper.Exceptional.Model
 {
     /// <summary>Stores data about processed <see cref="IMethodDeclaration"/></summary>
-    internal class MethodDeclarationModel : ModelBase, IBlockModel
+    internal class MethodDeclarationModel : TreeElementModelBase<IMethodDeclarationNode>, IBlockModel
     {
-        public IMethodDeclarationNode MethodDeclaration { get; private set; }
         public DocCommentBlockModel DocCommentBlockModel { get; set; }
         public List<TryStatementModel> TryStatementModels { get; private set; }
         public List<ThrowStatementModel> ThrowStatementModels { get; private set; }
@@ -24,8 +23,8 @@ namespace CodeGears.ReSharper.Exceptional.Model
         {
             get
             {
-                if(this.MethodDeclaration == null) return false;
-                var rights = this.MethodDeclaration.GetAccessRights();
+                if(this.Node == null) return false;
+                var rights = this.Node.GetAccessRights();
                 return rights == AccessRights.PUBLIC ||
                        rights == AccessRights.INTERNAL ||
                        rights == AccessRights.PROTECTED;
@@ -68,9 +67,8 @@ namespace CodeGears.ReSharper.Exceptional.Model
             }
         }
 
-        public MethodDeclarationModel(IMethodDeclarationNode methodDeclaration) : base(null)
+        public MethodDeclarationModel(IMethodDeclarationNode methodDeclaration) : base(null, methodDeclaration)
         {
-            MethodDeclaration = methodDeclaration;
             TryStatementModels = new List<TryStatementModel>();
             ThrowStatementModels = new List<ThrowStatementModel>();
             DocCommentBlockModel = new DocCommentBlockModel(this);
@@ -94,9 +92,9 @@ namespace CodeGears.ReSharper.Exceptional.Model
             }
         }
 
-        public void SetDocCommentBlockNode(IDocCommentBlockNode docCommentBlockNode)
+        public IDocCommentBlockNode AddDocCommentNode(IDocCommentBlockNode docCommentBlockNode)
         {
-            SharedImplUtil.SetDocCommentBlockNode(this.MethodDeclaration.ToTreeNode(), docCommentBlockNode);
+            return ModificationUtil.AddChildBefore(this.Node, this.Node.FirstChild, docCommentBlockNode);
         }
     }
 }

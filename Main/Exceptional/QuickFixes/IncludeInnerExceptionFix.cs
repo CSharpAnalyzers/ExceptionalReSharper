@@ -4,9 +4,9 @@
 
 using System;
 using CodeGears.ReSharper.Exceptional.Highlightings;
-using CodeGears.ReSharper.Exceptional.Model;
 using JetBrains.ProjectModel;
 using JetBrains.ReSharper.Intentions;
+using JetBrains.ReSharper.Psi.CSharp.Tree;
 using JetBrains.TextControl;
 
 namespace CodeGears.ReSharper.Exceptional.QuickFixes
@@ -33,7 +33,7 @@ namespace CodeGears.ReSharper.Exceptional.QuickFixes
             var outerCatchClause = throwStatementModel.FindOuterCatchClause();
             var variableName = outerCatchClause.SuggestVariableName();
 
-            if(outerCatchClause is SpecificCatchClauseModel)
+            if(outerCatchClause.Node is ISpecificCatchClauseNode)
             {
                 outerCatchClause.AddCatchVariable(variableName);
                 throwStatementModel.AddInnerException(variableName);

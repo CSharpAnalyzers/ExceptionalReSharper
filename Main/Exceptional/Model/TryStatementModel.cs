@@ -9,19 +9,16 @@ using JetBrains.ReSharper.Psi.CSharp.Tree;
 
 namespace CodeGears.ReSharper.Exceptional.Model
 {
-    internal class TryStatementModel : ModelBase, IBlockModel
+    internal class TryStatementModel : TreeElementModelBase<ITryStatementNode>, IBlockModel
     {
-        private ITryStatement TryStatement { get; set; }
-        
         public List<CatchClauseModel> CatchClauseModels { get; private set; }
         public List<ThrowStatementModel> ThrowStatementModels { get; private set; }
         public List<TryStatementModel> TryStatementModels { get; private set; }
         public IBlockModel ParentBlock { get; set; }
 
-        public TryStatementModel(MethodDeclarationModel methodDeclarationModel, ITryStatement tryStatement)
-            : base(methodDeclarationModel)
+        public TryStatementModel(MethodDeclarationModel methodDeclarationModel, ITryStatementNode tryStatement)
+            : base(methodDeclarationModel, tryStatement)
         {
-            TryStatement = tryStatement;
             CatchClauseModels = new List<CatchClauseModel>();
             ThrowStatementModels = new List<ThrowStatementModel>();
             TryStatementModels = new List<TryStatementModel>();

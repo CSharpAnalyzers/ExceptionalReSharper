@@ -12,22 +12,20 @@ using JetBrains.ReSharper.Psi.CSharp;
 using JetBrains.ReSharper.Psi.CSharp.CodeStyle;
 using JetBrains.ReSharper.Psi.CSharp.Tree;
 using JetBrains.ReSharper.Psi.ExtensionsAPI;
-using JetBrains.ReSharper.Psi.ExtensionsAPI.Tree;
 using JetBrains.ReSharper.Psi.Resolve;
 using JetBrains.ReSharper.Psi.Tree;
 
 namespace CodeGears.ReSharper.Exceptional.Model
 {
     /// <summary>Stores data about processed <see cref="IDocCommentBlockNode"/>.</summary>
-    internal class DocCommentBlockModel : ModelBase
+    internal class DocCommentBlockModel : TreeElementModelBase<IDocCommentBlockNode>
     {
-        public IDocCommentBlockNode DocCommentNode { get; private set; }
         private List<DocCommentModel> DocCommentModels { get; set; }
         public List<IReference> References { get; private set; }
 
         private bool IsReal
         {
-            get { return this.DocCommentNode != null; }
+            get { return this.Node != null; }
         }
 
         public IEnumerable<ExceptionDocCommentModel> ExceptionDocCommentModels
@@ -48,9 +46,8 @@ namespace CodeGears.ReSharper.Exceptional.Model
             : this(methodDeclarationModel, null) { }
 
         public DocCommentBlockModel(MethodDeclarationModel methodDeclarationModel, IDocCommentBlockNode docCommentNode) 
-            : base(methodDeclarationModel)
+            : base(methodDeclarationModel, docCommentNode)
         {
-            DocCommentNode = docCommentNode;
             DocCommentModels = new List<DocCommentModel>();
             References = new List<IReference>();
 
@@ -59,10 +56,10 @@ namespace CodeGears.ReSharper.Exceptional.Model
 
         private void Preprocess()
         {
-            if (this.DocCommentNode == null) return;
+            if (this.Node == null) return;
 
-            this.References.AddRange(this.DocCommentNode.GetFirstClassReferences());
-            this.DocCommentModels = DocCommentReader.Read(this.DocCommentNode, this);
+            this.References.AddRange(this.Node.GetFirstClassReferences());
+            this.DocCommentModels = DocCommentReader.Read(this.Node, this);
         }
 
         public override void Accept(AnalyzerBase analyzerBase)
@@ -86,12 +83,11 @@ namespace CodeGears.ReSharper.Exceptional.Model
             if (this.IsReal == false)
             {
                 var docCommentBlockNode = this.GetElementFactory().CreateDocComment(exceptionDocumentation);
-                var methodDeclaretionNode = this.MethodDeclarationModel.MethodDeclaration;
-                docCommentBlockNode = ModificationUtil.AddChildBefore(methodDeclaretionNode, methodDeclaretionNode.FirstChild, docCommentBlockNode);
-                this.DocCommentNode = docCommentBlockNode;
+                docCommentBlockNode  = this.MethodDeclarationModel.AddDocCommentNode(docCommentBlockNode);
+                this.Node = docCommentBlockNode;
                 Preprocess();
 
-                CSharpCodeFormatter.Instance.Format(this.DocCommentNode, CodeFormatProfile.INDENT);
+                CSharpCodeFormatter.Instance.Format(this.Node, CodeFormatProfile.INDENT);
 
                 result = this.DocCommentModels[1] as ExceptionDocCommentModel;
             }
@@ -106,16 +102,16 @@ namespace CodeGears.ReSharper.Exceptional.Model
 
                 var spaces = commentNode.NextSibling;
 
-                if (this.DocCommentNode.LastChild != null)
+                if (this.Node.LastChild != null)
                 {
-                    LowLevelModificationUtil.AddChildAfter(this.DocCommentNode.LastChild, spaces, commentNode);
+                    LowLevelModificationUtil.AddChildAfter(this.Node.LastChild, spaces, commentNode);
                 }
                 else
                 {
-                    LowLevelModificationUtil.AddChild(this.DocCommentNode, spaces, commentNode);
+                    LowLevelModificationUtil.AddChild(this.Node, spaces, commentNode);
                 }
 
-                CSharpCodeFormatter.Instance.Format(this.DocCommentNode, CodeFormatProfile.INDENT);
+                CSharpCodeFormatter.Instance.Format(this.Node, CodeFormatProfile.INDENT);
 
                 result = new ExceptionDocCommentModel(this);
                 result.TreeNodes.Add(commentNode);
@@ -137,7 +133,7 @@ namespace CodeGears.ReSharper.Exceptional.Model
             var lastNode = exceptionDocCommentModel.TreeNodes[exceptionDocCommentModel.TreeNodes.Count - 1];
 
             LowLevelModificationUtil.DeleteChildRange(firstNode, lastNode);
-            CSharpCodeFormatter.Instance.Format(this.DocCommentNode, CodeFormatProfile.SOFT);
+            CSharpCodeFormatter.Instance.Format(this.Node, CodeFormatProfile.SOFT);
         }
     }
 }

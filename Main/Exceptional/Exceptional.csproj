@@ -127,15 +127,14 @@
     <Compile Include="Model\DocCommentBlockModel.cs" />
     <Compile Include="Model\DocCommentModel.cs" />
     <Compile Include="Model\ExceptionDocCommentModel.cs" />
-    <Compile Include="Model\GeneralCatchClauseModel.cs" />
     <Compile Include="Model\GeneralDocCommentModel.cs" />
     <Compile Include="Model\IBlockModel.cs" />
     <Compile Include="Model\MethodDeclarationModel.cs" />
     <Compile Include="Model\ModelBase.cs" />
-    <Compile Include="Model\SpecificCatchClauseModel.cs" />
     <Compile Include="Model\ThrownExceptionModel.cs" />
     <Compile Include="Model\ThrowStatementModel.cs" />
     <Compile Include="Analyzers\AnalyzerBase.cs" />
+    <Compile Include="Model\TreeElementModelBase.cs" />
     <Compile Include="Model\TryStatementModel.cs" />
     <Compile Include="ProcessContext.cs" />
     <Compile Include="QuickFixes\IncludeInnerExceptionFix.cs" />

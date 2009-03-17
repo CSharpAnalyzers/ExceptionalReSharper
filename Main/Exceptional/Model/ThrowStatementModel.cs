@@ -12,32 +12,34 @@ using JetBrains.Util;
 
 namespace CodeGears.ReSharper.Exceptional.Model
 {
-    internal class ThrowStatementModel : ModelBase, IExceptionsOrigin
+    internal class ThrowStatementModel : TreeElementModelBase<IThrowStatementNode>, IExceptionsOrigin
     {
         private ThrownExceptionModel ThrownExceptionModel { get; set; }
-        private IThrowStatementNode ThrowStatement { get; set; }
 
         public override DocumentRange DocumentRange
         {
             get
             {
-                if(this.ThrowStatement.ExceptionNode != null)
+                //if we have exceptiontype then highlight the type
+                if(this.Node.ExceptionNode != null)
                 {
-                    return this.ThrowStatement.ExceptionNode.GetDocumentRange();
+                    return this.Node.ExceptionNode.GetDocumentRange();
                 }
 
-                return this.ThrowStatement.ThrowKeyword.GetDocumentRange();
+                //if not highlight the throw keyword
+                return this.Node.ThrowKeyword.GetDocumentRange();
             }
         }
 
+        /// <summary>Specifies if this throw statement is a rethrow statement.</summary>
         public bool IsRethrow
         {
-            get { return this.ThrowStatement.Exception == null; }
+            get { return this.Node.Exception == null; }
         }
 
-        public ThrowStatementModel(MethodDeclarationModel methodDeclarationModel, IThrowStatementNode throwStatement, IBlockModel containingBlockModel) : base(methodDeclarationModel)
+        public ThrowStatementModel(MethodDeclarationModel methodDeclarationModel, IThrowStatementNode throwStatement, IBlockModel containingBlockModel) 
+            : base(methodDeclarationModel, throwStatement)
         {
-            ThrowStatement = throwStatement;
             ContainingBlockModel = containingBlockModel;
 
             ThrownExceptionModel = new ThrownExceptionModel(methodDeclarationModel, GetExceptionType(), this);
@@ -60,9 +62,9 @@ namespace CodeGears.ReSharper.Exceptional.Model
 
         private IDeclaredType GetExceptionType()
         {
-            if (this.ThrowStatement.Exception != null)
+            if (this.Node.Exception != null)
             {
-                return this.ThrowStatement.Exception.GetExpressionType() as IDeclaredType;
+                return this.Node.Exception.GetExpressionType() as IDeclaredType;
             }
 
             return this.ContainingBlockModel.GetCatchedException();
@@ -92,7 +94,7 @@ namespace CodeGears.ReSharper.Exceptional.Model
         {
             var ranges = new List<TextRange>();
 
-            var objectCreationExpressionNode = this.ThrowStatement.Exception as IObjectCreationExpressionNode;
+            var objectCreationExpressionNode = this.Node.Exception as IObjectCreationExpressionNode;
             if (objectCreationExpressionNode == null) return new TextRange[0];
 
             if (objectCreationExpressionNode.Arguments.Count == 0)
@@ -122,7 +124,7 @@ namespace CodeGears.ReSharper.Exceptional.Model
 
         public bool HasInnerException(string variableName)
         {
-            var objectCreationExpressionNode = this.ThrowStatement.Exception as IObjectCreationExpressionNode;
+            var objectCreationExpressionNode = this.Node.Exception as IObjectCreationExpressionNode;
             if (objectCreationExpressionNode == null) return false;
             if (objectCreationExpressionNode.Arguments.Count < 2) return false;
 

@@ -41,7 +41,7 @@ namespace CodeGears.ReSharper.Exceptional.Model
 
                 var resolveResult = exceptionReference.Resolve();
                 var declaredType = resolveResult.DeclaredElement as ITypeElement;
-                if (declaredType == null) return TypeFactory.CreateTypeByCLRName(exceptionType, docCommentNode.GetPsiModule()); ;
+                if (declaredType == null) return TypeFactory.CreateTypeByCLRName(exceptionType, docCommentNode.GetPsiModule());
 
                 return TypeFactory.CreateTypeByCLRName(declaredType.CLRName, docCommentNode.GetPsiModule());
             }

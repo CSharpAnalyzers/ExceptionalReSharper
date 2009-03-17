@@ -8,14 +8,13 @@ using JetBrains.ReSharper.Psi.CSharp.Tree;
 
 namespace CodeGears.ReSharper.Exceptional.Model
 {
-    internal class InvocationModel : ModelBase, IExceptionsOrigin
+    internal class InvocationModel : TreeElementModelBase<IInvocationExpressionNode>, IExceptionsOrigin
     {
-        private IInvocationExpression InvocationExpression { get; set; }
+        public IBlockModel ContainingBlockModel { get; private set; }
 
-        public InvocationModel(MethodDeclarationModel methodDeclarationModel, IInvocationExpression invocationExpression, IBlockModel containingBlockModel)
-            : base(methodDeclarationModel)
+        public InvocationModel(MethodDeclarationModel methodDeclarationModel, IInvocationExpressionNode invocationExpression, IBlockModel containingBlockModel)
+            : base(methodDeclarationModel, invocationExpression)
         {
-            InvocationExpression = invocationExpression;
             ContainingBlockModel = containingBlockModel;
         }
 
@@ -24,8 +23,6 @@ namespace CodeGears.ReSharper.Exceptional.Model
             //TODO: Implement
             get { return new List<ThrownExceptionModel>(); }
         }
-
-        public IBlockModel ContainingBlockModel { get; private set; }
 
         public bool Throws(IDeclaredType exceptionType)
         {

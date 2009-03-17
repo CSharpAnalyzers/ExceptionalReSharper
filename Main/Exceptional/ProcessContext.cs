@@ -68,7 +68,7 @@ namespace CodeGears.ReSharper.Exceptional
             instance = null;
         }
 
-        public void EnterTryBlock(ITryStatement tryStatement)
+        public void EnterTryBlock(ITryStatementNode tryStatement)
         {
             if (this.IsValid() == false) return;
             if (tryStatement == null) return;
@@ -90,7 +90,7 @@ namespace CodeGears.ReSharper.Exceptional
             this.BlockModelsStack.Pop();
         }
 
-        public void EnterCatchClause(ICatchClause catchClause)
+        public void EnterCatchClause(ICatchClauseNode catchClause)
         {
             if (this.IsValid() == false) return;
             if (catchClause == null) return;
@@ -98,7 +98,7 @@ namespace CodeGears.ReSharper.Exceptional
 
             var tryStatementModel = this.TryStatementModelsStack.Peek();
 
-            var model = (catchClause is ISpecificCatchClauseNode) ? (CatchClauseModel)new SpecificCatchClauseModel(this.MethodDeclarationModel, catchClause as ICatchClauseNode) : new GeneralCatchClauseModel(this.MethodDeclarationModel, catchClause as ICatchClauseNode);
+            var model = new CatchClauseModel(this.MethodDeclarationModel, catchClause);
             model.ParentBlock = tryStatementModel.ParentBlock;
             tryStatementModel.CatchClauseModels.Add(model);
             this.CatchClauseModelsStack.Push(model);
@@ -120,7 +120,7 @@ namespace CodeGears.ReSharper.Exceptional
             new ThrowStatementModel(this.MethodDeclarationModel, throwStatement, this.BlockModelsStack.Peek());
         }
 
-        public void Process(ICatchVariableDeclaration catchVariableDeclaration)
+        public void Process(ICatchVariableDeclarationNode catchVariableDeclaration)
         {
             if (this.IsValid() == false) return;
             if (catchVariableDeclaration == null) return;
@@ -131,7 +131,7 @@ namespace CodeGears.ReSharper.Exceptional
             catchClause.VariableModel = new CatchVariableModel(this.MethodDeclarationModel, catchVariableDeclaration);
         }
 
-        public void Process(IInvocationExpression invocationExpression)
+        public void Process(IInvocationExpressionNode invocationExpression)
         {
             if (this.IsValid() == false) return;
             if (invocationExpression == null) return;
