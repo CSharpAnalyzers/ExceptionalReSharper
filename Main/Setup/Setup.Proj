@@ -25,7 +25,7 @@
 		<!-- Can be overridden on the command line when running the installation. -->
 		<VsVersion>9.0</VsVersion>
 
-		<!-- The plugin assembly file. -->
+		<!-- The plugin assembly files. -->
 		<AssemblyFile>$(ExceptionalBinariesDir)/CodeGears.ReSharper.Exceptional.dll</AssemblyFile>
 		<PdbFile>$(ExceptionalBinariesDir)/CodeGears.ReSharper.Exceptional.pdb</PdbFile>
 
