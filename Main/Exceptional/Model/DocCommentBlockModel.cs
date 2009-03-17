@@ -23,6 +23,7 @@ namespace CodeGears.ReSharper.Exceptional.Model
     {
         public IDocCommentBlockNode DocCommentNode { get; private set; }
         private List<DocCommentModel> DocCommentModels { get; set; }
+        public List<IReference> References { get; private set; }
 
         private bool IsReal
         {
@@ -43,12 +44,11 @@ namespace CodeGears.ReSharper.Exceptional.Model
             }
         }
 
-        public List<IReference> References { get; private set; }
+        public DocCommentBlockModel(MethodDeclarationModel methodDeclarationModel) 
+            : this(methodDeclarationModel, null) { }
 
-        public DocCommentBlockModel(MethodDeclarationModel methodDeclarationModel) : this(methodDeclarationModel, null)
-        { }
-
-        public DocCommentBlockModel(MethodDeclarationModel methodDeclarationModel, IDocCommentBlockNode docCommentNode) : base(methodDeclarationModel)
+        public DocCommentBlockModel(MethodDeclarationModel methodDeclarationModel, IDocCommentBlockNode docCommentNode) 
+            : base(methodDeclarationModel)
         {
             DocCommentNode = docCommentNode;
             DocCommentModels = new List<DocCommentModel>();
@@ -62,73 +62,7 @@ namespace CodeGears.ReSharper.Exceptional.Model
             if (this.DocCommentNode == null) return;
 
             this.References.AddRange(this.DocCommentNode.GetFirstClassReferences());
-            InitializeExceptionsDocumentation();
-        }
-
-        private void InitializeExceptionsDocumentation()
-        {
-            var whitespaceNodes = new List<ITreeNode>();
-            DocCommentModel currentModel = null;
-            var exceptionNodeFinished = false;
-
-            for (var currentNode = this.DocCommentNode.FirstChild; currentNode != null; currentNode = currentNode.NextSibling)
-            {
-                if(currentNode is IWhitespaceNode)
-                {
-                    whitespaceNodes.Add(currentNode);
-                    continue;
-                }
-
-                if(currentNode is IDocCommentNode && exceptionNodeFinished)
-                {
-                    currentModel = null;
-                    exceptionNodeFinished = false;
-                }
-
-                if(currentModel == null)
-                {
-                    currentModel = new GeneralDocCommentModel(this);
-                    this.DocCommentModels.Add(currentModel);
-                }
-
-                if((currentNode is IDocCommentNode) == false)
-                {
-                    currentModel.TreeNodes.Add(currentNode);
-                    continue;
-                }
-
-                var text = currentNode.GetText();
-
-                if (text.Contains("<exception"))
-                {
-                    currentModel.Initialize();
-
-                    currentModel = new ExceptionDocCommentModel(this);
-                    this.DocCommentModels.Add(currentModel);
-                    currentModel.TreeNodes.AddRange(whitespaceNodes);
-                    whitespaceNodes.Clear();
-                    currentModel.TreeNodes.Add(currentNode);
-                }
-                else if (text.Contains("</exception>"))
-                {
-                    currentModel.TreeNodes.AddRange(whitespaceNodes);
-                    whitespaceNodes.Clear();
-                    currentModel.TreeNodes.Add(currentNode);
-                    currentModel.Initialize();
-                    exceptionNodeFinished = true;
-                }
-                else
-                {
-                    currentModel.TreeNodes.AddRange(whitespaceNodes);
-                    whitespaceNodes.Clear();
-                    currentModel.TreeNodes.Add(currentNode);
-                }
-            }
-
-            if (currentModel != null)
-            {
-                currentModel.Initialize();
-            }
+            this.DocCommentModels = DocCommentReader.Read(this.DocCommentNode, this);
         }
 
         public override void Accept(AnalyzerBase analyzerBase)
@@ -151,8 +85,8 @@ namespace CodeGears.ReSharper.Exceptional.Model
 
             if (this.IsReal == false)
             {
-                var docCommentBlockNode = CSharpElementFactory.GetInstance(this.GetPsiModule()).CreateDocComment(exceptionDocumentation);
-                var methodDeclaretionNode = this.MethodDeclarationModel.MethodDeclaration as IMethodDeclarationNode;
+                var docCommentBlockNode = this.GetElementFactory().CreateDocComment(exceptionDocumentation);
+                var methodDeclaretionNode = this.MethodDeclarationModel.MethodDeclaration;
                 docCommentBlockNode = ModificationUtil.AddChildBefore(methodDeclaretionNode, methodDeclaretionNode.FirstChild, docCommentBlockNode);
                 this.DocCommentNode = docCommentBlockNode;
                 Preprocess();

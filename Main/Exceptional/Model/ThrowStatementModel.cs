@@ -15,20 +15,18 @@ namespace CodeGears.ReSharper.Exceptional.Model
     internal class ThrowStatementModel : ModelBase, IExceptionsOrigin
     {
         private ThrownExceptionModel ThrownExceptionModel { get; set; }
-        private IThrowStatement ThrowStatement { get; set; }
+        private IThrowStatementNode ThrowStatement { get; set; }
 
         public override DocumentRange DocumentRange
         {
             get
             {
-                var node = this.ThrowStatement.ToTreeNode();
-
-                if(node.ExceptionNode != null)
+                if(this.ThrowStatement.ExceptionNode != null)
                 {
-                    return node.ExceptionNode.GetDocumentRange();
+                    return this.ThrowStatement.ExceptionNode.GetDocumentRange();
                 }
 
-                return node.ThrowKeyword.GetDocumentRange();
+                return this.ThrowStatement.ThrowKeyword.GetDocumentRange();
             }
         }
 
@@ -37,7 +35,7 @@ namespace CodeGears.ReSharper.Exceptional.Model
             get { return this.ThrowStatement.Exception == null; }
         }
 
-        public ThrowStatementModel(MethodDeclarationModel methodDeclarationModel, IThrowStatement throwStatement, IBlockModel containingBlockModel) : base(methodDeclarationModel)
+        public ThrowStatementModel(MethodDeclarationModel methodDeclarationModel, IThrowStatementNode throwStatement, IBlockModel containingBlockModel) : base(methodDeclarationModel)
         {
             ThrowStatement = throwStatement;
             ContainingBlockModel = containingBlockModel;

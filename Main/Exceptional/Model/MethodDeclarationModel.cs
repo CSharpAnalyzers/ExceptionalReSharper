@@ -5,22 +5,20 @@
 using System.Collections.Generic;
 using CodeGears.ReSharper.Exceptional.Analyzers;
 using JetBrains.ReSharper.Psi;
-using JetBrains.ReSharper.Psi.CSharp;
 using JetBrains.ReSharper.Psi.CSharp.Tree;
 using JetBrains.ReSharper.Psi.ExtensionsAPI;
 using JetBrains.ReSharper.Psi.Tree;
-using JetBrains.ReSharper.Psi.Util;
 
 namespace CodeGears.ReSharper.Exceptional.Model
 {
     /// <summary>Stores data about processed <see cref="IMethodDeclaration"/></summary>
     internal class MethodDeclarationModel : ModelBase, IBlockModel
     {
-        public IMethodDeclaration MethodDeclaration { get; set; }
+        public IMethodDeclarationNode MethodDeclaration { get; private set; }
         public DocCommentBlockModel DocCommentBlockModel { get; set; }
         public List<TryStatementModel> TryStatementModels { get; private set; }
         public List<ThrowStatementModel> ThrowStatementModels { get; private set; }
-        public IBlockModel ParentBlock { get; set; }
+        public IBlockModel ParentBlock { get; private set; }
 
         public bool IsPublicOrInternal
         {
@@ -70,7 +68,7 @@ namespace CodeGears.ReSharper.Exceptional.Model
             }
         }
 
-        public MethodDeclarationModel(IMethodDeclaration methodDeclaration) : base(null)
+        public MethodDeclarationModel(IMethodDeclarationNode methodDeclaration) : base(null)
         {
             MethodDeclaration = methodDeclaration;
             TryStatementModels = new List<TryStatementModel>();

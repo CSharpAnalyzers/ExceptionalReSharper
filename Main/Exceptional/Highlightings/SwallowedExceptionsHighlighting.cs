@@ -6,12 +6,11 @@ using System;
 using CodeGears.ReSharper.Exceptional.Model;
 using JetBrains.DocumentModel;
 using JetBrains.ReSharper.Daemon;
-using JetBrains.ReSharper.Daemon.CSharp.Stages;
 
 namespace CodeGears.ReSharper.Exceptional.Highlightings
 {
     [StaticSeverityHighlighting(Severity.WARNING)]
-    public class SwallowedExceptionsHighlighting : CSharpHighlightingBase, IHighlighting
+    public class SwallowedExceptionsHighlighting : HighlightingBase
     {
         private CatchClauseModel CatchClauseModel { get; set; }
 
@@ -20,34 +19,14 @@ namespace CodeGears.ReSharper.Exceptional.Highlightings
             CatchClauseModel = catchClauseModel;
         }
 
-        public override bool IsValid()
-        {
-            return true;
-        }
-
         public override DocumentRange Range
         {
             get { return this.CatchClauseModel.DocumentRange; }
         }
 
-        public string ToolTip
-        {
-            get { return Message; }
-        }
-
-        public string ErrorStripeToolTip
-        {
-            get { return Message; }
-        }
-
-        private static string Message
+        protected override string Message
         {
             get { return String.Format(Resources.HighLightSwallowingExceptions); }
-        }
-
-        public int NavigationOffsetPatch
-        {
-            get { return 0; }
         }
     }
 }

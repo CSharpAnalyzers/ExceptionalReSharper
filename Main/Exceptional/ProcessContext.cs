@@ -49,7 +49,7 @@ namespace CodeGears.ReSharper.Exceptional
             this.BlockModelsStack = new Stack<IBlockModel>();
         }
 
-        public void StartProcess(IMethodDeclaration methodDeclaration)
+        public void StartProcess(IMethodDeclarationNode methodDeclaration)
         {
             this.MethodDeclarationModel = new MethodDeclarationModel(methodDeclaration);
             this.BlockModelsStack.Push(this.MethodDeclarationModel);
@@ -111,7 +111,7 @@ namespace CodeGears.ReSharper.Exceptional
             this.BlockModelsStack.Pop();
         }
 
-        public void Process(IThrowStatement throwStatement)
+        public void Process(IThrowStatementNode throwStatement)
         {
             if (this.IsValid() == false) return;
             if (throwStatement == null) return;

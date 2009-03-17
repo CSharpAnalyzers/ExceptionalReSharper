@@ -25,12 +25,12 @@ namespace CodeGears.ReSharper.Exceptional
 
         public override void ProcessBeforeInterior(IElement element)
         {
-            if (element is IMethodDeclaration)
+            if (element is IMethodDeclarationNode)
             {
-                var methodDeclaration = element as IMethodDeclaration;
+                var methodDeclaration = element as IMethodDeclarationNode;
                 if(ShouldProcessMethod(methodDeclaration))
                 {
-                    ProcessContext.Instance.StartProcess(element as IMethodDeclaration);
+                    ProcessContext.Instance.StartProcess(methodDeclaration);
                 }
             }
             else if (element is IDocCommentBlockNode)
@@ -78,7 +78,7 @@ namespace CodeGears.ReSharper.Exceptional
 
         public override void VisitThrowStatement(IThrowStatement throwStatement)
         {
-            ProcessContext.Instance.Process(throwStatement);
+            ProcessContext.Instance.Process(throwStatement as IThrowStatementNode);
         }
 
         public override void VisitCatchVariableDeclaration(ICatchVariableDeclaration catchVariableDeclaration)
