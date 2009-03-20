@@ -2,6 +2,7 @@
 ///   Copyright (c) CodeGears. All rights reserved.
 /// </copyright>
 
+using System;
 using System.Collections.Generic;
 using CodeGears.ReSharper.Exceptional.Analyzers;
 using CodeGears.ReSharper.Exceptional.Model;
@@ -37,7 +38,7 @@ namespace CodeGears.ReSharper.Exceptional
                     , new HasInnerExceptionFromOuterCatchClauseAnalyzer()
                 });
 
-        private MethodDeclarationModel MethodDeclarationModel { get; set; }
+        private IAnalyzeUnit AnalyzeUnit { get; set; }
         private Stack<TryStatementModel> TryStatementModelsStack { get; set; }
         private Stack<CatchClauseModel> CatchClauseModelsStack { get; set; }
         private Stack<IBlockModel> BlockModelsStack { get; set; }
@@ -49,10 +50,10 @@ namespace CodeGears.ReSharper.Exceptional
             this.BlockModelsStack = new Stack<IBlockModel>();
         }
 
-        public void StartProcess(IMethodDeclarationNode methodDeclaration)
+        public void StartProcess(IAnalyzeUnit analyzeUnit)
         {
-            this.MethodDeclarationModel = new MethodDeclarationModel(methodDeclaration);
-            this.BlockModelsStack.Push(this.MethodDeclarationModel);
+            this.AnalyzeUnit = analyzeUnit;
+            this.BlockModelsStack.Push(this.AnalyzeUnit);
         }
 
         public void EndProcess(CSharpDaemonStageProcessBase process)
@@ -62,7 +63,7 @@ namespace CodeGears.ReSharper.Exceptional
             foreach (var analyzerBase in _analyzers)
             {
                 analyzerBase.Process = process;
-                this.MethodDeclarationModel.Accept(analyzerBase);
+                this.AnalyzeUnit.Accept(analyzerBase);
             }
 
             instance = null;
@@ -74,7 +75,7 @@ namespace CodeGears.ReSharper.Exceptional
             if (tryStatement == null) return;
             Logger.Assert(this.BlockModelsStack.Count > 0, "[Exceptional] There is no block for try statement.");
 
-            var model = new TryStatementModel(this.MethodDeclarationModel, tryStatement);
+            var model = new TryStatementModel(this.AnalyzeUnit, tryStatement);
 
             var blockModel = this.BlockModelsStack.Peek();
             blockModel.TryStatementModels.Add(model);
@@ -98,7 +99,7 @@ namespace CodeGears.ReSharper.Exceptional
 
             var tryStatementModel = this.TryStatementModelsStack.Peek();
 
-            var model = new CatchClauseModel(this.MethodDeclarationModel, catchClause);
+            var model = new CatchClauseModel(this.AnalyzeUnit, catchClause);
             model.ParentBlock = tryStatementModel.ParentBlock;
             tryStatementModel.CatchClauseModels.Add(model);
             this.CatchClauseModelsStack.Push(model);
@@ -117,7 +118,7 @@ namespace CodeGears.ReSharper.Exceptional
             if (throwStatement == null) return;
             Logger.Assert(this.BlockModelsStack.Count > 0, "[Exceptional] There is no block for throw statement.");
 
-            new ThrowStatementModel(this.MethodDeclarationModel, throwStatement, this.BlockModelsStack.Peek());
+            new ThrowStatementModel(this.AnalyzeUnit, throwStatement, this.BlockModelsStack.Peek());
         }
 
         public void Process(ICatchVariableDeclarationNode catchVariableDeclaration)
@@ -128,7 +129,7 @@ namespace CodeGears.ReSharper.Exceptional
             Logger.Assert(this.CatchClauseModelsStack.Count > 0, "[Exceptional] There is no catch clause for catch variable declaration.");
 
             var catchClause = this.CatchClauseModelsStack.Peek();
-            catchClause.VariableModel = new CatchVariableModel(this.MethodDeclarationModel, catchVariableDeclaration);
+            catchClause.VariableModel = new CatchVariableModel(this.AnalyzeUnit, catchVariableDeclaration);
         }
 
         public void Process(IInvocationExpressionNode invocationExpression)
@@ -138,19 +139,38 @@ namespace CodeGears.ReSharper.Exceptional
 
             Logger.Assert(this.BlockModelsStack.Count > 0, "[Exceptional] There is no block for invocation statement.");
 
-            new InvocationModel(this.MethodDeclarationModel, invocationExpression, this.BlockModelsStack.Peek());
+            new InvocationModel(this.AnalyzeUnit, invocationExpression, this.BlockModelsStack.Peek());
         }
 
         public bool IsValid()
         {
-            return this.MethodDeclarationModel != null;
+            return this.AnalyzeUnit != null;
         }
 
         public void Process(IDocCommentBlockNode docCommentBlockNode)
         {
             if (this.IsValid() == false) return;
 
-            this.MethodDeclarationModel.DocCommentBlockModel = new DocCommentBlockModel(this.MethodDeclarationModel, docCommentBlockNode);
+            this.AnalyzeUnit.DocCommentBlockModel = new DocCommentBlockModel(this.AnalyzeUnit, docCommentBlockNode);
+        }
+
+        public void EnterAccessor(IAccessorDeclarationNode accessorDeclarationNode)
+        {
+            if (this.IsValid() == false) return;
+            if (accessorDeclarationNode == null) return;
+            Logger.Assert(this.AnalyzeUnit is PropertyDeclarationModel, "[Exceptional] We are not processing a property.");
+
+            var parent = this.BlockModelsStack.Peek();
+
+            var model = new AccessorDeclarationModel(this.AnalyzeUnit, accessorDeclarationNode);
+            model.ParentBlock = parent;
+            (this.AnalyzeUnit as PropertyDeclarationModel).Accessors.Add(model);
+            this.BlockModelsStack.Push(model);
+        }
+
+        public void LeaveAccessor()
+        {
+            this.BlockModelsStack.Pop();
         }
     }
 }

@@ -13,7 +13,7 @@ namespace CodeGears.ReSharper.Exceptional.Analyzers
         public override void Visit(ExceptionDocCommentModel exceptionDocumentationModel)
         {
             if (exceptionDocumentationModel == null) return;
-            if (exceptionDocumentationModel.MethodDeclarationModel.IsPublicOrInternal == false) return;
+            if (exceptionDocumentationModel.AnalyzeUnit.IsPublicOrInternal == false) return;
             if (AnalyzeIfExeptionThrown(exceptionDocumentationModel)) return;
 
             this.Process.AddHighlighting(new ExceptionNotThrownHighlighting(exceptionDocumentationModel));
@@ -21,7 +21,7 @@ namespace CodeGears.ReSharper.Exceptional.Analyzers
 
         private static bool AnalyzeIfExeptionThrown(ExceptionDocCommentModel exceptionDocumentationModel)
         {
-            foreach (var throwStatementModel in exceptionDocumentationModel.MethodDeclarationModel.ThrownExceptionModelsNotCatched)
+            foreach (var throwStatementModel in exceptionDocumentationModel.AnalyzeUnit.ThrownExceptionModelsNotCatched)
             {
                 if(throwStatementModel.Throws(exceptionDocumentationModel.ExceptionType))
                 {

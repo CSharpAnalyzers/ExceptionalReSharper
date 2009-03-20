@@ -8,19 +8,14 @@ namespace CodeGears.ReSharper.Exceptional.Model
     {
         public T Node { get; protected set; }
 
-        protected TreeElementModelBase(MethodDeclarationModel methodDeclarationModel, T node) : base(methodDeclarationModel)
+        protected TreeElementModelBase(IAnalyzeUnit analyzeUnit, T node) : base(analyzeUnit)
         {
             Node = node;
-        }
-
-        protected IPsiModule GetPsiModule()
-        {
-            return this.Node.GetPsiModule();
-        }
+        }       
 
         protected CSharpElementFactory GetElementFactory()
         {
-            return CSharpElementFactory.GetInstance(this.GetPsiModule());
+            return CSharpElementFactory.GetInstance(this.AnalyzeUnit.GetPsiModule());
         }
     }
 }

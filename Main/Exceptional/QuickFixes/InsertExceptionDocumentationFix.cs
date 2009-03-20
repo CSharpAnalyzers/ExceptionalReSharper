@@ -28,7 +28,7 @@ namespace CodeGears.ReSharper.Exceptional.QuickFixes
 
         protected override Action<ITextControl> ExecuteTransaction(ISolution solution, IProgressIndicator progress)
         {
-            var methodDeclaration = this.Error.ThrownExceptionModel.MethodDeclarationModel;
+            var methodDeclaration = this.Error.ThrownExceptionModel.AnalyzeUnit;
 
             var insertedExceptionModel = methodDeclaration.DocCommentBlockModel.AddExceptionDocumentation(this.Error.ThrownExceptionModel.ExceptionType);
             if (insertedExceptionModel == null) return null;

@@ -13,7 +13,7 @@ namespace CodeGears.ReSharper.Exceptional.Analyzers
         public override void Visit(ThrownExceptionModel thrownExceptionModel)
         {
             if (thrownExceptionModel == null) return;
-            if (thrownExceptionModel.MethodDeclarationModel.IsPublicOrInternal == false) return;
+            if (thrownExceptionModel.AnalyzeUnit.IsPublicOrInternal == false) return;
             if (thrownExceptionModel.IsCatched) return;
             if (thrownExceptionModel.IsDocumented) return;
 

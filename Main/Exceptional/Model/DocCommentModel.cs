@@ -23,7 +23,7 @@ namespace CodeGears.ReSharper.Exceptional.Model
         }
 
         protected DocCommentModel(DocCommentBlockModel docCommentBlockModel)
-            : base(docCommentBlockModel.MethodDeclarationModel)
+            : base(docCommentBlockModel.AnalyzeUnit)
         {
             DocCommentBlockModel = docCommentBlockModel;
             DocCommentNodes = new List<IDocCommentNode>();

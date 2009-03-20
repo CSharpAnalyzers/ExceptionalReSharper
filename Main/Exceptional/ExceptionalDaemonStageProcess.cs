@@ -3,6 +3,7 @@
 /// </copyright>
 
 using System;
+using CodeGears.ReSharper.Exceptional.Model;
 using JetBrains.ReSharper.Daemon;
 using JetBrains.ReSharper.Daemon.CSharp.Stages;
 using JetBrains.ReSharper.Psi.CSharp.Tree;
@@ -30,8 +31,16 @@ namespace CodeGears.ReSharper.Exceptional
                 var methodDeclaration = element as IMethodDeclarationNode;
                 if(ShouldProcessMethod(methodDeclaration))
                 {
-                    ProcessContext.Instance.StartProcess(methodDeclaration);
+                    ProcessContext.Instance.StartProcess(new MethodDeclarationModel(methodDeclaration));
                 }
+            }
+            else if(element is IPropertyDeclarationNode)
+            {
+                ProcessContext.Instance.StartProcess(new PropertyDeclarationModel(element as IPropertyDeclarationNode));
+            }
+            else if(element is IAccessorDeclarationNode)
+            {
+                ProcessContext.Instance.EnterAccessor(element as IAccessorDeclarationNode);
             }
             else if (element is IDocCommentBlockNode)
             {
@@ -65,6 +74,14 @@ namespace CodeGears.ReSharper.Exceptional
                 {
                     ProcessContext.Instance.EndProcess(this);
                 }
+            }
+            else if (element is IPropertyDeclarationNode)
+            {
+                ProcessContext.Instance.EndProcess(this);
+            }
+            else if (element is IAccessorDeclarationNode)
+            {
+                ProcessContext.Instance.LeaveAccessor();
             }
             else if (element is ITryStatementNode)
             {

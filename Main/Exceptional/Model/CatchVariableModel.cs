@@ -13,7 +13,7 @@ namespace CodeGears.ReSharper.Exceptional.Model
             get { return this.Node.Name; }
         }
 
-        public CatchVariableModel(MethodDeclarationModel methodDeclarationModel, ICatchVariableDeclarationNode catchVariableDeclaration)
-            : base(methodDeclarationModel, catchVariableDeclaration) { }
+        public CatchVariableModel(IAnalyzeUnit analyzeUnit, ICatchVariableDeclarationNode catchVariableDeclaration)
+            : base(analyzeUnit, catchVariableDeclaration) { }
     }
 }

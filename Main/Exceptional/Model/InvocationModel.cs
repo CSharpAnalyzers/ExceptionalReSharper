@@ -12,8 +12,8 @@ namespace CodeGears.ReSharper.Exceptional.Model
     {
         public IBlockModel ContainingBlockModel { get; private set; }
 
-        public InvocationModel(MethodDeclarationModel methodDeclarationModel, IInvocationExpressionNode invocationExpression, IBlockModel containingBlockModel)
-            : base(methodDeclarationModel, invocationExpression)
+        public InvocationModel(IAnalyzeUnit analyzeUnit, IInvocationExpressionNode invocationExpression, IBlockModel containingBlockModel)
+            : base(analyzeUnit, invocationExpression)
         {
             ContainingBlockModel = containingBlockModel;
         }

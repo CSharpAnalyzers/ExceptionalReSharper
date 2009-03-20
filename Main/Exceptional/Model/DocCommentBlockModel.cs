@@ -42,11 +42,11 @@ namespace CodeGears.ReSharper.Exceptional.Model
             }
         }
 
-        public DocCommentBlockModel(MethodDeclarationModel methodDeclarationModel) 
-            : this(methodDeclarationModel, null) { }
+        public DocCommentBlockModel(IAnalyzeUnit analyzeUnit) 
+            : this(analyzeUnit, null) { }
 
-        public DocCommentBlockModel(MethodDeclarationModel methodDeclarationModel, IDocCommentBlockNode docCommentNode) 
-            : base(methodDeclarationModel, docCommentNode)
+        public DocCommentBlockModel(IAnalyzeUnit analyzeUnit, IDocCommentBlockNode docCommentNode) 
+            : base(analyzeUnit, docCommentNode)
         {
             DocCommentModels = new List<DocCommentModel>();
             References = new List<IReference>();
@@ -83,7 +83,7 @@ namespace CodeGears.ReSharper.Exceptional.Model
             if (this.IsReal == false)
             {
                 var docCommentBlockNode = this.GetElementFactory().CreateDocComment(exceptionDocumentation);
-                docCommentBlockNode  = this.MethodDeclarationModel.AddDocCommentNode(docCommentBlockNode);
+                docCommentBlockNode  = this.AnalyzeUnit.AddDocCommentNode(docCommentBlockNode);
                 this.Node = docCommentBlockNode;
                 Preprocess();
 
@@ -94,7 +94,7 @@ namespace CodeGears.ReSharper.Exceptional.Model
             else
             {
                 exceptionDocumentation += exceptionDocumentation;
-                var docCommentBlockNode = CSharpElementFactory.GetInstance(this.GetPsiModule()).CreateDocComment(exceptionDocumentation);
+                var docCommentBlockNode = CSharpElementFactory.GetInstance(this.AnalyzeUnit.GetPsiModule()).CreateDocComment(exceptionDocumentation);
 
                 var commentNode = docCommentBlockNode.FirstChild as IDocCommentNode;
 

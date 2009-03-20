@@ -9,13 +9,13 @@ namespace CodeGears.ReSharper.Exceptional.Model
 {
     internal abstract class ModelBase
     {
-        public MethodDeclarationModel MethodDeclarationModel { get; private set; }
+        public IAnalyzeUnit AnalyzeUnit { get; private set; }
 
         public virtual DocumentRange DocumentRange { get { return DocumentRange.InvalidRange; } }
 
-        protected ModelBase(MethodDeclarationModel methodDeclarationModel)
+        protected ModelBase(IAnalyzeUnit analyzeUnit)
         {
-            MethodDeclarationModel = methodDeclarationModel;
+            AnalyzeUnit = analyzeUnit;
         }
 
         public virtual void Accept(AnalyzerBase analyzerBase) {}

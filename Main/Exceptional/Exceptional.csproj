@@ -119,7 +119,11 @@
     <Compile Include="Highlightings\HighlightingBase.cs" />
     <Compile Include="Highlightings\SwallowedExceptionsHighlighting.cs" />
     <Compile Include="Highlightings\ThrowFromCatchWithNoInnerExceptionHighlighting.cs" />
+    <Compile Include="Model\AccessorDeclarationModel.cs" />
+    <Compile Include="Model\AnalyzeUnitModelBase.cs" />
+    <Compile Include="Model\BlockModelBase.cs" />
     <Compile Include="Model\DocCommentReader.cs" />
+    <Compile Include="Model\IAnalyzeUnit.cs" />
     <Compile Include="Model\IExceptionsOrigin.cs" />
     <Compile Include="Model\InvocationModel.cs" />
     <Compile Include="Model\CatchClauseModel.cs" />
@@ -131,6 +135,7 @@
     <Compile Include="Model\IBlockModel.cs" />
     <Compile Include="Model\MethodDeclarationModel.cs" />
     <Compile Include="Model\ModelBase.cs" />
+    <Compile Include="Model\PropertyDeclarationModel.cs" />
     <Compile Include="Model\ThrownExceptionModel.cs" />
     <Compile Include="Model\ThrowStatementModel.cs" />
     <Compile Include="Analyzers\AnalyzerBase.cs" />

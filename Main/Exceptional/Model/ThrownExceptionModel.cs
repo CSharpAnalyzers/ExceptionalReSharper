@@ -21,7 +21,7 @@ namespace CodeGears.ReSharper.Exceptional.Model
             get { return this.Parent.DocumentRange; }
         }
 
-        public ThrownExceptionModel(MethodDeclarationModel methodDeclarationModel, IDeclaredType exceptionType, IExceptionsOrigin parent) : base(methodDeclarationModel)
+        public ThrownExceptionModel(IAnalyzeUnit analyzeUnit, IDeclaredType exceptionType, IExceptionsOrigin parent) : base(analyzeUnit)
         {
             ExceptionType = exceptionType;
             Parent = parent;
@@ -32,7 +32,7 @@ namespace CodeGears.ReSharper.Exceptional.Model
 
         private bool CheckIfDocumented()
         {
-            var docCommentBlockNode = this.MethodDeclarationModel.DocCommentBlockModel;
+            var docCommentBlockNode = this.AnalyzeUnit.DocCommentBlockModel;
             if (docCommentBlockNode == null) return false;
 
             foreach (var exceptionDocumentationModel in docCommentBlockNode.ExceptionDocCommentModels)

@@ -9,22 +9,17 @@ using JetBrains.ReSharper.Psi.CSharp.Tree;
 
 namespace CodeGears.ReSharper.Exceptional.Model
 {
-    internal class TryStatementModel : TreeElementModelBase<ITryStatementNode>, IBlockModel
+    internal class TryStatementModel : BlockModelBase<ITryStatementNode>
     {
         public List<CatchClauseModel> CatchClauseModels { get; private set; }
-        public List<ThrowStatementModel> ThrowStatementModels { get; private set; }
-        public List<TryStatementModel> TryStatementModels { get; private set; }
-        public IBlockModel ParentBlock { get; set; }
 
-        public TryStatementModel(MethodDeclarationModel methodDeclarationModel, ITryStatementNode tryStatement)
-            : base(methodDeclarationModel, tryStatement)
+        public TryStatementModel(IAnalyzeUnit analyzeUnit, ITryStatementNode tryStatement)
+            : base(analyzeUnit, tryStatement)
         {
             CatchClauseModels = new List<CatchClauseModel>();
-            ThrowStatementModels = new List<ThrowStatementModel>();
-            TryStatementModels = new List<TryStatementModel>();
         }
 
-        public bool CatchesException(IDeclaredType exception)
+        public override bool CatchesException(IDeclaredType exception)
         {
             foreach (var catchClauseModel in this.CatchClauseModels)
             {
@@ -37,33 +32,18 @@ namespace CodeGears.ReSharper.Exceptional.Model
             return this.ParentBlock.CatchesException(exception);
         }
 
-        public IDeclaredType GetCatchedException()
+        public override IDeclaredType GetCatchedException()
         {
             return this.ParentBlock.GetCatchedException();
         }
 
-        public IEnumerable<ThrownExceptionModel> ThrownExceptionModelsNotCatched
+        public override IEnumerable<ThrownExceptionModel> ThrownExceptionModelsNotCatched
         {
             get
             {
-                foreach (var throwStatementModel in this.ThrowStatementModels)
+                foreach (var throwStatementModel in base.ThrownExceptionModelsNotCatched)
                 {
-                    foreach (var thrownExceptionModel in throwStatementModel.ThrownExceptions)
-                    {
-                        if (thrownExceptionModel.IsCatched == false)
-                        {
-                            yield return thrownExceptionModel;
-                        }
-                    }
-                }
-
-                for (var i = 0; i < this.TryStatementModels.Count; i++)
-                {
-                    IBlockModel tryStatementModel = this.TryStatementModels[i];
-                    foreach (var model in tryStatementModel.ThrownExceptionModelsNotCatched)
-                    {
-                        yield return model;
-                    }
+                    yield return throwStatementModel;
                 }
 
                 for (var i = 0; i < this.CatchClauseModels.Count; i++)
@@ -79,19 +59,11 @@ namespace CodeGears.ReSharper.Exceptional.Model
 
         public override void Accept(AnalyzerBase analyzerBase)
         {
-            foreach (var innerTryStatementModel in this.TryStatementModels)
-            {
-                innerTryStatementModel.Accept(analyzerBase);
-            }
+            base.Accept(analyzerBase);
 
             foreach (var catchClauseModel in this.CatchClauseModels)
             {
                 catchClauseModel.Accept(analyzerBase);
-            }
-
-            foreach (var throwStatementModel in this.ThrowStatementModels)
-            {
-                throwStatementModel.Accept(analyzerBase);
             }
         }
     }

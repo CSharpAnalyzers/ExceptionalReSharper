@@ -23,7 +23,7 @@ namespace CodeGears.ReSharper.Exceptional.QuickFixes
 
         protected override Action<ITextControl> ExecuteTransaction(ISolution solution, IProgressIndicator progress)
         {
-            var docCommentModel = this.Error.ExceptionDocumentationModel.MethodDeclarationModel.DocCommentBlockModel;
+            var docCommentModel = this.Error.ExceptionDocumentationModel.AnalyzeUnit.DocCommentBlockModel;
             docCommentModel.RemoveExceptionDocumentation(this.Error.ExceptionDocumentationModel);
 
             return null;
