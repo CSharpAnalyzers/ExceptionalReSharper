@@ -15,7 +15,7 @@ using JetBrains.UI.Application.PluginSupport;
 [assembly: AssemblyCulture("")]
 [assembly: ComVisible(false)]
 [assembly: Guid("3628d589-e118-4c2c-bd8e-fdef6b6ed07c")]
-[assembly: AssemblyVersion("0.1.0.*")]
+[assembly: AssemblyVersion("0.1.*")]
 [assembly: AssemblyFileVersion("0.1.0.0")]
 
 [assembly: PluginTitle("Exceptional")]

@@ -30,13 +30,10 @@ namespace ExceptionalSandBox
             }
         }
 
-        /// <exception cref="System.InvalidOperationException">Thrown when test</exception>//OK
+        /// <exception cref="InvalidOperationException">Thrown when test</exception>//OK
         public void Test03()
         {
-            try
-            {
-                Console.WriteLine("TRY");
-            }
+            try { }
             catch (OperationCanceledException)//OK
             {
                 throw new InvalidOperationException();//BAD

@@ -18,10 +18,7 @@ namespace ExceptionalSandBox
 
         public void Test02()
         {
-            try
-            {
-                Console.WriteLine("TRY");
-            }
+            try { }
             catch (Exception)//BAD
             {
                 Console.WriteLine("CATCH");
