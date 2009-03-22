@@ -24,12 +24,8 @@ namespace CodeGears.ReSharper.Exceptional.Model
 
         public bool Catches(IDeclaredType exception)
         {
-            if(exception == null) return false;
-
-            if(this.Node is IGeneralCatchClauseNode)
-            {
-                return exception.GetCLRName().Equals("System.Exception");
-            }
+            if (exception == null) return false;
+            if (this.Node.ExceptionType == null) return false;
 
             return exception.IsSubtypeOf(this.Node.ExceptionType);
         }
@@ -69,15 +65,6 @@ namespace CodeGears.ReSharper.Exceptional.Model
             return this.Node.ExceptionType.GetCLRName().Equals("System.Exception");
         }
 
-        //public override void AssignHighlights(CSharpDaemonStageProcessBase process)
-        //{
-        //    if(this.IsRethrown == false)
-        //    {
-        //        var treeNode = this.CatchClause.ToTreeNode();
-        //        process.AddHighlighting(treeNode.CatchKeyword.GetDocumentRange(), new SwallowedExceptionsHighlighting(this));
-        //    }
-        //}
-
         public override void Accept(AnalyzerBase analyzerBase)
         {
             analyzerBase.Visit(this);
@@ -89,10 +76,10 @@ namespace CodeGears.ReSharper.Exceptional.Model
 
         public override IDeclaredType GetCatchedException()
         {
-            if(this.Node is IGeneralCatchClauseNode)
-            {
-                return TypeFactory.CreateTypeByCLRName("System.Exception", this.AnalyzeUnit.GetPsiModule());
-            }
+//            if(this.Node is IGeneralCatchClauseNode)
+//            {
+//                return TypeFactory.CreateTypeByCLRName("System.Exception", this.AnalyzeUnit.GetPsiModule());
+//            }
 
             return this.Node.ExceptionType;
         }

@@ -16,7 +16,21 @@ namespace CodeGears.ReSharper.Exceptional.Model
         public TryStatementModel(IAnalyzeUnit analyzeUnit, ITryStatementNode tryStatement)
             : base(analyzeUnit, tryStatement)
         {
-            CatchClauseModels = new List<CatchClauseModel>();
+            CatchClauseModels = GetCatchClauses();
+        }
+
+        private List<CatchClauseModel> GetCatchClauses()
+        {
+            var result = new List<CatchClauseModel>();
+
+            foreach (var catchClause in this.Node.Catches)
+            {
+                var model = new CatchClauseModel(this.AnalyzeUnit, catchClause as ICatchClauseNode);
+                model.ParentBlock = this;
+                result.Add(model);
+            }
+
+            return result;
         }
 
         public override bool CatchesException(IDeclaredType exception)
@@ -27,19 +41,6 @@ namespace CodeGears.ReSharper.Exceptional.Model
                 {
                     return true;
                 }
-            }
-
-            //TODO: Refactor. Construct catch models right at try processing.
-            foreach (var catchClause in this.Node.Catches)
-            {
-                if(catchClause.ExceptionType == null && exception.GetCLRName().Equals("System.Exception"))
-                    return true;
-
-                if(catchClause.ExceptionType == null)
-                    continue;
-
-                if (exception.IsSubtypeOf(catchClause.ExceptionType))
-                    return true;
             }
 
             return this.ParentBlock.CatchesException(exception);

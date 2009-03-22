@@ -115,7 +115,7 @@ namespace CodeGears.ReSharper.Exceptional {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Add documentation for exception [Exceptional].
+        ///   Looks up a localized string similar to Add documentation for {0} exception [Exceptional].
         /// </summary>
         internal static string QuickFixInsertExceptionDocumentation {
             get {

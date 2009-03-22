@@ -11,7 +11,7 @@ namespace CodeGears.ReSharper.Exceptional
         void EndProcess(CSharpDaemonStageProcessBase process);
         void EnterTryBlock(ITryStatementNode tryStatement);
         void LeaveTryBlock();
-        void EnterCatchClause(ICatchClauseNode catchClause);
+        void EnterCatchClause(ICatchClauseNode catchClauseNode);
         void LeaveCatchClause();
         void Process(IThrowStatementNode throwStatement);
         void Process(ICatchVariableDeclarationNode catchVariableDeclaration);

@@ -55,7 +55,7 @@ namespace CodeGears.ReSharper.Exceptional.QuickFixes
 
         public override string Text
         {
-            get { return Resources.QuickFixInsertExceptionDocumentation; }
+            get { return String.Format(Resources.QuickFixInsertExceptionDocumentation, this.Error.ThrownExceptionModel.ExceptionType.GetCLRName()); }
         }
     }
 }

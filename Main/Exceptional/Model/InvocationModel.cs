@@ -2,13 +2,10 @@
 ///   Copyright (c) CodeGears. All rights reserved.
 /// </copyright>
 
-using System;
 using System.Collections.Generic;
 using CodeGears.ReSharper.Exceptional.Analyzers;
-using JetBrains.DocumentModel;
 using JetBrains.ReSharper.Psi;
 using JetBrains.ReSharper.Psi.CSharp.Tree;
-using JetBrains.ReSharper.Psi.Tree;
 
 namespace CodeGears.ReSharper.Exceptional.Model
 {
@@ -30,28 +27,10 @@ namespace CodeGears.ReSharper.Exceptional.Model
         {
             var result = new List<ThrownExceptionModel>();
 
-            var referenceExpression = this.Node.InvokedExpressionNode as IReferenceExpressionNode;
-            if (referenceExpression == null) return result;
-
-            var resolveResult = referenceExpression.Reference.Resolve();
-            var declaredElement = resolveResult.DeclaredElement;
-            if(declaredElement == null) return result;
-
-            var declarations = declaredElement.GetDeclarations();
-            if(declarations == null || declarations.Count == 0) return result;
-
-            var docCommentBlockOwnerNode = declarations[0] as IDocCommentBlockOwnerNode;
-            if(docCommentBlockOwnerNode == null) return result;
-
-            var docCommentBlockNode = docCommentBlockOwnerNode.GetDocCommentBlockNode();
-            if (docCommentBlockNode == null) return result;
-
-            var docCommentBlockModel = new DocCommentBlockModel(null, docCommentBlockNode);
-
-            foreach (var exceptionDocCommentModel in docCommentBlockModel.ExceptionDocCommentModels)
+            foreach (var exceptionType in InvocationExceptionsReader.Read(this.Node))
             {
                 var thrownException = new ThrownExceptionModel(
-                    this.AnalyzeUnit, exceptionDocCommentModel.ExceptionType, this);
+                    this.AnalyzeUnit, exceptionType, this);
 
                 result.Add(thrownException);
             }

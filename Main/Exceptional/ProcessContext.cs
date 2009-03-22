@@ -77,17 +77,18 @@ namespace CodeGears.ReSharper.Exceptional
             this.BlockModelsStack.Pop();
         }
 
-        public void EnterCatchClause(ICatchClauseNode catchClause)
+        public void EnterCatchClause(ICatchClauseNode catchClauseNode)
         {
             if (this.IsValid() == false) return;
-            if (catchClause == null) return;
+            if (catchClauseNode == null) return;
             Logger.Assert(this.TryStatementModelsStack.Count > 0, "[Exceptional] There is no try statement for catch declaration.");
 
             var tryStatementModel = this.TryStatementModelsStack.Peek();
+            var model = tryStatementModel.CatchClauseModels.Find(catchClauseModel => catchClauseModel.Node.Equals(catchClauseNode));
 
-            var model = new CatchClauseModel(this.AnalyzeUnit, catchClause);
-            model.ParentBlock = tryStatementModel.ParentBlock;
-            tryStatementModel.CatchClauseModels.Add(model);
+            //var model = new CatchClauseModel(this.AnalyzeUnit, catchClauseNode);
+            //model.ParentBlock = tryStatementModel.ParentBlock;
+            //tryStatementModel.CatchClauseModels.Add(model);
             this.CatchClauseModelsStack.Push(model);
             this.BlockModelsStack.Push(model);
         }

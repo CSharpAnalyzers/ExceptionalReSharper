@@ -1,4 +1,5 @@
 using System;
+using System.IO;
 
 namespace ExceptionalSandBox
 {
@@ -34,7 +35,49 @@ namespace ExceptionalSandBox
             {
                 ReferenceMethod(); //OK
             }
-            catch(Exception) {}
+            catch {}
+        }
+
+        public void Test04()
+        {
+            try
+            {
+                ReferenceMethod(); //OK
+            }
+            catch(Exception) { }
+        }
+
+        public void Test05()
+        {
+            try
+            {
+                ReferenceMethod(); //OK
+            }
+            catch (InvalidOperationException) { }
+        }
+
+        public void Test06()
+        {
+            try
+            {
+                ReferenceMethod(); //BAD
+            }
+            catch (ArgumentNullException) { }
+        }
+
+        public void Test07()
+        {
+            File.ReadAllLines("asd");
+        }
+
+        public void Test08()
+        {
+            this.ReferenceProperty = "sd";
+        }
+
+        public void Test09()
+        {
+            var s = this.ReferenceProperty;
         }
     }
 }
