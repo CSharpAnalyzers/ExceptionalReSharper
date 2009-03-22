@@ -3,7 +3,7 @@
 		<!-- Home folder for the PowerToys build site. -->
 		<ExceptionalHomeDir>$(MSBuildProjectDirectory)/..</ExceptionalHomeDir>
 		<!-- Binaries dir; redirect the build output by setting it externally. -->
-		<ExceptionalBinariesDir Condition="'$(ExceptionalBinariesDir)'==''">$(ExceptionalHomeDir)/Exceptional/bin/Debug</ExceptionalBinariesDir>
+		<ExceptionalBinariesDir Condition="'$(ExceptionalBinariesDir)'==''">$(ExceptionalHomeDir)/Exceptional/bin/Release</ExceptionalBinariesDir>
 	</PropertyGroup>
 	
 	<PropertyGroup>

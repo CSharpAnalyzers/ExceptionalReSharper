@@ -119,6 +119,8 @@
     <Compile Include="Highlightings\HighlightingBase.cs" />
     <Compile Include="Highlightings\SwallowedExceptionsHighlighting.cs" />
     <Compile Include="Highlightings\ThrowFromCatchWithNoInnerExceptionHighlighting.cs" />
+    <Compile Include="IProcessContext.cs" />
+    <Compile Include="MethodProcessContext.cs" />
     <Compile Include="Model\AccessorDeclarationModel.cs" />
     <Compile Include="Model\AnalyzeUnitModelBase.cs" />
     <Compile Include="Model\BlockModelBase.cs" />
@@ -142,6 +144,7 @@
     <Compile Include="Model\TreeElementModelBase.cs" />
     <Compile Include="Model\TryStatementModel.cs" />
     <Compile Include="ProcessContext.cs" />
+    <Compile Include="PropertyProcessContext.cs" />
     <Compile Include="QuickFixes\IncludeInnerExceptionFix.cs" />
     <Compile Include="QuickFixes\InsertExceptionDocumentationFix.cs" />
     <Compile Include="QuickFixes\RemoveExceptionDocumentationFix.cs" />

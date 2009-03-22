@@ -20,8 +20,6 @@ namespace CodeGears.ReSharper.Exceptional.Analyzers
 
         private static bool AnalyzeIfHasInnerException(ThrowStatementModel throwStatementModel)
         {
-            if (ProcessContext.Instance.IsValid() == false) return true;
-
             var outerCatchClause = throwStatementModel.FindOuterCatchClause();
             if (outerCatchClause == null) return true;
 

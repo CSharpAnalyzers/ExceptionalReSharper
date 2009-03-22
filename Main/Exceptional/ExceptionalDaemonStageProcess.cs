@@ -17,6 +17,8 @@ namespace CodeGears.ReSharper.Exceptional
     /// the target highlighting logic.</remarks>
     public class ExceptionalDaemonStageProcess : CSharpDaemonStageProcessBase
     {
+        private IProcessContext _currentContext;
+
         public ExceptionalDaemonStageProcess(IDaemonProcess process) : base(process) { }
 
         public override void Execute(Action<DaemonStageResult> commiter)
@@ -31,29 +33,58 @@ namespace CodeGears.ReSharper.Exceptional
                 var methodDeclaration = element as IMethodDeclarationNode;
                 if(ShouldProcessMethod(methodDeclaration))
                 {
-                    ProcessContext.Instance.StartProcess(new MethodDeclarationModel(methodDeclaration));
+                    this._currentContext = new MethodProcessContext();
+                    this._currentContext.StartProcess(new MethodDeclarationModel(methodDeclaration));
                 }
             }
             else if(element is IPropertyDeclarationNode)
             {
-                ProcessContext.Instance.StartProcess(new PropertyDeclarationModel(element as IPropertyDeclarationNode));
+                var propertyDeclaration = element as IPropertyDeclarationNode;
+                if (ShouldProcessProperty(propertyDeclaration))
+                {
+                    this._currentContext = new PropertyProcessContext();
+                    this._currentContext.StartProcess(new PropertyDeclarationModel(propertyDeclaration));
+                }
             }
             else if(element is IAccessorDeclarationNode)
             {
-                ProcessContext.Instance.EnterAccessor(element as IAccessorDeclarationNode);
+                if(this._currentContext != null)
+                {
+                    this._currentContext.EnterAccessor(element as IAccessorDeclarationNode);
+                }
             }
             else if (element is IDocCommentBlockNode)
             {
-                ProcessContext.Instance.Process(element as IDocCommentBlockNode);
+                if (this._currentContext != null)
+                {
+                    this._currentContext.Process(element as IDocCommentBlockNode);
+                }
             }
             else if (element is ITryStatementNode)
             {
-                ProcessContext.Instance.EnterTryBlock(element as ITryStatementNode);
+                if (this._currentContext != null)
+                {
+                    this._currentContext.EnterTryBlock(element as ITryStatementNode);
+                }
             }
             else if(element is ICatchClauseNode)
             {
-                ProcessContext.Instance.EnterCatchClause(element as ICatchClauseNode);
+                if (this._currentContext != null)
+                {
+                    this._currentContext.EnterCatchClause(element as ICatchClauseNode);
+                }
             }
+        }
+
+        private bool ShouldProcessProperty(IPropertyDeclarationNode propertyDeclarationNode)
+        {
+            foreach (var accessorDeclarationNode in propertyDeclarationNode.AccessorDeclarationsNode)
+            {
+                if(accessorDeclarationNode.Body != null)
+                    return true;
+            }
+
+            return false;
         }
 
         private static bool ShouldProcessMethod(IMethodDeclaration methodDeclaration)
@@ -69,43 +100,63 @@ namespace CodeGears.ReSharper.Exceptional
 
             if(element is IMethodDeclarationNode)
             {
-                var methodDeclaration = element as IMethodDeclarationNode;
-                if(ShouldProcessMethod(methodDeclaration))
+                if(this._currentContext != null)
                 {
-                    ProcessContext.Instance.EndProcess(this);
+                    this._currentContext.EndProcess(this);
                 }
             }
             else if (element is IPropertyDeclarationNode)
             {
-                ProcessContext.Instance.EndProcess(this);
+                if (this._currentContext != null)
+                {
+                    this._currentContext.EndProcess(this);
+                }
             }
             else if (element is IAccessorDeclarationNode)
             {
-                ProcessContext.Instance.LeaveAccessor();
+                if (this._currentContext != null)
+                {
+                    this._currentContext.LeaveAccessor();
+                }
             }
             else if (element is ITryStatementNode)
             {
-                ProcessContext.Instance.LeaveTryBlock();
+                if (this._currentContext != null)
+                {
+                    this._currentContext.LeaveTryBlock();
+                }
             }
             else if (element is ICatchClauseNode)
             {
-                ProcessContext.Instance.LeaveCatchClause();
+                if (this._currentContext != null)
+                {
+                    this._currentContext.LeaveCatchClause();
+                }
             }
         }
 
         public override void VisitThrowStatement(IThrowStatement throwStatement)
         {
-            ProcessContext.Instance.Process(throwStatement as IThrowStatementNode);
+            if (this._currentContext != null)
+            {
+                this._currentContext.Process(throwStatement as IThrowStatementNode);
+            }
         }
 
         public override void VisitCatchVariableDeclaration(ICatchVariableDeclaration catchVariableDeclaration)
         {
-            ProcessContext.Instance.Process(catchVariableDeclaration as ICatchVariableDeclarationNode);
+            if (this._currentContext != null)
+            {
+                this._currentContext.Process(catchVariableDeclaration as ICatchVariableDeclarationNode);
+            }
         }
 
         public override void VisitInvocationExpression(IInvocationExpression invocationExpression)
         {
-            ProcessContext.Instance.Process(invocationExpression as IInvocationExpressionNode);
+            if (this._currentContext != null)
+            {
+                this._currentContext.Process(invocationExpression as IInvocationExpressionNode);
+            }
         }
     }
 }

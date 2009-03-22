@@ -13,22 +13,8 @@ using JetBrains.Util;
 
 namespace CodeGears.ReSharper.Exceptional
 {
-    internal class ProcessContext
+    internal abstract class ProcessContext<T> : IProcessContext where T : IAnalyzeUnit
     {
-        private static ProcessContext instance;
-        public static ProcessContext Instance
-        {
-            get
-            {
-                if(instance == null)
-                {
-                    instance = new ProcessContext();
-                }
-
-                return instance;
-            }
-        }
-
         private static readonly List<AnalyzerBase> _analyzers = new List<AnalyzerBase>(
             new AnalyzerBase[]
                 {
@@ -38,12 +24,13 @@ namespace CodeGears.ReSharper.Exceptional
                     , new HasInnerExceptionFromOuterCatchClauseAnalyzer()
                 });
 
-        private IAnalyzeUnit AnalyzeUnit { get; set; }
+        protected IAnalyzeUnit AnalyzeUnit { get; private set; }
+        protected T Model { get; private set; }
         private Stack<TryStatementModel> TryStatementModelsStack { get; set; }
         private Stack<CatchClauseModel> CatchClauseModelsStack { get; set; }
-        private Stack<IBlockModel> BlockModelsStack { get; set; }
+        protected Stack<IBlockModel> BlockModelsStack { get; set; }
 
-        private ProcessContext()
+        protected ProcessContext()
         {
             this.TryStatementModelsStack = new Stack<TryStatementModel>();
             this.CatchClauseModelsStack = new Stack<CatchClauseModel>();
@@ -53,6 +40,7 @@ namespace CodeGears.ReSharper.Exceptional
         public void StartProcess(IAnalyzeUnit analyzeUnit)
         {
             this.AnalyzeUnit = analyzeUnit;
+            this.Model = (T)analyzeUnit;
             this.BlockModelsStack.Push(this.AnalyzeUnit);
         }
 
@@ -65,8 +53,6 @@ namespace CodeGears.ReSharper.Exceptional
                 analyzerBase.Process = process;
                 this.AnalyzeUnit.Accept(analyzerBase);
             }
-
-            instance = null;
         }
 
         public void EnterTryBlock(ITryStatementNode tryStatement)
@@ -154,23 +140,7 @@ namespace CodeGears.ReSharper.Exceptional
             this.AnalyzeUnit.DocCommentBlockModel = new DocCommentBlockModel(this.AnalyzeUnit, docCommentBlockNode);
         }
 
-        public void EnterAccessor(IAccessorDeclarationNode accessorDeclarationNode)
-        {
-            if (this.IsValid() == false) return;
-            if (accessorDeclarationNode == null) return;
-            Logger.Assert(this.AnalyzeUnit is PropertyDeclarationModel, "[Exceptional] We are not processing a property.");
-
-            var parent = this.BlockModelsStack.Peek();
-
-            var model = new AccessorDeclarationModel(this.AnalyzeUnit, accessorDeclarationNode);
-            model.ParentBlock = parent;
-            (this.AnalyzeUnit as PropertyDeclarationModel).Accessors.Add(model);
-            this.BlockModelsStack.Push(model);
-        }
-
-        public void LeaveAccessor()
-        {
-            this.BlockModelsStack.Pop();
-        }
+        public virtual void EnterAccessor(IAccessorDeclarationNode accessorDeclarationNode) {}
+        public virtual void LeaveAccessor() {}
     }
 }
