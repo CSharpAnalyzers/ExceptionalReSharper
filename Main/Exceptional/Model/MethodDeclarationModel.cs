@@ -10,9 +10,6 @@ namespace CodeGears.ReSharper.Exceptional.Model
     internal class MethodDeclarationModel : AnalyzeUnitModelBase<IMethodDeclarationNode>
     {
         public MethodDeclarationModel(IMethodDeclarationNode methodDeclaration)
-            : base(null, methodDeclaration)
-        {
-            DocCommentBlockModel = new DocCommentBlockModel(this);
-        }
+            : base(null, methodDeclaration) { }
     }
 }

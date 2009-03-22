@@ -4,6 +4,11 @@ namespace ExceptionalSandBox
 {
     class SandBox
     {
+        public void Test01()
+        {
+            Console.WindowLeft = 12;
+        }
+
 //        public void Test08()
 //        {
 //            try

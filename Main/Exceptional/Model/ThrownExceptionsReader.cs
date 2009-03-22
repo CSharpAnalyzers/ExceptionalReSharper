@@ -1,4 +1,3 @@
-using System;
 using System.Collections.Generic;
 using System.Xml;
 using JetBrains.ReSharper.Psi;
@@ -8,14 +7,12 @@ using JetBrains.Util;
 
 namespace CodeGears.ReSharper.Exceptional.Model
 {
-    public static class InvocationExceptionsReader
+    /// <summary>Extracts thrown exceptions.</summary>
+    internal static class ThrownExceptionsReader
     {
-        public static List<IDeclaredType> Read(IInvocationExpressionNode invocationExpression)
+        public static List<IDeclaredType> Read(IReferenceExpressionNode referenceExpression)
         {
             var result = new List<IDeclaredType>();
-
-            var referenceExpression = invocationExpression.InvokedExpressionNode as IReferenceExpressionNode;
-            if (referenceExpression == null) return result;
 
             var resolveResult = referenceExpression.Reference.Resolve();
             var declaredElement = resolveResult.DeclaredElement;
@@ -24,7 +21,7 @@ namespace CodeGears.ReSharper.Exceptional.Model
             var declarations = declaredElement.GetDeclarations();
             if (declarations == null || declarations.Count == 0)
             {
-                return GetFromXmlDoc(declaredElement, invocationExpression.GetPsiModule());
+                return GetFromXmlDoc(declaredElement, referenceExpression.GetPsiModule());
             }
 
             var docCommentBlockOwnerNode = declarations[0] as IDocCommentBlockOwnerNode;
@@ -49,7 +46,6 @@ namespace CodeGears.ReSharper.Exceptional.Model
 
             var xmlNode = declaredElement.GetXMLDoc(false);
             if (xmlNode == null) return result;
-
 
             var exceptionNodes = xmlNode.SelectNodes("exception");
             if (exceptionNodes == null) return result;

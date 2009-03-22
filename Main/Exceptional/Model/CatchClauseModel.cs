@@ -20,7 +20,6 @@ namespace CodeGears.ReSharper.Exceptional.Model
     {
         public CatchVariableModel VariableModel { get; set; }
         public bool IsCatchAll { get; private set; }
-        public bool IsRethrown { get; set; }
 
         public bool Catches(IDeclaredType exception)
         {
@@ -49,13 +48,6 @@ namespace CodeGears.ReSharper.Exceptional.Model
             : base(analyzeUnit, catchClauseNode)
         {
             this.IsCatchAll = GetIsCatchAll();
-            this.IsRethrown = GetIsRethrown();
-        }
-
-        private bool GetIsRethrown()
-        {
-            //TODO: Implement
-            return true;
         }
 
         private bool GetIsCatchAll()
@@ -76,11 +68,6 @@ namespace CodeGears.ReSharper.Exceptional.Model
 
         public override IDeclaredType GetCatchedException()
         {
-//            if(this.Node is IGeneralCatchClauseNode)
-//            {
-//                return TypeFactory.CreateTypeByCLRName("System.Exception", this.AnalyzeUnit.GetPsiModule());
-//            }
-
             return this.Node.ExceptionType;
         }
 

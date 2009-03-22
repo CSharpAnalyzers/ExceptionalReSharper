@@ -9,12 +9,12 @@ using JetBrains.ReSharper.Psi.CSharp.Tree;
 
 namespace CodeGears.ReSharper.Exceptional.Model
 {
-    internal class InvocationModel : TreeElementModelBase<IInvocationExpressionNode>, IExceptionsOriginModel
+    internal class InvocationModel : TreeElementModelBase<IReferenceExpressionNode>, IExceptionsOriginModel
     {
         public List<ThrownExceptionModel> ThrownExceptions { get; set; }
         public IBlockModel ContainingBlockModel { get; private set; }
 
-        public InvocationModel(IAnalyzeUnit analyzeUnit, IInvocationExpressionNode invocationExpression, IBlockModel containingBlockModel)
+        public InvocationModel(IAnalyzeUnit analyzeUnit, IReferenceExpressionNode invocationExpression, IBlockModel containingBlockModel)
             : base(analyzeUnit, invocationExpression)
         {
             ContainingBlockModel = containingBlockModel;
@@ -27,7 +27,7 @@ namespace CodeGears.ReSharper.Exceptional.Model
         {
             var result = new List<ThrownExceptionModel>();
 
-            foreach (var exceptionType in InvocationExceptionsReader.Read(this.Node))
+            foreach (var exceptionType in ThrownExceptionsReader.Read(this.Node))
             {
                 var thrownException = new ThrownExceptionModel(
                     this.AnalyzeUnit, exceptionType, this);

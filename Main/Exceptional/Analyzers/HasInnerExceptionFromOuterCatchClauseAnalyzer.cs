@@ -23,8 +23,6 @@ namespace CodeGears.ReSharper.Exceptional.Analyzers
             var outerCatchClause = throwStatementModel.FindOuterCatchClause();
             if (outerCatchClause == null) return true;
 
-            outerCatchClause.IsRethrown = throwStatementModel.IsRethrow;
-
             if (outerCatchClause.HasExceptionType == false || throwStatementModel.IsRethrow)
             {
                 //There is no variable decaration or there is no exception creation

@@ -15,7 +15,7 @@ namespace CodeGears.ReSharper.Exceptional
         void LeaveCatchClause();
         void Process(IThrowStatementNode throwStatement);
         void Process(ICatchVariableDeclarationNode catchVariableDeclaration);
-        void Process(IInvocationExpressionNode invocationExpression);
+        void Process(IReferenceExpressionNode invocationExpression);
         void Process(IDocCommentBlockNode docCommentBlockNode);
         void EnterAccessor(IAccessorDeclarationNode accessorDeclarationNode);
         void LeaveAccessor();

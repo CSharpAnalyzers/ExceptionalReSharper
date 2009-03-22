@@ -24,7 +24,10 @@ namespace CodeGears.ReSharper.Exceptional.Model
         }
 
         protected AnalyzeUnitModelBase(IAnalyzeUnit analyzeUnit, T node)
-            : base(analyzeUnit, node) { }
+            : base(analyzeUnit, node)
+        {
+            DocCommentBlockModel = new DocCommentBlockModel(this);
+        }
 
         public override void Accept(AnalyzerBase analyzerBase)
         {

@@ -2,7 +2,6 @@
 ///   Copyright (c) CodeGears. All rights reserved.
 /// </copyright>
 
-using System;
 using System.Collections.Generic;
 using CodeGears.ReSharper.Exceptional.Analyzers;
 using CodeGears.ReSharper.Exceptional.Model;
@@ -28,7 +27,7 @@ namespace CodeGears.ReSharper.Exceptional
         protected T Model { get; private set; }
         private Stack<TryStatementModel> TryStatementModelsStack { get; set; }
         private Stack<CatchClauseModel> CatchClauseModelsStack { get; set; }
-        protected Stack<IBlockModel> BlockModelsStack { get; set; }
+        protected Stack<IBlockModel> BlockModelsStack { get; private set; }
 
         protected ProcessContext()
         {
@@ -86,9 +85,8 @@ namespace CodeGears.ReSharper.Exceptional
             var tryStatementModel = this.TryStatementModelsStack.Peek();
             var model = tryStatementModel.CatchClauseModels.Find(catchClauseModel => catchClauseModel.Node.Equals(catchClauseNode));
 
-            //var model = new CatchClauseModel(this.AnalyzeUnit, catchClauseNode);
-            //model.ParentBlock = tryStatementModel.ParentBlock;
-            //tryStatementModel.CatchClauseModels.Add(model);
+            Logger.Assert(model != null, "[Exceptional] Cannot find catch model!");
+
             this.CatchClauseModelsStack.Push(model);
             this.BlockModelsStack.Push(model);
         }
@@ -119,7 +117,7 @@ namespace CodeGears.ReSharper.Exceptional
             catchClause.VariableModel = new CatchVariableModel(this.AnalyzeUnit, catchVariableDeclaration);
         }
 
-        public void Process(IInvocationExpressionNode invocationExpression)
+        public void Process(IReferenceExpressionNode invocationExpression)
         {
             if (this.IsValid() == false) return;
             if (invocationExpression == null) return;
@@ -129,7 +127,7 @@ namespace CodeGears.ReSharper.Exceptional
             new InvocationModel(this.AnalyzeUnit, invocationExpression, this.BlockModelsStack.Peek());
         }
 
-        public bool IsValid()
+        protected bool IsValid()
         {
             return this.AnalyzeUnit != null;
         }

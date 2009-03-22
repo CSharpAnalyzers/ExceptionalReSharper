@@ -151,11 +151,11 @@ namespace CodeGears.ReSharper.Exceptional
             }
         }
 
-        public override void VisitInvocationExpression(IInvocationExpression invocationExpression)
+        public override void VisitReferenceExpression(IReferenceExpression referenceExpression)
         {
             if (this._currentContext != null)
             {
-                this._currentContext.Process(invocationExpression as IInvocationExpressionNode);
+                this._currentContext.Process(referenceExpression as IReferenceExpressionNode);
             }
         }
     }
