@@ -1,6 +1,4 @@
-/// <copyright file="IncludeInnerExceptionFix.cs" manufacturer="CodeGears">
-///   Copyright (c) CodeGears. All rights reserved.
-/// </copyright>
+/// <copyright>Copyright (c) 2009 CodeGears.net All rights reserved.</copyright>
 
 using System;
 using CodeGears.ReSharper.Exceptional.Highlightings;
@@ -26,14 +24,16 @@ namespace CodeGears.ReSharper.Exceptional.QuickFixes
             get { return Resources.QuickFixIncludeInnerException; }
         }
 
-        protected override Action<ITextControl> ExecuteTransaction(ISolution solution, JetBrains.Application.Progress.IProgressIndicator progress)
+        protected override Action<ITextControl> ExecuteTransaction(ISolution solution,
+                                                                   JetBrains.Application.Progress.IProgressIndicator
+                                                                       progress)
         {
             var throwStatementModel = this.Error.ThrowStatementModel;
 
             var outerCatchClause = throwStatementModel.FindOuterCatchClause();
             var variableName = outerCatchClause.SuggestVariableName();
 
-            if(outerCatchClause.Node is ISpecificCatchClauseNode)
+            if (outerCatchClause.Node is ISpecificCatchClauseNode)
             {
                 outerCatchClause.AddCatchVariable(variableName);
                 throwStatementModel.AddInnerException(variableName);

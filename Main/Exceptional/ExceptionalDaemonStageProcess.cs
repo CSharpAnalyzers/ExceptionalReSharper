@@ -1,6 +1,4 @@
-/// <copyright file="ExceptionalDaemonStageProcess.cs" manufacturer="CodeGears">
-///   Copyright (c) CodeGears. All rights reserved.
-/// </copyright>
+/// <copyright>Copyright (c) 2009 CodeGears.net All rights reserved.</copyright>
 
 using System;
 using CodeGears.ReSharper.Exceptional.Model;
@@ -19,7 +17,9 @@ namespace CodeGears.ReSharper.Exceptional
     {
         private IProcessContext _currentContext;
 
-        public ExceptionalDaemonStageProcess(IDaemonProcess process) : base(process) { }
+        public ExceptionalDaemonStageProcess(IDaemonProcess process) : base(process)
+        {
+        }
 
         public override void Execute(Action<DaemonStageResult> commiter)
         {
@@ -31,13 +31,13 @@ namespace CodeGears.ReSharper.Exceptional
             if (element is IMethodDeclarationNode)
             {
                 var methodDeclaration = element as IMethodDeclarationNode;
-                if(ShouldProcessMethod(methodDeclaration))
+                if (ShouldProcessMethod(methodDeclaration))
                 {
                     this._currentContext = new MethodProcessContext();
                     this._currentContext.StartProcess(new MethodDeclarationModel(methodDeclaration));
                 }
             }
-            else if(element is IPropertyDeclarationNode)
+            else if (element is IPropertyDeclarationNode)
             {
                 var propertyDeclaration = element as IPropertyDeclarationNode;
                 if (ShouldProcessProperty(propertyDeclaration))
@@ -46,9 +46,9 @@ namespace CodeGears.ReSharper.Exceptional
                     this._currentContext.StartProcess(new PropertyDeclarationModel(propertyDeclaration));
                 }
             }
-            else if(element is IAccessorDeclarationNode)
+            else if (element is IAccessorDeclarationNode)
             {
-                if(this._currentContext != null)
+                if (this._currentContext != null)
                 {
                     this._currentContext.EnterAccessor(element as IAccessorDeclarationNode);
                 }
@@ -67,7 +67,7 @@ namespace CodeGears.ReSharper.Exceptional
                     this._currentContext.EnterTryBlock(element as ITryStatementNode);
                 }
             }
-            else if(element is ICatchClauseNode)
+            else if (element is ICatchClauseNode)
             {
                 if (this._currentContext != null)
                 {
@@ -80,8 +80,10 @@ namespace CodeGears.ReSharper.Exceptional
         {
             foreach (var accessorDeclarationNode in propertyDeclarationNode.AccessorDeclarationsNode)
             {
-                if(accessorDeclarationNode.Body != null)
+                if (accessorDeclarationNode.Body != null)
+                {
                     return true;
+                }
             }
 
             return false;
@@ -98,9 +100,9 @@ namespace CodeGears.ReSharper.Exceptional
             //This call triggers visiting so it must be called first.
             base.ProcessAfterInterior(element);
 
-            if(element is IMethodDeclarationNode)
+            if (element is IMethodDeclarationNode)
             {
-                if(this._currentContext != null)
+                if (this._currentContext != null)
                 {
                     this._currentContext.EndProcess(this);
                 }

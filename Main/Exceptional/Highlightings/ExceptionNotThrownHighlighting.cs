@@ -1,6 +1,4 @@
-/// <copyright file="ExceptionNotThrownHighlighting.cs" manufacturer="CodeGears">
-///   Copyright (c) CodeGears. All rights reserved.
-/// </copyright>
+/// <copyright>Copyright (c) 2009 CodeGears.net All rights reserved.</copyright>
 
 using System;
 using CodeGears.ReSharper.Exceptional.Model;
@@ -26,7 +24,11 @@ namespace CodeGears.ReSharper.Exceptional.Highlightings
 
         protected override string Message
         {
-            get { return String.Format(Resources.HighLightNotThrownDocumentedExceptions, this.ExceptionDocumentationModel.ExceptionType.GetCLRName()); }
+            get
+            {
+                return String.Format(Resources.HighLightNotThrownDocumentedExceptions,
+                                     this.ExceptionDocumentationModel.ExceptionType.GetCLRName());
+            }
         }
     }
 }

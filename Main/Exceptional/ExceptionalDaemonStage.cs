@@ -1,6 +1,4 @@
-/// <copyright file="ExceptionalDaemonStage.cs" manufacturer="CodeGears">
-///   Copyright (c) CodeGears. All rights reserved.
-/// </copyright>
+/// <copyright>Copyright (c) 2009 CodeGears.net All rights reserved.</copyright>
 
 using JetBrains.ProjectModel;
 using JetBrains.ReSharper.Daemon;
@@ -18,8 +16,14 @@ namespace CodeGears.ReSharper.Exceptional
     {
         public override IDaemonStageProcess CreateProcess(IDaemonProcess process, DaemonProcessKind processKind)
         {
-            if (process == null) return null;
-            if (IsSupported(process.ProjectFile) == false) return null;
+            if (process == null)
+            {
+                return null;
+            }
+            if (IsSupported(process.ProjectFile) == false)
+            {
+                return null;
+            }
 
             return new ExceptionalDaemonStageProcess(process);
         }

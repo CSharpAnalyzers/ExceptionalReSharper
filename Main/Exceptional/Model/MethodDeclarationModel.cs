@@ -1,6 +1,4 @@
-/// <copyright file="MethodDeclarationModel.cs" manufacturer="CodeGears">
-///   Copyright (c) CodeGears. All rights reserved.
-/// </copyright>
+/// <copyright>Copyright (c) 2009 CodeGears.net All rights reserved.</copyright>
 
 using JetBrains.ReSharper.Psi.CSharp.Tree;
 
@@ -10,6 +8,8 @@ namespace CodeGears.ReSharper.Exceptional.Model
     internal class MethodDeclarationModel : AnalyzeUnitModelBase<IMethodDeclarationNode>
     {
         public MethodDeclarationModel(IMethodDeclarationNode methodDeclaration)
-            : base(null, methodDeclaration) { }
+            : base(null, methodDeclaration)
+        {
+        }
     }
 }

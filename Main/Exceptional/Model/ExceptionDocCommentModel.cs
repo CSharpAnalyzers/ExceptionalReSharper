@@ -1,6 +1,4 @@
-/// <copyright file="ExceptionDocCommentModel.cs" manufacturer="CodeGears">
-///   Copyright (c) CodeGears. All rights reserved.
-/// </copyright>
+/// <copyright>Copyright (c) 2009 CodeGears.net All rights reserved.</copyright>
 
 using System.Text.RegularExpressions;
 using CodeGears.ReSharper.Exceptional.Analyzers;
@@ -14,8 +12,10 @@ namespace CodeGears.ReSharper.Exceptional.Model
     {
         public IDeclaredType ExceptionType { get; private set; }
 
-        public ExceptionDocCommentModel(DocCommentBlockModel docCommentBlockModel) 
-            : base(docCommentBlockModel) { }
+        public ExceptionDocCommentModel(DocCommentBlockModel docCommentBlockModel)
+            : base(docCommentBlockModel)
+        {
+        }
 
         public override void Initialize()
         {
@@ -32,16 +32,26 @@ namespace CodeGears.ReSharper.Exceptional.Model
             {
                 var text = docCommentNode.GetText();
                 var match = regEx.Match(text);
-                if (match.Success == false) continue;
+                if (match.Success == false)
+                {
+                    continue;
+                }
 
                 var exceptionType = match.Groups["exception"].Value;
 
-                var exceptionReference = this.DocCommentBlockModel.References.Find(reference => reference.GetName().Equals(exceptionType));
-                if (exceptionReference == null) return TypeFactory.CreateTypeByCLRName(exceptionType, docCommentNode.GetPsiModule());
+                var exceptionReference =
+                    this.DocCommentBlockModel.References.Find(reference => reference.GetName().Equals(exceptionType));
+                if (exceptionReference == null)
+                {
+                    return TypeFactory.CreateTypeByCLRName(exceptionType, docCommentNode.GetPsiModule());
+                }
 
                 var resolveResult = exceptionReference.Resolve();
                 var declaredType = resolveResult.DeclaredElement as ITypeElement;
-                if (declaredType == null) return TypeFactory.CreateTypeByCLRName(exceptionType, docCommentNode.GetPsiModule());
+                if (declaredType == null)
+                {
+                    return TypeFactory.CreateTypeByCLRName(exceptionType, docCommentNode.GetPsiModule());
+                }
 
                 return TypeFactory.CreateTypeByCLRName(declaredType.CLRName, docCommentNode.GetPsiModule());
             }
@@ -62,7 +72,10 @@ namespace CodeGears.ReSharper.Exceptional.Model
             {
                 var text = docCommentNode.GetText();
                 var match = regEx.Match(text);
-                if (match.Success == false) continue;
+                if (match.Success == false)
+                {
+                    continue;
+                }
 
                 var exceptionType = match.Groups["exception"].Value;
                 var documentRange = docCommentNode.GetDocumentRange();
@@ -84,7 +97,10 @@ namespace CodeGears.ReSharper.Exceptional.Model
             foreach (var docCommentNode in this.DocCommentNodes)
             {
                 var text = docCommentNode.GetText();
-                if (text.Contains("[MARKER]") == false) continue;
+                if (text.Contains("[MARKER]") == false)
+                {
+                    continue;
+                }
 
                 var documentRange = docCommentNode.GetDocumentRange();
                 var textRange = documentRange.TextRange;

@@ -1,3 +1,5 @@
+/// <copyright>Copyright (c) 2009 CodeGears.net All rights reserved.</copyright>
+
 using CodeGears.ReSharper.Exceptional.Model;
 using JetBrains.ReSharper.Daemon.CSharp.Stages;
 using JetBrains.ReSharper.Psi.CSharp.Tree;

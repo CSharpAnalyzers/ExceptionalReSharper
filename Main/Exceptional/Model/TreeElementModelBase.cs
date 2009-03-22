@@ -1,5 +1,6 @@
+/// <copyright>Copyright (c) 2009 CodeGears.net All rights reserved.</copyright>
+
 using JetBrains.DocumentModel;
-using JetBrains.ReSharper.Psi;
 using JetBrains.ReSharper.Psi.CSharp;
 using JetBrains.ReSharper.Psi.Tree;
 
@@ -17,7 +18,7 @@ namespace CodeGears.ReSharper.Exceptional.Model
         protected TreeElementModelBase(IAnalyzeUnit analyzeUnit, T node) : base(analyzeUnit)
         {
             Node = node;
-        }       
+        }
 
         protected CSharpElementFactory GetElementFactory()
         {

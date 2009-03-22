@@ -1,3 +1,5 @@
+/// <copyright>Copyright (c) 2009 CodeGears.net All rights reserved.</copyright>
+
 using CodeGears.ReSharper.Exceptional.Analyzers;
 using JetBrains.ReSharper.Psi;
 using JetBrains.ReSharper.Psi.Tree;

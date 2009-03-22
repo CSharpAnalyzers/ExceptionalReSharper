@@ -1,6 +1,4 @@
-/// <copyright file="DocCommentModel.cs" manufacturer="CodeGears">
-///   Copyright (c) CodeGears. All rights reserved.
-/// </copyright>
+/// <copyright>Copyright (c) 2009 CodeGears.net All rights reserved.</copyright>
 
 using System.Collections.Generic;
 using JetBrains.DocumentModel;
@@ -17,6 +15,7 @@ namespace CodeGears.ReSharper.Exceptional.Model
         public List<ITreeNode> TreeNodes { get; private set; }
 
         private DocumentRange _documentRange;
+
         public override DocumentRange DocumentRange
         {
             get { return _documentRange; }
@@ -34,7 +33,7 @@ namespace CodeGears.ReSharper.Exceptional.Model
         {
             foreach (var treeNode in this.TreeNodes)
             {
-                if(treeNode is IDocCommentNode)
+                if (treeNode is IDocCommentNode)
                 {
                     this.DocCommentNodes.Add(treeNode as IDocCommentNode);
                 }
@@ -46,7 +45,9 @@ namespace CodeGears.ReSharper.Exceptional.Model
         protected virtual DocumentRange GetDocCommentRage()
         {
             if (this.DocCommentNodes.Count == 0)
+            {
                 return DocumentRange.InvalidRange;
+            }
 
             var textRange = this.DocCommentNodes[0].GetDocumentRange().TextRange;
 

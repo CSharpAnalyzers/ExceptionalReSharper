@@ -1,6 +1,4 @@
-/// <copyright file="ModelBase.cs" manufacturer="CodeGears">
-///   Copyright (c) CodeGears. All rights reserved.
-/// </copyright>
+/// <copyright>Copyright (c) 2009 CodeGears.net All rights reserved.</copyright>
 
 using CodeGears.ReSharper.Exceptional.Analyzers;
 using JetBrains.DocumentModel;
@@ -18,6 +16,8 @@ namespace CodeGears.ReSharper.Exceptional.Model
             AnalyzeUnit = analyzeUnit;
         }
 
-        public virtual void Accept(AnalyzerBase analyzerBase) {}
+        public virtual void Accept(AnalyzerBase analyzerBase)
+        {
+        }
     }
 }

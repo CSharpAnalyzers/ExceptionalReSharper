@@ -1,6 +1,4 @@
-/// <copyright file="DocCommentBlockModel.cs" manufacturer="CodeGears">
-///   Copyright (c) CodeGears. All rights reserved.
-/// </copyright>
+/// <copyright>Copyright (c) 2009 CodeGears.net All rights reserved.</copyright>
 
 using System;
 using System.Collections.Generic;
@@ -34,7 +32,7 @@ namespace CodeGears.ReSharper.Exceptional.Model
             {
                 foreach (var docCommentModel in this.DocCommentModels)
                 {
-                    if(docCommentModel is ExceptionDocCommentModel)
+                    if (docCommentModel is ExceptionDocCommentModel)
                     {
                         yield return docCommentModel as ExceptionDocCommentModel;
                     }
@@ -42,10 +40,12 @@ namespace CodeGears.ReSharper.Exceptional.Model
             }
         }
 
-        public DocCommentBlockModel(IAnalyzeUnit analyzeUnit) 
-            : this(analyzeUnit, null) { }
+        public DocCommentBlockModel(IAnalyzeUnit analyzeUnit)
+            : this(analyzeUnit, null)
+        {
+        }
 
-        public DocCommentBlockModel(IAnalyzeUnit analyzeUnit, IDocCommentBlockNode docCommentNode) 
+        public DocCommentBlockModel(IAnalyzeUnit analyzeUnit, IDocCommentBlockNode docCommentNode)
             : base(analyzeUnit, docCommentNode)
         {
             DocCommentModels = new List<DocCommentModel>();
@@ -56,7 +56,10 @@ namespace CodeGears.ReSharper.Exceptional.Model
 
         private void Preprocess()
         {
-            if (this.Node == null) return;
+            if (this.Node == null)
+            {
+                return;
+            }
 
             this.References.AddRange(this.Node.GetFirstClassReferences());
             this.DocCommentModels = DocCommentReader.Read(this.Node, this);
@@ -72,18 +75,22 @@ namespace CodeGears.ReSharper.Exceptional.Model
 
         public ExceptionDocCommentModel AddExceptionDocumentation(IDeclaredType exceptionType)
         {
-            if(exceptionType == null) return null;
+            if (exceptionType == null)
+            {
+                return null;
+            }
 
             Shell.Instance.Locks.AcquireWriteLock();
 
             ExceptionDocCommentModel result;
 
-            var exceptionDocumentation = String.Format("<exception cref=\"{1}\">[MARKER]</exception>{0}", Environment.NewLine, exceptionType.GetCLRName());
+            var exceptionDocumentation = String.Format("<exception cref=\"{1}\">[MARKER]</exception>{0}",
+                                                       Environment.NewLine, exceptionType.GetCLRName());
 
             if (this.IsReal == false)
             {
                 var docCommentBlockNode = this.GetElementFactory().CreateDocComment(exceptionDocumentation);
-                docCommentBlockNode  = this.AnalyzeUnit.AddDocCommentNode(docCommentBlockNode);
+                docCommentBlockNode = this.AnalyzeUnit.AddDocCommentNode(docCommentBlockNode);
                 this.Node = docCommentBlockNode;
                 Preprocess();
 
@@ -94,11 +101,16 @@ namespace CodeGears.ReSharper.Exceptional.Model
             else
             {
                 exceptionDocumentation += exceptionDocumentation;
-                var docCommentBlockNode = CSharpElementFactory.GetInstance(this.AnalyzeUnit.GetPsiModule()).CreateDocComment(exceptionDocumentation);
+                var docCommentBlockNode =
+                    CSharpElementFactory.GetInstance(this.AnalyzeUnit.GetPsiModule()).CreateDocComment(
+                        exceptionDocumentation);
 
                 var commentNode = docCommentBlockNode.FirstChild as IDocCommentNode;
 
-                if (commentNode == null) return null;
+                if (commentNode == null)
+                {
+                    return null;
+                }
 
                 var spaces = commentNode.NextSibling;
 
@@ -126,8 +138,14 @@ namespace CodeGears.ReSharper.Exceptional.Model
 
         public void RemoveExceptionDocumentation(ExceptionDocCommentModel exceptionDocCommentModel)
         {
-            if (exceptionDocCommentModel == null) return;
-            if (exceptionDocCommentModel.DocCommentNodes.Count == 0) return;
+            if (exceptionDocCommentModel == null)
+            {
+                return;
+            }
+            if (exceptionDocCommentModel.DocCommentNodes.Count == 0)
+            {
+                return;
+            }
 
             var firstNode = exceptionDocCommentModel.TreeNodes[0];
             var lastNode = exceptionDocCommentModel.TreeNodes[exceptionDocCommentModel.TreeNodes.Count - 1];

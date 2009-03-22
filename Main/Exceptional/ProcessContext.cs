@@ -1,6 +1,4 @@
-/// <copyright file="ProcessContext.cs" manufacturer="CodeGears">
-///   Copyright (c) CodeGears. All rights reserved.
-/// </copyright>
+/// <copyright>Copyright (c) 2009 CodeGears.net All rights reserved.</copyright>
 
 using System.Collections.Generic;
 using CodeGears.ReSharper.Exceptional.Analyzers;
@@ -39,13 +37,16 @@ namespace CodeGears.ReSharper.Exceptional
         public void StartProcess(IAnalyzeUnit analyzeUnit)
         {
             this.AnalyzeUnit = analyzeUnit;
-            this.Model = (T)analyzeUnit;
+            this.Model = (T) analyzeUnit;
             this.BlockModelsStack.Push(this.AnalyzeUnit);
         }
 
         public void EndProcess(CSharpDaemonStageProcessBase process)
         {
-            if (this.IsValid() == false) return;
+            if (this.IsValid() == false)
+            {
+                return;
+            }
 
             foreach (var analyzerBase in _analyzers)
             {
@@ -56,8 +57,14 @@ namespace CodeGears.ReSharper.Exceptional
 
         public void EnterTryBlock(ITryStatementNode tryStatement)
         {
-            if (this.IsValid() == false) return;
-            if (tryStatement == null) return;
+            if (this.IsValid() == false)
+            {
+                return;
+            }
+            if (tryStatement == null)
+            {
+                return;
+            }
             Logger.Assert(this.BlockModelsStack.Count > 0, "[Exceptional] There is no block for try statement.");
 
             var model = new TryStatementModel(this.AnalyzeUnit, tryStatement);
@@ -78,12 +85,21 @@ namespace CodeGears.ReSharper.Exceptional
 
         public void EnterCatchClause(ICatchClauseNode catchClauseNode)
         {
-            if (this.IsValid() == false) return;
-            if (catchClauseNode == null) return;
-            Logger.Assert(this.TryStatementModelsStack.Count > 0, "[Exceptional] There is no try statement for catch declaration.");
+            if (this.IsValid() == false)
+            {
+                return;
+            }
+            if (catchClauseNode == null)
+            {
+                return;
+            }
+            Logger.Assert(this.TryStatementModelsStack.Count > 0,
+                          "[Exceptional] There is no try statement for catch declaration.");
 
             var tryStatementModel = this.TryStatementModelsStack.Peek();
-            var model = tryStatementModel.CatchClauseModels.Find(catchClauseModel => catchClauseModel.Node.Equals(catchClauseNode));
+            var model =
+                tryStatementModel.CatchClauseModels.Find(
+                    catchClauseModel => catchClauseModel.Node.Equals(catchClauseNode));
 
             Logger.Assert(model != null, "[Exceptional] Cannot find catch model!");
 
@@ -99,8 +115,14 @@ namespace CodeGears.ReSharper.Exceptional
 
         public void Process(IThrowStatementNode throwStatement)
         {
-            if (this.IsValid() == false) return;
-            if (throwStatement == null) return;
+            if (this.IsValid() == false)
+            {
+                return;
+            }
+            if (throwStatement == null)
+            {
+                return;
+            }
             Logger.Assert(this.BlockModelsStack.Count > 0, "[Exceptional] There is no block for throw statement.");
 
             new ThrowStatementModel(this.AnalyzeUnit, throwStatement, this.BlockModelsStack.Peek());
@@ -108,10 +130,17 @@ namespace CodeGears.ReSharper.Exceptional
 
         public void Process(ICatchVariableDeclarationNode catchVariableDeclaration)
         {
-            if (this.IsValid() == false) return;
-            if (catchVariableDeclaration == null) return;
+            if (this.IsValid() == false)
+            {
+                return;
+            }
+            if (catchVariableDeclaration == null)
+            {
+                return;
+            }
 
-            Logger.Assert(this.CatchClauseModelsStack.Count > 0, "[Exceptional] There is no catch clause for catch variable declaration.");
+            Logger.Assert(this.CatchClauseModelsStack.Count > 0,
+                          "[Exceptional] There is no catch clause for catch variable declaration.");
 
             var catchClause = this.CatchClauseModelsStack.Peek();
             catchClause.VariableModel = new CatchVariableModel(this.AnalyzeUnit, catchVariableDeclaration);
@@ -119,12 +148,18 @@ namespace CodeGears.ReSharper.Exceptional
 
         public void Process(IReferenceExpressionNode invocationExpression)
         {
-            if (this.IsValid() == false) return;
-            if (invocationExpression == null) return;
+            if (this.IsValid() == false)
+            {
+                return;
+            }
+            if (invocationExpression == null)
+            {
+                return;
+            }
 
             Logger.Assert(this.BlockModelsStack.Count > 0, "[Exceptional] There is no block for invocation statement.");
 
-            new InvocationModel(this.AnalyzeUnit, invocationExpression, this.BlockModelsStack.Peek());
+            new ReferenceExpressionModel(this.AnalyzeUnit, invocationExpression, this.BlockModelsStack.Peek());
         }
 
         protected bool IsValid()
@@ -134,12 +169,20 @@ namespace CodeGears.ReSharper.Exceptional
 
         public void Process(IDocCommentBlockNode docCommentBlockNode)
         {
-            if (this.IsValid() == false) return;
+            if (this.IsValid() == false)
+            {
+                return;
+            }
 
             this.AnalyzeUnit.DocCommentBlockModel = new DocCommentBlockModel(this.AnalyzeUnit, docCommentBlockNode);
         }
 
-        public virtual void EnterAccessor(IAccessorDeclarationNode accessorDeclarationNode) {}
-        public virtual void LeaveAccessor() {}
+        public virtual void EnterAccessor(IAccessorDeclarationNode accessorDeclarationNode)
+        {
+        }
+
+        public virtual void LeaveAccessor()
+        {
+        }
     }
 }

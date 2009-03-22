@@ -1,3 +1,5 @@
+/// <copyright>Copyright (c) 2009 CodeGears.net All rights reserved.</copyright>
+
 using System.Collections.Generic;
 using CodeGears.ReSharper.Exceptional.Analyzers;
 using JetBrains.ReSharper.Psi;
@@ -11,7 +13,7 @@ namespace CodeGears.ReSharper.Exceptional.Model
         public List<IExceptionsOriginModel> ExceptionOriginModels { get; private set; }
         public IBlockModel ParentBlock { get; set; }
 
-        protected BlockModelBase(IAnalyzeUnit analyzeUnit, T node) 
+        protected BlockModelBase(IAnalyzeUnit analyzeUnit, T node)
             : base(analyzeUnit, node)
         {
             TryStatementModels = new List<TryStatementModel>();

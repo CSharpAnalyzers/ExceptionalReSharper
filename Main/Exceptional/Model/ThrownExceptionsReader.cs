@@ -1,3 +1,5 @@
+/// <copyright>Copyright (c) 2009 CodeGears.net All rights reserved.</copyright>
+
 using System.Collections.Generic;
 using System.Xml;
 using JetBrains.ReSharper.Psi;
@@ -16,7 +18,10 @@ namespace CodeGears.ReSharper.Exceptional.Model
 
             var resolveResult = referenceExpression.Reference.Resolve();
             var declaredElement = resolveResult.DeclaredElement;
-            if (declaredElement == null) return result;
+            if (declaredElement == null)
+            {
+                return result;
+            }
 
             var declarations = declaredElement.GetDeclarations();
             if (declarations == null || declarations.Count == 0)
@@ -24,17 +29,26 @@ namespace CodeGears.ReSharper.Exceptional.Model
                 return GetFromXmlDoc(declaredElement, referenceExpression.GetPsiModule());
             }
 
-            var docCommentBlockOwnerNode = declarations[0] as IDocCommentBlockOwnerNode;
-            if (docCommentBlockOwnerNode == null) return result;
-
-            var docCommentBlockNode = docCommentBlockOwnerNode.GetDocCommentBlockNode();
-            if (docCommentBlockNode == null) return result;
-
-            var docCommentBlockModel = new DocCommentBlockModel(null, docCommentBlockNode);
-
-            foreach (var exceptionDocCommentModel in docCommentBlockModel.ExceptionDocCommentModels)
+            foreach (var declaration in declarations)
             {
-                result.Add(exceptionDocCommentModel.ExceptionType);
+                var docCommentBlockOwnerNode = declaration as IDocCommentBlockOwnerNode;
+                if (docCommentBlockOwnerNode == null)
+                {
+                    return result;
+                }
+
+                var docCommentBlockNode = docCommentBlockOwnerNode.GetDocCommentBlockNode();
+                if (docCommentBlockNode == null)
+                {
+                    return result;
+                }
+
+                var docCommentBlockModel = new DocCommentBlockModel(null, docCommentBlockNode);
+
+                foreach (var exceptionDocCommentModel in docCommentBlockModel.ExceptionDocCommentModels)
+                {
+                    result.Add(exceptionDocCommentModel.ExceptionType);
+                }
             }
 
             return result;
@@ -45,17 +59,25 @@ namespace CodeGears.ReSharper.Exceptional.Model
             var result = new List<IDeclaredType>();
 
             var xmlNode = declaredElement.GetXMLDoc(false);
-            if (xmlNode == null) return result;
+            if (xmlNode == null)
+            {
+                return result;
+            }
 
             var exceptionNodes = xmlNode.SelectNodes("exception");
-            if (exceptionNodes == null) return result;
+            if (exceptionNodes == null)
+            {
+                return result;
+            }
 
             foreach (XmlNode exceptionNode in exceptionNodes)
             {
                 var exceptionType = exceptionNode.Attributes["cref"].Value;
 
                 if (exceptionType.StartsWith("T:"))
+                {
                     exceptionType = exceptionType.Substring(2);
+                }
 
                 var exceptionDecaredType = TypeFactory.CreateTypeByCLRName(exceptionType, psiModule);
 

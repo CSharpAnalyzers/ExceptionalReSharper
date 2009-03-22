@@ -1,6 +1,4 @@
-/// <copyright file="IsDocumentedExceptionThrownAnalyzer.cs" manufacturer="CodeGears">
-///   Copyright (c) CodeGears. All rights reserved.
-/// </copyright>
+/// <copyright>Copyright (c) 2009 CodeGears.net All rights reserved.</copyright>
 
 using CodeGears.ReSharper.Exceptional.Highlightings;
 using CodeGears.ReSharper.Exceptional.Model;
@@ -12,9 +10,18 @@ namespace CodeGears.ReSharper.Exceptional.Analyzers
     {
         public override void Visit(ExceptionDocCommentModel exceptionDocumentationModel)
         {
-            if (exceptionDocumentationModel == null) return;
-            if (exceptionDocumentationModel.AnalyzeUnit.IsPublicOrInternal == false) return;
-            if (AnalyzeIfExeptionThrown(exceptionDocumentationModel)) return;
+            if (exceptionDocumentationModel == null)
+            {
+                return;
+            }
+            if (exceptionDocumentationModel.AnalyzeUnit.IsPublicOrInternal == false)
+            {
+                return;
+            }
+            if (AnalyzeIfExeptionThrown(exceptionDocumentationModel))
+            {
+                return;
+            }
 
             this.Process.AddHighlighting(new ExceptionNotThrownHighlighting(exceptionDocumentationModel));
         }
@@ -23,7 +30,7 @@ namespace CodeGears.ReSharper.Exceptional.Analyzers
         {
             foreach (var throwStatementModel in exceptionDocumentationModel.AnalyzeUnit.ThrownExceptionModelsNotCatched)
             {
-                if(throwStatementModel.Throws(exceptionDocumentationModel.ExceptionType))
+                if (throwStatementModel.Throws(exceptionDocumentationModel.ExceptionType))
                 {
                     return true;
                 }

@@ -1,3 +1,5 @@
+/// <copyright>Copyright (c) 2009 CodeGears.net All rights reserved.</copyright>
+
 using CodeGears.ReSharper.Exceptional.Analyzers;
 using JetBrains.ReSharper.Psi;
 using JetBrains.ReSharper.Psi.ExtensionsAPI.Tree;
@@ -14,7 +16,10 @@ namespace CodeGears.ReSharper.Exceptional.Model
             get
             {
                 var accessRightsOwner = this.Node as IAccessRightsOwner;
-                if (accessRightsOwner == null) return false;
+                if (accessRightsOwner == null)
+                {
+                    return false;
+                }
 
                 var rights = accessRightsOwner.GetAccessRights();
                 return rights == AccessRights.PUBLIC ||

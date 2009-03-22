@@ -1,3 +1,5 @@
+/// <copyright>Copyright (c) 2009 CodeGears.net All rights reserved.</copyright>
+
 using System.Collections.Generic;
 using CodeGears.ReSharper.Exceptional.Analyzers;
 using JetBrains.ReSharper.Psi.CSharp.Tree;
@@ -8,7 +10,7 @@ namespace CodeGears.ReSharper.Exceptional.Model
     {
         public List<AccessorDeclarationModel> Accessors { get; private set; }
 
-        public PropertyDeclarationModel(IPropertyDeclarationNode node) 
+        public PropertyDeclarationModel(IPropertyDeclarationNode node)
             : base(null, node)
         {
             Accessors = new List<AccessorDeclarationModel>();
@@ -20,7 +22,7 @@ namespace CodeGears.ReSharper.Exceptional.Model
             {
                 accessorDeclarationModel.Accept(analyzerBase);
             }
-    
+
             base.Accept(analyzerBase);
         }
 

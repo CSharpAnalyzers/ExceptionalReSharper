@@ -1,6 +1,4 @@
-/// <copyright file="TryStatementModel.cs" manufacturer="CodeGears">
-///   Copyright (c) CodeGears. All rights reserved.
-/// </copyright>
+/// <copyright>Copyright (c) 2009 CodeGears.net All rights reserved.</copyright>
 
 using System.Collections.Generic;
 using CodeGears.ReSharper.Exceptional.Analyzers;
@@ -37,7 +35,7 @@ namespace CodeGears.ReSharper.Exceptional.Model
         {
             foreach (var catchClauseModel in this.CatchClauseModels)
             {
-                if(catchClauseModel.Catches(exception))
+                if (catchClauseModel.Catches(exception))
                 {
                     return true;
                 }

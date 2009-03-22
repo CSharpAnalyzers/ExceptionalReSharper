@@ -1,6 +1,4 @@
-/// <copyright file="CatchVariableModel.cs" manufacturer="CodeGears">
-///   Copyright (c) CodeGears. All rights reserved.
-/// </copyright>
+/// <copyright>Copyright (c) 2009 CodeGears.net All rights reserved.</copyright>
 
 using JetBrains.ReSharper.Psi.CSharp.Tree;
 
@@ -14,6 +12,8 @@ namespace CodeGears.ReSharper.Exceptional.Model
         }
 
         public CatchVariableModel(IAnalyzeUnit analyzeUnit, ICatchVariableDeclarationNode catchVariableDeclaration)
-            : base(analyzeUnit, catchVariableDeclaration) { }
+            : base(analyzeUnit, catchVariableDeclaration)
+        {
+        }
     }
 }

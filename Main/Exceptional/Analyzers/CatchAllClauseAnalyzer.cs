@@ -1,6 +1,4 @@
-/// <copyright file="CatchAllClauseAnalyzer.cs" manufacturer="CodeGears">
-///   Copyright (c) CodeGears. All rights reserved.
-/// </copyright>
+/// <copyright>Copyright (c) 2009 CodeGears.net All rights reserved.</copyright>
 
 using CodeGears.ReSharper.Exceptional.Highlightings;
 using CodeGears.ReSharper.Exceptional.Model;
@@ -12,8 +10,14 @@ namespace CodeGears.ReSharper.Exceptional.Analyzers
     {
         public override void Visit(CatchClauseModel catchClauseModel)
         {
-            if (catchClauseModel == null) return;
-            if (catchClauseModel.IsCatchAll == false) return;
+            if (catchClauseModel == null)
+            {
+                return;
+            }
+            if (catchClauseModel.IsCatchAll == false)
+            {
+                return;
+            }
 
             this.Process.AddHighlighting(new CatchAllClauseHighlighting(catchClauseModel));
         }

@@ -1,6 +1,4 @@
-/// <copyright file="SingleActionFix.cs" manufacturer="CodeGears">
-///   Copyright (c) CodeGears. All rights reserved.
-/// </copyright>
+/// <copyright>Copyright (c) 2009 CodeGears.net All rights reserved.</copyright>
 
 using JetBrains.ReSharper.Feature.Services.Bulbs;
 using JetBrains.ReSharper.Intentions;

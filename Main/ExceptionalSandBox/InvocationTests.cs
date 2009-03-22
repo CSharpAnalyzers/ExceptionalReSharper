@@ -67,7 +67,7 @@ namespace ExceptionalSandBox
 
         public void Test07()
         {
-            File.ReadAllLines("asd");
+            File.ReadAllLines("path to file");
         }
 
         public void Test08()

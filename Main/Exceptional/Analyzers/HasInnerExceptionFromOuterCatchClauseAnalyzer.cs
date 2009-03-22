@@ -1,6 +1,4 @@
-/// <copyright file="HasInnerExceptionFromOuterCatchClauseAnalyzer.cs" manufacturer="CodeGears">
-///   Copyright (c) CodeGears. All rights reserved.
-/// </copyright>
+/// <copyright>Copyright (c) 2009 CodeGears.net All rights reserved.</copyright>
 
 using CodeGears.ReSharper.Exceptional.Highlightings;
 using CodeGears.ReSharper.Exceptional.Model;
@@ -12,8 +10,14 @@ namespace CodeGears.ReSharper.Exceptional.Analyzers
     {
         public override void Visit(ThrowStatementModel throwStatementModel)
         {
-            if (throwStatementModel == null) return;
-            if (AnalyzeIfHasInnerException(throwStatementModel)) return;
+            if (throwStatementModel == null)
+            {
+                return;
+            }
+            if (AnalyzeIfHasInnerException(throwStatementModel))
+            {
+                return;
+            }
 
             this.Process.AddHighlighting(new ThrowFromCatchWithNoInnerExceptionHighlighting(throwStatementModel));
         }
@@ -21,7 +25,10 @@ namespace CodeGears.ReSharper.Exceptional.Analyzers
         private static bool AnalyzeIfHasInnerException(ThrowStatementModel throwStatementModel)
         {
             var outerCatchClause = throwStatementModel.FindOuterCatchClause();
-            if (outerCatchClause == null) return true;
+            if (outerCatchClause == null)
+            {
+                return true;
+            }
 
             if (outerCatchClause.HasExceptionType == false || throwStatementModel.IsRethrow)
             {
@@ -29,7 +36,7 @@ namespace CodeGears.ReSharper.Exceptional.Analyzers
                 return throwStatementModel.IsRethrow;
             }
 
-            if(outerCatchClause.HasVariable == false)
+            if (outerCatchClause.HasVariable == false)
             {
                 return false;
             }

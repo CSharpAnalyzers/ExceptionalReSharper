@@ -128,7 +128,7 @@
     <Compile Include="Model\IAnalyzeUnit.cs" />
     <Compile Include="Model\IExceptionsOriginModel.cs" />
     <Compile Include="Model\ThrownExceptionsReader.cs" />
-    <Compile Include="Model\InvocationModel.cs" />
+    <Compile Include="Model\ReferenceExpressionModel.cs" />
     <Compile Include="Model\CatchClauseModel.cs" />
     <Compile Include="Model\CatchVariableModel.cs" />
     <Compile Include="Model\DocCommentBlockModel.cs" />

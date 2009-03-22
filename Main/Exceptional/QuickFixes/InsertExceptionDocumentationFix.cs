@@ -1,6 +1,4 @@
-/// <copyright file="InsertExceptionDocumentationFix.cs" manufacturer="CodeGears">
-///   Copyright (c) CodeGears. All rights reserved.
-/// </copyright>
+/// <copyright>Copyright (c) 2009 CodeGears.net All rights reserved.</copyright>
 
 using System;
 using CodeGears.ReSharper.Exceptional.Highlightings;
@@ -30,11 +28,19 @@ namespace CodeGears.ReSharper.Exceptional.QuickFixes
         {
             var methodDeclaration = this.Error.ThrownExceptionModel.AnalyzeUnit;
 
-            var insertedExceptionModel = methodDeclaration.DocCommentBlockModel.AddExceptionDocumentation(this.Error.ThrownExceptionModel.ExceptionType);
-            if (insertedExceptionModel == null) return null;
+            var insertedExceptionModel =
+                methodDeclaration.DocCommentBlockModel.AddExceptionDocumentation(
+                    this.Error.ThrownExceptionModel.ExceptionType);
+            if (insertedExceptionModel == null)
+            {
+                return null;
+            }
 
             var exceptionCommentRange = insertedExceptionModel.GetDescriptionDocumentRange();
-            if (exceptionCommentRange == DocumentRange.InvalidRange) return null;
+            if (exceptionCommentRange == DocumentRange.InvalidRange)
+            {
+                return null;
+            }
 
             var nameSuggestionsExpression = new NameSuggestionsExpression(new[] {"Thrown when "});
             var field = new TemplateField("name", nameSuggestionsExpression, 0);
@@ -55,7 +61,11 @@ namespace CodeGears.ReSharper.Exceptional.QuickFixes
 
         public override string Text
         {
-            get { return String.Format(Resources.QuickFixInsertExceptionDocumentation, this.Error.ThrownExceptionModel.ExceptionType.GetCLRName()); }
+            get
+            {
+                return String.Format(Resources.QuickFixInsertExceptionDocumentation,
+                                     this.Error.ThrownExceptionModel.ExceptionType.GetCLRName());
+            }
         }
     }
 }

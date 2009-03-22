@@ -1,6 +1,4 @@
-/// <copyright file="ThrowFromCatchWithNoInnerExceptionHighlighting.cs" manufacturer="CodeGears">
-///   Copyright (c) CodeGears. All rights reserved.
-/// </copyright>
+/// <copyright>Copyright (c) 2009 CodeGears.net All rights reserved.</copyright>
 
 using CodeGears.ReSharper.Exceptional.Model;
 using JetBrains.DocumentModel;

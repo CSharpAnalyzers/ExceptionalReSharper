@@ -1,6 +1,4 @@
-/// <copyright file="InvocationModel.cs" manufacturer="CodeGears">
-///   Copyright (c) CodeGears. All rights reserved.
-/// </copyright>
+/// <copyright>Copyright (c) 2009 CodeGears.net All rights reserved.</copyright>
 
 using System.Collections.Generic;
 using CodeGears.ReSharper.Exceptional.Analyzers;
@@ -9,12 +7,13 @@ using JetBrains.ReSharper.Psi.CSharp.Tree;
 
 namespace CodeGears.ReSharper.Exceptional.Model
 {
-    internal class InvocationModel : TreeElementModelBase<IReferenceExpressionNode>, IExceptionsOriginModel
+    internal class ReferenceExpressionModel : TreeElementModelBase<IReferenceExpressionNode>, IExceptionsOriginModel
     {
         public List<ThrownExceptionModel> ThrownExceptions { get; set; }
         public IBlockModel ContainingBlockModel { get; private set; }
 
-        public InvocationModel(IAnalyzeUnit analyzeUnit, IReferenceExpressionNode invocationExpression, IBlockModel containingBlockModel)
+        public ReferenceExpressionModel(IAnalyzeUnit analyzeUnit, IReferenceExpressionNode invocationExpression,
+                                        IBlockModel containingBlockModel)
             : base(analyzeUnit, invocationExpression)
         {
             ContainingBlockModel = containingBlockModel;
@@ -43,7 +42,9 @@ namespace CodeGears.ReSharper.Exceptional.Model
             foreach (var thrownExceptionModel in this.ThrownExceptions)
             {
                 if (thrownExceptionModel.Throws(exceptionType))
+                {
                     return true;
+                }
             }
 
             return false;

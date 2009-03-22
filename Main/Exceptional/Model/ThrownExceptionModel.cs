@@ -1,6 +1,4 @@
-/// <copyright file="ThrownExceptionModel.cs" manufacturer="CodeGears">
-///   Copyright (c) CodeGears. All rights reserved.
-/// </copyright>
+/// <copyright>Copyright (c) 2009 CodeGears.net All rights reserved.</copyright>
 
 using CodeGears.ReSharper.Exceptional.Analyzers;
 using JetBrains.DocumentModel;
@@ -21,7 +19,8 @@ namespace CodeGears.ReSharper.Exceptional.Model
             get { return this.Parent.DocumentRange; }
         }
 
-        public ThrownExceptionModel(IAnalyzeUnit analyzeUnit, IDeclaredType exceptionType, IExceptionsOriginModel parent) : base(analyzeUnit)
+        public ThrownExceptionModel(IAnalyzeUnit analyzeUnit, IDeclaredType exceptionType, IExceptionsOriginModel parent)
+            : base(analyzeUnit)
         {
             ExceptionType = exceptionType;
             Parent = parent;
@@ -33,7 +32,10 @@ namespace CodeGears.ReSharper.Exceptional.Model
         private bool CheckIfDocumented()
         {
             var docCommentBlockNode = this.AnalyzeUnit.DocCommentBlockModel;
-            if (docCommentBlockNode == null) return false;
+            if (docCommentBlockNode == null)
+            {
+                return false;
+            }
 
             foreach (var exceptionDocumentationModel in docCommentBlockNode.ExceptionDocCommentModels)
             {
@@ -48,7 +50,10 @@ namespace CodeGears.ReSharper.Exceptional.Model
 
         private bool CheckIfCatched()
         {
-            if (ExceptionType == null) return false;
+            if (ExceptionType == null)
+            {
+                return false;
+            }
 
             return this.Parent.ContainingBlockModel.CatchesException(ExceptionType);
         }
@@ -56,8 +61,14 @@ namespace CodeGears.ReSharper.Exceptional.Model
         /// <summary>Checks whether this thrown exception equals to <paramref name="exceptionType"/>.</summary>
         public bool Throws(IDeclaredType exceptionType)
         {
-            if (this.ExceptionType == null) return false;
-            if (exceptionType == null) return false;
+            if (this.ExceptionType == null)
+            {
+                return false;
+            }
+            if (exceptionType == null)
+            {
+                return false;
+            }
 
             return this.ExceptionType.GetCLRName().Equals(exceptionType.GetCLRName());
         }
