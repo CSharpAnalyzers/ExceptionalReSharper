@@ -9,7 +9,7 @@ namespace CodeGears.ReSharper.Exceptional.Model
 {
     internal interface IBlockModel
     {
-        List<ThrowStatementModel> ThrowStatementModels { get; }
+        List<IExceptionsOriginModel> ExceptionOriginModels { get; }
         List<TryStatementModel> TryStatementModels { get; }
         IBlockModel ParentBlock { get; }
         bool CatchesException(IDeclaredType exception);

@@ -11,7 +11,7 @@ namespace CodeGears.ReSharper.Exceptional.Model
     {
         public IAnalyzeUnit AnalyzeUnit { get; private set; }
 
-        public virtual DocumentRange DocumentRange { get { return DocumentRange.InvalidRange; } }
+        public abstract DocumentRange DocumentRange { get; }
 
         protected ModelBase(IAnalyzeUnit analyzeUnit)
         {

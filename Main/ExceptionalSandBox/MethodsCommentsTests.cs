@@ -70,5 +70,25 @@ namespace ExceptionalSandBox
                 throw new InvalidOperationException("Test", ex);//OK
             }
         }
+
+        public void Test09()
+        {
+            try
+            {
+                throw new InvalidCastException();//OK
+            }
+            //This catch hides thrown exception
+            catch { }
+        }
+
+        public void Test10()
+        {
+            try
+            {
+                throw new InvalidCastException();//BAD
+            }
+            //This catch does not catch thrown exception
+            catch (ArgumentNullException) { }
+        }
     }
 }

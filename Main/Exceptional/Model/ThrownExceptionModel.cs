@@ -14,14 +14,14 @@ namespace CodeGears.ReSharper.Exceptional.Model
         public bool IsDocumented { get; private set; }
 
         public IDeclaredType ExceptionType { get; private set; }
-        private IExceptionsOrigin Parent { get; set; }
+        private IExceptionsOriginModel Parent { get; set; }
 
         public override DocumentRange DocumentRange
         {
             get { return this.Parent.DocumentRange; }
         }
 
-        public ThrownExceptionModel(IAnalyzeUnit analyzeUnit, IDeclaredType exceptionType, IExceptionsOrigin parent) : base(analyzeUnit)
+        public ThrownExceptionModel(IAnalyzeUnit analyzeUnit, IDeclaredType exceptionType, IExceptionsOriginModel parent) : base(analyzeUnit)
         {
             ExceptionType = exceptionType;
             Parent = parent;

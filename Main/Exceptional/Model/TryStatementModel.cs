@@ -29,6 +29,19 @@ namespace CodeGears.ReSharper.Exceptional.Model
                 }
             }
 
+            //TODO: Refactor. Construct catch models right at try processing.
+            foreach (var catchClause in this.Node.Catches)
+            {
+                if(catchClause.ExceptionType == null && exception.GetCLRName().Equals("System.Exception"))
+                    return true;
+
+                if(catchClause.ExceptionType == null)
+                    continue;
+
+                if (exception.IsSubtypeOf(catchClause.ExceptionType))
+                    return true;
+            }
+
             return this.ParentBlock.CatchesException(exception);
         }
 

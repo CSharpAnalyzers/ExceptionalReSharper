@@ -31,7 +31,7 @@ namespace CodeGears.ReSharper.Exceptional.Model
                 return exception.GetCLRName().Equals("System.Exception");
             }
 
-            return this.Node.ExceptionType.GetCLRName().Equals(exception.GetCLRName());
+            return exception.IsSubtypeOf(this.Node.ExceptionType);
         }
 
         public bool HasExceptionType

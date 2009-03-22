@@ -12,7 +12,7 @@ using JetBrains.Util;
 
 namespace CodeGears.ReSharper.Exceptional.Model
 {
-    internal class ThrowStatementModel : TreeElementModelBase<IThrowStatementNode>, IExceptionsOrigin
+    internal class ThrowStatementModel : TreeElementModelBase<IThrowStatementNode>, IExceptionsOriginModel
     {
         private ThrownExceptionModel ThrownExceptionModel { get; set; }
 
@@ -44,7 +44,7 @@ namespace CodeGears.ReSharper.Exceptional.Model
 
             ThrownExceptionModel = new ThrownExceptionModel(analyzeUnit, GetExceptionType(), this);
 
-            containingBlockModel.ThrowStatementModels.Add(this);
+            containingBlockModel.ExceptionOriginModels.Add(this);
         }
 
         /// <summary>Searches for the nearest containing catch clause.</summary>

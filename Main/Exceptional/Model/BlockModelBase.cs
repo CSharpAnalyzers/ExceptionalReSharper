@@ -8,14 +8,14 @@ namespace CodeGears.ReSharper.Exceptional.Model
     internal abstract class BlockModelBase<T> : TreeElementModelBase<T>, IBlockModel where T : ITreeNode
     {
         public List<TryStatementModel> TryStatementModels { get; private set; }
-        public List<ThrowStatementModel> ThrowStatementModels { get; private set; }
+        public List<IExceptionsOriginModel> ExceptionOriginModels { get; private set; }
         public IBlockModel ParentBlock { get; set; }
 
         protected BlockModelBase(IAnalyzeUnit analyzeUnit, T node) 
             : base(analyzeUnit, node)
         {
             TryStatementModels = new List<TryStatementModel>();
-            ThrowStatementModels = new List<ThrowStatementModel>();
+            ExceptionOriginModels = new List<IExceptionsOriginModel>();
         }
 
         public virtual bool CatchesException(IDeclaredType exception)
@@ -35,7 +35,7 @@ namespace CodeGears.ReSharper.Exceptional.Model
                 tryStatementModel.Accept(analyzerBase);
             }
 
-            foreach (var throwStatementModel in this.ThrowStatementModels)
+            foreach (var throwStatementModel in this.ExceptionOriginModels)
             {
                 throwStatementModel.Accept(analyzerBase);
             }
@@ -45,7 +45,7 @@ namespace CodeGears.ReSharper.Exceptional.Model
         {
             get
             {
-                foreach (var throwStatementModel in this.ThrowStatementModels)
+                foreach (var throwStatementModel in this.ExceptionOriginModels)
                 {
                     foreach (var thrownExceptionModel in throwStatementModel.ThrownExceptions)
                     {
