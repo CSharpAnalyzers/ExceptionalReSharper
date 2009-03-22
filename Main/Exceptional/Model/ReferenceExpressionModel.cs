@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using CodeGears.ReSharper.Exceptional.Analyzers;
 using JetBrains.ReSharper.Psi;
 using JetBrains.ReSharper.Psi.CSharp.Tree;
+using JetBrains.ReSharper.Psi.Tree;
 
 namespace CodeGears.ReSharper.Exceptional.Model
 {
@@ -56,6 +57,20 @@ namespace CodeGears.ReSharper.Exceptional.Model
             {
                 thrownExceptionModel.Accept(analyzerBase);
             }
+        }
+
+        public void SurroundWithTryBlock(IDeclaredType exceptionType)
+        {
+            var codeElementFactory = new CodeElementFactory(this.GetElementFactory());
+            var exceptionVariableName = NameFactory.CatchVariableName(this.Node, exceptionType);
+            var tryStatement = codeElementFactory.CreateTryStatement(exceptionType, exceptionVariableName);
+
+            var containingStatement = this.Node.GetContainingStatement();
+
+            var block = codeElementFactory.CreateBlock(containingStatement.ToTreeNode());
+            tryStatement.SetTry(block);
+            
+            containingStatement.ReplaceBy(tryStatement);
         }
     }
 }

@@ -1,5 +1,6 @@
 /// <copyright>Copyright (c) 2009 CodeGears.net All rights reserved.</copyright>
 
+using System;
 using System.Collections.Generic;
 using CodeGears.ReSharper.Exceptional.Analyzers;
 using JetBrains.ReSharper.Psi;
@@ -69,6 +70,16 @@ namespace CodeGears.ReSharper.Exceptional.Model
             }
         }
 
+        public override TryStatementModel FindNearestTryBlock()
+        {
+            return this;
+        }
+
+        public override IBlock Contents
+        {
+            get { return this.Node.Try; }
+        }
+
         public override void Accept(AnalyzerBase analyzerBase)
         {
             base.Accept(analyzerBase);
@@ -77,6 +88,14 @@ namespace CodeGears.ReSharper.Exceptional.Model
             {
                 catchClauseModel.Accept(analyzerBase);
             }
+        }
+
+        public void AddCatchClause(IDeclaredType exceptionType)
+        {
+            var codeElementFactory = new CodeElementFactory(this.GetElementFactory());
+            var variableName = NameFactory.CatchVariableName(this.Node, exceptionType);
+            var catchClauseNode = codeElementFactory.CreateSpecificCatchClause(exceptionType, null, variableName);
+            this.Node.AddCatchClause(catchClauseNode);
         }
     }
 }

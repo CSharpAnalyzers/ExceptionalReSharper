@@ -1,16 +1,10 @@
 /// <copyright>Copyright (c) 2009 CodeGears.net All rights reserved.</copyright>
 
 using System;
-using System.Collections.Generic;
 using CodeGears.ReSharper.Exceptional.Analyzers;
 using JetBrains.DocumentModel;
 using JetBrains.ReSharper.Psi;
 using JetBrains.ReSharper.Psi.CSharp.Tree;
-using JetBrains.ReSharper.Psi.Naming;
-using JetBrains.ReSharper.Psi.Naming.Extentions;
-using JetBrains.ReSharper.Psi.Naming.Settings;
-using JetBrains.ReSharper.Psi.Tree;
-using JetBrains.Util;
 
 namespace CodeGears.ReSharper.Exceptional.Model
 {
@@ -78,6 +72,11 @@ namespace CodeGears.ReSharper.Exceptional.Model
             return this.Node.ExceptionType;
         }
 
+        public override IBlock Contents
+        {
+            get { return this.Node.Body; }
+        }
+
         public override bool CatchesException(IDeclaredType exception)
         {
             return this.ParentBlock.CatchesException(exception);
@@ -89,30 +88,22 @@ namespace CodeGears.ReSharper.Exceptional.Model
         {
             if (this.Node is IGeneralCatchClauseNode)
             {
-                if (this.HasVariable)
-                {
-                    return;
-                }
+                if (this.HasVariable) return;
+
                 if (String.IsNullOrEmpty(variableName))
                 {
-                    variableName = SuggestVariableName();
+                    variableName = NameFactory.CatchVariableName(this.Node, GetCatchedException());
                 }
 
-                var codeFactory = new CodeElementFactory(this.AnalyzeUnit.GetPsiModule());
-
+                var codeFactory = new CodeElementFactory(this.GetElementFactory());
 
                 var newCatch = codeFactory.CreateSpecificCatchClause(null, this.Node.Body, variableName);
-                if (newCatch == null)
-                {
-                    return;
-                }
+                if (newCatch == null) return;
 
                 this.Node.ReplaceBy(newCatch);
 
                 this.Node = newCatch;
-                this.VariableModel = new CatchVariableModel(this.AnalyzeUnit,
-                                                            newCatch.ExceptionDeclaration as
-                                                            ICatchVariableDeclarationNode);
+                this.VariableModel = new CatchVariableModel(this.AnalyzeUnit, newCatch.ExceptionDeclaration as ICatchVariableDeclarationNode);
             }
             else
             {
@@ -123,7 +114,7 @@ namespace CodeGears.ReSharper.Exceptional.Model
 
                 if (String.IsNullOrEmpty(variableName))
                 {
-                    variableName = SuggestVariableName();
+                    variableName = NameFactory.CatchVariableName(this.Node, GetCatchedException());
                 }
 
                 var specificNode = this.Node as ISpecificCatchClauseNode;
@@ -131,9 +122,7 @@ namespace CodeGears.ReSharper.Exceptional.Model
                 var exceptionType = specificNode.ExceptionTypeUsage as IUserDeclaredTypeUsageNode;
                 var exceptionTypeName = exceptionType.TypeName.NameIdentifier.Name;
 
-                var tempTry =
-                    this.GetElementFactory().CreateStatement("try {} catch($0 $1) {}", exceptionTypeName, variableName)
-                    as ITryStatementNode;
+                var tempTry = this.GetElementFactory().CreateStatement("try {} catch($0 $1) {}", exceptionTypeName, variableName) as ITryStatementNode;
                 if (tempTry == null)
                 {
                     return;
@@ -148,20 +137,6 @@ namespace CodeGears.ReSharper.Exceptional.Model
                 var resultVariable = specificNode.SetExceptionDeclarationNode(tempCatch.ExceptionDeclarationNode);
                 this.VariableModel = new CatchVariableModel(this.AnalyzeUnit, resultVariable);
             }
-        }
-
-        public string SuggestVariableName()
-        {
-            var namesCollection = NameSuggestionUtil.CreateEmptyCollection(
-                this.Node.Language, PluralityKinds.Single, true, this.Node.GetSolution());
-            namesCollection.Add(this.GetCatchedException(), PluralityKinds.Single);
-
-            var roots = new List<NameRoot>(namesCollection.GetRoots("e", PredefinedPrefixPolicy.Preserve));
-            var newNames =
-                new List<string>(NamingManager.SuggestUniqueShortNames(roots, this.Node, NamedElementKinds.Locals,
-                                                                       ScopeKind.LocalSelfScoped));
-
-            return newNames.Count > 0 ? newNames.GetLast() : "exception";
         }
     }
 }

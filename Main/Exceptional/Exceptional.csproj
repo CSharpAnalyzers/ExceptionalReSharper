@@ -144,8 +144,10 @@
     <Compile Include="Analyzers\AnalyzerBase.cs" />
     <Compile Include="Model\TreeElementModelBase.cs" />
     <Compile Include="Model\TryStatementModel.cs" />
+    <Compile Include="NameFactory.cs" />
     <Compile Include="ProcessContext.cs" />
     <Compile Include="PropertyProcessContext.cs" />
+    <Compile Include="QuickFixes\CatchExceptionFix.cs" />
     <Compile Include="QuickFixes\IncludeInnerExceptionFix.cs" />
     <Compile Include="QuickFixes\InsertExceptionDocumentationFix.cs" />
     <Compile Include="QuickFixes\RemoveExceptionDocumentationFix.cs" />

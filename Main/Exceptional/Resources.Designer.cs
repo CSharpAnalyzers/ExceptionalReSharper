@@ -106,6 +106,15 @@ namespace CodeGears.ReSharper.Exceptional {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Catch &apos;{0}&apos; exception [Exceptional].
+        /// </summary>
+        internal static string QuickFixCatchException {
+            get {
+                return ResourceManager.GetString("QuickFixCatchException", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Include catched exception as inner exception [Exceptional].
         /// </summary>
         internal static string QuickFixIncludeInnerException {

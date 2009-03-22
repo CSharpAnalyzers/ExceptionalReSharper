@@ -50,6 +50,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="CatchAllTests.cs" />
+    <Compile Include="CatchExceptionTests.cs" />
     <Compile Include="InvocationTests.cs" />
     <Compile Include="MethodsCommentsTests.cs" />
     <Compile Include="InnerExceptionTests.cs" />

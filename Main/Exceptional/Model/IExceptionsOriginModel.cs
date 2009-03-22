@@ -14,5 +14,6 @@ namespace CodeGears.ReSharper.Exceptional.Model
         bool Throws(IDeclaredType exceptionType);
         DocumentRange DocumentRange { get; }
         void Accept(AnalyzerBase anayzeBase);
+        void SurroundWithTryBlock(IDeclaredType exceptionType);
     }
 }

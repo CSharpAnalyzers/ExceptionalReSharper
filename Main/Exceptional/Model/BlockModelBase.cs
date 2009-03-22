@@ -3,6 +3,7 @@
 using System.Collections.Generic;
 using CodeGears.ReSharper.Exceptional.Analyzers;
 using JetBrains.ReSharper.Psi;
+using JetBrains.ReSharper.Psi.CSharp.Tree;
 using JetBrains.ReSharper.Psi.Tree;
 
 namespace CodeGears.ReSharper.Exceptional.Model
@@ -19,6 +20,8 @@ namespace CodeGears.ReSharper.Exceptional.Model
             TryStatementModels = new List<TryStatementModel>();
             ExceptionOriginModels = new List<IExceptionsOriginModel>();
         }
+
+        public abstract IBlock Contents { get; }
 
         public virtual bool CatchesException(IDeclaredType exception)
         {
@@ -67,6 +70,13 @@ namespace CodeGears.ReSharper.Exceptional.Model
                     }
                 }
             }
+        }
+
+        public virtual TryStatementModel FindNearestTryBlock()
+        {
+            if(this.ParentBlock == null) return null;
+
+            return this.ParentBlock.FindNearestTryBlock();
         }
     }
 }

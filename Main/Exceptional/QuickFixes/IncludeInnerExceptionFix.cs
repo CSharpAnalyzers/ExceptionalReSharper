@@ -2,6 +2,7 @@
 
 using System;
 using CodeGears.ReSharper.Exceptional.Highlightings;
+using JetBrains.Application.Progress;
 using JetBrains.ProjectModel;
 using JetBrains.ReSharper.Intentions;
 using JetBrains.ReSharper.Psi.CSharp.Tree;
@@ -24,14 +25,12 @@ namespace CodeGears.ReSharper.Exceptional.QuickFixes
             get { return Resources.QuickFixIncludeInnerException; }
         }
 
-        protected override Action<ITextControl> ExecuteTransaction(ISolution solution,
-                                                                   JetBrains.Application.Progress.IProgressIndicator
-                                                                       progress)
+        protected override Action<ITextControl> ExecuteTransaction(ISolution solution, IProgressIndicator progress)
         {
             var throwStatementModel = this.Error.ThrowStatementModel;
 
             var outerCatchClause = throwStatementModel.FindOuterCatchClause();
-            var variableName = outerCatchClause.SuggestVariableName();
+            var variableName = NameFactory.CatchVariableName(outerCatchClause.Node, outerCatchClause.GetCatchedException());
 
             if (outerCatchClause.Node is ISpecificCatchClauseNode)
             {

@@ -13,6 +13,7 @@ namespace CodeGears.ReSharper.Exceptional.Model
     internal class ThrowStatementModel : TreeElementModelBase<IThrowStatementNode>, IExceptionsOriginModel
     {
         private ThrownExceptionModel ThrownExceptionModel { get; set; }
+        public IBlockModel ContainingBlockModel { get; private set; }
 
         public override DocumentRange DocumentRange
         {
@@ -78,12 +79,20 @@ namespace CodeGears.ReSharper.Exceptional.Model
             this.ThrownExceptionModel.Accept(analyzerBase);
         }
 
+        public void SurroundWithTryBlock(IDeclaredType exceptionType)
+        {
+            var codeElementFactory = new CodeElementFactory(this.GetElementFactory());
+            var exceptionVariableName = NameFactory.CatchVariableName(this.Node, exceptionType);
+            var tryStatement = codeElementFactory.CreateTryStatement(exceptionType, exceptionVariableName);
+            var block = codeElementFactory.CreateBlock(this.Node);
+            tryStatement.SetTry(block);
+            this.Node.ReplaceBy(tryStatement);
+        }
+
         public List<ThrownExceptionModel> ThrownExceptions
         {
             get { return new List<ThrownExceptionModel>(new[] {ThrownExceptionModel}); }
         }
-
-        public IBlockModel ContainingBlockModel { get; private set; }
 
         /// <summary>Checks whether this throw statement throws given <paramref name="exceptionType"/>.</summary>
         public bool Throws(IDeclaredType exceptionType)

@@ -12,7 +12,7 @@ namespace CodeGears.ReSharper.Exceptional.Model
         public bool IsDocumented { get; private set; }
 
         public IDeclaredType ExceptionType { get; private set; }
-        private IExceptionsOriginModel Parent { get; set; }
+        public IExceptionsOriginModel Parent { get; private set; }
 
         public override DocumentRange DocumentRange
         {

@@ -1,5 +1,6 @@
 /// <copyright>Copyright (c) 2009 CodeGears.net All rights reserved.</copyright>
 
+using System;
 using JetBrains.ReSharper.Psi.CSharp.Tree;
 
 namespace CodeGears.ReSharper.Exceptional.Model
@@ -10,6 +11,11 @@ namespace CodeGears.ReSharper.Exceptional.Model
         public MethodDeclarationModel(IMethodDeclarationNode methodDeclaration)
             : base(null, methodDeclaration)
         {
+        }
+
+        public override IBlock Contents
+        {
+            get { return this.Node.Body; }
         }
     }
 }

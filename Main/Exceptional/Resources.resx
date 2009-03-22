@@ -132,6 +132,9 @@
   <data name="HighLightThrowingFromCatchWithoutInnerException" xml:space="preserve">
     <value>While throwing from catch clause include substituted exception as inner exception. [Exceptional]</value>
   </data>
+  <data name="QuickFixCatchException" xml:space="preserve">
+    <value>Catch '{0}' exception [Exceptional]</value>
+  </data>
   <data name="QuickFixIncludeInnerException" xml:space="preserve">
     <value>Include catched exception as inner exception [Exceptional]</value>
   </data>

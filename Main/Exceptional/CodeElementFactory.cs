@@ -3,7 +3,7 @@
 using JetBrains.ReSharper.Psi;
 using JetBrains.ReSharper.Psi.CSharp;
 using JetBrains.ReSharper.Psi.CSharp.Tree;
-using JetBrains.Util;
+using JetBrains.ReSharper.Psi.Tree;
 
 namespace CodeGears.ReSharper.Exceptional
 {
@@ -12,11 +12,9 @@ namespace CodeGears.ReSharper.Exceptional
     {
         private CSharpElementFactory Factory { get; set; }
 
-        public CodeElementFactory(IPsiModule psiModule)
+        public CodeElementFactory(CSharpElementFactory factory)
         {
-            Logger.Assert(psiModule != null, "[Exceptional] Psi module cannot be null.");
-
-            this.Factory = CSharpElementFactory.GetInstance(psiModule);
+            Factory = factory;
         }
 
         /// <summary>Creates a variable declaration for catch clause.</summary>
@@ -61,12 +59,10 @@ namespace CodeGears.ReSharper.Exceptional
         /// <summary>Creates a specific catch clause with given <paramref name="exceptionType"/> and <paramref name="catchBody"/>.</summary>
         /// <param name="exceptionType">Type of the exception to catch.</param>
         /// <param name="catchBody">Body of the created catch.</param>
-        /// <returns></returns>
-        public ISpecificCatchClauseNode CreateSpecificCatchClause(IDeclaredType exceptionType, IBlock catchBody,
-                                                                  string variableName)
+        /// <param name="variableName">A name for catch variable.</param>
+        public ISpecificCatchClauseNode CreateSpecificCatchClause(IDeclaredType exceptionType, IBlock catchBody, string variableName)
         {
-            var tryStatement =
-                this.Factory.CreateStatement("try {} catch(Exception $0) {}", variableName) as ITryStatement;
+            var tryStatement = this.Factory.CreateStatement("try {} catch(Exception $0) {}", variableName) as ITryStatement;
             if (tryStatement == null)
             {
                 return null;
@@ -97,6 +93,27 @@ namespace CodeGears.ReSharper.Exceptional
             }
 
             return catchClause;
+        }
+
+        public ITryStatement CreateTryStatement(IDeclaredType exceptionType, string exceptionVariableName)
+        {
+            var tryStatement = this.Factory.CreateStatement("try {} catch($0 $1) {}", exceptionType.GetCLRName(), exceptionVariableName) as ITryStatement;
+            if (tryStatement == null) return tryStatement;
+
+            var catchClause = tryStatement.Catches[0] as ISpecificCatchClauseNode;
+            if (catchClause == null) return tryStatement;
+            var exceptionDeclaration = catchClause.ExceptionDeclaration as ICatchVariableDeclarationNode;
+            if (exceptionDeclaration == null) return tryStatement;
+
+            var declaredTypeUsageNode = this.Factory.CreateDeclaredTypeUsageNode(exceptionType);
+            exceptionDeclaration.SetDeclaredTypeUsage(declaredTypeUsageNode);
+
+            return tryStatement;
+        }
+
+        public IBlock CreateBlock(ITreeNode node)
+        {
+            return this.Factory.CreateBlock("{ $0 }", node.GetText());
         }
     }
 }

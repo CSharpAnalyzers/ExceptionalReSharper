@@ -2,6 +2,7 @@
 
 using System.Collections.Generic;
 using JetBrains.ReSharper.Psi;
+using JetBrains.ReSharper.Psi.CSharp.Tree;
 
 namespace CodeGears.ReSharper.Exceptional.Model
 {
@@ -13,5 +14,7 @@ namespace CodeGears.ReSharper.Exceptional.Model
         bool CatchesException(IDeclaredType exception);
         IDeclaredType GetCatchedException();
         IEnumerable<ThrownExceptionModel> ThrownExceptionModelsNotCatched { get; }
+        TryStatementModel FindNearestTryBlock();
+        IBlock Contents { get; }
     }
 }
