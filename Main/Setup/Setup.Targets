@@ -20,10 +20,10 @@
 
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
-    <ProductVersion>0.1.0</ProductVersion>
-    <ProjectGuid>{5e53cf6b-8786-413b-b49b-cd11f48770ed}</ProjectGuid>
+    <ProductVersion>0.2.0</ProductVersion>
+    <ProjectGuid>{e8fe5695-1c4d-4697-ac02-18d17cf898d0}</ProjectGuid>
     <SchemaVersion>2.0</SchemaVersion>
-    <OutputName>$(ProductName) $(ProductVersion) Setup (R# $(ReSharperVersion2))</OutputName>
+    <OutputName>$(ProductName) v$(ProductVersion) for R# $(ReSharperVersion2)</OutputName>
     <OutputType>Package</OutputType>
     <DefineConstants Condition=" '$(Configuration)' == 'Debug' ">Debug</DefineConstants>
     <Cultures>en-us</Cultures>
