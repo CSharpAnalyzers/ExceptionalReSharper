@@ -1,5 +1,6 @@
 using System;
 using System.IO;
+using System.Xml;
 
 namespace ExceptionalSandBox
 {
@@ -67,7 +68,7 @@ namespace ExceptionalSandBox
 
         public void Test07()
         {
-            File.ReadAllLines("path to file");
+            Decimal.Parse("3.4");
         }
 
         public void Test08()

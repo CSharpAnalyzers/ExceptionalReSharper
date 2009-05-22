@@ -12,8 +12,9 @@ namespace ExceptionalSandBox
         public void Test02()
         {
             //We throw but there is no documentation for the exception thrown.
-            throw new InvalidOperationException("Message");//BAD
+            throw new InvalidOperationException("Message");
         }
+
 
         /// <summary>This method...</summary>
         public void Test03()

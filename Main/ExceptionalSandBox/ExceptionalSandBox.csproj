@@ -51,6 +51,8 @@
   <ItemGroup>
     <Compile Include="CatchAllTests.cs" />
     <Compile Include="CatchExceptionTests.cs" />
+    <Compile Include="Demo1.cs" />
+    <Compile Include="Demo2.cs" />
     <Compile Include="InvocationTests.cs" />
     <Compile Include="MethodsCommentsTests.cs" />
     <Compile Include="InnerExceptionTests.cs" />

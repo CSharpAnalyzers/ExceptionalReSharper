@@ -51,6 +51,7 @@ namespace ExceptionalSandBox
             throw new ArgumentNullException();
         }
 
+
         public void Test06()
         {
             try
