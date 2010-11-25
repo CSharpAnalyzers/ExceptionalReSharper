@@ -5,7 +5,7 @@
 <!-- To do that, do not modify this file; instead, see how the “Setup.Proj” files are organized inside the PowerToy folders. -->
 <Wix xmlns="http://schemas.microsoft.com/wix/2006/wi">
   <!-- The “Dyn”-prefixed variables are coming from the project file. This way you can build a typical R# plugin installer without touching the installer sources themselves, just modify the settings file (Setup.Proj). -->
-  <Product Id="*" Name="$(var.DynProductName) ReSharper $(var.DynReSharperVersion2) Plugin" Language="1033" Version="$(var.DynProductVersion)" Manufacturer="$(var.DynCompanyName)" UpgradeCode="$(var.DynUpgradeCode)">
+  <Product Id="*" Name="$(var.DynProductName) v$(var.DynProductVersion) Plugin for ReSharper $(var.DynReSharperVersion2)" Language="1033" Version="$(var.DynProductVersion)" Manufacturer="$(var.DynCompanyName)" UpgradeCode="$(var.DynUpgradeCode)">
     <Package InstallerVersion="200" Compressed="yes" />
 
     <!-- Defines the pack of source files. -->

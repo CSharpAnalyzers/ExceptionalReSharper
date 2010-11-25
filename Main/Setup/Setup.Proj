@@ -12,10 +12,10 @@
 		<ProductName>Exceptional</ProductName>
 		
 		<!-- Version of R# (two components only) that the plugin is targeting. -->
-		<ReSharperVersion2>4.5</ReSharperVersion2>
+		<ReSharperVersion2>5.1</ReSharperVersion2>
 		
 		<!-- Plugin vendor name. -->
-		<CompanyName>CodeGears.net</CompanyName>
+		<CompanyName>Cofinite Solutions</CompanyName>
 		
 		<!-- Upgrade code for the plugin. -->
 		<!-- Should be unique for each of the plugins, but should not change within the plugin lifetime. All of the plugin versions should feature the same Upgrade Code. -->
