@@ -1,5 +1,4 @@
-/// <copyright>Copyright (c) 2009 CodeGears.net All rights reserved.</copyright>
-
+// Copyright (c) 2009-2010 Cofinite Solutions. All rights reserved.
 using System;
 using CodeGears.ReSharper.Exceptional.Highlightings;
 using JetBrains.Application.Progress;
@@ -7,7 +6,7 @@ using JetBrains.DocumentModel;
 using JetBrains.ProjectModel;
 using JetBrains.ReSharper.Feature.Services.LiveTemplates.Hotspots;
 using JetBrains.ReSharper.Feature.Services.LiveTemplates.LiveTemplates;
-using JetBrains.ReSharper.Intentions;
+using JetBrains.ReSharper.Feature.Services.Bulbs;
 using JetBrains.ReSharper.LiveTemplates;
 using JetBrains.TextControl;
 using JetBrains.Util;
@@ -28,19 +27,12 @@ namespace CodeGears.ReSharper.Exceptional.QuickFixes
         {
             var methodDeclaration = this.Error.ThrownExceptionModel.AnalyzeUnit;
 
-            var insertedExceptionModel =
-                methodDeclaration.DocCommentBlockModel.AddExceptionDocumentation(
-                    this.Error.ThrownExceptionModel.ExceptionType);
-            if (insertedExceptionModel == null)
-            {
-                return null;
-            }
+            var insertedExceptionModel = methodDeclaration.DocCommentBlockModel.AddExceptionDocumentation(
+                                                                    this.Error.ThrownExceptionModel.ExceptionType);
+            if (insertedExceptionModel == null)return null;
 
             var exceptionCommentRange = insertedExceptionModel.GetDescriptionDocumentRange();
-            if (exceptionCommentRange == DocumentRange.InvalidRange)
-            {
-                return null;
-            }
+            if (exceptionCommentRange == DocumentRange.InvalidRange) return null;
 
             var nameSuggestionsExpression = new NameSuggestionsExpression(new[] {"Thrown when "});
             var field = new TemplateField("name", nameSuggestionsExpression, 0);
@@ -48,7 +40,7 @@ namespace CodeGears.ReSharper.Exceptional.QuickFixes
 
             return textControl =>
                        {
-                           var hotspotSession = LiveTemplatesManager.CreateHotpotSessionAtopExistingText(
+                           var hotspotSession = LiveTemplatesManager.CreateHotspotSessionAtopExistingText(
                                this.Error.ThrownExceptionModel.ExceptionType.GetManager().Solution,
                                TextRange.InvalidRange,
                                textControl,

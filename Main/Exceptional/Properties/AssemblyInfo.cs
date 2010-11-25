@@ -1,3 +1,4 @@
+// Copyright (c) 2009-2010 Cofinite Solutions. All rights reserved.
 using System.Reflection;
 using System.Runtime.InteropServices;
 using JetBrains.UI.Application.PluginSupport;

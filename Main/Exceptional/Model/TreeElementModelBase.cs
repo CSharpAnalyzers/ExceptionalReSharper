@@ -1,5 +1,4 @@
-/// <copyright>Copyright (c) 2009 CodeGears.net All rights reserved.</copyright>
-
+// Copyright (c) 2009-2010 Cofinite Solutions. All rights reserved.
 using JetBrains.DocumentModel;
 using JetBrains.ReSharper.Psi.CSharp;
 using JetBrains.ReSharper.Psi.Tree;

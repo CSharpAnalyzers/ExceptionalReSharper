@@ -1,5 +1,4 @@
-/// <copyright>Copyright (c) 2009 CodeGears.net All rights reserved.</copyright>
-
+// Copyright (c) 2009-2010 Cofinite Solutions. All rights reserved.
 using System.Collections.Generic;
 using CodeGears.ReSharper.Exceptional.Analyzers;
 using JetBrains.DocumentModel;
@@ -9,7 +8,7 @@ namespace CodeGears.ReSharper.Exceptional.Model
 {
     internal interface IExceptionsOriginModel
     {
-        List<ThrownExceptionModel> ThrownExceptions { get; }
+        IEnumerable<ThrownExceptionModel> ThrownExceptions { get; }
         IBlockModel ContainingBlockModel { get; }
         bool Throws(IDeclaredType exceptionType);
         DocumentRange DocumentRange { get; }

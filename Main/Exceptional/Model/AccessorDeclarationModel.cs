@@ -1,6 +1,4 @@
-/// <copyright>Copyright (c) 2009 CodeGears.net All rights reserved.</copyright>
-
-using System;
+// Copyright (c) 2009-2010 Cofinite Solutions. All rights reserved.
 using JetBrains.ReSharper.Psi.CSharp.Tree;
 
 namespace CodeGears.ReSharper.Exceptional.Model
@@ -8,9 +6,7 @@ namespace CodeGears.ReSharper.Exceptional.Model
     internal class AccessorDeclarationModel : BlockModelBase<IAccessorDeclarationNode>
     {
         public AccessorDeclarationModel(IAnalyzeUnit analyzeUnit, IAccessorDeclarationNode node)
-            : base(analyzeUnit, node)
-        {
-        }
+            : base(analyzeUnit, node) { }
 
         public override IBlock Contents
         {

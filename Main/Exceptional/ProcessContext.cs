@@ -1,5 +1,4 @@
-/// <copyright>Copyright (c) 2009 CodeGears.net All rights reserved.</copyright>
-
+// Copyright (c) 2009-2010 Cofinite Solutions. All rights reserved.
 using System.Collections.Generic;
 using CodeGears.ReSharper.Exceptional.Analyzers;
 using CodeGears.ReSharper.Exceptional.Model;
@@ -12,20 +11,21 @@ namespace CodeGears.ReSharper.Exceptional
 {
     internal abstract class ProcessContext<T> : IProcessContext where T : IAnalyzeUnit
     {
-        private static readonly List<AnalyzerBase> _analyzers = new List<AnalyzerBase>(
-            new AnalyzerBase[]
-                {
-                    new IsThrownExceptionDocumentedAnalyzer()
-                    , new IsDocumentedExceptionThrownAnalyzer()
-                    , new CatchAllClauseAnalyzer()
-                    , new HasInnerExceptionFromOuterCatchClauseAnalyzer()
-                });
-
         protected IAnalyzeUnit AnalyzeUnit { get; private set; }
         protected T Model { get; private set; }
         private Stack<TryStatementModel> TryStatementModelsStack { get; set; }
         private Stack<CatchClauseModel> CatchClauseModelsStack { get; set; }
         protected Stack<IBlockModel> BlockModelsStack { get; private set; }
+
+        private static IEnumerable<AnalyzerBase> ProvideAnalyzers(ExceptionalDaemonStageProcess stageProcess)
+        {
+            if(stageProcess == null) yield break;
+
+            yield return new IsThrownExceptionDocumentedAnalyzer(stageProcess);
+            yield return new IsDocumentedExceptionThrownAnalyzer(stageProcess);
+            yield return new CatchAllClauseAnalyzer(stageProcess);
+            yield return new HasInnerExceptionFromOuterCatchClauseAnalyzer(stageProcess);
+        }
 
         protected ProcessContext()
         {
@@ -43,28 +43,19 @@ namespace CodeGears.ReSharper.Exceptional
 
         public void EndProcess(CSharpDaemonStageProcessBase process)
         {
-            if (this.IsValid() == false)
-            {
-                return;
-            }
+            if (this.IsValid() == false) return;
 
-            foreach (var analyzerBase in _analyzers)
+            foreach (var analyzerBase in ProvideAnalyzers(process as ExceptionalDaemonStageProcess))
             {
-                analyzerBase.Process = process;
                 this.AnalyzeUnit.Accept(analyzerBase);
             }
         }
 
         public void EnterTryBlock(ITryStatementNode tryStatement)
         {
-            if (this.IsValid() == false)
-            {
-                return;
-            }
-            if (tryStatement == null)
-            {
-                return;
-            }
+            if (this.IsValid() == false) return;
+            if (tryStatement == null) return;
+
             Logger.Assert(this.BlockModelsStack.Count > 0, "[Exceptional] There is no block for try statement.");
 
             var model = new TryStatementModel(this.AnalyzeUnit, tryStatement);
@@ -85,14 +76,9 @@ namespace CodeGears.ReSharper.Exceptional
 
         public void EnterCatchClause(ICatchClauseNode catchClauseNode)
         {
-            if (this.IsValid() == false)
-            {
-                return;
-            }
-            if (catchClauseNode == null)
-            {
-                return;
-            }
+            if (this.IsValid() == false) return;
+            if (catchClauseNode == null) return;
+
             Logger.Assert(this.TryStatementModelsStack.Count > 0,
                           "[Exceptional] There is no try statement for catch declaration.");
 
@@ -115,14 +101,9 @@ namespace CodeGears.ReSharper.Exceptional
 
         public void Process(IThrowStatementNode throwStatement)
         {
-            if (this.IsValid() == false)
-            {
-                return;
-            }
-            if (throwStatement == null)
-            {
-                return;
-            }
+            if (this.IsValid() == false) return;
+            if (throwStatement == null) return;
+
             Logger.Assert(this.BlockModelsStack.Count > 0, "[Exceptional] There is no block for throw statement.");
 
             new ThrowStatementModel(this.AnalyzeUnit, throwStatement, this.BlockModelsStack.Peek());
@@ -130,14 +111,8 @@ namespace CodeGears.ReSharper.Exceptional
 
         public void Process(ICatchVariableDeclarationNode catchVariableDeclaration)
         {
-            if (this.IsValid() == false)
-            {
-                return;
-            }
-            if (catchVariableDeclaration == null)
-            {
-                return;
-            }
+            if (this.IsValid() == false) return;
+            if (catchVariableDeclaration == null) return;
 
             Logger.Assert(this.CatchClauseModelsStack.Count > 0,
                           "[Exceptional] There is no catch clause for catch variable declaration.");
@@ -148,14 +123,8 @@ namespace CodeGears.ReSharper.Exceptional
 
         public void Process(IReferenceExpressionNode invocationExpression)
         {
-            if (this.IsValid() == false)
-            {
-                return;
-            }
-            if (invocationExpression == null)
-            {
-                return;
-            }
+            if (this.IsValid() == false) return;
+            if (invocationExpression == null) return;
 
             Logger.Assert(this.BlockModelsStack.Count > 0, "[Exceptional] There is no block for invocation statement.");
 
@@ -169,10 +138,7 @@ namespace CodeGears.ReSharper.Exceptional
 
         public void Process(IDocCommentBlockNode docCommentBlockNode)
         {
-            if (this.IsValid() == false)
-            {
-                return;
-            }
+            if (this.IsValid() == false) return;
 
             this.AnalyzeUnit.DocCommentBlockModel = new DocCommentBlockModel(this.AnalyzeUnit, docCommentBlockNode);
         }

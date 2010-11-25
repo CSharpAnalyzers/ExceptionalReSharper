@@ -1,11 +1,12 @@
-/// <copyright>Copyright (c) 2009 CodeGears.net All rights reserved.</copyright>
-
+// Copyright (c) 2009-2010 Cofinite Solutions. All rights reserved.
 using System;
-using CodeGears.ReSharper.Exceptional.Model;
+using System.Collections.Generic;
+using JetBrains.Application.Progress;
 using JetBrains.ReSharper.Daemon;
 using JetBrains.ReSharper.Daemon.CSharp.Stages;
+using JetBrains.ReSharper.Psi;
+using JetBrains.ReSharper.Psi.CSharp;
 using JetBrains.ReSharper.Psi.CSharp.Tree;
-using JetBrains.ReSharper.Psi.Tree;
 
 namespace CodeGears.ReSharper.Exceptional
 {
@@ -15,150 +16,35 @@ namespace CodeGears.ReSharper.Exceptional
     /// the target highlighting logic.</remarks>
     public class ExceptionalDaemonStageProcess : CSharpDaemonStageProcessBase
     {
-        private IProcessContext _currentContext;
+        private readonly IDaemonProcess _process;
+        private readonly List<HighlightingInfo> _hightlightings = new List<HighlightingInfo>();
+
+        public List<HighlightingInfo> Hightlightings
+        {
+            get { return this._hightlightings; }
+        }
 
         public ExceptionalDaemonStageProcess(IDaemonProcess process) : base(process)
         {
+            this._process = process;
         }
 
         public override void Execute(Action<DaemonStageResult> commiter)
         {
-            HighlightInFile(file => file.ProcessDescendants(this), commiter);
-        }
+            // Getting PSI (AST) for the file being highlighted
+            var manager = PsiManager.GetInstance(_process.Solution);
+            var file = manager.GetPsiFile(_process.ProjectFile, CSharpLanguageService.CSHARP) as ICSharpFile;
+            if (file == null) return;
 
-        public override void ProcessBeforeInterior(IElement element)
-        {
-            if (element is IMethodDeclarationNode)
-            {
-                var methodDeclaration = element as IMethodDeclarationNode;
-                if (ShouldProcessMethod(methodDeclaration))
-                {
-                    this._currentContext = new MethodProcessContext();
-                    this._currentContext.StartProcess(new MethodDeclarationModel(methodDeclaration));
-                }
-            }
-            else if (element is IPropertyDeclarationNode)
-            {
-                var propertyDeclaration = element as IPropertyDeclarationNode;
-                if (ShouldProcessProperty(propertyDeclaration))
-                {
-                    this._currentContext = new PropertyProcessContext();
-                    this._currentContext.StartProcess(new PropertyDeclarationModel(propertyDeclaration));
-                }
-            }
-            else if (element is IAccessorDeclarationNode)
-            {
-                if (this._currentContext != null)
-                {
-                    this._currentContext.EnterAccessor(element as IAccessorDeclarationNode);
-                }
-            }
-            else if (element is IDocCommentBlockNode)
-            {
-                if (this._currentContext != null)
-                {
-                    this._currentContext.Process(element as IDocCommentBlockNode);
-                }
-            }
-            else if (element is ITryStatementNode)
-            {
-                if (this._currentContext != null)
-                {
-                    this._currentContext.EnterTryBlock(element as ITryStatementNode);
-                }
-            }
-            else if (element is ICatchClauseNode)
-            {
-                if (this._currentContext != null)
-                {
-                    this._currentContext.EnterCatchClause(element as ICatchClauseNode);
-                }
-            }
-        }
+            // Running visitor against the PSI
+            var elementProcessor = new ExceptionalProcessor(this, _process);
+            file.ProcessDescendants(elementProcessor);
 
-        private bool ShouldProcessProperty(IPropertyDeclarationNode propertyDeclarationNode)
-        {
-            foreach (var accessorDeclarationNode in propertyDeclarationNode.AccessorDeclarationsNode)
-            {
-                if (accessorDeclarationNode.Body != null)
-                {
-                    return true;
-                }
-            }
+            // Checking if the daemon is interrupted by user activity);)
+            if (_process.InterruptFlag)
+                throw new ProcessCancelledException();
 
-            return false;
-        }
-
-        private static bool ShouldProcessMethod(IMethodDeclaration methodDeclaration)
-        {
-            return methodDeclaration.Body != null;
-        }
-
-        /// <summary>This is executed after processing the contents of a given element.</summary>
-        public override void ProcessAfterInterior(IElement element)
-        {
-            //This call triggers visiting so it must be called first.
-            base.ProcessAfterInterior(element);
-
-            if (element is IMethodDeclarationNode)
-            {
-                if (this._currentContext != null)
-                {
-                    this._currentContext.EndProcess(this);
-                }
-            }
-            else if (element is IPropertyDeclarationNode)
-            {
-                if (this._currentContext != null)
-                {
-                    this._currentContext.EndProcess(this);
-                }
-            }
-            else if (element is IAccessorDeclarationNode)
-            {
-                if (this._currentContext != null)
-                {
-                    this._currentContext.LeaveAccessor();
-                }
-            }
-            else if (element is ITryStatementNode)
-            {
-                if (this._currentContext != null)
-                {
-                    this._currentContext.LeaveTryBlock();
-                }
-            }
-            else if (element is ICatchClauseNode)
-            {
-                if (this._currentContext != null)
-                {
-                    this._currentContext.LeaveCatchClause();
-                }
-            }
-        }
-
-        public override void VisitThrowStatement(IThrowStatement throwStatement)
-        {
-            if (this._currentContext != null)
-            {
-                this._currentContext.Process(throwStatement as IThrowStatementNode);
-            }
-        }
-
-        public override void VisitCatchVariableDeclaration(ICatchVariableDeclaration catchVariableDeclaration)
-        {
-            if (this._currentContext != null)
-            {
-                this._currentContext.Process(catchVariableDeclaration as ICatchVariableDeclarationNode);
-            }
-        }
-
-        public override void VisitReferenceExpression(IReferenceExpression referenceExpression)
-        {
-            if (this._currentContext != null)
-            {
-                this._currentContext.Process(referenceExpression as IReferenceExpressionNode);
-            }
+            commiter(new DaemonStageResult(this.Hightlightings));
         }
     }
 }

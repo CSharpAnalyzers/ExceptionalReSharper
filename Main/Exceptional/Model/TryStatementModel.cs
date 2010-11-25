@@ -1,6 +1,4 @@
-/// <copyright>Copyright (c) 2009 CodeGears.net All rights reserved.</copyright>
-
-using System;
+// Copyright (c) 2009-2010 Cofinite Solutions. All rights reserved.
 using System.Collections.Generic;
 using CodeGears.ReSharper.Exceptional.Analyzers;
 using JetBrains.ReSharper.Psi;

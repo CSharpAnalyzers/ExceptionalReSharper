@@ -6,7 +6,7 @@ namespace ExceptionalSandBox
     {
         public string Property01 { get; set; }
 
-        /// <exception cref="InvalidOperationException">Test</exception>//BAD
+        /// <exception cref="InvalidOperationException">Test</exception>//TODO: DOES NOT WORK
         public string Property02 { get; set; }
 
         public string Property03

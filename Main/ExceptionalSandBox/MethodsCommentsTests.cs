@@ -12,9 +12,8 @@ namespace ExceptionalSandBox
         public void Test02()
         {
             //We throw but there is no documentation for the exception thrown.
-            throw new InvalidOperationException("Message");
+            throw new InvalidOperationException("Message");//BAD
         }
-
 
         /// <summary>This method...</summary>
         public void Test03()
@@ -57,7 +56,7 @@ namespace ExceptionalSandBox
             //We are not throwing so the exception documentation is invalid.
         }
 
-        /// <exception cref="InvalidOperationException">Test</exception>//OK
+        /// <exception cref="InvalidOperationException">Test</exception>//TODO: DOES NOT WORK
         public void Test08()
         {
             try
@@ -79,7 +78,7 @@ namespace ExceptionalSandBox
                 throw new InvalidCastException();//OK
             }
             //This catch hides thrown exception
-            catch { }
+            catch { }//BAD
         }
 
         public void Test10()

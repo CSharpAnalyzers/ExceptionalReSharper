@@ -45,7 +45,7 @@ namespace ExceptionalSandBox
             {
                 ReferenceMethod(); //OK
             }
-            catch(Exception) { }
+            catch(Exception) { }//BAD
         }
 
         public void Test05()
@@ -68,7 +68,7 @@ namespace ExceptionalSandBox
 
         public void Test07()
         {
-            Decimal.Parse("3.4");
+            Decimal.Parse("3.4");//TODO: DOES NOT WORK
         }
 
         public void Test08()

@@ -1,5 +1,4 @@
-/// <copyright>Copyright (c) 2009 CodeGears.net All rights reserved.</copyright>
-
+// Copyright (c) 2009-2010 Cofinite Solutions. All rights reserved.
 using JetBrains.ReSharper.Psi;
 using JetBrains.ReSharper.Psi.CSharp;
 using JetBrains.ReSharper.Psi.CSharp.Tree;
@@ -22,22 +21,13 @@ namespace CodeGears.ReSharper.Exceptional
         public ICatchVariableDeclarationNode CreateCatchVariableDeclarationNode(IDeclaredType exceptionType)
         {
             var tryStatement = this.Factory.CreateStatement("try {} catch(Exception e) {}") as ITryStatement;
-            if (tryStatement == null)
-            {
-                return null;
-            }
+            if (tryStatement == null) return null;
 
             var catchClause = tryStatement.Catches[0] as ISpecificCatchClause;
-            if (catchClause == null)
-            {
-                return null;
-            }
+            if (catchClause == null) return null;
 
             var exceptionDeclaration = catchClause.ExceptionDeclaration as ICatchVariableDeclarationNode;
-            if (exceptionDeclaration == null)
-            {
-                return null;
-            }
+            if (exceptionDeclaration == null) return null;
 
             if (exceptionType != null)
             {
@@ -63,24 +53,15 @@ namespace CodeGears.ReSharper.Exceptional
         public ISpecificCatchClauseNode CreateSpecificCatchClause(IDeclaredType exceptionType, IBlock catchBody, string variableName)
         {
             var tryStatement = this.Factory.CreateStatement("try {} catch(Exception $0) {}", variableName) as ITryStatement;
-            if (tryStatement == null)
-            {
-                return null;
-            }
+            if (tryStatement == null) return null;
 
             var catchClause = tryStatement.Catches[0] as ISpecificCatchClauseNode;
-            if (catchClause == null)
-            {
-                return null;
-            }
+            if (catchClause == null) return null;
 
             if (exceptionType != null)
             {
                 var exceptionDeclaration = catchClause.ExceptionDeclaration as ICatchVariableDeclarationNode;
-                if (exceptionDeclaration == null)
-                {
-                    return null;
-                }
+                if (exceptionDeclaration == null) return null;
 
                 var declaredTypeUsageNode = this.Factory.CreateDeclaredTypeUsageNode(exceptionType);
                 exceptionDeclaration.SetDeclaredTypeUsage(declaredTypeUsageNode);

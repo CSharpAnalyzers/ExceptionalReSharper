@@ -1,11 +1,11 @@
-/// <copyright>Copyright (c) 2009 CodeGears.net All rights reserved.</copyright>
-
+// Copyright (c) 2009-2010 Cofinite Solutions. All rights reserved.
 using System.Collections.Generic;
 using CodeGears.ReSharper.Exceptional.Analyzers;
 using JetBrains.DocumentModel;
 using JetBrains.ReSharper.Psi;
 using JetBrains.ReSharper.Psi.CSharp;
 using JetBrains.ReSharper.Psi.CSharp.Tree;
+using JetBrains.ReSharper.Psi.Tree;
 using JetBrains.Util;
 
 namespace CodeGears.ReSharper.Exceptional.Model
@@ -89,7 +89,7 @@ namespace CodeGears.ReSharper.Exceptional.Model
             this.Node.ReplaceBy(tryStatement);
         }
 
-        public List<ThrownExceptionModel> ThrownExceptions
+        public IEnumerable<ThrownExceptionModel> ThrownExceptions
         {
             get { return new List<ThrownExceptionModel>(new[] {ThrownExceptionModel}); }
         }

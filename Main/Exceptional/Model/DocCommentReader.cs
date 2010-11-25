@@ -1,5 +1,4 @@
-/// <copyright>Copyright (c) 2009 CodeGears.net All rights reserved.</copyright>
-
+// Copyright (c) 2009-2010 Cofinite Solutions. All rights reserved.
 using System.Collections.Generic;
 using JetBrains.ReSharper.Psi.CSharp.Tree;
 using JetBrains.ReSharper.Psi.Tree;
@@ -18,14 +17,8 @@ namespace CodeGears.ReSharper.Exceptional.Model
 
             var result = new List<DocCommentModel>();
 
-            if (docCommentBlockNode == null)
-            {
-                return result;
-            }
-            if (docCommentBlockModel == null)
-            {
-                return result;
-            }
+            if (docCommentBlockNode == null) return result;
+            if (docCommentBlockModel == null) return result;
 
             var whitespaceNodes = new List<ITreeNode>();
             DocCommentModel currentModel = null;

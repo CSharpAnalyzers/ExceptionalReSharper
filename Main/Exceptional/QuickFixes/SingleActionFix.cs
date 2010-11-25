@@ -1,5 +1,4 @@
-/// <copyright>Copyright (c) 2009 CodeGears.net All rights reserved.</copyright>
-
+// Copyright (c) 2009-2010 Cofinite Solutions. All rights reserved.
 using JetBrains.ReSharper.Feature.Services.Bulbs;
 using JetBrains.ReSharper.Intentions;
 using JetBrains.Util;
@@ -14,7 +13,7 @@ namespace CodeGears.ReSharper.Exceptional.QuickFixes
             return true;
         }
 
-        public IBulbItem[] Items
+        public override IBulbItem[] Items
         {
             get { return new[] {this}; }
         }

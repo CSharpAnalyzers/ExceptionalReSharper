@@ -1,10 +1,10 @@
-/// <copyright>Copyright (c) 2009 CodeGears.net All rights reserved.</copyright>
-
+// Copyright (c) 2009-2010 Cofinite Solutions. All rights reserved.
 using System;
 using CodeGears.ReSharper.Exceptional.Analyzers;
 using JetBrains.DocumentModel;
 using JetBrains.ReSharper.Psi;
 using JetBrains.ReSharper.Psi.CSharp.Tree;
+using JetBrains.ReSharper.Psi.Tree;
 
 namespace CodeGears.ReSharper.Exceptional.Model
 {
@@ -15,14 +15,8 @@ namespace CodeGears.ReSharper.Exceptional.Model
 
         public bool Catches(IDeclaredType exception)
         {
-            if (exception == null)
-            {
-                return false;
-            }
-            if (this.Node.ExceptionType == null)
-            {
-                return false;
-            }
+            if (exception == null) return false;
+            if (this.Node.ExceptionType == null) return false;
 
             return exception.IsSubtypeOf(this.Node.ExceptionType);
         }
@@ -50,10 +44,7 @@ namespace CodeGears.ReSharper.Exceptional.Model
 
         private bool GetIsCatchAll()
         {
-            if (this.Node.ExceptionType == null)
-            {
-                return false;
-            }
+            if (this.Node.ExceptionType == null) return false;
 
             return this.Node.ExceptionType.GetCLRName().Equals("System.Exception");
         }
@@ -107,10 +98,7 @@ namespace CodeGears.ReSharper.Exceptional.Model
             }
             else
             {
-                if (this.HasVariable)
-                {
-                    return;
-                }
+                if (this.HasVariable) return;
 
                 if (String.IsNullOrEmpty(variableName))
                 {
@@ -123,16 +111,10 @@ namespace CodeGears.ReSharper.Exceptional.Model
                 var exceptionTypeName = exceptionType.TypeName.NameIdentifier.Name;
 
                 var tempTry = this.GetElementFactory().CreateStatement("try {} catch($0 $1) {}", exceptionTypeName, variableName) as ITryStatementNode;
-                if (tempTry == null)
-                {
-                    return;
-                }
+                if (tempTry == null) return;
 
                 var tempCatch = tempTry.Catches[0] as ISpecificCatchClauseNode;
-                if (tempCatch == null)
-                {
-                    return;
-                }
+                if (tempCatch == null) return;
 
                 var resultVariable = specificNode.SetExceptionDeclarationNode(tempCatch.ExceptionDeclarationNode);
                 this.VariableModel = new CatchVariableModel(this.AnalyzeUnit, resultVariable);

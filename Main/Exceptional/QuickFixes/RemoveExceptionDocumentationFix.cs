@@ -1,10 +1,9 @@
-/// <copyright>Copyright (c) 2009 CodeGears.net All rights reserved.</copyright>
-
+// Copyright (c) 2009-2010 Cofinite Solutions. All rights reserved.
 using System;
 using CodeGears.ReSharper.Exceptional.Highlightings;
 using JetBrains.Application.Progress;
 using JetBrains.ProjectModel;
-using JetBrains.ReSharper.Intentions;
+using JetBrains.ReSharper.Feature.Services.Bulbs;
 using JetBrains.TextControl;
 
 namespace CodeGears.ReSharper.Exceptional.QuickFixes

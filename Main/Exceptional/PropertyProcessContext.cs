@@ -1,5 +1,4 @@
-/// <copyright>Copyright (c) 2009 CodeGears.net All rights reserved.</copyright>
-
+// Copyright (c) 2009-2010 Cofinite Solutions. All rights reserved.
 using CodeGears.ReSharper.Exceptional.Model;
 using JetBrains.ReSharper.Psi.CSharp.Tree;
 
@@ -9,14 +8,8 @@ namespace CodeGears.ReSharper.Exceptional
     {
         public override void EnterAccessor(IAccessorDeclarationNode accessorDeclarationNode)
         {
-            if (this.IsValid() == false)
-            {
-                return;
-            }
-            if (accessorDeclarationNode == null)
-            {
-                return;
-            }
+            if (this.IsValid() == false) return;
+            if (accessorDeclarationNode == null) return;
 
             var parent = this.BlockModelsStack.Peek();
 

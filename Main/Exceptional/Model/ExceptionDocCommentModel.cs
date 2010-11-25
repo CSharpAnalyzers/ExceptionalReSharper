@@ -1,9 +1,9 @@
-/// <copyright>Copyright (c) 2009 CodeGears.net All rights reserved.</copyright>
-
+// Copyright (c) 2009-2010 Cofinite Solutions. All rights reserved.
 using System.Text.RegularExpressions;
 using CodeGears.ReSharper.Exceptional.Analyzers;
 using JetBrains.DocumentModel;
 using JetBrains.ReSharper.Psi;
+using JetBrains.ReSharper.Psi.Tree;
 using JetBrains.Util;
 
 namespace CodeGears.ReSharper.Exceptional.Model
@@ -32,10 +32,7 @@ namespace CodeGears.ReSharper.Exceptional.Model
             {
                 var text = docCommentNode.GetText();
                 var match = regEx.Match(text);
-                if (match.Success == false)
-                {
-                    continue;
-                }
+                if (match.Success == false) continue;
 
                 var exceptionType = match.Groups["exception"].Value;
 
@@ -72,10 +69,7 @@ namespace CodeGears.ReSharper.Exceptional.Model
             {
                 var text = docCommentNode.GetText();
                 var match = regEx.Match(text);
-                if (match.Success == false)
-                {
-                    continue;
-                }
+                if (match.Success == false) continue;
 
                 var exceptionType = match.Groups["exception"].Value;
                 var documentRange = docCommentNode.GetDocumentRange();
@@ -97,10 +91,7 @@ namespace CodeGears.ReSharper.Exceptional.Model
             foreach (var docCommentNode in this.DocCommentNodes)
             {
                 var text = docCommentNode.GetText();
-                if (text.Contains("[MARKER]") == false)
-                {
-                    continue;
-                }
+                if (text.Contains("[MARKER]") == false) continue;
 
                 var documentRange = docCommentNode.GetDocumentRange();
                 var textRange = documentRange.TextRange;

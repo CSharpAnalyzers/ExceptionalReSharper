@@ -1,16 +1,14 @@
-/// <copyright>Copyright (c) 2009 CodeGears.net All rights reserved.</copyright>
-
+// Copyright (c) 2009-2010 Cofinite Solutions. All rights reserved.
 using System.Collections.Generic;
 using CodeGears.ReSharper.Exceptional.Analyzers;
 using JetBrains.ReSharper.Psi;
 using JetBrains.ReSharper.Psi.CSharp.Tree;
-using JetBrains.ReSharper.Psi.Tree;
 
 namespace CodeGears.ReSharper.Exceptional.Model
 {
     internal class ReferenceExpressionModel : TreeElementModelBase<IReferenceExpressionNode>, IExceptionsOriginModel
     {
-        public List<ThrownExceptionModel> ThrownExceptions { get; set; }
+        public IEnumerable<ThrownExceptionModel> ThrownExceptions { get; set; }
         public IBlockModel ContainingBlockModel { get; private set; }
 
         public ReferenceExpressionModel(IAnalyzeUnit analyzeUnit, IReferenceExpressionNode invocationExpression,
@@ -23,7 +21,7 @@ namespace CodeGears.ReSharper.Exceptional.Model
             ThrownExceptions = GetThrownExceptions();
         }
 
-        private List<ThrownExceptionModel> GetThrownExceptions()
+        private IEnumerable<ThrownExceptionModel> GetThrownExceptions()
         {
             var result = new List<ThrownExceptionModel>();
 
