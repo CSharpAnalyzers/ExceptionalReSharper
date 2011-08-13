@@ -24,14 +24,14 @@ namespace CodeGears.ReSharper.Exceptional.QuickFixes
             get { return Resources.QuickFixIncludeInnerException; }
         }
 
-        protected override Action<ITextControl> ExecuteTransaction(ISolution solution, IProgressIndicator progress)
+        protected override Action<ITextControl> ExecutePsiTransaction(ISolution solution, IProgressIndicator progress)
         {
             var throwStatementModel = this.Error.ThrowStatementModel;
 
             var outerCatchClause = throwStatementModel.FindOuterCatchClause();
             var variableName = NameFactory.CatchVariableName(outerCatchClause.Node, outerCatchClause.GetCatchedException());
 
-            if (outerCatchClause.Node is ISpecificCatchClauseNode)
+            if (outerCatchClause.Node is ISpecificCatchClause)
             {
                 outerCatchClause.AddCatchVariable(variableName);
                 throwStatementModel.AddInnerException(variableName);

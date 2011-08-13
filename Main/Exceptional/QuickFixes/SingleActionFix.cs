@@ -12,10 +12,5 @@ namespace CodeGears.ReSharper.Exceptional.QuickFixes
         {
             return true;
         }
-
-        public override IBulbItem[] Items
-        {
-            get { return new[] {this}; }
-        }
     }
 }

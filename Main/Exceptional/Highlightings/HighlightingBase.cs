@@ -1,5 +1,6 @@
 // Copyright (c) 2009-2010 Cofinite Solutions. All rights reserved.
 using JetBrains.ReSharper.Daemon;
+using JetBrains.ReSharper.Daemon.CSharp.Errors;
 using JetBrains.ReSharper.Daemon.CSharp.Stages;
 
 namespace CodeGears.ReSharper.Exceptional.Highlightings

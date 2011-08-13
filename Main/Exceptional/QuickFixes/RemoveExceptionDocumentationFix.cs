@@ -18,7 +18,7 @@ namespace CodeGears.ReSharper.Exceptional.QuickFixes
             Error = error;
         }
 
-        protected override Action<ITextControl> ExecuteTransaction(ISolution solution, IProgressIndicator progress)
+        protected override Action<ITextControl> ExecutePsiTransaction(ISolution solution, IProgressIndicator progress)
         {
             var docCommentModel = this.Error.ExceptionDocumentationModel.AnalyzeUnit.DocCommentBlockModel;
             docCommentModel.RemoveExceptionDocumentation(this.Error.ExceptionDocumentationModel);

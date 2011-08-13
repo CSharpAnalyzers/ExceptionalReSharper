@@ -15,7 +15,7 @@ namespace CodeGears.ReSharper.Exceptional
         {
         }
 
-        public void EnterTryBlock(ITryStatementNode tryStatement)
+        public void EnterTryBlock(ITryStatement tryStatement)
         {
         }
 
@@ -23,7 +23,7 @@ namespace CodeGears.ReSharper.Exceptional
         {
         }
 
-        public void EnterCatchClause(ICatchClauseNode catchClauseNode)
+        public void EnterCatchClause(ICatchClause catchClauseNode)
         {
         }
 
@@ -31,15 +31,15 @@ namespace CodeGears.ReSharper.Exceptional
         {
         }
 
-        public void Process(IThrowStatementNode throwStatement)
+        public void Process(IThrowStatement throwStatement)
         {
         }
 
-        public void Process(ICatchVariableDeclarationNode catchVariableDeclaration)
+        public void Process(ICatchVariableDeclaration catchVariableDeclaration)
         {
         }
 
-        public void Process(IReferenceExpressionNode invocationExpression)
+        public void Process(IReferenceExpression invocationExpression)
         {
         }
 
@@ -47,7 +47,7 @@ namespace CodeGears.ReSharper.Exceptional
         {
         }
 
-        public void EnterAccessor(IAccessorDeclarationNode accessorDeclarationNode)
+        public void EnterAccessor(IAccessorDeclaration accessorDeclarationNode)
         {
         }
 

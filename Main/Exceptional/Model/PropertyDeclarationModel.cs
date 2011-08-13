@@ -5,11 +5,11 @@ using JetBrains.ReSharper.Psi.CSharp.Tree;
 
 namespace CodeGears.ReSharper.Exceptional.Model
 {
-    internal class PropertyDeclarationModel : AnalyzeUnitModelBase<IPropertyDeclarationNode>
+    internal class PropertyDeclarationModel : AnalyzeUnitModelBase<IPropertyDeclaration>
     {
         public List<AccessorDeclarationModel> Accessors { get; private set; }
 
-        public PropertyDeclarationModel(IPropertyDeclarationNode node)
+        public PropertyDeclarationModel(IPropertyDeclaration node)
             : base(null, node)
         {
             Accessors = new List<AccessorDeclarationModel>();

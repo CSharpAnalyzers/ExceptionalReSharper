@@ -1,17 +1,20 @@
 // Copyright (c) 2009-2010 Cofinite Solutions. All rights reserved.
+
+using System;
 using System.Collections.Generic;
 using CodeGears.ReSharper.Exceptional.Analyzers;
 using JetBrains.ReSharper.Psi;
 using JetBrains.ReSharper.Psi.CSharp.Tree;
+using JetBrains.ReSharper.Psi.ExtensionsAPI;
 
 namespace CodeGears.ReSharper.Exceptional.Model
 {
-    internal class ReferenceExpressionModel : TreeElementModelBase<IReferenceExpressionNode>, IExceptionsOriginModel
+    internal class ReferenceExpressionModel : TreeElementModelBase<IReferenceExpression>, IExceptionsOriginModel
     {
         public IEnumerable<ThrownExceptionModel> ThrownExceptions { get; set; }
         public IBlockModel ContainingBlockModel { get; private set; }
 
-        public ReferenceExpressionModel(IAnalyzeUnit analyzeUnit, IReferenceExpressionNode invocationExpression,
+        public ReferenceExpressionModel(IAnalyzeUnit analyzeUnit, IReferenceExpression invocationExpression,
                                         IBlockModel containingBlockModel)
             : base(analyzeUnit, invocationExpression)
         {
@@ -62,11 +65,12 @@ namespace CodeGears.ReSharper.Exceptional.Model
             var codeElementFactory = new CodeElementFactory(this.GetElementFactory());
             var exceptionVariableName = NameFactory.CatchVariableName(this.Node, exceptionType);
             var tryStatement = codeElementFactory.CreateTryStatement(exceptionType, exceptionVariableName);
-
             var containingStatement = this.Node.GetContainingStatement();
+        	var spaces = GetElementFactory().CreateWhitespaces(Environment.NewLine);
+			LowLevelModificationUtil.AddChildAfter(containingStatement.LastChild, spaces[0]);
 
-            var block = codeElementFactory.CreateBlock(containingStatement.ToTreeNode());
-            tryStatement.SetTry(block);
+            var block = codeElementFactory.CreateBlock(containingStatement);
+			tryStatement.SetTry(block);
             
             containingStatement.ReplaceBy(tryStatement);
         }

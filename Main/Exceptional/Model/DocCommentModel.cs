@@ -56,7 +56,7 @@ namespace CodeGears.ReSharper.Exceptional.Model
                 textRange = textRange.Join(range);
             }
 
-            return new DocumentRange(this.DocCommentNodes[0].GetProjectFile(), textRange);
+            return new DocumentRange(this.DocCommentNodes[0].GetSourceFile().Document, textRange);
         }
     }
 }

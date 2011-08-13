@@ -5,7 +5,7 @@ using JetBrains.ReSharper.Daemon;
 
 namespace CodeGears.ReSharper.Exceptional.Highlightings
 {
-    [StaticSeverityHighlighting(Severity.WARNING)]
+	[StaticSeverityHighlighting(Severity.WARNING, Category.Title)]
     public class ThrowFromCatchWithNoInnerExceptionHighlighting : HighlightingBase
     {
         internal ThrowStatementModel ThrowStatementModel { get; private set; }

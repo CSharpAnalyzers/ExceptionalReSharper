@@ -6,7 +6,7 @@ namespace CodeGears.ReSharper.Exceptional
 {
     internal class PropertyProcessContext : ProcessContext<PropertyDeclarationModel>
     {
-        public override void EnterAccessor(IAccessorDeclarationNode accessorDeclarationNode)
+        public override void EnterAccessor(IAccessorDeclaration accessorDeclarationNode)
         {
             if (this.IsValid() == false) return;
             if (accessorDeclarationNode == null) return;

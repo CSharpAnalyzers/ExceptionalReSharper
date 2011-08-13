@@ -50,7 +50,7 @@ namespace CodeGears.ReSharper.Exceptional.Model
                     return TypeFactory.CreateTypeByCLRName(exceptionType, docCommentNode.GetPsiModule());
                 }
 
-                return TypeFactory.CreateTypeByCLRName(declaredType.CLRName, docCommentNode.GetPsiModule());
+                return TypeFactory.CreateTypeByCLRName(declaredType.ShortName, docCommentNode.GetPsiModule());
             }
 
             return null;

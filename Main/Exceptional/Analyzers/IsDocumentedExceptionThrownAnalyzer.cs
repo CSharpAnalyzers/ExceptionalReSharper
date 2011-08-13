@@ -18,7 +18,7 @@ namespace CodeGears.ReSharper.Exceptional.Analyzers
             if (exceptionDocumentationModel.AnalyzeUnit.IsPublicOrInternal == false) return;
             if (AnalyzeIfExeptionThrown(exceptionDocumentationModel)) return;
 
-            this.Process.Hightlightings.Add(new HighlightingInfo(exceptionDocumentationModel.DocumentRange, new ExceptionNotThrownHighlighting(exceptionDocumentationModel)));            
+            this.Process.Hightlightings.Add(new HighlightingInfo(exceptionDocumentationModel.DocumentRange, new ExceptionNotThrownHighlighting(exceptionDocumentationModel), null, null));            
         }
 
         private static bool AnalyzeIfExeptionThrown(ExceptionDocCommentModel exceptionDocumentationModel)

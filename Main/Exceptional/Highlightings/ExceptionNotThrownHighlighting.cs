@@ -6,7 +6,7 @@ using JetBrains.ReSharper.Daemon;
 
 namespace CodeGears.ReSharper.Exceptional.Highlightings
 {
-    [StaticSeverityHighlighting(Severity.WARNING)]
+	[StaticSeverityHighlighting(Severity.WARNING, Category.Title)]
     public class ExceptionNotThrownHighlighting : HighlightingBase
     {
         internal ExceptionDocCommentModel ExceptionDocumentationModel { get; private set; }
@@ -21,7 +21,7 @@ namespace CodeGears.ReSharper.Exceptional.Highlightings
             get
             {
                 return String.Format(Resources.HighLightNotThrownDocumentedExceptions,
-                                     this.ExceptionDocumentationModel.ExceptionType.GetCLRName());
+                                     this.ExceptionDocumentationModel.ExceptionType.GetClrName().ShortName);
             }
         }
     }

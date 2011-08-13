@@ -4,7 +4,7 @@ using JetBrains.ReSharper.Daemon;
 
 namespace CodeGears.ReSharper.Exceptional.Highlightings
 {
-    [StaticSeverityHighlighting(Severity.SUGGESTION)]
+    [StaticSeverityHighlighting(Severity.SUGGESTION, Category.Title)]
     public class CatchAllClauseHighlighting : HighlightingBase
     {
         protected override string Message

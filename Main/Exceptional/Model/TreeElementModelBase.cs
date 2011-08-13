@@ -21,7 +21,7 @@ namespace CodeGears.ReSharper.Exceptional.Model
 
         protected CSharpElementFactory GetElementFactory()
         {
-            return CSharpElementFactory.GetInstance(this.AnalyzeUnit.GetPsiModule());
+            return CSharpElementFactory.GetInstance(this.AnalyzeUnit.GetPsiModule(), true, true);
         }
     }
 }

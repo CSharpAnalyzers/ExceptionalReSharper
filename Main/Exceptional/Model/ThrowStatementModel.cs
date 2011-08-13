@@ -10,7 +10,7 @@ using JetBrains.Util;
 
 namespace CodeGears.ReSharper.Exceptional.Model
 {
-    internal class ThrowStatementModel : TreeElementModelBase<IThrowStatementNode>, IExceptionsOriginModel
+    internal class ThrowStatementModel : TreeElementModelBase<IThrowStatement>, IExceptionsOriginModel
     {
         private ThrownExceptionModel ThrownExceptionModel { get; set; }
         public IBlockModel ContainingBlockModel { get; private set; }
@@ -20,9 +20,9 @@ namespace CodeGears.ReSharper.Exceptional.Model
             get
             {
                 //if we have exceptiontype then highlight the type
-                if (this.Node.ExceptionNode != null)
+                if (this.Node.Exception != null)
                 {
-                    return this.Node.ExceptionNode.GetDocumentRange();
+                    return this.Node.Exception.GetDocumentRange();
                 }
 
                 //if not highlight the throw keyword
@@ -36,7 +36,7 @@ namespace CodeGears.ReSharper.Exceptional.Model
             get { return this.Node.Exception == null; }
         }
 
-        public ThrowStatementModel(IAnalyzeUnit analyzeUnit, IThrowStatementNode throwStatement,
+        public ThrowStatementModel(IAnalyzeUnit analyzeUnit, IThrowStatement throwStatement,
                                    IBlockModel containingBlockModel)
             : base(analyzeUnit, throwStatement)
         {
@@ -104,7 +104,7 @@ namespace CodeGears.ReSharper.Exceptional.Model
         {
             var ranges = new List<TextRange>();
 
-            var objectCreationExpressionNode = this.Node.Exception as IObjectCreationExpressionNode;
+            var objectCreationExpressionNode = this.Node.Exception as IObjectCreationExpression;
             if (objectCreationExpressionNode == null)
             {
                 return new TextRange[0];
@@ -112,12 +112,12 @@ namespace CodeGears.ReSharper.Exceptional.Model
 
             if (objectCreationExpressionNode.Arguments.Count == 0)
             {
-                var messageExpression = CSharpElementFactory.GetInstance(this.AnalyzeUnit.GetPsiModule()).
+                var messageExpression = CSharpElementFactory.GetInstance(this.AnalyzeUnit.GetPsiModule(), true, true).
                     CreateExpressionAsIs(
                     "\"See inner exception for details.\"");
 
                 var messageArgument =
-                    CSharpElementFactory.GetInstance(this.AnalyzeUnit.GetPsiModule()).CreateArgument(
+					CSharpElementFactory.GetInstance(this.AnalyzeUnit.GetPsiModule(), true, true).CreateArgument(
                         ParameterKind.VALUE, messageExpression);
 
                 messageArgument = objectCreationExpressionNode.AddArgumentAfter(messageArgument, null);
@@ -129,9 +129,9 @@ namespace CodeGears.ReSharper.Exceptional.Model
                 var messageArgument = objectCreationExpressionNode.ArgumentList.Arguments[0];
 
                 var innerExceptionExpression =
-                    CSharpElementFactory.GetInstance(this.AnalyzeUnit.GetPsiModule()).CreateExpressionAsIs(variableName);
+					CSharpElementFactory.GetInstance(this.AnalyzeUnit.GetPsiModule(), true, true).CreateExpressionAsIs(variableName);
                 var innerExpressionArgument =
-                    CSharpElementFactory.GetInstance(this.AnalyzeUnit.GetPsiModule()).CreateArgument(
+					CSharpElementFactory.GetInstance(this.AnalyzeUnit.GetPsiModule(), true, true).CreateArgument(
                         ParameterKind.VALUE, innerExceptionExpression);
 
                 innerExpressionArgument = objectCreationExpressionNode.AddArgumentAfter(innerExpressionArgument,
@@ -144,7 +144,7 @@ namespace CodeGears.ReSharper.Exceptional.Model
 
         public bool HasInnerException(string variableName)
         {
-            var objectCreationExpressionNode = this.Node.Exception as IObjectCreationExpressionNode;
+            var objectCreationExpressionNode = this.Node.Exception as IObjectCreationExpression;
             if (objectCreationExpressionNode == null)
             {
                 return false;

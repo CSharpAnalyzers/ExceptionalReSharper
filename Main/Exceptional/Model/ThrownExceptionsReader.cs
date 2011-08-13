@@ -11,7 +11,7 @@ namespace CodeGears.ReSharper.Exceptional.Model
     /// <summary>Extracts thrown exceptions.</summary>
     internal static class ThrownExceptionsReader
     {
-        public static IEnumerable<IDeclaredType> Read(IReferenceExpressionNode referenceExpression)
+        public static IEnumerable<IDeclaredType> Read(IReferenceExpression referenceExpression)
         {
             var result = new List<IDeclaredType>();
 

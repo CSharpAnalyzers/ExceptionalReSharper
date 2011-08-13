@@ -6,6 +6,7 @@ using JetBrains.Application;
 using JetBrains.ReSharper.Psi;
 using JetBrains.ReSharper.Psi.CSharp;
 using JetBrains.ReSharper.Psi.CSharp.Tree;
+using JetBrains.ReSharper.Psi.CodeStyle;
 using JetBrains.ReSharper.Psi.ExtensionsAPI;
 using JetBrains.ReSharper.Psi.Resolve;
 using JetBrains.ReSharper.Psi.Tree;
@@ -75,8 +76,8 @@ namespace CodeGears.ReSharper.Exceptional.Model
 
             ExceptionDocCommentModel result;
 
-            var exceptionDocumentation = String.Format("<exception cref=\"{1}\">[MARKER]</exception>{0}",
-                                                       Environment.NewLine, exceptionType.GetCLRName());
+            var exceptionDocumentation = String.Format(" <exception cref=\"{1}\">[MARKER]</exception>{0}",
+                                                       Environment.NewLine, exceptionType.GetClrName().ShortName);
 
             if (this.IsReal == false)
             {
@@ -91,28 +92,30 @@ namespace CodeGears.ReSharper.Exceptional.Model
             }
             else
             {
-                exceptionDocumentation += exceptionDocumentation;
-                var docCommentBlockNode = CSharpElementFactory.GetInstance(this.AnalyzeUnit.GetPsiModule())
-                                                              .CreateDocComment(exceptionDocumentation);
+				//exceptionDocumentation += exceptionDocumentation;
+                var docCommentBlockNode = GetElementFactory().CreateDocComment(exceptionDocumentation);
                 if (docCommentBlockNode == null) return null;
 
-                var commentNode = docCommentBlockNode.FirstChild as IDocCommentNode;
+            	var commentNode = docCommentBlockNode;
+				//var commentNode = docCommentBlockNode.FirstChild as IDocCommentNode;
 
-                if (commentNode == null) return null;
+				//if (commentNode == null) return null;
 
-                var spaces = commentNode.NextSibling;
+            	var spaces1 = GetElementFactory().CreateWhitespaces(Environment.NewLine);
+            	var spaces2 = GetElementFactory().CreateWhitespaces(Environment.NewLine);
 
                 if (this.Node.LastChild != null)
                 {
-                    LowLevelModificationUtil.AddChildAfter(this.Node.LastChild, spaces, commentNode);
+					LowLevelModificationUtil.AddChildAfter(this.Node.LastChild, spaces1[0], commentNode, spaces2[0]);
                 }
                 else
                 {
-                    LowLevelModificationUtil.AddChild(this.Node, spaces, commentNode);
+					LowLevelModificationUtil.AddChild(this.Node, spaces2[1], commentNode, spaces2[0]);
                 }
 
                 //TODO: japf warning: i don't know how to use the CSharpCodeFormatter
-                //CSharpCodeFormatter.Instance.Format(this.Node, CodeFormatProfile.INDENT);
+				LanguageService.GetInstance(this.AnalyzeUnit.GetPsiModule().PsiLanguage).CodeFormatter.Format(this.Node, CodeFormatProfile.INDENT);
+				//CSharpCodeFormatter.Instance.Format(this.Node, CodeFormatProfile.INDENT);
 
                 result = new ExceptionDocCommentModel(this);
                 result.TreeNodes.Add(commentNode);

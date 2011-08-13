@@ -1,4 +1,6 @@
 // Copyright (c) 2009-2010 Cofinite Solutions. All rights reserved.
+
+using System;
 using JetBrains.ReSharper.Psi;
 using JetBrains.ReSharper.Psi.CSharp;
 using JetBrains.ReSharper.Psi.CSharp.Tree;
@@ -18,7 +20,7 @@ namespace CodeGears.ReSharper.Exceptional
 
         /// <summary>Creates a variable declaration for catch clause.</summary>
         /// <param name="exceptionType">The type of a created variable.</param>
-        public ICatchVariableDeclarationNode CreateCatchVariableDeclarationNode(IDeclaredType exceptionType)
+        public ICatchVariableDeclaration CreateCatchVariableDeclarationNode(IDeclaredType exceptionType)
         {
             var tryStatement = this.Factory.CreateStatement("try {} catch(Exception e) {}") as ITryStatement;
             if (tryStatement == null) return null;
@@ -26,7 +28,7 @@ namespace CodeGears.ReSharper.Exceptional
             var catchClause = tryStatement.Catches[0] as ISpecificCatchClause;
             if (catchClause == null) return null;
 
-            var exceptionDeclaration = catchClause.ExceptionDeclaration as ICatchVariableDeclarationNode;
+            var exceptionDeclaration = catchClause.ExceptionDeclaration as ICatchVariableDeclaration;
             if (exceptionDeclaration == null) return null;
 
             if (exceptionType != null)
@@ -50,17 +52,17 @@ namespace CodeGears.ReSharper.Exceptional
         /// <param name="exceptionType">Type of the exception to catch.</param>
         /// <param name="catchBody">Body of the created catch.</param>
         /// <param name="variableName">A name for catch variable.</param>
-        public ISpecificCatchClauseNode CreateSpecificCatchClause(IDeclaredType exceptionType, IBlock catchBody, string variableName)
+        public ISpecificCatchClause CreateSpecificCatchClause(IDeclaredType exceptionType, IBlock catchBody, string variableName)
         {
             var tryStatement = this.Factory.CreateStatement("try {} catch(Exception $0) {}", variableName) as ITryStatement;
             if (tryStatement == null) return null;
 
-            var catchClause = tryStatement.Catches[0] as ISpecificCatchClauseNode;
+            var catchClause = tryStatement.Catches[0] as ISpecificCatchClause;
             if (catchClause == null) return null;
 
             if (exceptionType != null)
             {
-                var exceptionDeclaration = catchClause.ExceptionDeclaration as ICatchVariableDeclarationNode;
+                var exceptionDeclaration = catchClause.ExceptionDeclaration as ICatchVariableDeclaration;
                 if (exceptionDeclaration == null) return null;
 
                 var declaredTypeUsageNode = this.Factory.CreateDeclaredTypeUsageNode(exceptionType);
@@ -78,12 +80,12 @@ namespace CodeGears.ReSharper.Exceptional
 
         public ITryStatement CreateTryStatement(IDeclaredType exceptionType, string exceptionVariableName)
         {
-            var tryStatement = this.Factory.CreateStatement("try {} catch($0 $1) {}", exceptionType.GetCLRName(), exceptionVariableName) as ITryStatement;
+			var tryStatement = this.Factory.CreateStatement("try {} catch($0 $1) {}", exceptionType.GetClrName().ShortName, exceptionVariableName) as ITryStatement;
             if (tryStatement == null) return tryStatement;
 
-            var catchClause = tryStatement.Catches[0] as ISpecificCatchClauseNode;
+            var catchClause = tryStatement.Catches[0] as ISpecificCatchClause;
             if (catchClause == null) return tryStatement;
-            var exceptionDeclaration = catchClause.ExceptionDeclaration as ICatchVariableDeclarationNode;
+            var exceptionDeclaration = catchClause.ExceptionDeclaration as ICatchVariableDeclaration;
             if (exceptionDeclaration == null) return tryStatement;
 
             var declaredTypeUsageNode = this.Factory.CreateDeclaredTypeUsageNode(exceptionType);
@@ -94,7 +96,8 @@ namespace CodeGears.ReSharper.Exceptional
 
         public IBlock CreateBlock(ITreeNode node)
         {
-            return this.Factory.CreateBlock("{ $0 }", node.GetText());
+        	IBlock block = this.Factory.CreateBlock("{ $0 }", node.GetText());
+        	return block;
         }
     }
 }

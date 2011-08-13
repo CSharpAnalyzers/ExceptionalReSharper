@@ -8,7 +8,7 @@ using JetBrains.ReSharper.Psi.Tree;
 
 namespace CodeGears.ReSharper.Exceptional.Model
 {
-    internal class CatchClauseModel : BlockModelBase<ICatchClauseNode>
+    internal class CatchClauseModel : BlockModelBase<ICatchClause>
     {
         public CatchVariableModel VariableModel { get; set; }
         public bool IsCatchAll { get; private set; }
@@ -23,7 +23,7 @@ namespace CodeGears.ReSharper.Exceptional.Model
 
         public bool HasExceptionType
         {
-            get { return this.Node is ISpecificCatchClauseNode; }
+            get { return this.Node is ISpecificCatchClause; }
         }
 
         public bool HasVariable
@@ -36,7 +36,7 @@ namespace CodeGears.ReSharper.Exceptional.Model
             get { return this.Node.CatchKeyword.GetDocumentRange(); }
         }
 
-        public CatchClauseModel(IAnalyzeUnit analyzeUnit, ICatchClauseNode catchClauseNode)
+        public CatchClauseModel(IAnalyzeUnit analyzeUnit, ICatchClause catchClauseNode)
             : base(analyzeUnit, catchClauseNode)
         {
             this.IsCatchAll = GetIsCatchAll();
@@ -46,7 +46,7 @@ namespace CodeGears.ReSharper.Exceptional.Model
         {
             if (this.Node.ExceptionType == null) return false;
 
-            return this.Node.ExceptionType.GetCLRName().Equals("System.Exception");
+            return this.Node.ExceptionType.GetClrName().ShortName.Equals("System.Exception");
         }
 
         public override void Accept(AnalyzerBase analyzerBase)
@@ -77,7 +77,7 @@ namespace CodeGears.ReSharper.Exceptional.Model
 
         public void AddCatchVariable(string variableName)
         {
-            if (this.Node is IGeneralCatchClauseNode)
+            if (this.Node is IGeneralCatchClause)
             {
                 if (this.HasVariable) return;
 
@@ -94,7 +94,7 @@ namespace CodeGears.ReSharper.Exceptional.Model
                 this.Node.ReplaceBy(newCatch);
 
                 this.Node = newCatch;
-                this.VariableModel = new CatchVariableModel(this.AnalyzeUnit, newCatch.ExceptionDeclaration as ICatchVariableDeclarationNode);
+                this.VariableModel = new CatchVariableModel(this.AnalyzeUnit, newCatch.ExceptionDeclaration as ICatchVariableDeclaration);
             }
             else
             {
@@ -105,18 +105,18 @@ namespace CodeGears.ReSharper.Exceptional.Model
                     variableName = NameFactory.CatchVariableName(this.Node, GetCatchedException());
                 }
 
-                var specificNode = this.Node as ISpecificCatchClauseNode;
+                var specificNode = this.Node as ISpecificCatchClause;
 
-                var exceptionType = specificNode.ExceptionTypeUsage as IUserDeclaredTypeUsageNode;
+                var exceptionType = specificNode.ExceptionTypeUsage as IUserDeclaredTypeUsage;
                 var exceptionTypeName = exceptionType.TypeName.NameIdentifier.Name;
 
-                var tempTry = this.GetElementFactory().CreateStatement("try {} catch($0 $1) {}", exceptionTypeName, variableName) as ITryStatementNode;
+                var tempTry = this.GetElementFactory().CreateStatement("try {} catch($0 $1) {}", exceptionTypeName, variableName) as ITryStatement;
                 if (tempTry == null) return;
 
-                var tempCatch = tempTry.Catches[0] as ISpecificCatchClauseNode;
+                var tempCatch = tempTry.Catches[0] as ISpecificCatchClause;
                 if (tempCatch == null) return;
 
-                var resultVariable = specificNode.SetExceptionDeclarationNode(tempCatch.ExceptionDeclarationNode);
+                var resultVariable = specificNode.SetExceptionDeclaration(tempCatch.ExceptionDeclaration);
                 this.VariableModel = new CatchVariableModel(this.AnalyzeUnit, resultVariable);
             }
         }

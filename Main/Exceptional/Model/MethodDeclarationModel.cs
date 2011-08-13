@@ -4,9 +4,9 @@ using JetBrains.ReSharper.Psi.CSharp.Tree;
 namespace CodeGears.ReSharper.Exceptional.Model
 {
     /// <summary>Stores data about processed <see cref="IMethodDeclaration"/></summary>
-    internal class MethodDeclarationModel : AnalyzeUnitModelBase<IMethodDeclarationNode>
+    internal class MethodDeclarationModel : AnalyzeUnitModelBase<IMethodDeclaration>
     {
-        public MethodDeclarationModel(IMethodDeclarationNode methodDeclaration)
+        public MethodDeclarationModel(IMethodDeclaration methodDeclaration)
             : base(null, methodDeclaration)
         {
         }

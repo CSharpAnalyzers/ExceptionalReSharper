@@ -6,7 +6,7 @@ using JetBrains.ReSharper.Daemon;
 
 namespace CodeGears.ReSharper.Exceptional.Highlightings
 {
-    [StaticSeverityHighlighting(Severity.WARNING)]
+	[StaticSeverityHighlighting(Severity.WARNING, Category.Title)]
     public class ExceptionNotDocumentedHighlighting : HighlightingBase
     {
         internal ThrownExceptionModel ThrownExceptionModel { get; private set; }
@@ -21,7 +21,7 @@ namespace CodeGears.ReSharper.Exceptional.Highlightings
             get
             {
                 var exceptionType = this.ThrownExceptionModel.ExceptionType;
-                var exceptionTypeName = exceptionType != null ? exceptionType.GetCLRName() : "[NOT RESOLVED]";
+                var exceptionTypeName = exceptionType != null ? exceptionType.GetClrName().ShortName : "[NOT RESOLVED]";
                 return String.Format(Resources.HighLightNotDocumentedExceptions, exceptionTypeName);
             }
         }

@@ -57,7 +57,7 @@ namespace CodeGears.ReSharper.Exceptional.Model
             if (this.ExceptionType == null) return false;
             if (exceptionType == null) return false;
 
-            return this.ExceptionType.GetCLRName().Equals(exceptionType.GetCLRName());
+            return this.ExceptionType.GetClrName().ShortName.Equals(exceptionType.GetClrName().ShortName);
         }
 
         public override void Accept(AnalyzerBase analyzerBase)

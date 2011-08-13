@@ -51,7 +51,7 @@ namespace CodeGears.ReSharper.Exceptional
             }
         }
 
-        public void EnterTryBlock(ITryStatementNode tryStatement)
+        public void EnterTryBlock(ITryStatement tryStatement)
         {
             if (this.IsValid() == false) return;
             if (tryStatement == null) return;
@@ -74,7 +74,7 @@ namespace CodeGears.ReSharper.Exceptional
             this.BlockModelsStack.Pop();
         }
 
-        public void EnterCatchClause(ICatchClauseNode catchClauseNode)
+        public void EnterCatchClause(ICatchClause catchClauseNode)
         {
             if (this.IsValid() == false) return;
             if (catchClauseNode == null) return;
@@ -99,7 +99,7 @@ namespace CodeGears.ReSharper.Exceptional
             this.BlockModelsStack.Pop();
         }
 
-        public void Process(IThrowStatementNode throwStatement)
+        public void Process(IThrowStatement throwStatement)
         {
             if (this.IsValid() == false) return;
             if (throwStatement == null) return;
@@ -109,7 +109,7 @@ namespace CodeGears.ReSharper.Exceptional
             new ThrowStatementModel(this.AnalyzeUnit, throwStatement, this.BlockModelsStack.Peek());
         }
 
-        public void Process(ICatchVariableDeclarationNode catchVariableDeclaration)
+        public void Process(ICatchVariableDeclaration catchVariableDeclaration)
         {
             if (this.IsValid() == false) return;
             if (catchVariableDeclaration == null) return;
@@ -121,7 +121,7 @@ namespace CodeGears.ReSharper.Exceptional
             catchClause.VariableModel = new CatchVariableModel(this.AnalyzeUnit, catchVariableDeclaration);
         }
 
-        public void Process(IReferenceExpressionNode invocationExpression)
+        public void Process(IReferenceExpression invocationExpression)
         {
             if (this.IsValid() == false) return;
             if (invocationExpression == null) return;
@@ -143,7 +143,7 @@ namespace CodeGears.ReSharper.Exceptional
             this.AnalyzeUnit.DocCommentBlockModel = new DocCommentBlockModel(this.AnalyzeUnit, docCommentBlockNode);
         }
 
-        public virtual void EnterAccessor(IAccessorDeclarationNode accessorDeclarationNode)
+        public virtual void EnterAccessor(IAccessorDeclaration accessorDeclarationNode)
         {
         }
 

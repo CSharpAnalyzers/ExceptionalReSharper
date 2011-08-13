@@ -3,14 +3,14 @@ using JetBrains.ReSharper.Psi.CSharp.Tree;
 
 namespace CodeGears.ReSharper.Exceptional.Model
 {
-    internal class CatchVariableModel : TreeElementModelBase<ICatchVariableDeclarationNode>
+    internal class CatchVariableModel : TreeElementModelBase<ICatchVariableDeclaration>
     {
-        public ICSharpIdentifierNode VariableName
+        public ICSharpIdentifier VariableName
         {
             get { return this.Node.Name; }
         }
 
-        public CatchVariableModel(IAnalyzeUnit analyzeUnit, ICatchVariableDeclarationNode catchVariableDeclaration)
+        public CatchVariableModel(IAnalyzeUnit analyzeUnit, ICatchVariableDeclaration catchVariableDeclaration)
             : base(analyzeUnit, catchVariableDeclaration)
         {
         }

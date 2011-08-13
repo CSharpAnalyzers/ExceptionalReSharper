@@ -23,7 +23,7 @@ namespace CodeGears.ReSharper.Exceptional.QuickFixes
             Error = error;
         }
 
-        protected override Action<ITextControl> ExecuteTransaction(ISolution solution, IProgressIndicator progress)
+        protected override Action<ITextControl> ExecutePsiTransaction(ISolution solution, IProgressIndicator progress)
         {
             var methodDeclaration = this.Error.ThrownExceptionModel.AnalyzeUnit;
 
@@ -40,14 +40,15 @@ namespace CodeGears.ReSharper.Exceptional.QuickFixes
 
             return textControl =>
                        {
-                           var hotspotSession = LiveTemplatesManager.CreateHotspotSessionAtopExistingText(
-                               this.Error.ThrownExceptionModel.ExceptionType.GetManager().Solution,
+						   
+                           var hotspotSession = LiveTemplatesManager.Instance.CreateHotspotSessionAtopExistingText(
+                               this.Error.ThrownExceptionModel.ExceptionType.Module.GetSolution(),
                                TextRange.InvalidRange,
                                textControl,
                                LiveTemplatesManager.EscapeAction.LeaveTextAndCaret,
                                new[] {fieldInfo});
 
-                           hotspotSession.Execute();
+                           hotspotSession.Execute(null);
                        };
         }
 
@@ -56,7 +57,7 @@ namespace CodeGears.ReSharper.Exceptional.QuickFixes
             get
             {
                 return String.Format(Resources.QuickFixInsertExceptionDocumentation,
-                                     this.Error.ThrownExceptionModel.ExceptionType.GetCLRName());
+                                     this.Error.ThrownExceptionModel.ExceptionType.GetClrName().ShortName);
             }
         }
     }

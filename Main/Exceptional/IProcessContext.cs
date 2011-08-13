@@ -10,15 +10,15 @@ namespace CodeGears.ReSharper.Exceptional
     {
         void StartProcess(IAnalyzeUnit analyzeUnit);
         void EndProcess(CSharpDaemonStageProcessBase process);
-        void EnterTryBlock(ITryStatementNode tryStatement);
+        void EnterTryBlock(ITryStatement tryStatement);
         void LeaveTryBlock();
-        void EnterCatchClause(ICatchClauseNode catchClauseNode);
+        void EnterCatchClause(ICatchClause catchClauseNode);
         void LeaveCatchClause();
-        void Process(IThrowStatementNode throwStatement);
-        void Process(ICatchVariableDeclarationNode catchVariableDeclaration);
-        void Process(IReferenceExpressionNode invocationExpression);
+        void Process(IThrowStatement throwStatement);
+        void Process(ICatchVariableDeclaration catchVariableDeclaration);
+        void Process(IReferenceExpression invocationExpression);
         void Process(IDocCommentBlockNode docCommentBlockNode);
-        void EnterAccessor(IAccessorDeclarationNode accessorDeclarationNode);
+        void EnterAccessor(IAccessorDeclaration accessorDeclarationNode);
         void LeaveAccessor();
     }
 }

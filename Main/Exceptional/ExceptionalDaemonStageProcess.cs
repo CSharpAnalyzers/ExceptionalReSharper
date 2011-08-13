@@ -6,6 +6,7 @@ using JetBrains.ReSharper.Daemon;
 using JetBrains.ReSharper.Daemon.CSharp.Stages;
 using JetBrains.ReSharper.Psi;
 using JetBrains.ReSharper.Psi.CSharp;
+using JetBrains.ReSharper.Psi.CSharp.Impl;
 using JetBrains.ReSharper.Psi.CSharp.Tree;
 
 namespace CodeGears.ReSharper.Exceptional
@@ -33,7 +34,7 @@ namespace CodeGears.ReSharper.Exceptional
         {
             // Getting PSI (AST) for the file being highlighted
             var manager = PsiManager.GetInstance(_process.Solution);
-            var file = manager.GetPsiFile(_process.ProjectFile, CSharpLanguageService.CSHARP) as ICSharpFile;
+            var file = manager.GetPsiFile(_process.SourceFile, CSharpLanguage.Instance) as ICSharpFile;
             if (file == null) return;
 
             // Running visitor against the PSI

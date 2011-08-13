@@ -6,7 +6,7 @@ using JetBrains.ReSharper.Daemon;
 
 namespace CodeGears.ReSharper.Exceptional.Highlightings
 {
-    [StaticSeverityHighlighting(Severity.WARNING)]
+	[StaticSeverityHighlighting(Severity.WARNING, Category.Title)]
     public class SwallowedExceptionsHighlighting : HighlightingBase
     {
         private CatchClauseModel CatchClauseModel { get; set; }

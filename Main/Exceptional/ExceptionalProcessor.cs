@@ -21,83 +21,83 @@ namespace CodeGears.ReSharper.Exceptional
             this._currentContext = new NullProcessContext();
         }
 
-        public bool InteriorShouldBeProcessed(IElement element)
+        public bool InteriorShouldBeProcessed(ITreeNode element)
         {
             return true;
         }
 
-        public void ProcessBeforeInterior(IElement element)
+        public void ProcessBeforeInterior(ITreeNode element)
         {
             if (element is IThrowStatement)
             {
-                this._currentContext.Process(element as IThrowStatementNode);
+                this._currentContext.Process(element as IThrowStatement);
             }
 
             if (element is ICatchVariableDeclaration)
             {
-                this._currentContext.Process(element as ICatchVariableDeclarationNode);
+                this._currentContext.Process(element as ICatchVariableDeclaration);
             }
 
             if (element is IReferenceExpression)
             {
-                this._currentContext.Process(element as IReferenceExpressionNode);
+                this._currentContext.Process(element as IReferenceExpression);
             }
 
-            if (element is IMethodDeclarationNode)
+            if (element is IMethodDeclaration)
             {
-                var methodDeclaration = element as IMethodDeclarationNode;
+                var methodDeclaration = element as IMethodDeclaration;
                 if (ShouldProcessMethod(methodDeclaration))
                 {
                     this._currentContext = new MethodProcessContext();
                     this._currentContext.StartProcess(new MethodDeclarationModel(methodDeclaration));
                 }
             }
-            else if (element is IPropertyDeclarationNode)
+            else if (element is IPropertyDeclaration)
             {
-                var propertyDeclaration = element as IPropertyDeclarationNode;
+                var propertyDeclaration = element as IPropertyDeclaration;
                 if (ShouldProcessProperty(propertyDeclaration))
                 {
                     this._currentContext = new PropertyProcessContext();
                     this._currentContext.StartProcess(new PropertyDeclarationModel(propertyDeclaration));
                 }
             }
-            else if (element is IAccessorDeclarationNode)
+            else if (element is IAccessorDeclaration)
             {
-                this._currentContext.EnterAccessor(element as IAccessorDeclarationNode);
+                this._currentContext.EnterAccessor(element as IAccessorDeclaration);
             }
             else if (element is IDocCommentBlockNode)
             {
                 this._currentContext.Process(element as IDocCommentBlockNode);
             }
-            else if (element is ITryStatementNode)
+            else if (element is ITryStatement)
             {
-                this._currentContext.EnterTryBlock(element as ITryStatementNode);
+                this._currentContext.EnterTryBlock(element as ITryStatement);
             }
-            else if (element is ICatchClauseNode)
+            else if (element is ICatchClause)
             {
-                this._currentContext.EnterCatchClause(element as ICatchClauseNode);
+                this._currentContext.EnterCatchClause(element as ICatchClause);
             }
         }
 
-        public void ProcessAfterInterior(IElement element)
+        public void ProcessAfterInterior(ITreeNode element)
         {
-            if (element is IMethodDeclarationNode)
+            if (element is IMethodDeclaration)
             {
                 this._currentContext.EndProcess(this._daemonProcess);
             }
-            else if (element is IPropertyDeclarationNode)
+            else if (element is IPropertyDeclaration)
             {
                 this._currentContext.EndProcess(this._daemonProcess);
             }
-            else if (element is IAccessorDeclarationNode)
+            else if (element is IAccessorDeclaration)
             {
                 this._currentContext.LeaveAccessor();
             }
-            else if (element is ITryStatementNode)
+            else if (element is ITryStatement)
             {
                 this._currentContext.LeaveTryBlock();
             }
-            else if (element is ICatchClauseNode)
+            else if (element is ICatchClause)
             {
                 this._currentContext.LeaveCatchClause();
             }
@@ -108,9 +108,9 @@ namespace CodeGears.ReSharper.Exceptional
             get { return this._process.InterruptFlag; }
         }
 
-        private static bool ShouldProcessProperty(IPropertyDeclarationNode propertyDeclarationNode)
+        private static bool ShouldProcessProperty(IPropertyDeclaration propertyDeclarationNode)
         {
-            foreach (var accessorDeclarationNode in propertyDeclarationNode.AccessorDeclarationsNode)
+            foreach (var accessorDeclarationNode in propertyDeclarationNode.AccessorDeclarations)
             {
                 if (accessorDeclarationNode.Body != null)
                 {

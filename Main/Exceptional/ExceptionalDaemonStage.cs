@@ -2,6 +2,7 @@
 using JetBrains.ProjectModel;
 using JetBrains.ReSharper.Daemon;
 using JetBrains.ReSharper.Daemon.CSharp.Stages;
+using JetBrains.ReSharper.Psi;
 
 namespace CodeGears.ReSharper.Exceptional
 {
@@ -16,12 +17,12 @@ namespace CodeGears.ReSharper.Exceptional
         public override IDaemonStageProcess CreateProcess(IDaemonProcess process, DaemonProcessKind processKind)
         {
             if (process == null) return null;
-            if (IsSupported(process.ProjectFile) == false) return null;
+            if (IsSupported(process.SourceFile) == false) return null;
 
             return new ExceptionalDaemonStageProcess(process);
         }
 
-        public override ErrorStripeRequest NeedsErrorStripe(IProjectFile projectFile)
+        public override ErrorStripeRequest NeedsErrorStripe(IPsiSourceFile projectFile)
         {
             //We need a stripe and we're willing to show errors and warnings on it
             return ErrorStripeRequest.STRIPE_AND_ERRORS;

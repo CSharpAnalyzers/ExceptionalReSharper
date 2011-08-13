@@ -16,7 +16,7 @@ namespace CodeGears.ReSharper.Exceptional.Analyzers
             if (catchClauseModel == null) return;
             if (catchClauseModel.IsCatchAll == false) return;
 
-            this.Process.Hightlightings.Add(new HighlightingInfo(catchClauseModel.DocumentRange, new CatchAllClauseHighlighting()));
+            this.Process.Hightlightings.Add(new HighlightingInfo(catchClauseModel.DocumentRange, new CatchAllClauseHighlighting(), null, null));
         }
     }
 }

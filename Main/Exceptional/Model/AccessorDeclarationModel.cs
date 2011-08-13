@@ -3,9 +3,9 @@ using JetBrains.ReSharper.Psi.CSharp.Tree;
 
 namespace CodeGears.ReSharper.Exceptional.Model
 {
-    internal class AccessorDeclarationModel : BlockModelBase<IAccessorDeclarationNode>
+    internal class AccessorDeclarationModel : BlockModelBase<IAccessorDeclaration>
     {
-        public AccessorDeclarationModel(IAnalyzeUnit analyzeUnit, IAccessorDeclarationNode node)
+        public AccessorDeclarationModel(IAnalyzeUnit analyzeUnit, IAccessorDeclaration node)
             : base(analyzeUnit, node) { }
 
         public override IBlock Contents

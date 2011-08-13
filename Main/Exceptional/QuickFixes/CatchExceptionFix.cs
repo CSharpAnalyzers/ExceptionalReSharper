@@ -18,7 +18,7 @@ namespace CodeGears.ReSharper.Exceptional.QuickFixes
             Error = error;
         }
 
-        protected override Action<ITextControl> ExecuteTransaction(ISolution solution, IProgressIndicator progress)
+        protected override Action<ITextControl> ExecutePsiTransaction(ISolution solution, IProgressIndicator progress)
         {
             var exceptionsOriginModel = this.Error.ThrownExceptionModel.Parent;
 
@@ -38,7 +38,7 @@ namespace CodeGears.ReSharper.Exceptional.QuickFixes
 
         public override string Text
         {
-            get { return String.Format(Resources.QuickFixCatchException, this.Error.ThrownExceptionModel.ExceptionType.GetCLRName()); }
+            get { return String.Format(Resources.QuickFixCatchException, this.Error.ThrownExceptionModel.ExceptionType.GetClrName().ShortName); }
         }
     }
 }

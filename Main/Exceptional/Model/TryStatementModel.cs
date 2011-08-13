@@ -6,11 +6,11 @@ using JetBrains.ReSharper.Psi.CSharp.Tree;
 
 namespace CodeGears.ReSharper.Exceptional.Model
 {
-    internal class TryStatementModel : BlockModelBase<ITryStatementNode>
+    internal class TryStatementModel : BlockModelBase<ITryStatement>
     {
         public List<CatchClauseModel> CatchClauseModels { get; private set; }
 
-        public TryStatementModel(IAnalyzeUnit analyzeUnit, ITryStatementNode tryStatement)
+        public TryStatementModel(IAnalyzeUnit analyzeUnit, ITryStatement tryStatement)
             : base(analyzeUnit, tryStatement)
         {
             CatchClauseModels = GetCatchClauses();
@@ -22,7 +22,7 @@ namespace CodeGears.ReSharper.Exceptional.Model
 
             foreach (var catchClause in this.Node.Catches)
             {
-                var model = new CatchClauseModel(this.AnalyzeUnit, catchClause as ICatchClauseNode);
+                var model = new CatchClauseModel(this.AnalyzeUnit, catchClause as ICatchClause);
                 model.ParentBlock = this;
                 result.Add(model);
             }
