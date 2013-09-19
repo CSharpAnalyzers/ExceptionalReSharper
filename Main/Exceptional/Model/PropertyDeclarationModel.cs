@@ -29,7 +29,7 @@ namespace CodeGears.ReSharper.Exceptional.Model
         {
             get
             {
-                foreach (var accessorDeclarationModel in this.Accessors)
+                foreach (var accessorDeclarationModel in Accessors)
                 {
                     foreach (var thrownExceptionModel in accessorDeclarationModel.ThrownExceptionModelsNotCatched)
                     {

@@ -7,7 +7,7 @@ namespace CodeGears.ReSharper.Exceptional.Model
     {
         public ICSharpIdentifier VariableName
         {
-            get { return this.Node.Name; }
+            get { return Node.NameIdentifier; }
         }
 
         public CatchVariableModel(IAnalyzeUnit analyzeUnit, ICatchVariableDeclaration catchVariableDeclaration)

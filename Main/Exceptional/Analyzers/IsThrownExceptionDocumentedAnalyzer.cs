@@ -19,7 +19,7 @@ namespace CodeGears.ReSharper.Exceptional.Analyzers
             if (thrownExceptionModel.IsCatched) return;
             if (thrownExceptionModel.IsDocumented) return;
 
-            this.Process.Hightlightings.Add(new HighlightingInfo(thrownExceptionModel.DocumentRange, new ExceptionNotDocumentedHighlighting(thrownExceptionModel), null, null));            
+            Process.Hightlightings.Add(new HighlightingInfo(thrownExceptionModel.DocumentRange, new ExceptionNotDocumentedHighlighting(thrownExceptionModel), null, null));            
         }
     }
 }

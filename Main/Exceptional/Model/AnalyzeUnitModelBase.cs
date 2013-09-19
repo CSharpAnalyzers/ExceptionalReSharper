@@ -2,6 +2,7 @@
 using CodeGears.ReSharper.Exceptional.Analyzers;
 using JetBrains.ReSharper.Psi;
 using JetBrains.ReSharper.Psi.ExtensionsAPI.Tree;
+using JetBrains.ReSharper.Psi.Modules;
 using JetBrains.ReSharper.Psi.Tree;
 
 namespace CodeGears.ReSharper.Exceptional.Model
@@ -14,7 +15,7 @@ namespace CodeGears.ReSharper.Exceptional.Model
         {
             get
             {
-                var accessRightsOwner = this.Node as IAccessRightsOwner;
+                var accessRightsOwner = Node as IAccessRightsOwner;
                 if (accessRightsOwner == null) return false;
 
                 var rights = accessRightsOwner.GetAccessRights();
@@ -32,9 +33,9 @@ namespace CodeGears.ReSharper.Exceptional.Model
 
         public override void Accept(AnalyzerBase analyzerBase)
         {
-            if (this.DocCommentBlockModel != null)
+            if (DocCommentBlockModel != null)
             {
-                this.DocCommentBlockModel.Accept(analyzerBase);
+                DocCommentBlockModel.Accept(analyzerBase);
             }
 
             base.Accept(analyzerBase);
@@ -42,12 +43,12 @@ namespace CodeGears.ReSharper.Exceptional.Model
 
         public IDocCommentBlockNode AddDocCommentNode(IDocCommentBlockNode docCommentBlockNode)
         {
-            return ModificationUtil.AddChildBefore(this.Node, this.Node.FirstChild, docCommentBlockNode);
+            return ModificationUtil.AddChildBefore(Node, Node.FirstChild, docCommentBlockNode);
         }
 
         public IPsiModule GetPsiModule()
         {
-            return this.Node.GetPsiModule();
+            return Node.GetPsiModule();
         }
     }
 }

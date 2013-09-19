@@ -21,7 +21,7 @@ namespace CodeGears.ReSharper.Exceptional.Highlightings
             get
             {
                 return String.Format(Resources.HighLightNotThrownDocumentedExceptions,
-                                     this.ExceptionDocumentationModel.ExceptionType.GetClrName().ShortName);
+                                     ExceptionDocumentationModel.ExceptionType.GetClrName().ShortName);
             }
         }
     }

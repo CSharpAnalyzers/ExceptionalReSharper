@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using JetBrains.ReSharper.Psi.CSharp.Tree;
 using JetBrains.ReSharper.Psi.Tree;
 using JetBrains.Util;
+using JetBrains.Util.Logging;
 
 namespace CodeGears.ReSharper.Exceptional.Model
 {

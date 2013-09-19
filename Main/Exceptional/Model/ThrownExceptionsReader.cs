@@ -3,14 +3,22 @@ using System.Collections.Generic;
 using System.Xml;
 using JetBrains.ReSharper.Psi;
 using JetBrains.ReSharper.Psi.CSharp.Tree;
+using JetBrains.ReSharper.Psi.Modules;
 using JetBrains.ReSharper.Psi.Tree;
-using JetBrains.Util;
+using JetBrains.Util.Logging;
 
 namespace CodeGears.ReSharper.Exceptional.Model
 {
-    /// <summary>Extracts thrown exceptions.</summary>
+  /// <summary>
+  /// Extracts thrown exceptions.
+  /// </summary>
     internal static class ThrownExceptionsReader
     {
+      /// <summary>
+      /// Reads the specified reference expression.
+      /// </summary>
+      /// <param name="referenceExpression">The reference expression.</param>
+      /// <returns></returns>
         public static IEnumerable<IDeclaredType> Read(IReferenceExpression referenceExpression)
         {
             var result = new List<IDeclaredType>();
@@ -56,17 +64,18 @@ namespace CodeGears.ReSharper.Exceptional.Model
 
             foreach (XmlNode exceptionNode in exceptionNodes)
             {
-                var exceptionType = exceptionNode.Attributes["cref"].Value;
+              if (exceptionNode.Attributes == null) continue;
+              var exceptionType = exceptionNode.Attributes["cref"].Value;
 
-                if (exceptionType.StartsWith("T:"))
-                {
-                    exceptionType = exceptionType.Substring(2);
-                }
+              if (exceptionType.StartsWith("T:"))
+              {
+                exceptionType = exceptionType.Substring(2);
+              }
 
-                var exceptionDecaredType = TypeFactory.CreateTypeByCLRName(exceptionType, psiModule);
+              var exceptionDecaredType = TypeFactory.CreateTypeByCLRName(exceptionType, psiModule, psiModule.GetContextFromModule());
 
-                Logger.Assert(exceptionDecaredType != null, "Created exception type was null!");
-                result.Add(exceptionDecaredType);
+              Logger.Assert(exceptionDecaredType != null, "Created exception type was null!");
+              result.Add(exceptionDecaredType);
             }
 
             return result;

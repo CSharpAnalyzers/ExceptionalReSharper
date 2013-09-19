@@ -20,8 +20,8 @@ namespace CodeGears.ReSharper.Exceptional.QuickFixes
 
         protected override Action<ITextControl> ExecutePsiTransaction(ISolution solution, IProgressIndicator progress)
         {
-            var docCommentModel = this.Error.ExceptionDocumentationModel.AnalyzeUnit.DocCommentBlockModel;
-            docCommentModel.RemoveExceptionDocumentation(this.Error.ExceptionDocumentationModel);
+            var docCommentModel = Error.ExceptionDocumentationModel.AnalyzeUnit.DocCommentBlockModel;
+            docCommentModel.RemoveExceptionDocumentation(Error.ExceptionDocumentationModel);
 
             return null;
         }

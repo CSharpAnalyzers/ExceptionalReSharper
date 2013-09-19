@@ -13,7 +13,7 @@ namespace CodeGears.ReSharper.Exceptional.Model
 
         public override IBlock Contents
         {
-            get { return this.Node.Body; }
+            get { return Node.Body; }
         }
     }
 }

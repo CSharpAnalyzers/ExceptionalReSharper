@@ -3,6 +3,7 @@ using System.Text.RegularExpressions;
 using CodeGears.ReSharper.Exceptional.Analyzers;
 using JetBrains.DocumentModel;
 using JetBrains.ReSharper.Psi;
+using JetBrains.ReSharper.Psi.Modules;
 using JetBrains.ReSharper.Psi.Tree;
 using JetBrains.Util;
 
@@ -20,15 +21,14 @@ namespace CodeGears.ReSharper.Exceptional.Model
         public override void Initialize()
         {
             base.Initialize();
-
-            this.ExceptionType = GetExceptionType();
+            ExceptionType = GetExceptionType();
         }
 
         private IDeclaredType GetExceptionType()
         {
             var regEx = new Regex("cref=\"(?<exception>[^\"]+)\"");
 
-            foreach (var docCommentNode in this.DocCommentNodes)
+            foreach (var docCommentNode in DocCommentNodes)
             {
                 var text = docCommentNode.GetText();
                 var match = regEx.Match(text);
@@ -37,20 +37,21 @@ namespace CodeGears.ReSharper.Exceptional.Model
                 var exceptionType = match.Groups["exception"].Value;
 
                 var exceptionReference =
-                    this.DocCommentBlockModel.References.Find(reference => reference.GetName().Equals(exceptionType));
-                if (exceptionReference == null)
+                    DocCommentBlockModel.References.Find(reference => reference.GetName().Equals(exceptionType));
+              IPsiModule psiModule = docCommentNode.GetPsiModule();
+              if (exceptionReference == null)
                 {
-                    return TypeFactory.CreateTypeByCLRName(exceptionType, docCommentNode.GetPsiModule());
+                  return TypeFactory.CreateTypeByCLRName(exceptionType, psiModule, psiModule.GetContextFromModule());
                 }
 
                 var resolveResult = exceptionReference.Resolve();
                 var declaredType = resolveResult.DeclaredElement as ITypeElement;
                 if (declaredType == null)
                 {
-                    return TypeFactory.CreateTypeByCLRName(exceptionType, docCommentNode.GetPsiModule());
+                  return TypeFactory.CreateTypeByCLRName(exceptionType, psiModule, psiModule.GetContextFromModule());
                 }
 
-                return TypeFactory.CreateTypeByCLRName(declaredType.ShortName, docCommentNode.GetPsiModule());
+                return TypeFactory.CreateTypeByCLRName(declaredType.ShortName, psiModule, psiModule.GetContextFromModule());
             }
 
             return null;
@@ -65,7 +66,7 @@ namespace CodeGears.ReSharper.Exceptional.Model
         {
             var regEx = new Regex("cref=\"(?<exception>[^\"]+)\"");
 
-            foreach (var docCommentNode in this.DocCommentNodes)
+            foreach (var docCommentNode in DocCommentNodes)
             {
                 var text = docCommentNode.GetText();
                 var match = regEx.Match(text);
@@ -88,7 +89,7 @@ namespace CodeGears.ReSharper.Exceptional.Model
 
         public DocumentRange GetDescriptionDocumentRange()
         {
-            foreach (var docCommentNode in this.DocCommentNodes)
+            foreach (var docCommentNode in DocCommentNodes)
             {
                 var text = docCommentNode.GetText();
                 if (text.Contains("[MARKER]") == false) continue;

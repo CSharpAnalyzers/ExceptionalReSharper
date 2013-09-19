@@ -16,9 +16,9 @@ namespace CodeGears.ReSharper.Exceptional
 
         public ExceptionalProcessor(CSharpDaemonStageProcessBase daemonProcess, IDaemonProcess process)
         {
-            this._daemonProcess = daemonProcess;
-            this._process = process;
-            this._currentContext = new NullProcessContext();
+            _daemonProcess = daemonProcess;
+            _process = process;
+            _currentContext = new NullProcessContext();
         }
 
         public bool InteriorShouldBeProcessed(ITreeNode element)
@@ -30,17 +30,17 @@ namespace CodeGears.ReSharper.Exceptional
         {
             if (element is IThrowStatement)
             {
-                this._currentContext.Process(element as IThrowStatement);
+                _currentContext.Process(element as IThrowStatement);
             }
 
             if (element is ICatchVariableDeclaration)
             {
-                this._currentContext.Process(element as ICatchVariableDeclaration);
+                _currentContext.Process(element as ICatchVariableDeclaration);
             }
 
             if (element is IReferenceExpression)
             {
-                this._currentContext.Process(element as IReferenceExpression);
+                _currentContext.Process(element as IReferenceExpression);
             }
 
             if (element is IMethodDeclaration)
@@ -48,8 +48,8 @@ namespace CodeGears.ReSharper.Exceptional
                 var methodDeclaration = element as IMethodDeclaration;
                 if (ShouldProcessMethod(methodDeclaration))
                 {
-                    this._currentContext = new MethodProcessContext();
-                    this._currentContext.StartProcess(new MethodDeclarationModel(methodDeclaration));
+                    _currentContext = new MethodProcessContext();
+                    _currentContext.StartProcess(new MethodDeclarationModel(methodDeclaration));
                 }
             }
             else if (element is IPropertyDeclaration)
@@ -57,25 +57,25 @@ namespace CodeGears.ReSharper.Exceptional
                 var propertyDeclaration = element as IPropertyDeclaration;
                 if (ShouldProcessProperty(propertyDeclaration))
                 {
-                    this._currentContext = new PropertyProcessContext();
-                    this._currentContext.StartProcess(new PropertyDeclarationModel(propertyDeclaration));
+                    _currentContext = new PropertyProcessContext();
+                    _currentContext.StartProcess(new PropertyDeclarationModel(propertyDeclaration));
                 }
             }
             else if (element is IAccessorDeclaration)
             {
-                this._currentContext.EnterAccessor(element as IAccessorDeclaration);
+                _currentContext.EnterAccessor(element as IAccessorDeclaration);
             }
             else if (element is IDocCommentBlockNode)
             {
-                this._currentContext.Process(element as IDocCommentBlockNode);
+                _currentContext.Process(element as IDocCommentBlockNode);
             }
             else if (element is ITryStatement)
             {
-                this._currentContext.EnterTryBlock(element as ITryStatement);
+                _currentContext.EnterTryBlock(element as ITryStatement);
             }
             else if (element is ICatchClause)
             {
-                this._currentContext.EnterCatchClause(element as ICatchClause);
+                _currentContext.EnterCatchClause(element as ICatchClause);
             }
         }
 
@@ -83,29 +83,29 @@ namespace CodeGears.ReSharper.Exceptional
         {
             if (element is IMethodDeclaration)
             {
-                this._currentContext.EndProcess(this._daemonProcess);
+                _currentContext.EndProcess(_daemonProcess);
             }
             else if (element is IPropertyDeclaration)
             {
-                this._currentContext.EndProcess(this._daemonProcess);
+                _currentContext.EndProcess(_daemonProcess);
             }
             else if (element is IAccessorDeclaration)
             {
-                this._currentContext.LeaveAccessor();
+                _currentContext.LeaveAccessor();
             }
             else if (element is ITryStatement)
             {
-                this._currentContext.LeaveTryBlock();
+                _currentContext.LeaveTryBlock();
             }
             else if (element is ICatchClause)
             {
-                this._currentContext.LeaveCatchClause();
+                _currentContext.LeaveCatchClause();
             }
         }
 
         public bool ProcessingIsFinished
         {
-            get { return this._process.InterruptFlag; }
+            get { return _process.InterruptFlag; }
         }
 
         private static bool ShouldProcessProperty(IPropertyDeclaration propertyDeclarationNode)

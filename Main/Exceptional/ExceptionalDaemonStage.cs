@@ -1,8 +1,11 @@
 // Copyright (c) 2009-2010 Cofinite Solutions. All rights reserved.
+
+using JetBrains.Application.Settings;
 using JetBrains.ProjectModel;
 using JetBrains.ReSharper.Daemon;
 using JetBrains.ReSharper.Daemon.CSharp.Stages;
 using JetBrains.ReSharper.Psi;
+using JetBrains.ReSharper.Psi.CSharp.Tree;
 
 namespace CodeGears.ReSharper.Exceptional
 {
@@ -14,18 +17,19 @@ namespace CodeGears.ReSharper.Exceptional
     [DaemonStage]
     public class ExceptionalDaemonStage : CSharpDaemonStageBase
     {
-        public override IDaemonStageProcess CreateProcess(IDaemonProcess process, DaemonProcessKind processKind)
+        public override ErrorStripeRequest NeedsErrorStripe(IPsiSourceFile sourceFile, IContextBoundSettingsStore settings)
+        {
+            //We need a stripe and we're willing to show errors and warnings on it
+            return ErrorStripeRequest.STRIPE_AND_ERRORS;
+        }
+
+        protected override IDaemonStageProcess CreateProcess(IDaemonProcess process, IContextBoundSettingsStore settings,
+                                                             DaemonProcessKind processKind, ICSharpFile file)
         {
             if (process == null) return null;
             if (IsSupported(process.SourceFile) == false) return null;
 
-            return new ExceptionalDaemonStageProcess(process);
-        }
-
-        public override ErrorStripeRequest NeedsErrorStripe(IPsiSourceFile projectFile)
-        {
-            //We need a stripe and we're willing to show errors and warnings on it
-            return ErrorStripeRequest.STRIPE_AND_ERRORS;
+            return new ExceptionalDaemonStageProcess(process, file);
         }
     }
 }

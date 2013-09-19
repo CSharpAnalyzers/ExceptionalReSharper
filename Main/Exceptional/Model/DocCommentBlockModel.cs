@@ -4,16 +4,15 @@ using System.Collections.Generic;
 using CodeGears.ReSharper.Exceptional.Analyzers;
 using JetBrains.Application;
 using JetBrains.ReSharper.Psi;
-using JetBrains.ReSharper.Psi.CSharp;
-using JetBrains.ReSharper.Psi.CSharp.Tree;
-using JetBrains.ReSharper.Psi.CodeStyle;
 using JetBrains.ReSharper.Psi.ExtensionsAPI;
 using JetBrains.ReSharper.Psi.Resolve;
 using JetBrains.ReSharper.Psi.Tree;
 
 namespace CodeGears.ReSharper.Exceptional.Model
 {
-    /// <summary>Stores data about processed <see cref="IDocCommentBlockNode"/>.</summary>
+    /// <summary>
+    /// Stores data about processed <see cref="IDocCommentBlockNode"/>.
+    /// </summary>
     internal class DocCommentBlockModel : TreeElementModelBase<IDocCommentBlockNode>
     {
         private List<DocCommentModel> DocCommentModels { get; set; }
@@ -21,14 +20,14 @@ namespace CodeGears.ReSharper.Exceptional.Model
 
         private bool IsReal
         {
-            get { return this.Node != null; }
+            get { return Node != null; }
         }
 
         public IEnumerable<ExceptionDocCommentModel> ExceptionDocCommentModels
         {
             get
             {
-                foreach (var docCommentModel in this.DocCommentModels)
+                foreach (var docCommentModel in DocCommentModels)
                 {
                     if (docCommentModel is ExceptionDocCommentModel)
                     {
@@ -43,7 +42,7 @@ namespace CodeGears.ReSharper.Exceptional.Model
         {
         }
 
-        public DocCommentBlockModel(IAnalyzeUnit analyzeUnit, IDocCommentBlockNode docCommentNode)
+        public DocCommentBlockModel(IAnalyzeUnit analyzeUnit, IDocCommentBlockNode docCommentNode = null)
             : base(analyzeUnit, docCommentNode)
         {
             DocCommentModels = new List<DocCommentModel>();
@@ -54,15 +53,15 @@ namespace CodeGears.ReSharper.Exceptional.Model
 
         private void Preprocess()
         {
-            if (this.Node == null) return;
+            if (Node == null) return;
 
-            this.References.AddRange(this.Node.GetFirstClassReferences());
-            this.DocCommentModels = DocCommentReader.Read(this.Node, this);
+            References.AddRange(Node.GetFirstClassReferences());
+            DocCommentModels = DocCommentReader.Read(Node, this);
         }
 
         public override void Accept(AnalyzerBase analyzerBase)
         {
-            foreach (var docCommentModel in this.DocCommentModels)
+            foreach (var docCommentModel in DocCommentModels)
             {
                 docCommentModel.Accept(analyzerBase);
             }
@@ -72,58 +71,57 @@ namespace CodeGears.ReSharper.Exceptional.Model
         {
             if (exceptionType == null) return null;
 
-            Shell.Instance.Locks.AcquireWriteLock();
+            Shell.Instance.GetComponent<IShellLocks>().AcquireWriteLock();
 
             ExceptionDocCommentModel result;
 
-            var exceptionDocumentation = String.Format(" <exception cref=\"{1}\">[MARKER]</exception>{0}",
+            var exceptionDocumentation = string.Format(" <exception cref=\"{1}\">[MARKER]</exception>{0}",
                                                        Environment.NewLine, exceptionType.GetClrName().ShortName);
 
-            if (this.IsReal == false)
+            if (IsReal == false)
             {
-                var docCommentNode = this.GetElementFactory().CreateDocCommentBlock(exceptionDocumentation);
-                docCommentNode = this.AnalyzeUnit.AddDocCommentNode(docCommentNode);
-                this.Node = docCommentNode;
+                var docCommentNode = GetElementFactory().CreateDocCommentBlock(exceptionDocumentation);
+                docCommentNode = AnalyzeUnit.AddDocCommentNode(docCommentNode);
+                Node = docCommentNode;
                 Preprocess();
                 //TODO: japf warning: i don't know how to use the CSharpCodeFormatter
-                //CSharpCodeFormatter.Instance.Format(this.Node, CodeFormatProfile.INDENT);
+                //CSharpCodeFormatter.Instance.Format(Node, CodeFormatProfile.INDENT);
 
-                result = this.DocCommentModels[1] as ExceptionDocCommentModel;
+                result = DocCommentModels[1] as ExceptionDocCommentModel;
             }
             else
             {
-				//exceptionDocumentation += exceptionDocumentation;
+                //exceptionDocumentation += exceptionDocumentation;
                 var docCommentBlockNode = GetElementFactory().CreateDocComment(exceptionDocumentation);
-                if (docCommentBlockNode == null) return null;
 
-            	var commentNode = docCommentBlockNode;
-				//var commentNode = docCommentBlockNode.FirstChild as IDocCommentNode;
+                var commentNode = docCommentBlockNode;
+                //var commentNode = docCommentBlockNode.FirstChild as IDocCommentNode;
 
-				//if (commentNode == null) return null;
+                //if (commentNode == null) return null;
 
-            	var spaces1 = GetElementFactory().CreateWhitespaces(Environment.NewLine);
-            	var spaces2 = GetElementFactory().CreateWhitespaces(Environment.NewLine);
+                var spaces1 = GetElementFactory().CreateWhitespaces(Environment.NewLine);
+                var spaces2 = GetElementFactory().CreateWhitespaces(Environment.NewLine);
 
-                if (this.Node.LastChild != null)
+                if (Node.LastChild != null)
                 {
-					LowLevelModificationUtil.AddChildAfter(this.Node.LastChild, spaces1[0], commentNode, spaces2[0]);
+                    LowLevelModificationUtil.AddChildAfter(Node.LastChild, spaces1[0], commentNode, spaces2[0]);
                 }
                 else
                 {
-					LowLevelModificationUtil.AddChild(this.Node, spaces2[1], commentNode, spaces2[0]);
+                    LowLevelModificationUtil.AddChild(Node, spaces2[1], commentNode, spaces2[0]);
                 }
 
                 //TODO: japf warning: i don't know how to use the CSharpCodeFormatter
-				LanguageService.GetInstance(this.AnalyzeUnit.GetPsiModule().PsiLanguage).CodeFormatter.Format(this.Node, CodeFormatProfile.INDENT);
-				//CSharpCodeFormatter.Instance.Format(this.Node, CodeFormatProfile.INDENT);
+                //LanguageService.GetInstance(AnalyzeUnit.GetPsiModule().PsiLanguage).CodeFormatter.Format(Node, CodeFormatProfile.INDENT);
+                //CSharpCodeFormatter.Instance.Format(Node, CodeFormatProfile.INDENT);
 
                 result = new ExceptionDocCommentModel(this);
                 result.TreeNodes.Add(commentNode);
                 result.Initialize();
-                this.DocCommentModels.Add(result);
+                DocCommentModels.Add(result);
             }
 
-            Shell.Instance.Locks.ReleaseWriteLock();
+            Shell.Instance.GetComponent<IShellLocks>().ReleaseWriteLock();
 
             return result;
         }
@@ -138,7 +136,7 @@ namespace CodeGears.ReSharper.Exceptional.Model
 
             LowLevelModificationUtil.DeleteChildRange(firstNode, lastNode);
             //TODO: japf warning: i don't know how to use the CSharpCodeFormatter
-            //CSharpCodeFormatter.Instance.Format(this.Node, CodeFormatProfile.SOFT);
+            //CSharpCodeFormatter.Instance.Format(Node, CodeFormatProfile.SOFT);
         }
     }
 }

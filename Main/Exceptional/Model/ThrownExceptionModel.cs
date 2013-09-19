@@ -15,7 +15,7 @@ namespace CodeGears.ReSharper.Exceptional.Model
 
         public override DocumentRange DocumentRange
         {
-            get { return this.Parent.DocumentRange; }
+            get { return Parent.DocumentRange; }
         }
 
         public ThrownExceptionModel(IAnalyzeUnit analyzeUnit, IDeclaredType exceptionType, IExceptionsOriginModel parent)
@@ -30,12 +30,12 @@ namespace CodeGears.ReSharper.Exceptional.Model
 
         private bool CheckIfDocumented()
         {
-            var docCommentBlockNode = this.AnalyzeUnit.DocCommentBlockModel;
+            var docCommentBlockNode = AnalyzeUnit.DocCommentBlockModel;
             if (docCommentBlockNode == null) return false;
 
             foreach (var exceptionDocumentationModel in docCommentBlockNode.ExceptionDocCommentModels)
             {
-                if (this.Throws(exceptionDocumentationModel.ExceptionType))
+                if (Throws(exceptionDocumentationModel.ExceptionType))
                 {
                     return true;
                 }
@@ -48,16 +48,16 @@ namespace CodeGears.ReSharper.Exceptional.Model
         {
             if (ExceptionType == null) return false;
 
-            return this.Parent.ContainingBlockModel.CatchesException(ExceptionType);
+            return Parent.ContainingBlockModel.CatchesException(ExceptionType);
         }
 
         /// <summary>Checks whether this thrown exception equals to <paramref name="exceptionType"/>.</summary>
         public bool Throws(IDeclaredType exceptionType)
         {
-            if (this.ExceptionType == null) return false;
+            if (ExceptionType == null) return false;
             if (exceptionType == null) return false;
 
-            return this.ExceptionType.GetClrName().ShortName.Equals(exceptionType.GetClrName().ShortName);
+            return ExceptionType.GetClrName().ShortName.Equals(exceptionType.GetClrName().ShortName);
         }
 
         public override void Accept(AnalyzerBase analyzerBase)

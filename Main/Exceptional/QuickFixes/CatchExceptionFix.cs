@@ -20,17 +20,17 @@ namespace CodeGears.ReSharper.Exceptional.QuickFixes
 
         protected override Action<ITextControl> ExecutePsiTransaction(ISolution solution, IProgressIndicator progress)
         {
-            var exceptionsOriginModel = this.Error.ThrownExceptionModel.Parent;
+            var exceptionsOriginModel = Error.ThrownExceptionModel.Parent;
 
             var nearestTryBlock = exceptionsOriginModel.ContainingBlockModel.FindNearestTryBlock();
 
             if(nearestTryBlock == null)
             {
-                exceptionsOriginModel.SurroundWithTryBlock(this.Error.ThrownExceptionModel.ExceptionType);
+                exceptionsOriginModel.SurroundWithTryBlock(Error.ThrownExceptionModel.ExceptionType);
             }
             else
             {
-                nearestTryBlock.AddCatchClause(this.Error.ThrownExceptionModel.ExceptionType);
+                nearestTryBlock.AddCatchClause(Error.ThrownExceptionModel.ExceptionType);
             }
 
             return null;
@@ -38,7 +38,7 @@ namespace CodeGears.ReSharper.Exceptional.QuickFixes
 
         public override string Text
         {
-            get { return String.Format(Resources.QuickFixCatchException, this.Error.ThrownExceptionModel.ExceptionType.GetClrName().ShortName); }
+            get { return String.Format(Resources.QuickFixCatchException, Error.ThrownExceptionModel.ExceptionType.GetClrName().ShortName); }
         }
     }
 }

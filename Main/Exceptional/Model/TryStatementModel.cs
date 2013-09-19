@@ -20,9 +20,9 @@ namespace CodeGears.ReSharper.Exceptional.Model
         {
             var result = new List<CatchClauseModel>();
 
-            foreach (var catchClause in this.Node.Catches)
+            foreach (var catchClause in Node.Catches)
             {
-                var model = new CatchClauseModel(this.AnalyzeUnit, catchClause as ICatchClause);
+                var model = new CatchClauseModel(AnalyzeUnit, catchClause as ICatchClause);
                 model.ParentBlock = this;
                 result.Add(model);
             }
@@ -32,7 +32,7 @@ namespace CodeGears.ReSharper.Exceptional.Model
 
         public override bool CatchesException(IDeclaredType exception)
         {
-            foreach (var catchClauseModel in this.CatchClauseModels)
+            foreach (var catchClauseModel in CatchClauseModels)
             {
                 if (catchClauseModel.Catches(exception))
                 {
@@ -40,12 +40,12 @@ namespace CodeGears.ReSharper.Exceptional.Model
                 }
             }
 
-            return this.ParentBlock.CatchesException(exception);
+            return ParentBlock.CatchesException(exception);
         }
 
         public override IDeclaredType GetCatchedException()
         {
-            return this.ParentBlock.GetCatchedException();
+            return ParentBlock.GetCatchedException();
         }
 
         public override IEnumerable<ThrownExceptionModel> ThrownExceptionModelsNotCatched
@@ -57,9 +57,9 @@ namespace CodeGears.ReSharper.Exceptional.Model
                     yield return throwStatementModel;
                 }
 
-                for (var i = 0; i < this.CatchClauseModels.Count; i++)
+                for (var i = 0; i < CatchClauseModels.Count; i++)
                 {
-                    IBlockModel catchClauseModel = this.CatchClauseModels[i];
+                    IBlockModel catchClauseModel = CatchClauseModels[i];
                     foreach (var model in catchClauseModel.ThrownExceptionModelsNotCatched)
                     {
                         yield return model;
@@ -75,14 +75,14 @@ namespace CodeGears.ReSharper.Exceptional.Model
 
         public override IBlock Contents
         {
-            get { return this.Node.Try; }
+            get { return Node.Try; }
         }
 
         public override void Accept(AnalyzerBase analyzerBase)
         {
             base.Accept(analyzerBase);
 
-            foreach (var catchClauseModel in this.CatchClauseModels)
+            foreach (var catchClauseModel in CatchClauseModels)
             {
                 catchClauseModel.Accept(analyzerBase);
             }
@@ -90,10 +90,10 @@ namespace CodeGears.ReSharper.Exceptional.Model
 
         public void AddCatchClause(IDeclaredType exceptionType)
         {
-            var codeElementFactory = new CodeElementFactory(this.GetElementFactory());
-            var variableName = NameFactory.CatchVariableName(this.Node, exceptionType);
+            var codeElementFactory = new CodeElementFactory(GetElementFactory());
+            var variableName = NameFactory.CatchVariableName(Node, exceptionType);
             var catchClauseNode = codeElementFactory.CreateSpecificCatchClause(exceptionType, null, variableName);
-            this.Node.AddCatchClause(catchClauseNode);
+            Node.AddCatchClause(catchClauseNode);
         }
     }
 }

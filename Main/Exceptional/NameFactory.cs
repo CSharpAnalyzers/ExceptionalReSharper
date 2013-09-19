@@ -16,19 +16,20 @@ namespace CodeGears.ReSharper.Exceptional
     {
         public static string CatchVariableName(ITreeNode treeNode, IDeclaredType exceptionType)
         {
-        	NamingSettingsManager namingSettingsManager = new NamingSettingsManager(treeNode.GetSolution());
-        	NameParser nameParser = new NameParser(treeNode.GetSolution(), namingSettingsManager);
-        	NameSuggestionManager nameSuggestionManager = new NameSuggestionManager(treeNode.GetSolution(), nameParser);
-			NamingPolicy policy = namingSettingsManager.GetPolicy(NamedElementKinds.Locals, treeNode.Language);
+            NamingPolicyManager namingPolicyManager = new NamingPolicyManager(LanguageManager.Instance, treeNode.GetSolution());
+            NameParser nameParser = new NameParser(treeNode.GetSolution(), namingPolicyManager);
+            NameSuggestionManager nameSuggestionManager = new NameSuggestionManager(treeNode.GetSolution(), nameParser, namingPolicyManager);
+            NamingPolicy policy = namingPolicyManager.GetPolicy(NamedElementKinds.Locals, treeNode.Language, treeNode.GetSourceFile());
 
             INamesCollection namesCollection = nameSuggestionManager.CreateEmptyCollection(
                 PluralityKinds.Single,
                 treeNode.Language,
-                true);
+                true,
+                treeNode.GetSourceFile());
 
             EntryOptions entryOptions = new EntryOptions
                 {
-                    PluralityKind = PluralityKinds.Single, 
+                    PluralityKind = PluralityKinds.Single,
                     PredefinedPrefixPolicy = PredefinedPrefixPolicy.Preserve,
                     Emphasis = Emphasis.Good,
                     SubrootPolicy = SubrootPolicy.Decompose
@@ -36,23 +37,23 @@ namespace CodeGears.ReSharper.Exceptional
 
             namesCollection.Add(exceptionType, entryOptions);
 
-        	namesCollection.Prepare(policy.NamingRule, ScopeKind.Common, new SuggestionOptions());
+            namesCollection.Prepare(policy.NamingRule, ScopeKind.Common, new SuggestionOptions());
 
-        	return namesCollection.FirstName();
+            return namesCollection.FirstName();
         }
     }
 
-	internal class UnigueNamesService : IUnigueNamesService
-	{
-		public bool IsUnique(string name, ITreeNode context, ScopeKind kind)
-		{
-			return this.GetConflictedElements(name, context, kind).Count == 0;
-		}
+    internal class UnigueNamesService : IUnigueNamesService
+    {
+        public bool IsUnique(string name, ITreeNode context, ScopeKind kind)
+        {
+            return GetConflictedElements(name, context, kind).Count == 0;
+        }
 
-		public IList<IDeclaredElement> GetConflictedElements(string name, ITreeNode context, ScopeKind kind)
-		{
-			return NamingManager.GetNamingLanguageService(context.Language).GetConflictedElements(name, context, kind);
-		}
-	}
+        public IList<IDeclaredElement> GetConflictedElements(string name, ITreeNode context, ScopeKind kind)
+        {
+            return NamingManager.GetNamingLanguageService(context.Language).GetConflictedElements(name, context, kind);
+        }
+    }
 
 }

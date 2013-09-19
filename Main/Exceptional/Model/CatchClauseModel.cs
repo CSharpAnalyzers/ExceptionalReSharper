@@ -16,37 +16,37 @@ namespace CodeGears.ReSharper.Exceptional.Model
         public bool Catches(IDeclaredType exception)
         {
             if (exception == null) return false;
-            if (this.Node.ExceptionType == null) return false;
+            if (Node.ExceptionType == null) return false;
 
-            return exception.IsSubtypeOf(this.Node.ExceptionType);
+            return exception.IsSubtypeOf(Node.ExceptionType);
         }
 
         public bool HasExceptionType
         {
-            get { return this.Node is ISpecificCatchClause; }
+            get { return Node is ISpecificCatchClause; }
         }
 
         public bool HasVariable
         {
-            get { return this.VariableModel != null; }
+            get { return VariableModel != null; }
         }
 
         public override DocumentRange DocumentRange
         {
-            get { return this.Node.CatchKeyword.GetDocumentRange(); }
+            get { return Node.CatchKeyword.GetDocumentRange(); }
         }
 
         public CatchClauseModel(IAnalyzeUnit analyzeUnit, ICatchClause catchClauseNode)
             : base(analyzeUnit, catchClauseNode)
         {
-            this.IsCatchAll = GetIsCatchAll();
+            IsCatchAll = GetIsCatchAll();
         }
 
         private bool GetIsCatchAll()
         {
-            if (this.Node.ExceptionType == null) return false;
+            if (Node.ExceptionType == null) return false;
 
-            return this.Node.ExceptionType.GetClrName().ShortName.Equals("System.Exception");
+            return Node.ExceptionType.GetClrName().ShortName.Equals("System.Exception");
         }
 
         public override void Accept(AnalyzerBase analyzerBase)
@@ -60,64 +60,64 @@ namespace CodeGears.ReSharper.Exceptional.Model
 
         public override IDeclaredType GetCatchedException()
         {
-            return this.Node.ExceptionType;
+            return Node.ExceptionType;
         }
 
         public override IBlock Contents
         {
-            get { return this.Node.Body; }
+            get { return Node.Body; }
         }
 
         public override bool CatchesException(IDeclaredType exception)
         {
-            return this.ParentBlock.CatchesException(exception);
+            return ParentBlock.CatchesException(exception);
         }
 
         #endregion
 
         public void AddCatchVariable(string variableName)
         {
-            if (this.Node is IGeneralCatchClause)
+            if (Node is IGeneralCatchClause)
             {
-                if (this.HasVariable) return;
+                if (HasVariable) return;
 
                 if (String.IsNullOrEmpty(variableName))
                 {
-                    variableName = NameFactory.CatchVariableName(this.Node, GetCatchedException());
+                    variableName = NameFactory.CatchVariableName(Node, GetCatchedException());
                 }
 
-                var codeFactory = new CodeElementFactory(this.GetElementFactory());
+                var codeFactory = new CodeElementFactory(GetElementFactory());
 
-                var newCatch = codeFactory.CreateSpecificCatchClause(null, this.Node.Body, variableName);
+                var newCatch = codeFactory.CreateSpecificCatchClause(null, Node.Body, variableName);
                 if (newCatch == null) return;
 
-                this.Node.ReplaceBy(newCatch);
+                Node.ReplaceBy(newCatch);
 
-                this.Node = newCatch;
-                this.VariableModel = new CatchVariableModel(this.AnalyzeUnit, newCatch.ExceptionDeclaration as ICatchVariableDeclaration);
+                Node = newCatch;
+                VariableModel = new CatchVariableModel(AnalyzeUnit, newCatch.ExceptionDeclaration as ICatchVariableDeclaration);
             }
             else
             {
-                if (this.HasVariable) return;
+                if (HasVariable) return;
 
                 if (String.IsNullOrEmpty(variableName))
                 {
-                    variableName = NameFactory.CatchVariableName(this.Node, GetCatchedException());
+                    variableName = NameFactory.CatchVariableName(Node, GetCatchedException());
                 }
 
-                var specificNode = this.Node as ISpecificCatchClause;
+                var specificNode = Node as ISpecificCatchClause;
 
                 var exceptionType = specificNode.ExceptionTypeUsage as IUserDeclaredTypeUsage;
                 var exceptionTypeName = exceptionType.TypeName.NameIdentifier.Name;
 
-                var tempTry = this.GetElementFactory().CreateStatement("try {} catch($0 $1) {}", exceptionTypeName, variableName) as ITryStatement;
+                var tempTry = GetElementFactory().CreateStatement("try {} catch($0 $1) {}", exceptionTypeName, variableName) as ITryStatement;
                 if (tempTry == null) return;
 
                 var tempCatch = tempTry.Catches[0] as ISpecificCatchClause;
                 if (tempCatch == null) return;
 
                 var resultVariable = specificNode.SetExceptionDeclaration(tempCatch.ExceptionDeclaration);
-                this.VariableModel = new CatchVariableModel(this.AnalyzeUnit, resultVariable);
+                VariableModel = new CatchVariableModel(AnalyzeUnit, resultVariable);
             }
         }
     }

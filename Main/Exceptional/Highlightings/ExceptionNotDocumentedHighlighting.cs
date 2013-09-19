@@ -20,7 +20,7 @@ namespace CodeGears.ReSharper.Exceptional.Highlightings
         {
             get
             {
-                var exceptionType = this.ThrownExceptionModel.ExceptionType;
+                var exceptionType = ThrownExceptionModel.ExceptionType;
                 var exceptionTypeName = exceptionType != null ? exceptionType.GetClrName().ShortName : "[NOT RESOLVED]";
                 return String.Format(Resources.HighLightNotDocumentedExceptions, exceptionTypeName);
             }

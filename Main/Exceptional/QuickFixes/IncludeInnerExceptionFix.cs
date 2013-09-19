@@ -26,7 +26,7 @@ namespace CodeGears.ReSharper.Exceptional.QuickFixes
 
         protected override Action<ITextControl> ExecutePsiTransaction(ISolution solution, IProgressIndicator progress)
         {
-            var throwStatementModel = this.Error.ThrowStatementModel;
+            var throwStatementModel = Error.ThrowStatementModel;
 
             var outerCatchClause = throwStatementModel.FindOuterCatchClause();
             var variableName = NameFactory.CatchVariableName(outerCatchClause.Node, outerCatchClause.GetCatchedException());

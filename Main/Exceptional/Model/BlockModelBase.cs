@@ -34,12 +34,12 @@ namespace CodeGears.ReSharper.Exceptional.Model
 
         public override void Accept(AnalyzerBase analyzerBase)
         {
-            foreach (var tryStatementModel in this.TryStatementModels)
+            foreach (var tryStatementModel in TryStatementModels)
             {
                 tryStatementModel.Accept(analyzerBase);
             }
 
-            foreach (var throwStatementModel in this.ExceptionOriginModels)
+            foreach (var throwStatementModel in ExceptionOriginModels)
             {
                 throwStatementModel.Accept(analyzerBase);
             }
@@ -49,7 +49,7 @@ namespace CodeGears.ReSharper.Exceptional.Model
         {
             get
             {
-                foreach (var throwStatementModel in this.ExceptionOriginModels)
+                foreach (var throwStatementModel in ExceptionOriginModels)
                 {
                     foreach (var thrownExceptionModel in throwStatementModel.ThrownExceptions)
                     {
@@ -60,9 +60,9 @@ namespace CodeGears.ReSharper.Exceptional.Model
                     }
                 }
 
-                for (var i = 0; i < this.TryStatementModels.Count; i++)
+                for (var i = 0; i < TryStatementModels.Count; i++)
                 {
-                    IBlockModel tryStatementModel = this.TryStatementModels[i];
+                    IBlockModel tryStatementModel = TryStatementModels[i];
                     foreach (var model in tryStatementModel.ThrownExceptionModelsNotCatched)
                     {
                         yield return model;
@@ -73,9 +73,9 @@ namespace CodeGears.ReSharper.Exceptional.Model
 
         public virtual TryStatementModel FindNearestTryBlock()
         {
-            if(this.ParentBlock == null) return null;
+            if(ParentBlock == null) return null;
 
-            return this.ParentBlock.FindNearestTryBlock();
+            return ParentBlock.FindNearestTryBlock();
         }
     }
 }

@@ -1,6 +1,5 @@
 // Copyright (c) 2009-2010 Cofinite Solutions. All rights reserved.
 
-using System;
 using JetBrains.ReSharper.Psi;
 using JetBrains.ReSharper.Psi.CSharp;
 using JetBrains.ReSharper.Psi.CSharp.Tree;
@@ -22,7 +21,7 @@ namespace CodeGears.ReSharper.Exceptional
         /// <param name="exceptionType">The type of a created variable.</param>
         public ICatchVariableDeclaration CreateCatchVariableDeclarationNode(IDeclaredType exceptionType)
         {
-            var tryStatement = this.Factory.CreateStatement("try {} catch(Exception e) {}") as ITryStatement;
+            var tryStatement = Factory.CreateStatement("try {} catch(Exception e) {}") as ITryStatement;
             if (tryStatement == null) return null;
 
             var catchClause = tryStatement.Catches[0] as ISpecificCatchClause;
@@ -33,7 +32,7 @@ namespace CodeGears.ReSharper.Exceptional
 
             if (exceptionType != null)
             {
-                var declaredTypeUsageNode = this.Factory.CreateDeclaredTypeUsageNode(exceptionType);
+                var declaredTypeUsageNode = Factory.CreateDeclaredTypeUsageNode(exceptionType);
                 exceptionDeclaration.SetDeclaredTypeUsage(declaredTypeUsageNode);
             }
 
@@ -44,8 +43,8 @@ namespace CodeGears.ReSharper.Exceptional
         /// <param name="value">A value for an argument.</param>
         public ICSharpArgument CreateArgument(string value)
         {
-            var argumentExpression = this.Factory.CreateExpression(value);
-            return this.Factory.CreateArgument(ParameterKind.VALUE, argumentExpression);
+            var argumentExpression = Factory.CreateExpression(value);
+            return Factory.CreateArgument(ParameterKind.VALUE, argumentExpression);
         }
 
         /// <summary>Creates a specific catch clause with given <paramref name="exceptionType"/> and <paramref name="catchBody"/>.</summary>
@@ -54,7 +53,7 @@ namespace CodeGears.ReSharper.Exceptional
         /// <param name="variableName">A name for catch variable.</param>
         public ISpecificCatchClause CreateSpecificCatchClause(IDeclaredType exceptionType, IBlock catchBody, string variableName)
         {
-            var tryStatement = this.Factory.CreateStatement("try {} catch(Exception $0) {}", variableName) as ITryStatement;
+            var tryStatement = Factory.CreateStatement("try {} catch(Exception $0) {}", variableName) as ITryStatement;
             if (tryStatement == null) return null;
 
             var catchClause = tryStatement.Catches[0] as ISpecificCatchClause;
@@ -65,7 +64,7 @@ namespace CodeGears.ReSharper.Exceptional
                 var exceptionDeclaration = catchClause.ExceptionDeclaration as ICatchVariableDeclaration;
                 if (exceptionDeclaration == null) return null;
 
-                var declaredTypeUsageNode = this.Factory.CreateDeclaredTypeUsageNode(exceptionType);
+                var declaredTypeUsageNode = Factory.CreateDeclaredTypeUsageNode(exceptionType);
                 exceptionDeclaration.SetDeclaredTypeUsage(declaredTypeUsageNode);
             }
 
@@ -80,15 +79,15 @@ namespace CodeGears.ReSharper.Exceptional
 
         public ITryStatement CreateTryStatement(IDeclaredType exceptionType, string exceptionVariableName)
         {
-			var tryStatement = this.Factory.CreateStatement("try {} catch($0 $1) {}", exceptionType.GetClrName().ShortName, exceptionVariableName) as ITryStatement;
-            if (tryStatement == null) return tryStatement;
+            var tryStatement = Factory.CreateStatement("try {} catch($0 $1) {}", exceptionType.GetClrName().ShortName, exceptionVariableName) as ITryStatement;
+            if (tryStatement == null) return null;
 
             var catchClause = tryStatement.Catches[0] as ISpecificCatchClause;
             if (catchClause == null) return tryStatement;
             var exceptionDeclaration = catchClause.ExceptionDeclaration as ICatchVariableDeclaration;
             if (exceptionDeclaration == null) return tryStatement;
 
-            var declaredTypeUsageNode = this.Factory.CreateDeclaredTypeUsageNode(exceptionType);
+            var declaredTypeUsageNode = Factory.CreateDeclaredTypeUsageNode(exceptionType);
             exceptionDeclaration.SetDeclaredTypeUsage(declaredTypeUsageNode);
 
             return tryStatement;
@@ -96,8 +95,8 @@ namespace CodeGears.ReSharper.Exceptional
 
         public IBlock CreateBlock(ITreeNode node)
         {
-        	IBlock block = this.Factory.CreateBlock("{ $0 }", node.GetText());
-        	return block;
+            IBlock block = Factory.CreateBlock("{ $0 }", node.GetText());
+            return block;
         }
     }
 }

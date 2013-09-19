@@ -30,33 +30,33 @@ namespace CodeGears.ReSharper.Exceptional.Model
 
         public virtual void Initialize()
         {
-            foreach (var treeNode in this.TreeNodes)
+            foreach (var treeNode in TreeNodes)
             {
                 if (treeNode is IDocCommentNode)
                 {
-                    this.DocCommentNodes.Add(treeNode as IDocCommentNode);
+                    DocCommentNodes.Add(treeNode as IDocCommentNode);
                 }
             }
 
-            this._documentRange = GetDocCommentRage();
+            _documentRange = GetDocCommentRage();
         }
 
         protected virtual DocumentRange GetDocCommentRage()
         {
-            if (this.DocCommentNodes.Count == 0)
+            if (DocCommentNodes.Count == 0)
             {
                 return DocumentRange.InvalidRange;
             }
 
-            var textRange = this.DocCommentNodes[0].GetDocumentRange().TextRange;
+            var textRange = DocCommentNodes[0].GetDocumentRange().TextRange;
 
-            for (var i = 1; i < this.DocCommentNodes.Count; i++)
+            for (var i = 1; i < DocCommentNodes.Count; i++)
             {
-                var range = this.DocCommentNodes[i].GetDocumentRange().TextRange;
+                var range = DocCommentNodes[i].GetDocumentRange().TextRange;
                 textRange = textRange.Join(range);
             }
 
-            return new DocumentRange(this.DocCommentNodes[0].GetSourceFile().Document, textRange);
+            return new DocumentRange(DocCommentNodes[0].GetSourceFile().Document, textRange);
         }
     }
 }

@@ -28,10 +28,10 @@ namespace CodeGears.ReSharper.Exceptional.Model
         {
             var result = new List<ThrownExceptionModel>();
 
-            foreach (var exceptionType in ThrownExceptionsReader.Read(this.Node))
+            foreach (var exceptionType in ThrownExceptionsReader.Read(Node))
             {
                 var thrownException = new ThrownExceptionModel(
-                    this.AnalyzeUnit, exceptionType, this);
+                    AnalyzeUnit, exceptionType, this);
 
                 result.Add(thrownException);
             }
@@ -41,7 +41,7 @@ namespace CodeGears.ReSharper.Exceptional.Model
 
         public bool Throws(IDeclaredType exceptionType)
         {
-            foreach (var thrownExceptionModel in this.ThrownExceptions)
+            foreach (var thrownExceptionModel in ThrownExceptions)
             {
                 if (thrownExceptionModel.Throws(exceptionType))
                 {
@@ -54,7 +54,7 @@ namespace CodeGears.ReSharper.Exceptional.Model
 
         public override void Accept(AnalyzerBase analyzerBase)
         {
-            foreach (var thrownExceptionModel in this.ThrownExceptions)
+            foreach (var thrownExceptionModel in ThrownExceptions)
             {
                 thrownExceptionModel.Accept(analyzerBase);
             }
@@ -62,10 +62,10 @@ namespace CodeGears.ReSharper.Exceptional.Model
 
         public void SurroundWithTryBlock(IDeclaredType exceptionType)
         {
-            var codeElementFactory = new CodeElementFactory(this.GetElementFactory());
-            var exceptionVariableName = NameFactory.CatchVariableName(this.Node, exceptionType);
+            var codeElementFactory = new CodeElementFactory(GetElementFactory());
+            var exceptionVariableName = NameFactory.CatchVariableName(Node, exceptionType);
             var tryStatement = codeElementFactory.CreateTryStatement(exceptionType, exceptionVariableName);
-            var containingStatement = this.Node.GetContainingStatement();
+            var containingStatement = Node.GetContainingStatement();
         	var spaces = GetElementFactory().CreateWhitespaces(Environment.NewLine);
 			LowLevelModificationUtil.AddChildAfter(containingStatement.LastChild, spaces[0]);
 

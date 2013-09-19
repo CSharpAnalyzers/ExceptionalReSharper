@@ -15,27 +15,41 @@ namespace CodeGears.ReSharper.Exceptional.Model
         private ThrownExceptionModel ThrownExceptionModel { get; set; }
         public IBlockModel ContainingBlockModel { get; private set; }
 
+        /// <summary>
+        /// Gets the document range.
+        /// </summary>
         public override DocumentRange DocumentRange
         {
             get
             {
                 //if we have exceptiontype then highlight the type
-                if (this.Node.Exception != null)
+                if (Node.Exception != null)
                 {
-                    return this.Node.Exception.GetDocumentRange();
+                    return Node.Exception.GetDocumentRange();
                 }
 
                 //if not highlight the throw keyword
-                return this.Node.ThrowKeyword.GetDocumentRange();
+                return Node.ThrowKeyword.GetDocumentRange();
             }
         }
 
-        /// <summary>Specifies if this throw statement is a rethrow statement.</summary>
+        /// <summary>
+        /// Specifies if this throw statement is a rethrow statement.
+        /// </summary>
+        /// <value>
+        /// 	<c>true</c> if this instance is rethrow; otherwise, <c>false</c>.
+        /// </value>
         public bool IsRethrow
         {
-            get { return this.Node.Exception == null; }
+            get { return Node.Exception == null; }
         }
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="ThrowStatementModel"/> class.
+        /// </summary>
+        /// <param name="analyzeUnit">The analyze unit.</param>
+        /// <param name="throwStatement">The throw statement.</param>
+        /// <param name="containingBlockModel">The containing block model.</param>
         public ThrowStatementModel(IAnalyzeUnit analyzeUnit, IThrowStatement throwStatement,
                                    IBlockModel containingBlockModel)
             : base(analyzeUnit, throwStatement)
@@ -47,10 +61,13 @@ namespace CodeGears.ReSharper.Exceptional.Model
             containingBlockModel.ExceptionOriginModels.Add(this);
         }
 
-        /// <summary>Searches for the nearest containing catch clause.</summary>
+        /// <summary>
+        /// Searches for the nearest containing catch clause.
+        /// </summary>
+        /// <returns></returns>
         public CatchClauseModel FindOuterCatchClause()
         {
-            var outerBlock = this.ContainingBlockModel;
+            var outerBlock = ContainingBlockModel;
 
             while (outerBlock != null && (outerBlock is CatchClauseModel) == false)
             {
@@ -62,31 +79,31 @@ namespace CodeGears.ReSharper.Exceptional.Model
 
         private IDeclaredType GetExceptionType()
         {
-            if (this.Node.Exception != null)
+            if (Node.Exception != null)
             {
-                //var creation = this.Node.ExceptionNode as IObjectCreationExpressionNode;
+                //var creation = Node.ExceptionNode as IObjectCreationExpressionNode;
                 //creation.Reference.GetName();
-                return this.Node.Exception.GetExpressionType() as IDeclaredType;
+                return Node.Exception.GetExpressionType() as IDeclaredType;
             }
 
-            return this.ContainingBlockModel.GetCatchedException();
+            return ContainingBlockModel.GetCatchedException();
         }
 
         public override void Accept(AnalyzerBase analyzerBase)
         {
             analyzerBase.Visit(this);
 
-            this.ThrownExceptionModel.Accept(analyzerBase);
+            ThrownExceptionModel.Accept(analyzerBase);
         }
 
         public void SurroundWithTryBlock(IDeclaredType exceptionType)
         {
-            var codeElementFactory = new CodeElementFactory(this.GetElementFactory());
-            var exceptionVariableName = NameFactory.CatchVariableName(this.Node, exceptionType);
+            var codeElementFactory = new CodeElementFactory(GetElementFactory());
+            var exceptionVariableName = NameFactory.CatchVariableName(Node, exceptionType);
             var tryStatement = codeElementFactory.CreateTryStatement(exceptionType, exceptionVariableName);
-            var block = codeElementFactory.CreateBlock(this.Node);
+            var block = codeElementFactory.CreateBlock(Node);
             tryStatement.SetTry(block);
-            this.Node.ReplaceBy(tryStatement);
+            Node.ReplaceBy(tryStatement);
         }
 
         public IEnumerable<ThrownExceptionModel> ThrownExceptions
@@ -97,14 +114,14 @@ namespace CodeGears.ReSharper.Exceptional.Model
         /// <summary>Checks whether this throw statement throws given <paramref name="exceptionType"/>.</summary>
         public bool Throws(IDeclaredType exceptionType)
         {
-            return this.ThrownExceptionModel.Throws(exceptionType);
+            return ThrownExceptionModel.Throws(exceptionType);
         }
 
         public TextRange[] AddInnerException(string variableName)
         {
             var ranges = new List<TextRange>();
 
-            var objectCreationExpressionNode = this.Node.Exception as IObjectCreationExpression;
+            var objectCreationExpressionNode = Node.Exception as IObjectCreationExpression;
             if (objectCreationExpressionNode == null)
             {
                 return new TextRange[0];
@@ -112,12 +129,12 @@ namespace CodeGears.ReSharper.Exceptional.Model
 
             if (objectCreationExpressionNode.Arguments.Count == 0)
             {
-                var messageExpression = CSharpElementFactory.GetInstance(this.AnalyzeUnit.GetPsiModule(), true, true).
+                var messageExpression = CSharpElementFactory.GetInstance(AnalyzeUnit.GetPsiModule(), true, true).
                     CreateExpressionAsIs(
                     "\"See inner exception for details.\"");
 
                 var messageArgument =
-					CSharpElementFactory.GetInstance(this.AnalyzeUnit.GetPsiModule(), true, true).CreateArgument(
+					CSharpElementFactory.GetInstance(AnalyzeUnit.GetPsiModule(), true, true).CreateArgument(
                         ParameterKind.VALUE, messageExpression);
 
                 messageArgument = objectCreationExpressionNode.AddArgumentAfter(messageArgument, null);
@@ -128,14 +145,10 @@ namespace CodeGears.ReSharper.Exceptional.Model
             {
                 var messageArgument = objectCreationExpressionNode.ArgumentList.Arguments[0];
 
-                var innerExceptionExpression =
-					CSharpElementFactory.GetInstance(this.AnalyzeUnit.GetPsiModule(), true, true).CreateExpressionAsIs(variableName);
-                var innerExpressionArgument =
-					CSharpElementFactory.GetInstance(this.AnalyzeUnit.GetPsiModule(), true, true).CreateArgument(
-                        ParameterKind.VALUE, innerExceptionExpression);
+                var innerExceptionExpression = CSharpElementFactory.GetInstance(AnalyzeUnit.GetPsiModule()).CreateExpressionAsIs(variableName);
+                var innerExpressionArgument = CSharpElementFactory.GetInstance(AnalyzeUnit.GetPsiModule()).CreateArgument(ParameterKind.VALUE, innerExceptionExpression);
 
-                innerExpressionArgument = objectCreationExpressionNode.AddArgumentAfter(innerExpressionArgument,
-                                                                                        messageArgument);
+                innerExpressionArgument = objectCreationExpressionNode.AddArgumentAfter(innerExpressionArgument, messageArgument);
                 ranges.Add(innerExpressionArgument.GetDocumentRange().TextRange);
             }
 
@@ -144,7 +157,7 @@ namespace CodeGears.ReSharper.Exceptional.Model
 
         public bool HasInnerException(string variableName)
         {
-            var objectCreationExpressionNode = this.Node.Exception as IObjectCreationExpression;
+            var objectCreationExpressionNode = Node.Exception as IObjectCreationExpression;
             if (objectCreationExpressionNode == null)
             {
                 return false;

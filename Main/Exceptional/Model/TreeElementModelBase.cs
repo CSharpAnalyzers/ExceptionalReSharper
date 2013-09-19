@@ -11,7 +11,7 @@ namespace CodeGears.ReSharper.Exceptional.Model
 
         public override DocumentRange DocumentRange
         {
-            get { return this.Node.GetDocumentRange(); }
+            get { return Node.GetDocumentRange(); }
         }
 
         protected TreeElementModelBase(IAnalyzeUnit analyzeUnit, T node) : base(analyzeUnit)
@@ -21,7 +21,7 @@ namespace CodeGears.ReSharper.Exceptional.Model
 
         protected CSharpElementFactory GetElementFactory()
         {
-            return CSharpElementFactory.GetInstance(this.AnalyzeUnit.GetPsiModule(), true, true);
+            return CSharpElementFactory.GetInstance(AnalyzeUnit.GetPsiModule());
         }
     }
 }

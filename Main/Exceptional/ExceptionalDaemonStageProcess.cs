@@ -6,7 +6,6 @@ using JetBrains.ReSharper.Daemon;
 using JetBrains.ReSharper.Daemon.CSharp.Stages;
 using JetBrains.ReSharper.Psi;
 using JetBrains.ReSharper.Psi.CSharp;
-using JetBrains.ReSharper.Psi.CSharp.Impl;
 using JetBrains.ReSharper.Psi.CSharp.Tree;
 
 namespace CodeGears.ReSharper.Exceptional
@@ -22,19 +21,21 @@ namespace CodeGears.ReSharper.Exceptional
 
         public List<HighlightingInfo> Hightlightings
         {
-            get { return this._hightlightings; }
+            get { return _hightlightings; }
         }
 
-        public ExceptionalDaemonStageProcess(IDaemonProcess process) : base(process)
+        public ExceptionalDaemonStageProcess(IDaemonProcess process, ICSharpFile file)
+            : base(process, file)
         {
-            this._process = process;
+            _process = process;
         }
 
         public override void Execute(Action<DaemonStageResult> commiter)
         {
+            ICSharpFile file = _process.SourceFile.GetTheOnlyPsiFile(CSharpLanguage.Instance) as ICSharpFile;
             // Getting PSI (AST) for the file being highlighted
-            var manager = PsiManager.GetInstance(_process.Solution);
-            var file = manager.GetPsiFile(_process.SourceFile, CSharpLanguage.Instance) as ICSharpFile;
+            //var manager = PsiModule.GetInstance(_process.Solution);
+            //var file = manager.GetPsiFile(_process.SourceFile, CSharpLanguage.Instance, new DocumentRange(_process.Document, _process.VisibleRange)) as ICSharpFile;
             if (file == null) return;
 
             // Running visitor against the PSI
@@ -45,7 +46,7 @@ namespace CodeGears.ReSharper.Exceptional
             if (_process.InterruptFlag)
                 throw new ProcessCancelledException();
 
-            commiter(new DaemonStageResult(this.Hightlightings));
+            commiter(new DaemonStageResult(Hightlightings));
         }
     }
 }

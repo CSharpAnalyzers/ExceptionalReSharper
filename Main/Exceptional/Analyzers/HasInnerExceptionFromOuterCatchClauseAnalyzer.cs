@@ -17,7 +17,7 @@ namespace CodeGears.ReSharper.Exceptional.Analyzers
             if (throwStatementModel == null) return;
             if (AnalyzeIfHasInnerException(throwStatementModel)) return;
 
-            this.Process.Hightlightings.Add(new HighlightingInfo(throwStatementModel.DocumentRange, new ThrowFromCatchWithNoInnerExceptionHighlighting(throwStatementModel), null, null));            
+            Process.Hightlightings.Add(new HighlightingInfo(throwStatementModel.DocumentRange, new ThrowFromCatchWithNoInnerExceptionHighlighting(throwStatementModel), null, null));            
         }
 
         private static bool AnalyzeIfHasInnerException(ThrowStatementModel throwStatementModel)
