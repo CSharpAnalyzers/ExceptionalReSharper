@@ -61,7 +61,7 @@
 
     <!-- Specifies the primary icon for the installation package. -->
     <Property Id="ARPPRODUCTICON">F.ProductIcon.ico</Property>
-    <Icon Id="F.ProductIcon.ico" SourceFile="$(var.DynSetupFilesDir)/Exceptional.ico" />
+    <Icon Id="F.ProductIcon.ico" SourceFile="Exceptional.ico" />
 
   </Fragment>
 </Wix>

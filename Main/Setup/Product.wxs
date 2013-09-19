@@ -25,6 +25,13 @@
       <RegistrySearch Id="AS.ReSharperForVs90BinariesDir" Root="HKLM" Key="Software\JetBrains\ReSharper\v[RESHARPERVERSION2]\vs9.0" Name="InstallDir" Type="raw" />
     </Property>
 
+    <Property Id="RESHARPERFORVS100INSTALLDIR" Secure="yes">
+      <RegistrySearch Id="AS.ReSharperForVs100BinariesDir" Root="HKLM" Key="Software\JetBrains\ReSharper\v[RESHARPERVERSION2]\vs10.0" Name="InstallDir" Type="raw" />
+    </Property>
+
+    <Property Id="RESHARPERFORVS110INSTALLDIR" Secure="yes">
+      <RegistrySearch Id="AS.ReSharperForVs110BinariesDir" Root="HKLM" Key="Software\JetBrains\ReSharper\v[RESHARPERVERSION2]\vs11.0" Name="InstallDir" Type="raw" />
+    </Property>
 
     <Upgrade Id="$(var.DynUpgradeCode)">
       <UpgradeVersion Property="PATCHFOUND" IncludeMinimum="yes" IncludeMaximum='no' Minimum="0.0.0" Maximum="$(var.DynProductVersion)" />
@@ -38,15 +45,15 @@
         <Directory Id="Plugins" Name="Plugins">
           <Directory Id="APPLICATIONFOLDER" Name="$(var.DynProductName)">
             <!-- Install the plugin assembly. -->
-            <Component Id="C.ProductAssembly" Guid="$(var.DynMsiComponentGuid00)" Location="local">
-              <File Id="F.ProductAssembly" Checksum="yes" DiskId="1" KeyPath="yes" Name="CodeGears.ReSharper.Exceptional.dll" ReadOnly="yes" Source="$(var.DynAssemblyFile)" Vital="yes"/>
+            <Component Id="C.ProductAssembly" Guid="{E9C30054-FCBC-473D-A64F-B615E111FD37}" Location="local">
+              <File Id="F.ProductAssembly" Checksum="yes" DiskId="1" KeyPath="yes" Name="CodeGears.ReSharper.Exceptional.dll" ReadOnly="yes" Source="..\Exceptional\bin\Release\CodeGears.ReSharper.Exceptional.dll" Vital="yes"/>
             </Component>
             <Component Id="C.ProductAssemblyPdb" Guid="{7B112E39-1735-42fc-95D4-A25D4694565D}" Location="local">
-              <File Id="F.ProductAssemblyPdb" Checksum="yes" DiskId="1" KeyPath="yes" Name="CodeGears.ReSharper.Exceptional.pdb" ReadOnly="yes" Source="$(var.DynPdbFile)" Vital="yes" />
+              <File Id="F.ProductAssemblyPdb" Checksum="yes" DiskId="1" KeyPath="yes" Name="CodeGears.ReSharper.Exceptional.pdb" ReadOnly="yes" Source="..\Exceptional\bin\Release\CodeGears.ReSharper.Exceptional.pdb" Vital="yes" />
             </Component>
 
             <!-- Cause the one-time-init to happen in R# after the plugin is installed, either per-user or all-users. -->
-            <Component Id="C.OneTimeInit" Guid="$(var.DynMsiComponentGuid01)" Location="local">
+            <Component Id="C.OneTimeInit" Guid="{A1E828F8-6065-41C0-8335-6BC09CDF9E17}" Location="local">
               <RegistryValue Id="R.OneTimeInit" Root="HKMU" Key="Software\JetBrains\ReSharper\v[RESHARPERVERSION2]\vs[VSVERSION][VSROOTSUFFIX]" Name="One-Time Initialization Generation" Value="[Date]T[Time]" Type="string" Action="write" KeyPath="yes" />
             </Component>
           </Directory>
@@ -68,7 +75,7 @@
     <UIRef Id="WixUI_InstallDir" />
 
     <!-- Specify the license agreement text to be shown in the UI. -->
-    <WixVariable Id="WixUILicenseRtf" Value="$(var.DynSetupFilesDir)/License.rtf" />
+    <!--<WixVariable Id="WixUILicenseRtf" Value="License.rtf" />-->
 
     <!-- Wizard clipart. -->
     <!-- <WixVariable Id="WixUIBannerBmp" Value="$(var.DynSetupFilesDir)/ExceptionalSetup.Banner.bmp"/> -->
@@ -79,6 +86,8 @@
 
     <CustomAction Id="WixSetInstallFolder.ResharperForVs80Installed" Property="RESHARPERROOT" Value="[RESHARPERFORVS80INSTALLDIR]" Execute="immediate"/>
     <CustomAction Id="WixSetInstallFolder.ResharperForVs90Installed" Property="RESHARPERROOT" Value="[RESHARPERFORVS90INSTALLDIR]" Execute="immediate"/>
+    <CustomAction Id="WixSetInstallFolder.ResharperForVs100Installed" Property="RESHARPERROOT" Value="[RESHARPERFORVS100INSTALLDIR]" Execute="immediate"/>
+    <CustomAction Id="WixSetInstallFolder.ResharperForVs110Installed" Property="RESHARPERROOT" Value="[RESHARPERFORVS110INSTALLDIR]" Execute="immediate"/>
 
     <CustomAction Id='CANNOTUPGRADENEWERACTION' Error='Setup has detected that a newer version of [ProductName] is already installed on your system. The installer can only upgrade from older versions. You should manually uninstall the conflicting product and then run the installation again.' />
 
@@ -89,6 +98,8 @@
       <Custom Action="WixSetInstallFolder.NoResharperInstalled" Before="LaunchConditions">Not RESHARPERFORVS80INSTALLDIR and Not RESHARPERFORVS90INSTALLDIR</Custom>
       <Custom Action="WixSetInstallFolder.ResharperForVs80Installed" Before="LaunchConditions">RESHARPERFORVS80INSTALLDIR</Custom>
       <Custom Action="WixSetInstallFolder.ResharperForVs90Installed" Before="LaunchConditions">RESHARPERFORVS90INSTALLDIR AND NOT RESHARPERFORVS80INSTALLDIR</Custom>
+      <Custom Action="WixSetInstallFolder.ResharperForVs100Installed" Before="LaunchConditions">RESHARPERFORVS100INSTALLDIR AND NOT RESHARPERFORVS90INSTALLDIR AND NOT RESHARPERFORVS80INSTALLDIR</Custom>
+      <Custom Action="WixSetInstallFolder.ResharperForVs110Installed" Before="LaunchConditions">RESHARPERFORVS110INSTALLDIR AND NOT RESHARPERFORVS100INSTALLDIR AND NOT RESHARPERFORVS90INSTALLDIR AND NOT RESHARPERFORVS80INSTALLDIR</Custom>
       <RemoveExistingProducts After="InstallValidate" />
     </InstallExecuteSequence>
 
@@ -98,6 +109,8 @@
       <Custom Action="WixSetInstallFolder.NoResharperInstalled" Before="LaunchConditions">Not RESHARPERFORVS80INSTALLDIR and Not RESHARPERFORVS90INSTALLDIR</Custom>
       <Custom Action="WixSetInstallFolder.ResharperForVs80Installed" Before="LaunchConditions">RESHARPERFORVS80INSTALLDIR</Custom>
       <Custom Action="WixSetInstallFolder.ResharperForVs90Installed" Before="LaunchConditions">RESHARPERFORVS90INSTALLDIR and Not RESHARPERFORVS80INSTALLDIR</Custom>
+      <Custom Action="WixSetInstallFolder.ResharperForVs100Installed" Before="LaunchConditions">RESHARPERFORVS100INSTALLDIR AND NOT RESHARPERFORVS90INSTALLDIR AND NOT RESHARPERFORVS80INSTALLDIR</Custom>
+      <Custom Action="WixSetInstallFolder.ResharperForVs110Installed" Before="LaunchConditions">RESHARPERFORVS110INSTALLDIR AND NOT RESHARPERFORVS100INSTALLDIR AND NOT RESHARPERFORVS90INSTALLDIR AND NOT RESHARPERFORVS80INSTALLDIR</Custom>
     </InstallUISequence>
 
   </Product>
