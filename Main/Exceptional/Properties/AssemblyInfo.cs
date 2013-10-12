@@ -12,8 +12,9 @@ using JetBrains.Application.PluginSupport;
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("Cofinite Solutions")]
 [assembly: AssemblyProduct("Exceptional")]
-[assembly: AssemblyCopyright(@"Cofinite Solutions © 2010
-Branced upgrade by Lars-Erik Aabech / MarkedsPartner AS (http://www.markedspartner.no)")]
+[assembly: AssemblyCopyright(@"Cofinite Solutions © 2009 - 2013
+and Lars-Erik Aabech / MarkedsPartner AS (http://www.markedspartner.no)
+and Ralf Abramowitsch")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 [assembly: ComVisible(false)]

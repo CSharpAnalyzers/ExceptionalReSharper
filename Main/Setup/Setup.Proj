@@ -12,7 +12,7 @@
 		<ProductName>Exceptional</ProductName>
 		
 		<!-- Version of R# (two components only) that the plugin is targeting. -->
-		<ReSharperVersion2>5.1</ReSharperVersion2>
+		<ReSharperVersion2>8.0</ReSharperVersion2>
 		
 		<!-- Plugin vendor name. -->
 		<CompanyName>Cofinite Solutions</CompanyName>
