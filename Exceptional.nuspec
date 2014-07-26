@@ -1,0 +1,20 @@
+﻿<?xml version="1.0"?>
+<package>
+  <metadata>
+    <id>Exceptional</id>
+    <version>8.2.0.1</version>
+    <title>Exceptional plugin</title>
+    <authors>Cofinite Solutions</authors>    
+    <description>    
+	Exceptional plugin
+    </description>
+    <copyright>Copyright &#x00A9; 2014 Liebherr Machines Bulle SA</copyright>
+    <tags>Plugin</tags>
+    <dependencies>
+      <dependency id="ReSharper" version="[8.1, 8.2)" />
+    </dependencies>
+  </metadata>
+  <files>
+	<file src="src\Exceptional\bin\Debug\CodeGears.ReSharper.Exceptional.dll" target="ReSharper\v8.2\plugins" />
+  </files>
+</package>
