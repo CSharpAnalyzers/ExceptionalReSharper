@@ -14,7 +14,6 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".nuget", ".nuget", "{DDCE9B
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Build", "Build", "{CBC6B58D-5842-4132-8678-78475846D8B4}"
 	ProjectSection(SolutionItems) = preProject
-		Build\build-ci.cmd = Build\build-ci.cmd
 		Build\build.proj = Build\build.proj
 	EndProjectSection
 EndProject
