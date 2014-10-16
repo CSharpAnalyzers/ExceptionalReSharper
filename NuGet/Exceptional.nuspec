@@ -1,0 +1,18 @@
+﻿<?xml version="1.0"?>
+<package>
+  <metadata>
+    <id>Exceptional</id>
+    <version>0.5.0.0</version>
+    <title>Exceptional for ReSharper</title>
+    <description>Analyzes thrown and documented exceptions and suggests improvements. </description>
+    <authors>ExceptionalDevs</authors>    
+    <copyright>Copyright &#x00A9; 2014 ExceptionalDevs</copyright>
+    <tags>Exception XMLdoc</tags>
+    <dependencies>
+      <dependency id="ReSharper" version="[8.2, 8.3)" />
+    </dependencies>
+  </metadata>
+  <files>
+	<file src="..\Exceptional\bin\Release\ReSharper.Exceptional.dll" target="ReSharper\v8.2\plugins" />
+  </files>
+</package>
