@@ -6,6 +6,7 @@
     <title>Exceptional for ReSharper</title>
     <description>Analyzes thrown and documented exceptions and suggests improvements. </description>
     <authors>ExceptionalDevs</authors>    
+    <projectUrl>http://exceptionalplugin.codeplex.com</projectUrl>
     <copyright>Copyright &#x00A9; 2014 ExceptionalDevs</copyright>
     <tags>Exception XMLdoc</tags>
     <dependencies>
