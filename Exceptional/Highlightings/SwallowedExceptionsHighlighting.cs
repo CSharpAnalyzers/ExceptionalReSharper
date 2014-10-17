@@ -5,7 +5,7 @@ using ReSharper.Exceptional.Models;
 
 namespace ReSharper.Exceptional.Highlightings
 {
-	[StaticSeverityHighlighting(Severity.WARNING, Category.Title)]
+	[StaticSeverityHighlighting(Severity.WARNING, Constants.HighlightingTitle)]
     public class SwallowedExceptionsHighlighting : HighlightingBase
     {
         private CatchClauseModel CatchClauseModel { get; set; }

@@ -6,6 +6,9 @@ namespace ReSharper.Exceptional.Analyzers
     /// <summary>A base class for all analyzers.</summary>
     internal abstract class AnalyzerBase
     {
+        /// <summary>Initializes a new instance of the <see cref="AnalyzerBase"/> class. </summary>
+        /// <param name="process">The process. </param>
+        /// <param name="settings">The settings. </param>
         protected AnalyzerBase(ExceptionalDaemonStageProcess process, ExceptionalSettings settings)
         {
             Process = process;

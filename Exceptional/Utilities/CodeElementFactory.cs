@@ -3,13 +3,15 @@ using JetBrains.ReSharper.Psi.CSharp;
 using JetBrains.ReSharper.Psi.CSharp.Tree;
 using JetBrains.ReSharper.Psi.Tree;
 
-namespace ReSharper.Exceptional.Factories
+namespace ReSharper.Exceptional.Utilities
 {
     /// <summary>Provides services to create various code elements.</summary>
     public class CodeElementFactory
     {
         private readonly CSharpElementFactory _factory;
 
+        /// <summary>Initializes a new instance of the <see cref="CodeElementFactory"/> class. </summary>
+        /// <param name="factory">The element factory. </param>
         public CodeElementFactory(CSharpElementFactory factory)
         {
             _factory = factory;

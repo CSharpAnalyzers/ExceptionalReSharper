@@ -15,11 +15,11 @@ using ReSharper.Exceptional.Models;
 namespace ReSharper.Exceptional.QuickFixes
 {
     [QuickFix]
-    internal class InsertExceptionDocumentationFix : SingleActionFix
+    internal class AddExceptionDocumentationFix : SingleActionFix
     {
         private ExceptionNotDocumentedOptionalHighlighting Error { get; set; }
 
-        public InsertExceptionDocumentationFix(ExceptionNotDocumentedOptionalHighlighting error)
+        public AddExceptionDocumentationFix(ExceptionNotDocumentedOptionalHighlighting error)
         {
             Error = error;
         }

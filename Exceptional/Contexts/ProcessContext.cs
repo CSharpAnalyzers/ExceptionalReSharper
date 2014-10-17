@@ -12,10 +12,11 @@ namespace ReSharper.Exceptional.Contexts
 {
     internal abstract class ProcessContext<T> : IProcessContext where T : IAnalyzeUnit
     {
+        private readonly Stack<TryStatementModel> _tryStatementModelsStack;
+        private readonly Stack<CatchClauseModel> _catchClauseModelsStack;
+
         protected IAnalyzeUnit AnalyzeUnit { get; private set; }
         protected T Model { get; private set; }
-        private Stack<TryStatementModel> TryStatementModelsStack { get; set; }
-        private Stack<CatchClauseModel> CatchClauseModelsStack { get; set; }
         protected Stack<IBlockModel> BlockModelsStack { get; private set; }
 
         private static IEnumerable<AnalyzerBase> ProvideAnalyzers(ExceptionalDaemonStageProcess stageProcess, ExceptionalSettings settings)
@@ -31,8 +32,8 @@ namespace ReSharper.Exceptional.Contexts
 
         protected ProcessContext()
         {
-            TryStatementModelsStack = new Stack<TryStatementModel>();
-            CatchClauseModelsStack = new Stack<CatchClauseModel>();
+            _tryStatementModelsStack = new Stack<TryStatementModel>();
+            _catchClauseModelsStack = new Stack<CatchClauseModel>();
             BlockModelsStack = new Stack<IBlockModel>();
         }
 
@@ -49,9 +50,7 @@ namespace ReSharper.Exceptional.Contexts
                 return;
 
             foreach (var analyzerBase in ProvideAnalyzers(process as ExceptionalDaemonStageProcess, settings))
-            {
                 AnalyzeUnit.Accept(analyzerBase);
-            }
         }
 
         public void EnterTryBlock(ITryStatement tryStatement)
@@ -71,13 +70,13 @@ namespace ReSharper.Exceptional.Contexts
 
             model.ParentBlock = blockModel;
 
-            TryStatementModelsStack.Push(model);
+            _tryStatementModelsStack.Push(model);
             BlockModelsStack.Push(model);
         }
 
         public void LeaveTryBlock()
         {
-            TryStatementModelsStack.Pop();
+            _tryStatementModelsStack.Pop();
             BlockModelsStack.Pop();
         }
 
@@ -89,21 +88,21 @@ namespace ReSharper.Exceptional.Contexts
             if (catchClauseNode == null) 
                 return;
 
-            Logger.Assert(TryStatementModelsStack.Count > 0, "[Exceptional] There is no try statement for catch declaration.");
+            Logger.Assert(_tryStatementModelsStack.Count > 0, "[Exceptional] There is no try statement for catch declaration.");
 
-            var tryStatementModel = TryStatementModelsStack.Peek();
+            var tryStatementModel = _tryStatementModelsStack.Peek();
             var model = tryStatementModel.CatchClauseModels.Find(
                 catchClauseModel => catchClauseModel.Node.Equals(catchClauseNode));
 
             Logger.Assert(model != null, "[Exceptional] Cannot find catch model!");
 
-            CatchClauseModelsStack.Push(model);
+            _catchClauseModelsStack.Push(model);
             BlockModelsStack.Push(model);
         }
 
         public void LeaveCatchClause()
         {
-            CatchClauseModelsStack.Pop();
+            _catchClauseModelsStack.Pop();
             BlockModelsStack.Pop();
         }
 
@@ -127,9 +126,9 @@ namespace ReSharper.Exceptional.Contexts
             if (catchVariableDeclaration == null) 
                 return;
 
-            Logger.Assert(CatchClauseModelsStack.Count > 0, "[Exceptional] There is no catch clause for catch variable declaration.");
+            Logger.Assert(_catchClauseModelsStack.Count > 0, "[Exceptional] There is no catch clause for catch variable declaration.");
 
-            var catchClause = CatchClauseModelsStack.Peek();
+            var catchClause = _catchClauseModelsStack.Peek();
             catchClause.VariableModel = new CatchVariableModel(AnalyzeUnit, catchVariableDeclaration);
         }
 

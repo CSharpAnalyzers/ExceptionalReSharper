@@ -4,8 +4,8 @@ using JetBrains.ProjectModel;
 using JetBrains.ReSharper.Feature.Services.Bulbs;
 using JetBrains.ReSharper.Psi.CSharp.Tree;
 using JetBrains.TextControl;
-using ReSharper.Exceptional.Factories;
 using ReSharper.Exceptional.Highlightings;
+using ReSharper.Exceptional.Utilities;
 
 namespace ReSharper.Exceptional.QuickFixes
 {

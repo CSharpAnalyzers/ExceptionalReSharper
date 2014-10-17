@@ -1,7 +1,6 @@
 ﻿using JetBrains.ReSharper.Daemon.CSharp.Stages;
 using JetBrains.ReSharper.Psi.CSharp.Tree;
 using JetBrains.ReSharper.Psi.Tree;
-
 using ReSharper.Exceptional.Models;
 using ReSharper.Exceptional.Settings;
 

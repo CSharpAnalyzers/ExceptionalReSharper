@@ -5,7 +5,7 @@ using JetBrains.ReSharper.Psi.Naming.Impl;
 using JetBrains.ReSharper.Psi.Naming.Interfaces;
 using JetBrains.ReSharper.Psi.Tree;
 
-namespace ReSharper.Exceptional
+namespace ReSharper.Exceptional.Utilities
 {
     internal class UnigueNamesService : IUnigueNamesService
     {

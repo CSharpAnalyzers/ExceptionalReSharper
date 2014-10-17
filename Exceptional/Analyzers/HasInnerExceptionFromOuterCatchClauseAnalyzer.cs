@@ -8,9 +8,14 @@ namespace ReSharper.Exceptional.Analyzers
     /// <summary>Analyzes throw statements and checks if the contain inner exception when thrown from inside a catch clause.</summary>
     internal class HasInnerExceptionFromOuterCatchClauseAnalyzer : AnalyzerBase
     {
+        /// <summary>Initializes a new instance of the <see cref="AnalyzerBase"/> class. </summary>
+        /// <param name="process">The process. </param>
+        /// <param name="settings">The settings. </param>
         public HasInnerExceptionFromOuterCatchClauseAnalyzer(ExceptionalDaemonStageProcess process, ExceptionalSettings settings) 
             : base(process, settings) { }
 
+        /// <summary>Performs analyze of throw <paramref name="throwStatementModel"/>.</summary>
+        /// <param name="throwStatementModel">Throw statement model to analyze.</param>
         public override void Visit(ThrowStatementModel throwStatementModel)
         {
             if (throwStatementModel == null) return;

@@ -4,7 +4,7 @@ using ReSharper.Exceptional.Models;
 
 namespace ReSharper.Exceptional.Highlightings
 {
-    [StaticSeverityHighlighting(Severity.WARNING, Category.Title)]
+    [StaticSeverityHighlighting(Severity.WARNING, Constants.HighlightingTitle)]
     public class ExceptionNotDocumentedHighlighting : ExceptionNotDocumentedOptionalHighlighting
     {
         internal ExceptionNotDocumentedHighlighting(ThrownExceptionModel thrownExceptionModel)

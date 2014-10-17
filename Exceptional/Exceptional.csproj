@@ -135,7 +135,7 @@
     <Compile Include="Analyzers\HasInnerExceptionFromOuterCatchClauseAnalyzer.cs" />
     <Compile Include="Analyzers\IsDocumentedExceptionThrownAnalyzer.cs" />
     <Compile Include="Analyzers\IsThrownExceptionDocumentedAnalyzer.cs" />
-    <Compile Include="Factories\CodeElementFactory.cs" />
+    <Compile Include="Utilities\CodeElementFactory.cs" />
     <Compile Include="ExceptionalRecursiveElementProcessor.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -144,7 +144,7 @@
     <Compile Include="Highlightings\ExceptionNotDocumentedHighlighting.cs" />
     <Compile Include="Highlightings\SwallowedExceptionsHighlighting.cs" />
     <Compile Include="Highlightings\ThrowFromCatchWithNoInnerExceptionHighlighting.cs" />
-    <Compile Include="Highlightings\Category.cs" />
+    <Compile Include="Constants.cs" />
     <Compile Include="Images\ThemedIcons.Unnamed.Generated.cs" />
     <Compile Include="Contexts\IProcessContext.cs" />
     <Compile Include="Contexts\MethodProcessContext.cs" />
@@ -172,14 +172,14 @@
     <Compile Include="Analyzers\AnalyzerBase.cs" />
     <Compile Include="Models\TreeElementModelBase.cs" />
     <Compile Include="Models\TryStatementModel.cs" />
-    <Compile Include="Factories\NameFactory.cs" />
+    <Compile Include="Utilities\NameFactory.cs" />
     <Compile Include="Contexts\NullProcessContext.cs" />
     <Compile Include="Contexts\ProcessContext.cs" />
     <Compile Include="Contexts\PropertyProcessContext.cs" />
     <Compile Include="QuickFixes\AddToOptionalMethodExceptionsFix.cs" />
     <Compile Include="QuickFixes\CatchExceptionFix.cs" />
     <Compile Include="QuickFixes\IncludeInnerExceptionFix.cs" />
-    <Compile Include="QuickFixes\InsertExceptionDocumentationFix.cs" />
+    <Compile Include="QuickFixes\AddExceptionDocumentationFix.cs" />
     <Compile Include="QuickFixes\RemoveExceptionDocumentationFix.cs" />
     <Compile Include="QuickFixes\SingleActionFix.cs" />
     <Compile Include="Resources.Designer.cs">
@@ -200,7 +200,7 @@
     <Compile Include="Settings\Views\SettingsView.xaml.cs">
       <DependentUpon>SettingsView.xaml</DependentUpon>
     </Compile>
-    <Compile Include="UnigueNamesService.cs" />
+    <Compile Include="Utilities\UnigueNamesService.cs" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Resources.resx">

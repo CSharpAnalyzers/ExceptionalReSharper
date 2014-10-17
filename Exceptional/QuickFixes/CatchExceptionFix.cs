@@ -3,6 +3,7 @@ using JetBrains.Application.Progress;
 using JetBrains.ProjectModel;
 using JetBrains.ReSharper.Feature.Services.Bulbs;
 using JetBrains.TextControl;
+using JetBrains.Util;
 using ReSharper.Exceptional.Highlightings;
 
 namespace ReSharper.Exceptional.QuickFixes
@@ -22,8 +23,7 @@ namespace ReSharper.Exceptional.QuickFixes
             var exceptionsOriginModel = Error.ThrownExceptionModel.Parent;
 
             var nearestTryBlock = exceptionsOriginModel.ContainingBlockModel.FindNearestTryBlock();
-
-            if(nearestTryBlock == null)
+            if (nearestTryBlock == null)
             {
                 exceptionsOriginModel.SurroundWithTryBlock(Error.ThrownExceptionModel.ExceptionType);
             }

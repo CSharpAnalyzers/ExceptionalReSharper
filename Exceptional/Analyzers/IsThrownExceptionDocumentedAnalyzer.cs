@@ -12,11 +12,16 @@ namespace ReSharper.Exceptional.Analyzers
     /// <summary>Analyzes throw statements and checks that exceptions thrown outside are documented.</summary>
     internal class IsThrownExceptionDocumentedAnalyzer : AnalyzerBase
     {
+        /// <summary>Initializes a new instance of the <see cref="AnalyzerBase"/> class. </summary>
+        /// <param name="process">The process. </param>
+        /// <param name="settings">The settings. </param>
         public IsThrownExceptionDocumentedAnalyzer(ExceptionalDaemonStageProcess process, ExceptionalSettings settings)
             : base(process, settings)
         {
         }
 
+        /// <summary>Performs analyze of <paramref name="thrownExceptionModel"/>.</summary>
+        /// <param name="thrownExceptionModel">Thrown exception to analyze.</param>
         public override void Visit(ThrownExceptionModel thrownExceptionModel)
         {
             if (thrownExceptionModel == null)

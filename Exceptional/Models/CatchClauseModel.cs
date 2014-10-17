@@ -4,7 +4,7 @@ using JetBrains.ReSharper.Psi;
 using JetBrains.ReSharper.Psi.CSharp.Tree;
 using JetBrains.ReSharper.Psi.Tree;
 using ReSharper.Exceptional.Analyzers;
-using ReSharper.Exceptional.Factories;
+using ReSharper.Exceptional.Utilities;
 
 namespace ReSharper.Exceptional.Models
 {
