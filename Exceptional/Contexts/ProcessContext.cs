@@ -25,7 +25,7 @@ namespace ReSharper.Exceptional.Contexts
 
             yield return new IsThrownExceptionDocumentedAnalyzer(stageProcess, settings);
             yield return new IsDocumentedExceptionThrownAnalyzer(stageProcess, settings);
-            yield return new CatchAllClauseAnalyzer(stageProcess, settings);
+            yield return new CatchAllClauseAnalyzer(stageProcess, settings); 
             yield return new HasInnerExceptionFromOuterCatchClauseAnalyzer(stageProcess, settings);
         }
 

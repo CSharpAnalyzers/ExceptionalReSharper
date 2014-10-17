@@ -60,8 +60,7 @@ namespace ReSharper.Exceptional.Models
         }
 
         public ExceptionDocCommentModel AddExceptionDocumentation(
-            IDeclaredType exceptionType, string exceptionDescription,
-            IProgressIndicator progress)
+            IDeclaredType exceptionType, string exceptionDescription, IProgressIndicator progress)
         {
             if (exceptionType == null) return null;
 
@@ -74,7 +73,9 @@ namespace ReSharper.Exceptional.Models
             ExceptionDocCommentModel result;
             if (IsReal == false)
             {
-                var docCommentNode = GetElementFactory().CreateDocCommentBlock(exceptionDocumentation);
+                var docCommentNode = GetElementFactory()
+                    .CreateDocCommentBlock(exceptionDocumentation);
+
                 docCommentNode = AnalyzeUnit.AddDocCommentNode(docCommentNode);
                 Node = docCommentNode;
                 Preprocess();

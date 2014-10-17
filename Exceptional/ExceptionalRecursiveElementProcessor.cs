@@ -4,7 +4,6 @@ using JetBrains.ReSharper.Psi;
 using JetBrains.ReSharper.Psi.CSharp.Tree;
 using JetBrains.ReSharper.Psi.Tree;
 using ReSharper.Exceptional.Contexts;
-
 using ReSharper.Exceptional.Models;
 using ReSharper.Exceptional.Settings;
 
@@ -44,20 +43,14 @@ namespace ReSharper.Exceptional
             if (element is IMethodDeclaration)
             {
                 var methodDeclaration = element as IMethodDeclaration;
-                if (ShouldProcessMethod(methodDeclaration))
-                {
-                    _currentContext = new MethodProcessContext();
-                    _currentContext.StartProcess(new MethodDeclarationModel(methodDeclaration, _settings));
-                }
+                _currentContext = new MethodProcessContext();
+                _currentContext.StartProcess(new MethodDeclarationModel(methodDeclaration, _settings));
             }
             else if (element is IPropertyDeclaration)
             {
                 var propertyDeclaration = element as IPropertyDeclaration;
-                if (ShouldProcessProperty(propertyDeclaration))
-                {
-                    _currentContext = new PropertyProcessContext();
-                    _currentContext.StartProcess(new PropertyDeclarationModel(propertyDeclaration, _settings));
-                }
+                _currentContext = new PropertyProcessContext();
+                _currentContext.StartProcess(new PropertyDeclarationModel(propertyDeclaration, _settings));
             }
             else if (element is IAccessorDeclaration)
                 _currentContext.EnterAccessor(element as IAccessorDeclaration);
@@ -86,21 +79,6 @@ namespace ReSharper.Exceptional
         public bool ProcessingIsFinished
         {
             get { return _process.InterruptFlag; }
-        }
-
-        private static bool ShouldProcessProperty(IPropertyDeclaration propertyDeclarationNode)
-        {
-            foreach (var accessorDeclarationNode in propertyDeclarationNode.AccessorDeclarations)
-            {
-                if (accessorDeclarationNode.Body != null)
-                    return true;
-            }
-            return false;
-        }
-
-        private static bool ShouldProcessMethod(IMethodDeclaration methodDeclaration)
-        {
-            return methodDeclaration.Body != null;
         }
     }
 }

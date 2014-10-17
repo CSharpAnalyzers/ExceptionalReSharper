@@ -8,8 +8,6 @@ namespace ReSharper.Exceptional.Analyzers
     /// <summary>Analyzes a catch clause and checks if it is not catch-all clause.</summary>
     internal class CatchAllClauseAnalyzer : AnalyzerBase
     {
-        // TODO: Is this warning even needed? Isnt it built into R# 8?
-
         public CatchAllClauseAnalyzer(ExceptionalDaemonStageProcess process, ExceptionalSettings settings) 
             : base(process, settings) { }
 

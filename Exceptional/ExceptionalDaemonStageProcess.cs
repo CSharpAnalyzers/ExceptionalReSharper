@@ -46,7 +46,7 @@ namespace ReSharper.Exceptional
             var elementProcessor = new ExceptionalRecursiveElementProcessor(this, _process, _settings);
             file.ProcessDescendants(elementProcessor);
 
-            // Checking if the daemon is interrupted by user activity);)
+            // Checking if the daemon is interrupted by user activity
             if (_process.InterruptFlag)
                 throw new ProcessCancelledException();
 

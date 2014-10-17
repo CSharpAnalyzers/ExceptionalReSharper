@@ -10,6 +10,7 @@ using JetBrains.ReSharper.LiveTemplates;
 using JetBrains.TextControl;
 using JetBrains.Util;
 using ReSharper.Exceptional.Highlightings;
+using ReSharper.Exceptional.Models;
 
 namespace ReSharper.Exceptional.QuickFixes
 {
@@ -27,8 +28,18 @@ namespace ReSharper.Exceptional.QuickFixes
         {
             var methodDeclaration = Error.ThrownExceptionModel.AnalyzeUnit;
 
-            var insertedExceptionModel = methodDeclaration.DocCommentBlockModel
-                .AddExceptionDocumentation(Error.ThrownExceptionModel.ExceptionType, Error.ThrownExceptionModel.ExceptionDescription, progress);
+            ExceptionDocCommentModel insertedExceptionModel = null;
+            try
+            {
+                insertedExceptionModel = methodDeclaration.DocCommentBlockModel
+                    .AddExceptionDocumentation(Error.ThrownExceptionModel.ExceptionType, Error.ThrownExceptionModel.ExceptionDescription, progress);
+            }
+            catch (Exception exception)
+            {
+                // TODO: Find reason for very sporadic InvalidOperationException in AnalyzeUnitModelBase`1.AddDocCommentNode => ModificationUtil.AddChildBefore
+                MessageBox.ShowError("Error in QuickFix: " + exception.Message + "\nStackTrace: \n" + exception.StackTrace);
+                return null; 
+            }
 
             if (insertedExceptionModel == null)
                 return null;

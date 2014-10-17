@@ -39,15 +39,23 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="CatchAllClause.cs" />
     <Compile Include="Demonstration.cs" />
     <Compile Include="InnerExceptions.cs" />
     <Compile Include="InsertingCorrectComment.cs" />
+    <Compile Include="IssuesAndNewFeatures\Fixed\Problem01.cs" />
+    <Compile Include="CopyExceptionMessageToDocumentation.cs" />
+    <Compile Include="IssuesAndNewFeatures\Fixed\Problem02.cs" />
+    <Compile Include="IssuesAndNewFeatures\Open\HideWarningWhenBaseExceptionAlreadyDocumented.cs" />
+    <Compile Include="IssuesAndNewFeatures\Open\InsertExceptionDescriptionOfFrameworkMethod.cs" />
+    <Compile Include="IssuesAndNewFeatures\Open\RemoveQuickFixAddTryCatch.cs" />
     <Compile Include="OptionalMethodExceptions.cs" />
     <Compile Include="NotDocumentedOrCaughtException.cs" />
     <Compile Include="OptionalExceptions.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="UnnecessaryExceptionDocumented.cs" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

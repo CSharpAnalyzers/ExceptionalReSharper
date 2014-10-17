@@ -56,7 +56,9 @@ namespace ReSharper.Exceptional.Models
         {
             ContainingBlockModel = containingBlockModel;
 
-            ThrownExceptionModel = new ThrownExceptionModel(analyzeUnit, GetExceptionType(), string.Empty, this);
+            var exceptionType = GetExceptionType();
+            var exceptionDescription = GetThrownExceptionMessage(throwStatement);
+            ThrownExceptionModel = new ThrownExceptionModel(analyzeUnit, exceptionType, exceptionDescription, this);
 
             containingBlockModel.ExceptionOriginModels.Add(this);
         }
@@ -167,6 +169,27 @@ namespace ReSharper.Exceptional.Models
 
             var secondArgument = objectCreationExpressionNode.Arguments[1];
             return secondArgument.GetText().Equals(variableName);
+        }
+
+        private static string GetThrownExceptionMessage(IThrowStatement throwStatement)
+        {
+            if (throwStatement.Exception is IObjectCreationExpression)
+            {
+                var arguments = ((IObjectCreationExpression) throwStatement.Exception).Arguments;
+                if (arguments.Count > 0)
+                {
+                    var literal = arguments[0].Value as ICSharpLiteralExpression;
+                    if (literal != null && literal.Literal != null)
+                    {
+                        var exp = literal.Literal.Parent as ICSharpLiteralExpression;
+                        if (exp != null && exp.ConstantValue.Value != null)
+                        {
+                            return exp.ConstantValue.Value.ToString();
+                        }
+                    }
+                }
+            }
+            return string.Empty;
         }
     }
 }

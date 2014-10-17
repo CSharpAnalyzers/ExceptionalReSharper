@@ -17,3 +17,7 @@ How to release a new version:
 What to look for in pull requests: 
 - Check with community if feature makes sense
 - Check that the changes do not decrease performance (this is very important!)
+
+Log files to find problem why exception crashed:
+- The ReSharper log files can be found here: 
+C:\Users\USERNAME\AppData\Local\JetBrains\ReSharper\v8.2\ExceptionStorage
