@@ -12,90 +12,63 @@ namespace ReSharper.Exceptional.Models
 {
     internal class ThrowStatementModel : TreeElementModelBase<IThrowStatement>, IExceptionsOriginModel
     {
-        private ThrownExceptionModel ThrownExceptionModel { get; set; }
-        public IBlockModel ContainingBlockModel { get; private set; }
+        private readonly ThrownExceptionModel _thrownException;
 
-        /// <summary>
-        /// Gets the document range.
-        /// </summary>
+        /// <summary>Initializes a new instance of the <see cref="ThrowStatementModel"/> class. </summary>
+        /// <param name="analyzeUnit">The analyze unit.</param>
+        /// <param name="throwStatement">The throw statement.</param>
+        /// <param name="containingBlock">The containing block.</param>
+        public ThrowStatementModel(IAnalyzeUnit analyzeUnit, IThrowStatement throwStatement, IBlockModel containingBlock)
+            : base(analyzeUnit, throwStatement)
+        {
+            ContainingBlock = containingBlock;
+
+            var exceptionType = GetExceptionType();
+            var exceptionDescription = GetThrownExceptionMessage(throwStatement);
+
+            _thrownException = new ThrownExceptionModel(analyzeUnit, exceptionType, exceptionDescription, this);
+        }
+
+        /// <summary>Gets the parent block which contains this block. </summary>
+        public IBlockModel ContainingBlock { get; private set; }
+
+        /// <summary>Gets the document range of the throw statement which is highlighted. </summary>
         public override DocumentRange DocumentRange
         {
             get
             {
-                //if we have exceptiontype then highlight the type
+                // if we have exceptiontype then highlight the type
                 if (Node.Exception != null)
-                {
                     return Node.Exception.GetDocumentRange();
-                }
 
-                //if not highlight the throw keyword
+                // otherwise highlight the throw keyword
                 return Node.ThrowKeyword.GetDocumentRange();
             }
         }
 
-        /// <summary>
-        /// Specifies if this throw statement is a rethrow statement.
-        /// </summary>
-        /// <value>
-        /// 	<c>true</c> if this instance is rethrow; otherwise, <c>false</c>.
-        /// </value>
+        /// <summary>Gets a value indicating whether the throw statement is a rethrow statement. </summary>
+        /// <value><c>true</c> if this instance is rethrow; otherwise, <c>false</c>. </value>
         public bool IsRethrow
         {
             get { return Node.Exception == null; }
         }
 
-        /// <summary>
-        /// Initializes a new instance of the <see cref="ThrowStatementModel"/> class.
-        /// </summary>
-        /// <param name="analyzeUnit">The analyze unit.</param>
-        /// <param name="throwStatement">The throw statement.</param>
-        /// <param name="containingBlockModel">The containing block model.</param>
-        public ThrowStatementModel(IAnalyzeUnit analyzeUnit, IThrowStatement throwStatement,
-                                   IBlockModel containingBlockModel)
-            : base(analyzeUnit, throwStatement)
-        {
-            ContainingBlockModel = containingBlockModel;
-
-            var exceptionType = GetExceptionType();
-            var exceptionDescription = GetThrownExceptionMessage(throwStatement);
-            ThrownExceptionModel = new ThrownExceptionModel(analyzeUnit, exceptionType, exceptionDescription, this);
-
-            containingBlockModel.ExceptionOriginModels.Add(this);
-        }
-
-        /// <summary>
-        /// Searches for the nearest containing catch clause.
-        /// </summary>
+        /// <summary>Searches for the nearest containing catch clause. </summary>
         /// <returns></returns>
         public CatchClauseModel FindOuterCatchClause()
         {
-            var outerBlock = ContainingBlockModel;
+            var outerBlock = ContainingBlock;
 
             while (outerBlock != null && (outerBlock is CatchClauseModel) == false)
-            {
                 outerBlock = outerBlock.ParentBlock;
-            }
 
             return outerBlock as CatchClauseModel;
-        }
-
-        private IDeclaredType GetExceptionType()
-        {
-            if (Node.Exception != null)
-            {
-                //var creation = Node.ExceptionNode as IObjectCreationExpressionNode;
-                //creation.Reference.GetName();
-                return Node.Exception.GetExpressionType() as IDeclaredType;
-            }
-
-            return ContainingBlockModel.GetCaughtException();
         }
 
         public override void Accept(AnalyzerBase analyzerBase)
         {
             analyzerBase.Visit(this);
-
-            ThrownExceptionModel.Accept(analyzerBase);
+            _thrownException.Accept(analyzerBase);
         }
 
         public void SurroundWithTryBlock(IDeclaredType exceptionType)
@@ -104,19 +77,21 @@ namespace ReSharper.Exceptional.Models
             var exceptionVariableName = NameFactory.CatchVariableName(Node, exceptionType);
             var tryStatement = codeElementFactory.CreateTryStatement(exceptionType, exceptionVariableName);
             var block = codeElementFactory.CreateBlock(Node);
+            
             tryStatement.SetTry(block);
+            
             Node.ReplaceBy(tryStatement);
         }
 
         public IEnumerable<ThrownExceptionModel> ThrownExceptions
         {
-            get { return new List<ThrownExceptionModel>(new[] {ThrownExceptionModel}); }
+            get { return new List<ThrownExceptionModel>(new[] { _thrownException }); }
         }
 
         /// <summary>Checks whether this throw statement throws given <paramref name="exceptionType"/>.</summary>
         public bool Throws(IDeclaredType exceptionType)
         {
-            return ThrownExceptionModel.Throws(exceptionType);
+            return _thrownException.Throws(exceptionType);
         }
 
         public TextRange[] AddInnerException(string variableName)
@@ -132,9 +107,9 @@ namespace ReSharper.Exceptional.Models
             if (objectCreationExpressionNode.Arguments.Count == 0)
             {
                 var messageExpression = CSharpElementFactory.GetInstance(AnalyzeUnit.GetPsiModule())
-                    .CreateExpressionAsIs("\"See inner exception for details.\"");
+                    .CreateExpressionAsIs("\"See the inner exception for details.\"");
 
-                var messageArgument =CSharpElementFactory.GetInstance(AnalyzeUnit.GetPsiModule())
+                var messageArgument = CSharpElementFactory.GetInstance(AnalyzeUnit.GetPsiModule())
                     .CreateArgument(ParameterKind.VALUE, messageExpression);
 
                 messageArgument = objectCreationExpressionNode.AddArgumentAfter(messageArgument, null);
@@ -171,11 +146,23 @@ namespace ReSharper.Exceptional.Models
             return secondArgument.GetText().Equals(variableName);
         }
 
+        private IDeclaredType GetExceptionType()
+        {
+            if (Node.Exception != null)
+            {
+                //var creation = Node.ExceptionNode as IObjectCreationExpressionNode;
+                //creation.Reference.GetName();
+                return Node.Exception.GetExpressionType() as IDeclaredType;
+            }
+
+            return ContainingBlock.CaughtException;
+        }
+
         private static string GetThrownExceptionMessage(IThrowStatement throwStatement)
         {
             if (throwStatement.Exception is IObjectCreationExpression)
             {
-                var arguments = ((IObjectCreationExpression) throwStatement.Exception).Arguments;
+                var arguments = ((IObjectCreationExpression)throwStatement.Exception).Arguments;
                 if (arguments.Count > 0)
                 {
                     var literal = arguments[0].Value as ICSharpLiteralExpression;

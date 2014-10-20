@@ -8,7 +8,16 @@ namespace ReSharper.Exceptional.Models
 {
     internal abstract class DocCommentModel : ModelBase
     {
+        protected DocCommentModel(DocCommentBlockModel docCommentBlockModel)
+            : base(docCommentBlockModel.AnalyzeUnit)
+        {
+            DocCommentBlockModel = docCommentBlockModel;
+            DocCommentNodes = new List<IDocCommentNode>();
+            TreeNodes = new List<ITreeNode>();
+        }
+
         protected DocCommentBlockModel DocCommentBlockModel { get; private set; }
+
         public List<IDocCommentNode> DocCommentNodes { get; private set; }
 
         public List<ITreeNode> TreeNodes { get; private set; }
@@ -20,14 +29,6 @@ namespace ReSharper.Exceptional.Models
             get { return _documentRange; }
         }
 
-        protected DocCommentModel(DocCommentBlockModel docCommentBlockModel)
-            : base(docCommentBlockModel.AnalyzeUnit)
-        {
-            DocCommentBlockModel = docCommentBlockModel;
-            DocCommentNodes = new List<IDocCommentNode>();
-            TreeNodes = new List<ITreeNode>();
-        }
-
         public virtual void Initialize()
         {
             DocCommentNodes.AddRange(TreeNodes.OfType<IDocCommentNode>());
@@ -37,9 +38,7 @@ namespace ReSharper.Exceptional.Models
         protected virtual DocumentRange GetDocCommentRage()
         {
             if (DocCommentNodes.Count == 0)
-            {
                 return DocumentRange.InvalidRange;
-            }
 
             var textRange = DocCommentNodes[0].GetDocumentRange().TextRange;
 

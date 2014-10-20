@@ -18,7 +18,7 @@ namespace ReSharper.Exceptional
 
         public ExceptionalRecursiveElementProcessor(CSharpDaemonStageProcessBase daemonProcess, IDaemonProcess process, ExceptionalSettings settings)
         {
-            _settings = settings; 
+            _settings = settings;
             _daemonProcess = daemonProcess;
             _process = process;
             _currentContext = new NullProcessContext();
@@ -45,6 +45,12 @@ namespace ReSharper.Exceptional
                 var methodDeclaration = element as IMethodDeclaration;
                 _currentContext = new MethodProcessContext();
                 _currentContext.StartProcess(new MethodDeclarationModel(methodDeclaration, _settings));
+            }
+            else if (element is IConstructorDeclaration)
+            {
+                var constructorDeclaration = element as IConstructorDeclaration;
+                _currentContext = new ConstructorProcessContext();
+                _currentContext.StartProcess(new ConstructorDeclarationModel(constructorDeclaration, _settings));
             }
             else if (element is IPropertyDeclaration)
             {

@@ -17,7 +17,6 @@ namespace ReSharper.Exceptional
     {
         public override ErrorStripeRequest NeedsErrorStripe(IPsiSourceFile sourceFile, IContextBoundSettingsStore settings)
         {
-            // We need a stripe and we're willing to show errors and warnings on it
             return ErrorStripeRequest.STRIPE_AND_ERRORS;
         }
 
@@ -25,12 +24,13 @@ namespace ReSharper.Exceptional
             IDaemonProcess process, IContextBoundSettingsStore settings,
             DaemonProcessKind processKind, ICSharpFile file)
         {
-            if (process == null) 
-                return null;
-            if (IsSupported(process.SourceFile) == false) 
+            if (process == null)
                 return null;
 
-            var exceptionalSettings = settings.GetKey<ExceptionalSettings>(SettingsOptimization.OptimizeDefault); 
+            if (IsSupported(process.SourceFile) == false)
+                return null;
+
+            var exceptionalSettings = settings.GetKey<ExceptionalSettings>(SettingsOptimization.OptimizeDefault);
             exceptionalSettings.InvalidateCaches();
 
             return new ExceptionalDaemonStageProcess(process, file, exceptionalSettings);

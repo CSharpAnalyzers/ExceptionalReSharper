@@ -6,8 +6,11 @@ namespace Exceptional.Playground
     {
         // Warning: Exception is not thrown but documented
 
-        /// <exception cref="SecurityException">Sample. </exception>
-        public void Test2()
+        /// <summary>
+        /// 
+        /// </summary>
+      /// <exception cref="SecurityException">Sample. </exception>
+      public void Test2()
         {
         }
     }

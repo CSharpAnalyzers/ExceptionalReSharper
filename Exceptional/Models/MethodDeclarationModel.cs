@@ -16,4 +16,18 @@ namespace ReSharper.Exceptional.Models
             get { return Node.Body; }
         }
     }
+
+    /// <summary>Stores data about processed <see cref="IMethodDeclaration"/></summary>
+    internal class ConstructorDeclarationModel : AnalyzeUnitModelBase<IConstructorDeclaration>
+    {
+      public ConstructorDeclarationModel(IConstructorDeclaration constructorDeclaration, ExceptionalSettings settings)
+        : base(null, constructorDeclaration, settings)
+      {
+      }
+
+      public override IBlock Contents
+      {
+        get { return Node.Body; }
+      }
+    }
 }

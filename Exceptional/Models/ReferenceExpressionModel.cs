@@ -11,15 +11,12 @@ namespace ReSharper.Exceptional.Models
     internal class ReferenceExpressionModel : TreeElementModelBase<IReferenceExpression>, IExceptionsOriginModel
     {
         public IEnumerable<ThrownExceptionModel> ThrownExceptions { get; set; }
-        public IBlockModel ContainingBlockModel { get; private set; }
+        public IBlockModel ContainingBlock { get; private set; }
 
-        public ReferenceExpressionModel(IAnalyzeUnit analyzeUnit, IReferenceExpression invocationExpression,
-                                        IBlockModel containingBlockModel)
+        public ReferenceExpressionModel(IAnalyzeUnit analyzeUnit, IReferenceExpression invocationExpression, IBlockModel containingBlock)
             : base(analyzeUnit, invocationExpression)
         {
-            ContainingBlockModel = containingBlockModel;
-            containingBlockModel.ExceptionOriginModels.Add(this);
-
+            ContainingBlock = containingBlock;
             ThrownExceptions = GetThrownExceptions();
         }
 

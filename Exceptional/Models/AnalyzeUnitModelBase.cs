@@ -15,10 +15,10 @@ namespace ReSharper.Exceptional.Models
             : base(analyzeUnit, node)
         {
             _settings = settings;
-            DocCommentBlockModel = new DocCommentBlockModel(this);
+            DocCommentBlock = new DocCommentBlockModel(this);
         }
 
-        public DocCommentBlockModel DocCommentBlockModel { get; set; }
+        public DocCommentBlockModel DocCommentBlock { get; set; }
 
         public bool IsInspected
         {
@@ -41,10 +41,15 @@ namespace ReSharper.Exceptional.Models
             }
         }
 
+        ITreeNode IAnalyzeUnit.Node
+        {
+            get { return Node; }
+        }
+
         public override void Accept(AnalyzerBase analyzerBase)
         {
-            if (DocCommentBlockModel != null)
-                DocCommentBlockModel.Accept(analyzerBase);
+            if (DocCommentBlock != null)
+                DocCommentBlock.Accept(analyzerBase);
 
             base.Accept(analyzerBase);
         }

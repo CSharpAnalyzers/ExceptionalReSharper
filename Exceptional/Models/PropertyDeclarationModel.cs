@@ -23,9 +23,9 @@ namespace ReSharper.Exceptional.Models
             base.Accept(analyzerBase);
         }
 
-        public override IEnumerable<ThrownExceptionModel> ThrownExceptionModelsNotCaught
+        public override IEnumerable<ThrownExceptionModel> NotCaughtThrownExceptions
         {
-            get { return Accessors.SelectMany(m => m.ThrownExceptionModelsNotCaught); }
+            get { return Accessors.SelectMany(m => m.NotCaughtThrownExceptions); }
         }
 
         public override IBlock Contents

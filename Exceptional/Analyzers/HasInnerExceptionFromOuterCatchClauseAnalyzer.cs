@@ -37,7 +37,7 @@ namespace ReSharper.Exceptional.Analyzers
 
             if (outerCatchClause.HasVariable == false) return false;
 
-            return throwStatementModel.HasInnerException(outerCatchClause.VariableModel.VariableName.Name);
+            return throwStatementModel.HasInnerException(outerCatchClause.Variable.VariableName.Name);
         }
     }
 }

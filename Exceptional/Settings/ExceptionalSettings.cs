@@ -22,32 +22,24 @@ namespace ReSharper.Exceptional.Settings
 
         [SettingsEntry(false, "Inspect private methods")]
         public bool InspectPrivateMethods { get; set; }
-
-
-
+        
         [SettingsEntry(DefaultOptionalExceptions, "Optional exceptions")]
         public string OptionalExceptions { get; set; }
 
         [SettingsEntry(true, "Use default optional exceptions")]
         public bool UseDefaultOptionalExceptions { get; set; }        
-
-
-
+        
         [SettingsEntry(DefaultOptionalMethodExceptions, "Optional method exceptions")]
         public string OptionalMethodExceptions { get; set; }
 
         [SettingsEntry(true, "Use default optional method exceptions")]
         public bool UseDefaultOptionalMethodExceptions { get; set; }
 
-
-
         private const string DefaultOptionalExceptions = "System.ArgumentException,InvocationOnly\n" +
                                                          "System.FormatException,InvocationOnly\n" +
                                                          "System.NotImplementedException,ThrowOnly";
 
         private const string DefaultOptionalMethodExceptions = "System.NotSupportedException,System.Collections.IDictionary.Add";
-
-
 
         private List<OptionalExceptionConfiguration> _optionalExceptionsCache = null;
         private List<OptionalMethodExceptionConfiguration> _optionalMethodExceptionsCache = null;

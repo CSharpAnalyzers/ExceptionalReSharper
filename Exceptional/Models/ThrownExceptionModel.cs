@@ -36,7 +36,7 @@ namespace ReSharper.Exceptional.Models
 
         private bool CheckIfDocumented()
         {
-            var docCommentBlockNode = AnalyzeUnit.DocCommentBlockModel;
+            var docCommentBlockNode = AnalyzeUnit.DocCommentBlock;
             if (docCommentBlockNode == null) 
                 return false;
 
@@ -50,7 +50,7 @@ namespace ReSharper.Exceptional.Models
             if (ExceptionType == null) 
                 return false;
 
-            return Parent.ContainingBlockModel.CatchesException(ExceptionType);
+            return Parent.ContainingBlock.CatchesException(ExceptionType);
         }
 
         /// <summary>Checks whether this thrown exception equals to <paramref name="exceptionType"/>.</summary>

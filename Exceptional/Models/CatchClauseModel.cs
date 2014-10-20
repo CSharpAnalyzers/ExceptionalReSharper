@@ -10,19 +10,17 @@ namespace ReSharper.Exceptional.Models
 {
     internal class CatchClauseModel : BlockModelBase<ICatchClause>
     {
-        public CatchVariableModel VariableModel { get; set; }
-        public bool IsCatchAll { get; private set; }
-
-        public bool Catches(IDeclaredType exception)
+        public CatchClauseModel(ICatchClause catchClauseNode, TryStatementModel tryStatementModel, IAnalyzeUnit analyzeUnit)
+            : base(analyzeUnit, catchClauseNode)
         {
-            if (exception == null) 
-                return false;
-            
-            if (Node.ExceptionType == null) 
-                return false;
-
-            return exception.IsSubtypeOf(Node.ExceptionType);
+            IsCatchAll = GetIsCatchAll();
+            ParentBlock = tryStatementModel;
         }
+
+        public CatchVariableModel Variable { get; set; }
+
+        /// <summary>Gets a value indicating whether this is a catch clause which catches System.Exception. </summary>
+        public bool IsCatchAll { get; private set; }
 
         public bool HasExceptionType
         {
@@ -31,27 +29,33 @@ namespace ReSharper.Exceptional.Models
 
         public bool HasVariable
         {
-            get { return VariableModel != null; }
+            get { return Variable != null; }
         }
 
         public override DocumentRange DocumentRange
         {
             get { return Node.CatchKeyword.GetDocumentRange(); }
         }
-
-        public CatchClauseModel(ICatchClause catchClauseNode, TryStatementModel tryStatementModel, IAnalyzeUnit analyzeUnit)
-            : base(analyzeUnit, catchClauseNode)
+        
+        public override IDeclaredType CaughtException
         {
-            IsCatchAll = GetIsCatchAll();
-            ParentBlock = tryStatementModel;
+            get { return Node.ExceptionType; }
         }
 
-        private bool GetIsCatchAll()
+        public override IBlock Contents
         {
-            if (Node.ExceptionType == null) 
+            get { return Node.Body; }
+        }
+
+        public bool Catches(IDeclaredType exception)
+        {
+            if (exception == null)
                 return false;
 
-            return Node.ExceptionType.GetClrName().FullName == "System.Exception";
+            if (Node.ExceptionType == null)
+                return false;
+
+            return exception.IsSubtypeOf(Node.ExceptionType);
         }
 
         public override void Accept(AnalyzerBase analyzerBase)
@@ -61,24 +65,10 @@ namespace ReSharper.Exceptional.Models
             base.Accept(analyzerBase);
         }
 
-        #region IBlockModel implementation
-
-        public override IDeclaredType GetCaughtException()
-        {
-            return Node.ExceptionType;
-        }
-
-        public override IBlock Contents
-        {
-            get { return Node.Body; }
-        }
-
         public override bool CatchesException(IDeclaredType exception)
         {
             return ParentBlock.CatchesException(exception);
         }
-
-        #endregion
 
         public void AddCatchVariable(string variableName)
         {
@@ -88,7 +78,7 @@ namespace ReSharper.Exceptional.Models
                     return;
 
                 if (String.IsNullOrEmpty(variableName))
-                    variableName = NameFactory.CatchVariableName(Node, GetCaughtException());
+                    variableName = NameFactory.CatchVariableName(Node, CaughtException);
 
                 var codeFactory = new CodeElementFactory(GetElementFactory());
 
@@ -99,14 +89,14 @@ namespace ReSharper.Exceptional.Models
                 Node.ReplaceBy(newCatch);
 
                 Node = newCatch;
-                VariableModel = new CatchVariableModel(AnalyzeUnit, newCatch.ExceptionDeclaration as ICatchVariableDeclaration);
+                Variable = new CatchVariableModel(AnalyzeUnit, newCatch.ExceptionDeclaration as ICatchVariableDeclaration);
             }
             else
             {
                 if (HasVariable) return;
 
                 if (String.IsNullOrEmpty(variableName))
-                    variableName = NameFactory.CatchVariableName(Node, GetCaughtException());
+                    variableName = NameFactory.CatchVariableName(Node, CaughtException);
 
                 var specificNode = (ISpecificCatchClause)Node;
                 var exceptionType = (IUserDeclaredTypeUsage)specificNode.ExceptionTypeUsage;
@@ -121,8 +111,16 @@ namespace ReSharper.Exceptional.Models
                     return;
 
                 var resultVariable = specificNode.SetExceptionDeclaration(tempCatch.ExceptionDeclaration);
-                VariableModel = new CatchVariableModel(AnalyzeUnit, resultVariable);
+                Variable = new CatchVariableModel(AnalyzeUnit, resultVariable);
             }
+        }
+
+        private bool GetIsCatchAll()
+        {
+            if (Node.ExceptionType == null)
+                return false;
+
+            return Node.ExceptionType.GetClrName().FullName == "System.Exception";
         }
     }
 }

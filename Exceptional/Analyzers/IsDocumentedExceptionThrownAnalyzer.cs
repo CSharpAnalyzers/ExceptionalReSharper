@@ -34,7 +34,7 @@ namespace ReSharper.Exceptional.Analyzers
         {
             return exceptionDocumentationModel
                 .AnalyzeUnit
-                .ThrownExceptionModelsNotCaught
+                .NotCaughtThrownExceptions
                 .Any(m => m.Throws(exceptionDocumentationModel.ExceptionType));
         }
     }

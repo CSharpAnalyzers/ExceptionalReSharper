@@ -25,9 +25,7 @@ namespace ReSharper.Exceptional.Models
 
             var declarations = declaredElement.GetDeclarations();
             if (declarations.Count == 0)
-            {
                 return GetFromXmlDoc(declaredElement, referenceExpression.GetPsiModule());
-            }
 
             foreach (var declaration in declarations)
             {

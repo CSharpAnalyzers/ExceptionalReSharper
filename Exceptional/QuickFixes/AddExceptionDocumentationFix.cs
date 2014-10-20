@@ -29,17 +29,9 @@ namespace ReSharper.Exceptional.QuickFixes
             var methodDeclaration = Error.ThrownExceptionModel.AnalyzeUnit;
 
             ExceptionDocCommentModel insertedExceptionModel = null;
-            try
-            {
-                insertedExceptionModel = methodDeclaration.DocCommentBlockModel
-                    .AddExceptionDocumentation(Error.ThrownExceptionModel.ExceptionType, Error.ThrownExceptionModel.ExceptionDescription, progress);
-            }
-            catch (Exception exception)
-            {
-                // TODO: Find reason for very sporadic InvalidOperationException in AnalyzeUnitModelBase`1.AddDocCommentNode => ModificationUtil.AddChildBefore
-                MessageBox.ShowError("Error in QuickFix: " + exception.Message + "\nStackTrace: \n" + exception.StackTrace);
-                return null; 
-            }
+
+            insertedExceptionModel = methodDeclaration.DocCommentBlock
+                .AddExceptionDocumentation(Error.ThrownExceptionModel.ExceptionType, Error.ThrownExceptionModel.ExceptionDescription, progress);
 
             if (insertedExceptionModel == null)
                 return null;

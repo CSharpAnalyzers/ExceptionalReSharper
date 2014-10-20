@@ -21,12 +21,12 @@ namespace ReSharper.Exceptional.Contexts
 
         private static IEnumerable<AnalyzerBase> ProvideAnalyzers(ExceptionalDaemonStageProcess stageProcess, ExceptionalSettings settings)
         {
-            if (stageProcess == null) 
+            if (stageProcess == null)
                 yield break;
 
             yield return new IsThrownExceptionDocumentedAnalyzer(stageProcess, settings);
             yield return new IsDocumentedExceptionThrownAnalyzer(stageProcess, settings);
-            yield return new CatchAllClauseAnalyzer(stageProcess, settings); 
+            yield return new CatchAllClauseAnalyzer(stageProcess, settings);
             yield return new HasInnerExceptionFromOuterCatchClauseAnalyzer(stageProcess, settings);
         }
 
@@ -46,7 +46,7 @@ namespace ReSharper.Exceptional.Contexts
 
         public void EndProcess(CSharpDaemonStageProcessBase process, ExceptionalSettings settings)
         {
-            if (IsValid() == false) 
+            if (IsValid() == false)
                 return;
 
             foreach (var analyzerBase in ProvideAnalyzers(process as ExceptionalDaemonStageProcess, settings))
@@ -55,10 +55,10 @@ namespace ReSharper.Exceptional.Contexts
 
         public void EnterTryBlock(ITryStatement tryStatement)
         {
-            if (IsValid() == false) 
+            if (IsValid() == false)
                 return;
 
-            if (tryStatement == null) 
+            if (tryStatement == null)
                 return;
 
             Logger.Assert(BlockModelsStack.Count > 0, "[Exceptional] There is no block for try statement.");
@@ -66,7 +66,7 @@ namespace ReSharper.Exceptional.Contexts
             var model = new TryStatementModel(AnalyzeUnit, tryStatement);
 
             var blockModel = BlockModelsStack.Peek();
-            blockModel.TryStatementModels.Add(model);
+            blockModel.TryStatements.Add(model);
 
             model.ParentBlock = blockModel;
 
@@ -82,16 +82,16 @@ namespace ReSharper.Exceptional.Contexts
 
         public void EnterCatchClause(ICatchClause catchClauseNode)
         {
-            if (IsValid() == false) 
+            if (IsValid() == false)
                 return;
 
-            if (catchClauseNode == null) 
+            if (catchClauseNode == null)
                 return;
 
             Logger.Assert(_tryStatementModelsStack.Count > 0, "[Exceptional] There is no try statement for catch declaration.");
 
             var tryStatementModel = _tryStatementModelsStack.Peek();
-            var model = tryStatementModel.CatchClauseModels.Find(
+            var model = tryStatementModel.CatchClauses.Find(
                 catchClauseModel => catchClauseModel.Node.Equals(catchClauseNode));
 
             Logger.Assert(model != null, "[Exceptional] Cannot find catch model!");
@@ -108,41 +108,45 @@ namespace ReSharper.Exceptional.Contexts
 
         public void Process(IThrowStatement throwStatement)
         {
-            if (IsValid() == false) 
+            if (IsValid() == false)
                 return;
-            if (throwStatement == null) 
+            if (throwStatement == null)
                 return;
 
             Logger.Assert(BlockModelsStack.Count > 0, "[Exceptional] There is no block for throw statement.");
 
-            // TODO: Whats that? => refactor this
-            new ThrowStatementModel(AnalyzeUnit, throwStatement, BlockModelsStack.Peek());
+            var containingBlockModel = BlockModelsStack.Peek();
+            containingBlockModel.ThrownExceptions.Add(
+                new ThrowStatementModel(AnalyzeUnit, throwStatement, containingBlockModel));
         }
 
         public void Process(ICatchVariableDeclaration catchVariableDeclaration)
         {
             if (IsValid() == false)
                 return;
-            if (catchVariableDeclaration == null) 
+
+            if (catchVariableDeclaration == null)
                 return;
 
             Logger.Assert(_catchClauseModelsStack.Count > 0, "[Exceptional] There is no catch clause for catch variable declaration.");
 
             var catchClause = _catchClauseModelsStack.Peek();
-            catchClause.VariableModel = new CatchVariableModel(AnalyzeUnit, catchVariableDeclaration);
+            catchClause.Variable = new CatchVariableModel(AnalyzeUnit, catchVariableDeclaration);
         }
 
         public void Process(IReferenceExpression invocationExpression)
         {
             if (IsValid() == false)
                 return;
-            if (invocationExpression == null) 
+
+            if (invocationExpression == null)
                 return;
 
             Logger.Assert(BlockModelsStack.Count > 0, "[Exceptional] There is no block for invocation statement.");
 
-            // TODO: Whats that? => refactor this
-            new ReferenceExpressionModel(AnalyzeUnit, invocationExpression, BlockModelsStack.Peek());
+            var containingBlockModel = BlockModelsStack.Peek();
+            containingBlockModel.ThrownExceptions.Add(
+                new ReferenceExpressionModel(AnalyzeUnit, invocationExpression, containingBlockModel));
         }
 
         protected bool IsValid()
@@ -155,7 +159,7 @@ namespace ReSharper.Exceptional.Contexts
             if (IsValid() == false)
                 return;
 
-            AnalyzeUnit.DocCommentBlockModel = new DocCommentBlockModel(AnalyzeUnit, docCommentBlockNode);
+            AnalyzeUnit.DocCommentBlock = new DocCommentBlockModel(AnalyzeUnit, docCommentBlockNode);
         }
 
         public virtual void EnterAccessor(IAccessorDeclaration accessorDeclarationNode)

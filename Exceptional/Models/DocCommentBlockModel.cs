@@ -12,12 +12,24 @@ using ReSharper.Exceptional.Analyzers;
 
 namespace ReSharper.Exceptional.Models
 {
-    /// <summary>
-    /// Stores data about processed <see cref="IDocCommentBlockNode"/>.
-    /// </summary>
+    /// <summary>Stores data about processed <see cref="IDocCommentBlockNode"/>. </summary>
     internal class DocCommentBlockModel : TreeElementModelBase<IDocCommentBlockNode>
     {
         private List<DocCommentModel> DocCommentModels { get; set; }
+
+        public DocCommentBlockModel(IAnalyzeUnit analyzeUnit)
+            : this(analyzeUnit, null)
+        {
+        }
+
+        public DocCommentBlockModel(IAnalyzeUnit analyzeUnit, IDocCommentBlockNode docCommentNode)
+            : base(analyzeUnit, docCommentNode)
+        {
+            DocCommentModels = new List<DocCommentModel>();
+            References = new List<IReference>();
+
+            Initialize();
+        }
 
         public List<IReference> References { get; private set; }
 
@@ -31,81 +43,63 @@ namespace ReSharper.Exceptional.Models
             get { return DocCommentModels.OfType<ExceptionDocCommentModel>(); }
         }
 
-        public DocCommentBlockModel(IAnalyzeUnit analyzeUnit)
-            : this(analyzeUnit, null)
-        {
-        }
-
-        public DocCommentBlockModel(IAnalyzeUnit analyzeUnit, IDocCommentBlockNode docCommentNode = null)
-            : base(analyzeUnit, docCommentNode)
-        {
-            DocCommentModels = new List<DocCommentModel>();
-            References = new List<IReference>();
-
-            Preprocess();
-        }
-
-        private void Preprocess()
-        {
-            if (Node == null) return;
-
-            References.AddRange(Node.GetFirstClassReferences());
-            DocCommentModels = DocCommentReader.Read(Node, this);
-        }
-
         public override void Accept(AnalyzerBase analyzerBase)
         {
             foreach (var docCommentModel in DocCommentModels)
                 docCommentModel.Accept(analyzerBase);
         }
 
-        public ExceptionDocCommentModel AddExceptionDocumentation(
-            IDeclaredType exceptionType, string exceptionDescription, IProgressIndicator progress)
+        public ExceptionDocCommentModel AddExceptionDocumentation(IDeclaredType exceptionType, string exceptionDescription, IProgressIndicator progress)
         {
-            if (exceptionType == null) return null;
+            if (exceptionType == null) 
+              return null;
 
             Shell.Instance.GetComponent<IShellLocks>().AcquireWriteLock();
-
-            var exceptionDocumentation = string.IsNullOrEmpty(exceptionDescription)
-                ? string.Format("<exception cref=\"{0}\">[MARKER]. </exception>{1}", exceptionType.GetClrName().ShortName, Environment.NewLine) 
-                : string.Format("<exception cref=\"{0}\">{1}</exception>{2}",  exceptionType.GetClrName().ShortName, exceptionDescription, Environment.NewLine);
-
-            ExceptionDocCommentModel result;
-            if (IsReal == false)
+            try
             {
-                var docCommentNode = GetElementFactory()
-                    .CreateDocCommentBlock(exceptionDocumentation);
+                var exceptionDocumentation = string.IsNullOrEmpty(exceptionDescription)
+                    ? string.Format("<exception cref=\"{0}\">[MARKER]. </exception>{1}", exceptionType.GetClrName().ShortName, Environment.NewLine)
+                    : string.Format("<exception cref=\"{0}\">{1}</exception>{2}", exceptionType.GetClrName().ShortName, exceptionDescription, Environment.NewLine);
 
-                docCommentNode = AnalyzeUnit.AddDocCommentNode(docCommentNode);
-                Node = docCommentNode;
-                Preprocess();
+                ExceptionDocCommentModel result;
+                if (IsReal == false)
+                {
+                    var docCommentNode = GetElementFactory().CreateDocCommentBlock(exceptionDocumentation);
 
-                Node.FormatNode(progress);
+                    docCommentNode = AnalyzeUnit.AddDocCommentNode(docCommentNode);
 
-                result = DocCommentModels[1] as ExceptionDocCommentModel;
-            }
-            else
-            {
-                var docCommentBlockNode = GetElementFactory().CreateDocComment(" " + exceptionDocumentation);
-                var commentNode = docCommentBlockNode;
+                    Node = docCommentNode;
+                    Initialize();
 
-                var newLineNode = GetElementFactory().CreateWhitespaces(Environment.NewLine);
-                if (Node.LastChild != null)
-                    LowLevelModificationUtil.AddChildAfter(Node.LastChild, newLineNode[0], commentNode);
+                    Node.FormatNode(progress);
+
+                    result = DocCommentModels[1] as ExceptionDocCommentModel;
+                }
                 else
-                    LowLevelModificationUtil.AddChild(Node, newLineNode[0], commentNode);
+                {
+                    var docCommentBlockNode = GetElementFactory().CreateDocComment(" " + exceptionDocumentation);
+                    var commentNode = docCommentBlockNode;
 
-                Node.FormatNode(progress);
+                    var newLineNode = GetElementFactory().CreateWhitespaces(Environment.NewLine);
+                    if (Node.LastChild != null)
+                        LowLevelModificationUtil.AddChildAfter(Node.LastChild, newLineNode[0], commentNode);
+                    else
+                        LowLevelModificationUtil.AddChild(Node, newLineNode[0], commentNode);
 
-                result = new ExceptionDocCommentModel(this);
-                result.TreeNodes.Add(commentNode);
-                result.Initialize();
+                    Node.FormatNode(progress);
 
-                DocCommentModels.Add(result);
+                    result = new ExceptionDocCommentModel(this);
+                    result.TreeNodes.Add(commentNode);
+                    result.Initialize();
+
+                    DocCommentModels.Add(result);
+                }
+                return result;
             }
-
-            Shell.Instance.GetComponent<IShellLocks>().ReleaseWriteLock();
-            return result;
+            finally
+            {
+                Shell.Instance.GetComponent<IShellLocks>().ReleaseWriteLock();
+            }
         }
 
         public void RemoveExceptionDocumentation(ExceptionDocCommentModel exceptionDocCommentModel, IProgressIndicator progress)
@@ -120,8 +114,15 @@ namespace ReSharper.Exceptional.Models
             var lastNode = exceptionDocCommentModel.TreeNodes[exceptionDocCommentModel.TreeNodes.Count - 1];
 
             LowLevelModificationUtil.DeleteChildRange(firstNode, lastNode);
+        }
 
-            Node.FormatNode(progress);
+        private void Initialize()
+        {
+            if (Node == null) 
+                return;
+
+            References.AddRange(Node.GetFirstClassReferences());
+            DocCommentModels = DocCommentReader.Read(Node, this);
         }
     }
 }
