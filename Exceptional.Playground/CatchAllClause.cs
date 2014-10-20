@@ -23,7 +23,7 @@ namespace Exceptional.Playground
             {
                 throw new SecurityException();
             }
-            catch (Exception exception) // Tow warnings: Same as above and one from ReSharper
+            catch (Exception exception) // Two warnings: Same as above and one from ReSharper
             {
             }
         }

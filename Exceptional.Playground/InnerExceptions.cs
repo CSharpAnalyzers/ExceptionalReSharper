@@ -11,12 +11,22 @@ namespace Exceptional.Playground
             try { }
             catch (ArgumentException exception)
             {
-                throw new SecurityException(); // Warning: Inner exception not set
+                throw new SecurityException(); // Warning: Inner exception not set => fix should insert message and inner exception
             }
         }
 
         /// <exception cref="SecurityException">Sample. </exception>
         public void Test2()
+        {
+            try { }
+            catch (ArgumentException exception)
+            {
+                throw new SecurityException("Abc"); // Warning: Inner exception not set => fix should insert only inner exception
+            }
+        }
+
+        /// <exception cref="SecurityException">Sample. </exception>
+        public void Test3()
         {
             try { }
             catch (ArgumentException exception)
