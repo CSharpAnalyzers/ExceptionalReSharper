@@ -34,6 +34,7 @@ namespace ReSharper.Exceptional.Contexts
         {
             _tryStatementModelsStack = new Stack<TryStatementModel>();
             _catchClauseModelsStack = new Stack<CatchClauseModel>();
+
             BlockModelsStack = new Stack<IBlockModel>();
         }
 

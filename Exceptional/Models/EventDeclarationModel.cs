@@ -20,6 +20,7 @@ namespace ReSharper.Exceptional.Models
         {
             foreach (var accessorDeclarationModel in Accessors)
                 accessorDeclarationModel.Accept(analyzerBase);
+
             base.Accept(analyzerBase);
         }
 

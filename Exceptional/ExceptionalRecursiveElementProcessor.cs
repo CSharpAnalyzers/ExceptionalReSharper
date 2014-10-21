@@ -96,6 +96,10 @@ namespace ReSharper.Exceptional
                 _currentContext.EndProcess(_daemonProcess, _settings);
             else if (element is IPropertyDeclaration)
                 _currentContext.EndProcess(_daemonProcess, _settings);
+            else if (element is IEventDeclaration)
+                _currentContext.EndProcess(_daemonProcess, _settings);
+            else if (element is IConstructorDeclaration)
+                _currentContext.EndProcess(_daemonProcess, _settings);
             else if (element is IAccessorDeclaration)
                 _currentContext.LeaveAccessor();
             else if (element is ITryStatement)
