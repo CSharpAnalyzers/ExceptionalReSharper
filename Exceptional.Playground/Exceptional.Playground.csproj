@@ -43,9 +43,8 @@
     <Compile Include="Demonstration.cs" />
     <Compile Include="InnerExceptions.cs" />
     <Compile Include="InsertingCorrectComment.cs" />
-    <Compile Include="Fixed\Problem01.cs" />
+    <Compile Include="Fixed\DocumentationInsertedOnWrongPlace.cs" />
     <Compile Include="CopyExceptionMessageToDocumentation.cs" />
-    <Compile Include="Fixed\Problem02.cs" />
     <Compile Include="Fixed\DocumentationInsertedWrong.cs" />
     <Compile Include="Fixed\EventsAreNotScanned.cs" />
     <Compile Include="Fixed\ExceptionsInConstructorNotConsidered.cs" />

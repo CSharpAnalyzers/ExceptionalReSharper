@@ -2,7 +2,7 @@
 
 namespace Exceptional.Playground.Fixed
 {
-    public class Problem01
+    public class DocumentationInsertedOnWrongPlace
     {
         private double[] _arrayField;
 

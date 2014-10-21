@@ -5,6 +5,7 @@ using JetBrains.UI.Application;
 using JetBrains.UI.Options;
 using JetBrains.UI.Options.Helpers;
 using JetBrains.UI.Options.OptionPages;
+using ReSharper.Exceptional.Images;
 using ReSharper.Exceptional.Settings.Views;
 
 namespace ReSharper.Exceptional.Settings
