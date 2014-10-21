@@ -2,7 +2,7 @@
 <package>
   <metadata>
     <id>Exceptional</id>
-    <version>0.5.3.0</version>
+    <version>0.5.4.0</version>
     <title>Exceptional for ReSharper</title>
     <description>Analyzes thrown and documented exceptions and suggests improvements. </description>
     <authors>ExceptionalDevs</authors>    

@@ -9,6 +9,7 @@ namespace ReSharper.Exceptional.Contexts
 {
     internal interface IProcessContext
     {
+        IAnalyzeUnit Model { get; }
         void StartProcess(IAnalyzeUnit analyzeUnit);
         void EndProcess(CSharpDaemonStageProcessBase process, ExceptionalSettings settings);
         void EnterTryBlock(ITryStatement tryStatement);

@@ -8,6 +8,8 @@ namespace ReSharper.Exceptional.Contexts
 {
     internal class NullProcessContext : IProcessContext
     {
+        public IAnalyzeUnit Model { get { return null; }}
+
         public void StartProcess(IAnalyzeUnit analyzeUnit)
         {
         }

@@ -136,6 +136,8 @@
     <Compile Include="Analyzers\IsDocumentedExceptionThrownAnalyzer.cs" />
     <Compile Include="Analyzers\IsThrownExceptionDocumentedAnalyzer.cs" />
     <Compile Include="Contexts\ConstructorProcessContext.cs" />
+    <Compile Include="Contexts\EventProcessContext.cs" />
+    <Compile Include="Models\EventDeclarationModel.cs" />
     <Compile Include="Utilities\CodeElementFactory.cs" />
     <Compile Include="ExceptionalRecursiveElementProcessor.cs">
       <SubType>Code</SubType>

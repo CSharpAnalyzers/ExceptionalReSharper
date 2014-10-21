@@ -169,5 +169,10 @@ namespace ReSharper.Exceptional.Contexts
         public virtual void LeaveAccessor()
         {
         }
+
+        IAnalyzeUnit IProcessContext.Model
+        {
+            get { return Model; }
+        }
     }
 }

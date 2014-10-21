@@ -1,4 +1,6 @@
-﻿using JetBrains.ReSharper.Daemon;
+﻿using System;
+using System.Collections.Generic;
+using JetBrains.ReSharper.Daemon;
 using JetBrains.ReSharper.Daemon.CSharp.Stages;
 using JetBrains.ReSharper.Psi;
 using JetBrains.ReSharper.Psi.CSharp.Tree;
@@ -31,6 +33,8 @@ namespace ReSharper.Exceptional
 
         public void ProcessBeforeInterior(ITreeNode element)
         {
+            var eventComments = new List<IDocCommentBlockNode>();
+
             if (element is IThrowStatement)
                 _currentContext.Process(element as IThrowStatement);
 
@@ -58,10 +62,28 @@ namespace ReSharper.Exceptional
                 _currentContext = new PropertyProcessContext();
                 _currentContext.StartProcess(new PropertyDeclarationModel(propertyDeclaration, _settings));
             }
+            else if (element is IEventDeclaration)
+            {
+                var eventDeclaration = element as IEventDeclaration;
+                _currentContext = new EventProcessContext();
+                _currentContext.StartProcess(new EventDeclarationModel(eventDeclaration, _settings));
+
+                foreach (var doc in eventComments)
+                    _currentContext.Process(doc);
+            }
             else if (element is IAccessorDeclaration)
                 _currentContext.EnterAccessor(element as IAccessorDeclaration);
             else if (element is IDocCommentBlockNode)
-                _currentContext.Process(element as IDocCommentBlockNode);
+            {
+                if (_currentContext.Model.Node == element.Parent)
+                    _currentContext.Process(element as IDocCommentBlockNode);
+                else
+                {
+                    eventComments.Add((IDocCommentBlockNode)element); 
+                    // HACK: Event documentation blocks are processed before event declaration, 
+                    // other documentation blocks are processed after the associated element declaration
+                }
+            }
             else if (element is ITryStatement)
                 _currentContext.EnterTryBlock(element as ITryStatement);
             else if (element is ICatchClause)
