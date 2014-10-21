@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Exceptional.Playground.IssuesAndNewFeatures.Fixed
+namespace Exceptional.Playground.Fixed
 {
     public class Problem01
     {

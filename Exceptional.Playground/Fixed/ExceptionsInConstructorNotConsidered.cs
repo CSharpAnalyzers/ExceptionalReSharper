@@ -1,7 +1,7 @@
 ﻿using System.IO;
 using System.Security;
 
-namespace Exceptional.Playground.IssuesAndNewFeatures.Fixed
+namespace Exceptional.Playground.Fixed
 {
     class ExceptionsInConstructorNotConsidered
     {

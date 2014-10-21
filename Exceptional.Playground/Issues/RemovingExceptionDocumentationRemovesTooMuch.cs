@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Exceptional.Playground.IssuesAndNewFeatures.Open
+namespace Exceptional.Playground.Issues
 {
     class RemovingExceptionDocumentationRemovesTooMuch
     {

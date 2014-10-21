@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Security;
 
-namespace Exceptional.Playground.IssuesAndNewFeatures.Fixed
+namespace Exceptional.Playground.Fixed
 {
     public class EventsAreNotScanned
     {
