@@ -2,11 +2,11 @@
 
 namespace Exceptional.Playground
 {
-  class CopyExceptionMessageToDocumentation
-  {
-    public void Foo()
+    class CopyExceptionMessageToDocumentation
     {
-      throw new ArgumentException("abc"); // When inserting exception to documentation then "abc" should be used as exception description/condition. 
+        public void Foo()
+        {
+            throw new ArgumentException("abc"); // When inserting exception to documentation then "abc" should be used as exception description/condition. 
+        }
     }
-  }
 }

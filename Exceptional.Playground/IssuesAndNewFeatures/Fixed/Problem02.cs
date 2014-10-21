@@ -2,17 +2,17 @@
 
 namespace Exceptional.Playground.IssuesAndNewFeatures.Fixed
 {
-  public class Problem02
-  {
-    public void Test1()
+    public class Problem02
     {
-      throw new ArgumentException(); // Bug: Add documentation crashes
-    }
+        public void Test1()
+        {
+            throw new ArgumentException(); // Bug: Add documentation crashes
+        }
 
-    /// <summary>Test. </summary>
-    public void Test2()
-    {
-      
+        /// <summary>Test. </summary>
+        public void Test2()
+        {
+
+        }
     }
-  }
 }
