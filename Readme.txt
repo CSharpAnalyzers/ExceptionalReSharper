@@ -1,3 +1,9 @@
+How to use the source code: 
+- The Exceptional.csproj needs a ReSharper msbuild target file which is available
+  in the NuGet package. The NuGet package is stored in the Git repository. 
+  This is why you need to restore the packages before you can build the project. 
+- Just run RestorePackages.bat file
+
 How to debug the extension: 
 IMPORTANT: Uninstall the "Exceptional" extension first
 1. Open the "Properties" of the "Exceptional" project in the solution
