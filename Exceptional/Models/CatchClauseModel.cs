@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using JetBrains.DocumentModel;
 using JetBrains.ReSharper.Psi;
 using JetBrains.ReSharper.Psi.CSharp.Tree;
@@ -13,19 +14,19 @@ namespace ReSharper.Exceptional.Models
         public CatchClauseModel(ICatchClause catchClauseNode, TryStatementModel tryStatementModel, IAnalyzeUnit analyzeUnit)
             : base(analyzeUnit, catchClauseNode)
         {
-            IsCatchAll = GetIsCatchAll();
             ParentBlock = tryStatementModel;
+            IsCatchAll = GetIsCatchAll();
         }
-
-        public CatchVariableModel Variable { get; set; }
 
         /// <summary>Gets a value indicating whether this is a catch clause which catches System.Exception. </summary>
         public bool IsCatchAll { get; private set; }
 
-        public bool HasExceptionType
+        public bool IsExceptionTypeSpecified
         {
             get { return Node is ISpecificCatchClause; }
         }
+
+        public CatchVariableModel Variable { get; set; }
 
         public bool HasVariable
         {
@@ -37,7 +38,7 @@ namespace ReSharper.Exceptional.Models
             get { return Node.CatchKeyword.GetDocumentRange(); }
         }
         
-        public override IDeclaredType CaughtException
+        public IDeclaredType CaughtException
         {
             get { return Node.ExceptionType; }
         }
@@ -45,6 +46,15 @@ namespace ReSharper.Exceptional.Models
         public override IBlock Contents
         {
             get { return Node.Body; }
+        }
+
+        /// <summary>Gets the list of not caught thrown exceptions. </summary>
+        public override IEnumerable<ThrownExceptionModel> NotCaughtThrownExceptions
+        {
+            get
+            {
+                return base.NotCaughtThrownExceptions;
+            }
         }
 
         public bool Catches(IDeclaredType exception)
@@ -61,13 +71,12 @@ namespace ReSharper.Exceptional.Models
         public override void Accept(AnalyzerBase analyzerBase)
         {
             analyzerBase.Visit(this);
-
             base.Accept(analyzerBase);
         }
 
         public override bool CatchesException(IDeclaredType exception)
         {
-            return ParentBlock.CatchesException(exception);
+            return ParentBlock.ParentBlock.CatchesException(exception); // Warning: ParentBlock of CatchClause is TryStatement and not the method!
         }
 
         public void AddCatchVariable(string variableName)

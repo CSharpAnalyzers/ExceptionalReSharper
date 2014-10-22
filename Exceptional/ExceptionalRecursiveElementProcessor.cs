@@ -75,7 +75,7 @@ namespace ReSharper.Exceptional
                 _currentContext.EnterAccessor(element as IAccessorDeclaration);
             else if (element is IDocCommentBlockNode)
             {
-                if (_currentContext.Model.Node == element.Parent)
+                if (_currentContext.Model == null || _currentContext.Model.Node == element.Parent)
                     _currentContext.Process(element as IDocCommentBlockNode);
                 else
                 {

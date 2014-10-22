@@ -27,5 +27,16 @@ namespace Exceptional.Playground
             {
             }
         }
+
+        public void Test03()
+        {
+            try
+            {
+                throw new SecurityException();
+            }
+            catch // Two warnings: Same as above and one from ReSharper
+            {
+            }
+        }
     }
 }

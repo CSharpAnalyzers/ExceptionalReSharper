@@ -24,7 +24,7 @@ namespace ReSharper.Exceptional.QuickFixes
 
         protected override Action<ITextControl> ExecutePsiTransaction(ISolution solution, IProgressIndicator progress)
         {
-            var exceptionsOriginModel = Error.ThrownExceptionModel.Parent;
+            var exceptionsOriginModel = Error.ThrownExceptionModel.ExceptionsOrigin;
 
             var nearestTryBlock = exceptionsOriginModel.ContainingBlock.FindNearestTryStatement();
             if (nearestTryBlock == null)

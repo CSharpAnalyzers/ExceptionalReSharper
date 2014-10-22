@@ -34,7 +34,7 @@ namespace ReSharper.Exceptional.QuickFixes
             if (outerCatchClause.Node is ISpecificCatchClause)
                 variableName = ((ISpecificCatchClause)outerCatchClause.Node).ExceptionDeclaration.DeclaredName;
             else
-                variableName = NameFactory.CatchVariableName(outerCatchClause.Node, outerCatchClause.CaughtException); // TODO: Is this needed?
+                variableName = NameFactory.CatchVariableName(outerCatchClause.Node, outerCatchClause.CaughtException); 
             
             if (outerCatchClause.Node is ISpecificCatchClause)
             {

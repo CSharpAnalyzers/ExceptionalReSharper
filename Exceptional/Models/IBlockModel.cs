@@ -20,9 +20,6 @@ namespace ReSharper.Exceptional.Models
         /// <returns><c>true</c> if the exception is caught in the block; otherwise, <c>false</c>. </returns>
         bool CatchesException(IDeclaredType exception);
 
-        /// <summary>Gets the exception which is caught by the block. </summary>
-        IDeclaredType CaughtException { get; }
-
         /// <summary>Gets the list of not caught thrown exceptions. </summary>
         IEnumerable<ThrownExceptionModel> NotCaughtThrownExceptions { get; }
 

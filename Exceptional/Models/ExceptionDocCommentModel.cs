@@ -1,5 +1,4 @@
 using System;
-using System.Text.RegularExpressions;
 using JetBrains.DocumentModel;
 using JetBrains.ReSharper.Psi;
 using JetBrains.ReSharper.Psi.Modules;
@@ -9,53 +8,29 @@ using ReSharper.Exceptional.Analyzers;
 
 namespace ReSharper.Exceptional.Models
 {
-    internal class ExceptionDocCommentModel : DocCommentModel
+    internal class ExceptionDocCommentModel : ModelBase
     {
+        public ExceptionDocCommentModel(DocCommentBlockModel documentationBlock, string exceptionType, string exceptionDescription)
+            : base(documentationBlock.AnalyzeUnit)
+        {
+            DocumentationBlock = documentationBlock;
+
+            ExceptionTypeName = exceptionType;
+            ExceptionType = GetExceptionType(exceptionType);
+            ExceptionDescription = exceptionDescription;
+        }
+
+        public DocCommentBlockModel DocumentationBlock { get; private set; }
+
         public IDeclaredType ExceptionType { get; private set; }
+
+        public string ExceptionTypeName { get; private set; }
+
         public string ExceptionDescription { get; private set; }
 
-        public ExceptionDocCommentModel(DocCommentBlockModel docCommentBlockModel)
-            : base(docCommentBlockModel)
+        public override DocumentRange DocumentRange
         {
-        }
-
-        public override void Initialize()
-        {
-            base.Initialize();
-            GetExceptionType();
-        }
-
-        private void GetExceptionType()
-        {
-            var regex = new Regex("<exception cref=\"(.*?)\"(>(.*?)</exception>)?");
-            foreach (var docCommentNode in DocCommentNodes)
-            {
-                var text = docCommentNode.GetText();
-                var match = regex.Match(text);
-                if (match.Success)
-                {
-                    var exceptionType = match.Groups[1].Value;
-
-                    if (match.Groups.Count == 4)
-                        ExceptionDescription = match.Groups[3].Value;
-
-                    var exceptionReference = DocCommentBlockModel.References
-                        .Find(reference => reference.GetName().Equals(exceptionType));
-                    var psiModule = docCommentNode.GetPsiModule();
-
-                    if (exceptionReference == null)
-                        ExceptionType = TypeFactory.CreateTypeByCLRName(exceptionType, psiModule, psiModule.GetContextFromModule());
-                    else
-                    {
-                        var resolveResult = exceptionReference.Resolve();
-                        var declaredType = resolveResult.DeclaredElement as ITypeElement;
-                        if (declaredType == null)
-                            ExceptionType = TypeFactory.CreateTypeByCLRName(exceptionType, psiModule, psiModule.GetContextFromModule());
-                        else
-                            ExceptionType = TypeFactory.CreateType(declaredType);
-                    }
-                }
-            }
+            get { return GetCommentRange(); }
         }
 
         public override void Accept(AnalyzerBase analyzerBase)
@@ -63,53 +38,57 @@ namespace ReSharper.Exceptional.Models
             analyzerBase.Visit(this);
         }
 
-        protected override DocumentRange GetDocCommentRage()
+        private IDeclaredType GetExceptionType(string exceptionType)
         {
-            var regex = new Regex("<exception cref=\"(.*?)\"");
-            foreach (var docCommentNode in DocCommentNodes)
+            var exceptionReference = DocumentationBlock.References.Find(reference => reference.GetName().Equals(exceptionType));
+            var psiModule = DocumentationBlock.Node.GetPsiModule();
+
+            if (exceptionReference == null)
+                return TypeFactory.CreateTypeByCLRName(exceptionType, psiModule, psiModule.GetContextFromModule());
+            else
             {
-                var text = docCommentNode.GetText();
-
-                var match = regex.Match(text);
-                if (match.Success)
-                {
-                    var exceptionType = match.Groups[1].Value;
-                    var documentRange = docCommentNode.GetDocumentRange();
-                    var textRange = documentRange.TextRange;
-
-                    var index = text.IndexOf("cref=\"", StringComparison.InvariantCulture);
-
-                    var startOffset = textRange.StartOffset + index + 6;
-                    var endOffset = startOffset + exceptionType.Length;
-
-                    var newTextRange = new TextRange(startOffset, endOffset);
-                    return new DocumentRange(documentRange.Document, newTextRange);
-                }
+                var resolveResult = exceptionReference.Resolve();
+                var declaredType = resolveResult.DeclaredElement as ITypeElement;
+                if (declaredType == null)
+                    return TypeFactory.CreateTypeByCLRName(exceptionType, psiModule, psiModule.GetContextFromModule());
+                else
+                    return TypeFactory.CreateType(declaredType);
             }
+        }
 
+        public DocumentRange GetMarkerRange()
+        {
+            var text = DocumentationBlock.Node.GetText();
+            if (text.Contains(Constants.ExceptionDescriptionMarker))
+            {
+                var documentRange = DocumentationBlock.Node.GetDocumentRange();
+                var textRange = documentRange.TextRange;
+
+                var index = text.IndexOf(Constants.ExceptionDescriptionMarker, StringComparison.InvariantCulture);
+                var startOffset = textRange.StartOffset + index;
+                var endOffset = startOffset + 8;
+
+                var newTextRange = new TextRange(startOffset, endOffset);
+                return new DocumentRange(documentRange.Document, newTextRange);
+            }
             return DocumentRange.InvalidRange;
         }
 
-        public DocumentRange GetDescriptionDocumentRange()
+        private DocumentRange GetCommentRange()
         {
-            foreach (var docCommentNode in DocCommentNodes)
-            {
-                var text = docCommentNode.GetText();
-                if (text.Contains("[MARKER]"))
-                {
-                    var documentRange = docCommentNode.GetDocumentRange();
-                    var textRange = documentRange.TextRange;
+            var text = DocumentationBlock.Node.GetText();
+            var documentRange = DocumentationBlock.DocumentRange;
+            var textRange = documentRange.TextRange;
 
-                    var index = text.IndexOf("[MARKER]", StringComparison.InvariantCulture);
-                    var startOffset = textRange.StartOffset + index;
-                    var endOffset = startOffset + 8;
+            var tagStart = "<exception cref=\""; 
+            var xml = tagStart + ExceptionTypeName + "\"";
+            var index = text.IndexOf(xml, StringComparison.InvariantCulture);
 
-                    var newTextRange = new TextRange(startOffset, endOffset);
-                    return new DocumentRange(documentRange.Document, newTextRange);
-                }
-            }
+            var startOffset = textRange.StartOffset + index + tagStart.Length;
+            var endOffset = startOffset + ExceptionTypeName.Length;
 
-            return DocumentRange.InvalidRange;
+            var newTextRange = new TextRange(startOffset, endOffset);
+            return new DocumentRange(documentRange.Document, newTextRange);
         }
     }
 }

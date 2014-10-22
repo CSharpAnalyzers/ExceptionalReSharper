@@ -24,45 +24,6 @@ namespace ReSharper.Exceptional.QuickFixes
             Error = error;
         }
 
-        protected override Action<ITextControl> ExecutePsiTransaction(ISolution solution, IProgressIndicator progress)
-        {
-            var methodDeclaration = Error.ThrownExceptionModel.AnalyzeUnit;
-
-            ExceptionDocCommentModel insertedExceptionModel = null;
-
-            insertedExceptionModel = methodDeclaration.DocCommentBlock
-                .AddExceptionDocumentation(Error.ThrownExceptionModel.ExceptionType, Error.ThrownExceptionModel.ExceptionDescription, progress);
-
-            if (insertedExceptionModel == null)
-                return null;
-
-            var exceptionCommentRange = insertedExceptionModel.GetDescriptionDocumentRange();
-            if (exceptionCommentRange == DocumentRange.InvalidRange)
-                return null;
-
-            var copyExceptionDescription = string.IsNullOrEmpty(insertedExceptionModel.ExceptionDescription) ||
-                insertedExceptionModel.ExceptionDescription.Contains("[MARKER]");
-            var exceptionDescription = copyExceptionDescription ? string.Empty : insertedExceptionModel.ExceptionDescription;
-
-            // TODO: Replace string.Empty with default text of exceptionType if available
-
-            var nameSuggestionsExpression = new NameSuggestionsExpression(new[] { exceptionDescription });
-            var field = new TemplateField("name", nameSuggestionsExpression, 0);
-            var fieldInfo = new HotspotInfo(field, exceptionCommentRange);
-
-            return textControl =>
-            {
-                var hotspotSession = Shell.Instance.GetComponent<LiveTemplatesManager>().CreateHotspotSessionAtopExistingText(
-                    Error.ThrownExceptionModel.ExceptionType.Module.GetSolution(),
-                    TextRange.InvalidRange,
-                    textControl,
-                    LiveTemplatesManager.EscapeAction.LeaveTextAndCaret,
-                    new[] { fieldInfo });
-
-                hotspotSession.Execute();
-            };
-        }
-
         public override string Text
         {
             get
@@ -70,6 +31,42 @@ namespace ReSharper.Exceptional.QuickFixes
                 return String.Format(Resources.QuickFixInsertExceptionDocumentation,
                     Error.ThrownExceptionModel.ExceptionType.GetClrName().ShortName);
             }
+        }
+
+        protected override Action<ITextControl> ExecutePsiTransaction(ISolution solution, IProgressIndicator progress)
+        {
+            var methodDeclaration = Error.ThrownExceptionModel.AnalyzeUnit;
+
+            ExceptionDocCommentModel insertedExceptionModel = null;
+
+            insertedExceptionModel = methodDeclaration.DocumentationBlock.AddExceptionDocumentation(
+                Error.ThrownExceptionModel.ExceptionType, Error.ThrownExceptionModel.ExceptionDescription, progress);
+
+            if (insertedExceptionModel == null)
+                return null;
+
+            var exceptionCommentRange = insertedExceptionModel.GetMarkerRange();
+            if (exceptionCommentRange == DocumentRange.InvalidRange)
+                return null;
+
+            var copyExceptionDescription = 
+                string.IsNullOrEmpty(insertedExceptionModel.ExceptionDescription) || 
+                insertedExceptionModel.ExceptionDescription.Contains("[MARKER]");
+
+            var exceptionDescription = copyExceptionDescription ? "Condition" : insertedExceptionModel.ExceptionDescription;
+
+            var nameSuggestionsExpression = new NameSuggestionsExpression(new[] { exceptionDescription });
+            var field = new TemplateField("name", nameSuggestionsExpression, 0);
+            var fieldInfo = new HotspotInfo(field, exceptionCommentRange);
+
+            return textControl =>
+            {
+                var hotspotSession = Shell.Instance.GetComponent<LiveTemplatesManager>()
+                    .CreateHotspotSessionAtopExistingText(
+                        solution, TextRange.InvalidRange, textControl, LiveTemplatesManager.EscapeAction.LeaveTextAndCaret, new[] { fieldInfo });
+
+                hotspotSession.Execute();
+            };
         }
     }
 }

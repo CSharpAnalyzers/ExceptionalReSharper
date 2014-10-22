@@ -18,7 +18,7 @@ namespace ReSharper.Exceptional.Settings
         public ExceptionalOptionsPage([NotNull] Lifetime lifetime, OptionsSettingsSmartContext settings, UIApplication environment)
             : base(lifetime, environment, Pid)
         {
-            if (lifetime == null) 
+            if (lifetime == null)
                 throw new ArgumentNullException("lifetime");
 
             Control = new SettingsView(lifetime, settings);

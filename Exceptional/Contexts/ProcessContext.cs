@@ -15,8 +15,8 @@ namespace ReSharper.Exceptional.Contexts
         private readonly Stack<TryStatementModel> _tryStatementModelsStack;
         private readonly Stack<CatchClauseModel> _catchClauseModelsStack;
 
-        protected IAnalyzeUnit AnalyzeUnit { get; private set; }
         protected T Model { get; private set; }
+        protected IAnalyzeUnit AnalyzeUnit { get; private set; }
         protected Stack<IBlockModel> BlockModelsStack { get; private set; }
 
         private static IEnumerable<AnalyzerBase> ProvideAnalyzers(ExceptionalDaemonStageProcess stageProcess, ExceptionalSettings settings)
@@ -42,6 +42,7 @@ namespace ReSharper.Exceptional.Contexts
         {
             AnalyzeUnit = analyzeUnit;
             Model = (T)analyzeUnit;
+
             BlockModelsStack.Push(AnalyzeUnit);
         }
 
@@ -92,11 +93,11 @@ namespace ReSharper.Exceptional.Contexts
             Logger.Assert(_tryStatementModelsStack.Count > 0, "[Exceptional] There is no try statement for catch declaration.");
 
             var tryStatementModel = _tryStatementModelsStack.Peek();
-            var model = tryStatementModel.CatchClauses.Find(
-                catchClauseModel => catchClauseModel.Node.Equals(catchClauseNode));
+            var model = tryStatementModel.CatchClauses
+                .Find(catchClauseModel => catchClauseModel.Node.Equals(catchClauseNode));
 
             Logger.Assert(model != null, "[Exceptional] Cannot find catch model!");
-
+            
             _catchClauseModelsStack.Push(model);
             BlockModelsStack.Push(model);
         }
@@ -160,7 +161,7 @@ namespace ReSharper.Exceptional.Contexts
             if (IsValid() == false)
                 return;
 
-            AnalyzeUnit.DocCommentBlock = new DocCommentBlockModel(AnalyzeUnit, docCommentBlockNode);
+            AnalyzeUnit.DocumentationBlock = new DocCommentBlockModel(AnalyzeUnit, docCommentBlockNode);
         }
 
         public virtual void EnterAccessor(IAccessorDeclaration accessorDeclarationNode)

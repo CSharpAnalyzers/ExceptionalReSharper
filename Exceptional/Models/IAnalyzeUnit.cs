@@ -6,11 +6,13 @@ namespace ReSharper.Exceptional.Models
 {
     internal interface IAnalyzeUnit : IBlockModel
     {
-        DocCommentBlockModel DocCommentBlock { get; set; }
-        bool IsInspected { get; }
         ITreeNode Node { get; }
-        IDocCommentBlockNode AddDocCommentNode(IDocCommentBlockNode docCommentBlockNode);
         IPsiModule GetPsiModule();
+
+        DocCommentBlockModel DocumentationBlock { get; set; }
+
+        bool IsInspected { get; }
+
         void Accept(AnalyzerBase analyzerBase);
     }
 }

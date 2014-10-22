@@ -16,11 +16,13 @@ namespace ReSharper.Exceptional.Models
             ThrownExceptions = new List<IExceptionsOriginModel>();
         }
 
+
         /// <summary>Gets the try statements defined in the block. </summary>
         public List<TryStatementModel> TryStatements { get; private set; }
 
         /// <summary>Gets the list of exception which can be thrown from this block. </summary>
         public List<IExceptionsOriginModel> ThrownExceptions { get; private set; }
+
 
         /// <summary>Gets the parent block. </summary>
         public IBlockModel ParentBlock { get; set; }
@@ -33,9 +35,9 @@ namespace ReSharper.Exceptional.Models
         {
             get
             {
-                foreach (var throwStatementModel in ThrownExceptions)
+                foreach (var thrownException in ThrownExceptions)
                 {
-                    foreach (var thrownExceptionModel in throwStatementModel.ThrownExceptions.Where(m => m.IsCaught == false))
+                    foreach (var thrownExceptionModel in thrownException.ThrownExceptions.Where(m => m.IsCaught == false))
                         yield return thrownExceptionModel;
                 }
 
@@ -52,21 +54,15 @@ namespace ReSharper.Exceptional.Models
             return false;
         }
 
-        /// <summary>Gets the exception which is caught by the block. </summary>
-        public virtual IDeclaredType CaughtException
-        {
-            get { return null; }
-        }
-
         /// <summary>Analyzes the object and its children. </summary>
         /// <param name="analyzerBase">The analyzer base. </param>
         public override void Accept(AnalyzerBase analyzerBase)
         {
-            foreach (var tryStatementModel in TryStatements)
-                tryStatementModel.Accept(analyzerBase);
+            foreach (var tryStatement in TryStatements)
+                tryStatement.Accept(analyzerBase);
 
-            foreach (var throwStatementModel in ThrownExceptions)
-                throwStatementModel.Accept(analyzerBase);
+            foreach (var thrownException in ThrownExceptions)
+                thrownException.Accept(analyzerBase);
         }
 
         /// <summary>Finds the nearest parent try statement which encloses this block. </summary>

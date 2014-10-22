@@ -12,11 +12,13 @@ namespace ReSharper.Exceptional.Models
     internal static class ThrownExceptionsReader
     {
         /// <summary>Reads the specified reference expression. </summary>
+        /// <param name="analyzeUnit"></param>
+        /// <param name="exceptionsOrigin"></param>
         /// <param name="referenceExpression">The reference expression.</param>
         /// <returns>The list of thrown exceptions. </returns>
-        public static IEnumerable<ThrownExceptionDocumentationModel> Read(IReferenceExpression referenceExpression)
+        public static IEnumerable<ThrownExceptionModel> Read(IAnalyzeUnit analyzeUnit, IExceptionsOriginModel exceptionsOrigin, IReferenceExpression referenceExpression)
         {
-            var result = new List<ThrownExceptionDocumentationModel>();
+            var result = new List<ThrownExceptionModel>();
 
             var resolveResult = referenceExpression.Reference.Resolve();
             var declaredElement = resolveResult.DeclaredElement;
@@ -25,35 +27,29 @@ namespace ReSharper.Exceptional.Models
 
             var declarations = declaredElement.GetDeclarations();
             if (declarations.Count == 0)
-                return GetFromXmlDoc(declaredElement, referenceExpression.GetPsiModule());
+                return GetFromXmlDoc(analyzeUnit, exceptionsOrigin, declaredElement, referenceExpression.GetPsiModule());
 
             foreach (var declaration in declarations)
             {
                 var docCommentBlockOwnerNode = declaration as IDocCommentBlockOwnerNode;
-                if (docCommentBlockOwnerNode == null) return result;
+                if (docCommentBlockOwnerNode == null)
+                    return result;
 
                 var docCommentBlockNode = docCommentBlockOwnerNode.GetDocCommentBlockNode();
-                if (docCommentBlockNode == null) return result;
+                if (docCommentBlockNode == null)
+                    return result;
 
                 var docCommentBlockModel = new DocCommentBlockModel(null, docCommentBlockNode);
-
-                foreach (var exceptionDocCommentModel in docCommentBlockModel.ExceptionDocCommentModels)
-                {
-                    var model = new ThrownExceptionDocumentationModel(
-                        exceptionDocCommentModel.ExceptionType, exceptionDocCommentModel.ExceptionDescription);
-                    result.Add(model);
-                }
+                foreach (var comment in docCommentBlockModel.DocumentedExceptions)
+                    result.Add(new ThrownExceptionModel(analyzeUnit, exceptionsOrigin, comment.ExceptionType, comment.ExceptionDescription));
             }
 
             return result;
         }
 
-        private static IEnumerable<ThrownExceptionDocumentationModel> GetFromXmlDoc(IDeclaredElement declaredElement, IPsiModule psiModule)
+        private static IEnumerable<ThrownExceptionModel> GetFromXmlDoc(IAnalyzeUnit analyzeUnit, IExceptionsOriginModel exceptionsOrigin, IDeclaredElement declaredElement, IPsiModule psiModule)
         {
-            // TODO: This is the code where the XML doc from an external (eg system assembly) is read, 
-            // this sometimes fail if the xml doc is missing!? => is there a solution for this?
-
-            var result = new List<ThrownExceptionDocumentationModel>();
+            var result = new List<ThrownExceptionModel>();
 
             var xmlNode = declaredElement.GetXMLDoc(true);
             if (xmlNode == null)
@@ -76,8 +72,7 @@ namespace ReSharper.Exceptional.Models
                         psiModule.GetContextFromModule());
 
                     Logger.Assert(exceptionDeclaredType != null, "Created exception type was null!");
-
-                    result.Add(new ThrownExceptionDocumentationModel(exceptionDeclaredType, exceptionNode.Value));
+                    result.Add(new ThrownExceptionModel(analyzeUnit, exceptionsOrigin, exceptionDeclaredType, exceptionNode.InnerText));
                 }
             }
 

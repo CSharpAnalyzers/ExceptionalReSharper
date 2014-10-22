@@ -22,8 +22,10 @@ namespace ReSharper.Exceptional.Analyzers
         {
             if (exceptionDocumentationModel == null) 
                 return;
-            if (exceptionDocumentationModel.AnalyzeUnit.IsInspected == false)
+
+            if (!exceptionDocumentationModel.AnalyzeUnit.IsInspected)
                 return;
+
             if (AnalyzeIfExceptionThrown(exceptionDocumentationModel))
                 return;
 

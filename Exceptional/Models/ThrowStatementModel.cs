@@ -26,7 +26,7 @@ namespace ReSharper.Exceptional.Models
             var exceptionType = GetExceptionType();
             var exceptionDescription = GetThrownExceptionMessage(throwStatement);
 
-            _thrownException = new ThrownExceptionModel(analyzeUnit, exceptionType, exceptionDescription, this);
+            _thrownException = new ThrownExceptionModel(analyzeUnit, this, exceptionType, exceptionDescription);
         }
 
         /// <summary>Gets the parent block which contains this block. </summary>
@@ -71,7 +71,7 @@ namespace ReSharper.Exceptional.Models
             _thrownException.Accept(analyzerBase);
         }
 
-        public void SurroundWithTryBlock(IDeclaredType exceptionType)
+        public bool SurroundWithTryBlock(IDeclaredType exceptionType)
         {
             var codeElementFactory = new CodeElementFactory(GetElementFactory());
             var exceptionVariableName = NameFactory.CatchVariableName(Node, exceptionType);
@@ -79,10 +79,11 @@ namespace ReSharper.Exceptional.Models
             var block = codeElementFactory.CreateBlock(Node);
             
             tryStatement.SetTry(block);
-            
             Node.ReplaceBy(tryStatement);
-        }
 
+            return true; 
+        }
+        
         public IEnumerable<ThrownExceptionModel> ThrownExceptions
         {
             get { return new List<ThrownExceptionModel>(new[] { _thrownException }); }
@@ -100,9 +101,7 @@ namespace ReSharper.Exceptional.Models
 
             var objectCreationExpressionNode = Node.Exception as IObjectCreationExpression;
             if (objectCreationExpressionNode == null)
-            {
                 return new TextRange[0];
-            }
 
             if (objectCreationExpressionNode.Arguments.Count == 0)
             {
@@ -149,13 +148,8 @@ namespace ReSharper.Exceptional.Models
         private IDeclaredType GetExceptionType()
         {
             if (Node.Exception != null)
-            {
-                //var creation = Node.ExceptionNode as IObjectCreationExpressionNode;
-                //creation.Reference.GetName();
                 return Node.Exception.GetExpressionType() as IDeclaredType;
-            }
-
-            return ContainingBlock.CaughtException;
+            return null;
         }
 
         private static string GetThrownExceptionMessage(IThrowStatement throwStatement)

@@ -17,19 +17,16 @@ namespace ReSharper.Exceptional.QuickFixes
             Error = error;
         }
 
-        protected override Action<ITextControl> ExecutePsiTransaction(ISolution solution, IProgressIndicator progress)
-        {
-            var docCommentModel = Error.ExceptionDocumentationModel.AnalyzeUnit.DocCommentBlock;
-            docCommentModel.RemoveExceptionDocumentation(Error.ExceptionDocumentationModel, progress);
-
-            // TODO: Format correctly
-
-            return null;
-        }
-
         public override string Text
         {
             get { return Resources.QuickFixRemoveExceptionDocumentation; }
+        }
+
+        protected override Action<ITextControl> ExecutePsiTransaction(ISolution solution, IProgressIndicator progress)
+        {
+            var docCommentModel = Error.ExceptionDocumentationModel.AnalyzeUnit.DocumentationBlock;
+            docCommentModel.RemoveExceptionDocumentation(Error.ExceptionDocumentationModel, progress);
+            return null;
         }
     }
 }

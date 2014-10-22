@@ -29,7 +29,7 @@ namespace ReSharper.Exceptional.Analyzers
             var outerCatchClause = throwStatementModel.FindOuterCatchClause();
             if (outerCatchClause == null) return true;
 
-            if (outerCatchClause.HasExceptionType == false || throwStatementModel.IsRethrow)
+            if (outerCatchClause.IsExceptionTypeSpecified == false || throwStatementModel.IsRethrow)
             {
                 //There is no variable declaration or there is no exception creation
                 return throwStatementModel.IsRethrow;

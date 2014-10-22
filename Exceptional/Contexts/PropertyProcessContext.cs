@@ -11,13 +11,14 @@ namespace ReSharper.Exceptional.Contexts
             if (IsValid() == false)
                 return;
 
-            if (accessorDeclarationNode == null) 
+            if (accessorDeclarationNode == null)
                 return;
 
             var parent = BlockModelsStack.Peek();
 
             var model = new AccessorDeclarationModel(AnalyzeUnit, accessorDeclarationNode);
             model.ParentBlock = parent;
+
             Model.Accessors.Add(model);
 
             BlockModelsStack.Push(model);

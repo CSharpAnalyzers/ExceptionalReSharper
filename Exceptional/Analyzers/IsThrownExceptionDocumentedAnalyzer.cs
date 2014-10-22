@@ -26,11 +26,14 @@ namespace ReSharper.Exceptional.Analyzers
         {
             if (thrownExceptionModel == null)
                 return;
-            if (thrownExceptionModel.AnalyzeUnit.IsInspected == false)
-                return;
+
             if (thrownExceptionModel.IsCaught)
                 return;
+
             if (thrownExceptionModel.IsDocumented)
+                return;
+
+            if (!thrownExceptionModel.AnalyzeUnit.IsInspected)
                 return;
 
             if (IsThrownExceptionSubclassOfOptionalException(thrownExceptionModel) || IsThrownExceptionThrownFromExcludedMethod(thrownExceptionModel))
@@ -43,8 +46,8 @@ namespace ReSharper.Exceptional.Analyzers
         {
             var optionalExceptions = Settings.GetOptionalExceptions(Process);
 
-            if (thrownExceptionModel.Parent is ThrowStatementModel)
-                return optionalExceptions.Any(e => e.ReplacementType != OptionalExceptionReplacementType.InvocationOnly && 
+            if (thrownExceptionModel.ExceptionsOrigin is ThrowStatementModel)
+                return optionalExceptions.Any(e => e.ReplacementType != OptionalExceptionReplacementType.InvocationOnly &&
                     thrownExceptionModel.ExceptionType.IsSubtypeOf(e.ExceptionType));
             else
                 return optionalExceptions.Any(e => e.ReplacementType != OptionalExceptionReplacementType.ThrowOnly &&
@@ -53,7 +56,7 @@ namespace ReSharper.Exceptional.Analyzers
 
         private bool IsThrownExceptionThrownFromExcludedMethod(ThrownExceptionModel thrownExceptionModel)
         {
-            var parent = thrownExceptionModel.Parent as ReferenceExpressionModel;
+            var parent = thrownExceptionModel.ExceptionsOrigin as ReferenceExpressionModel;
             if (parent != null)
             {
                 var node = parent.Node;

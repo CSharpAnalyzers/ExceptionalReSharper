@@ -49,12 +49,6 @@ namespace ReSharper.Exceptional.Models
             return ParentBlock.CatchesException(exception);
         }
 
-        /// <summary>Gets the exception which is caught by the block. </summary>
-        public override IDeclaredType CaughtException
-        {
-            get { return ParentBlock.CaughtException; }
-        }
-
         /// <summary>Finds the nearest parent try statement which encloses this block. </summary>
         /// <returns>The try statement. </returns>
         public override TryStatementModel FindNearestTryStatement()

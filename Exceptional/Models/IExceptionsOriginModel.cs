@@ -5,7 +5,7 @@ using ReSharper.Exceptional.Analyzers;
 
 namespace ReSharper.Exceptional.Models
 {
-    /// <summary>Describes a location where an exception has been thrown. </summary>
+    /// <summary>Describes a location where exceptions can be thrown. </summary>
     internal interface IExceptionsOriginModel
     {
         /// <summary>Gets the list of exception which can be thrown from this object. </summary>
@@ -23,6 +23,6 @@ namespace ReSharper.Exceptional.Models
         
         void Accept(AnalyzerBase analyzeBase);
         
-        void SurroundWithTryBlock(IDeclaredType exceptionType);
+        bool SurroundWithTryBlock(IDeclaredType exceptionType);
     }
 }

@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Exceptional.Playground.Issues
+namespace Exceptional.Playground.Fixed
 {
     class InsertExceptionDescriptionOfFrameworkMethod
     {

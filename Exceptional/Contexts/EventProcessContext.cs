@@ -17,6 +17,7 @@ namespace ReSharper.Exceptional.Contexts
 
             var model = new AccessorDeclarationModel(AnalyzeUnit, accessorDeclarationNode);
             model.ParentBlock = parent;
+
             Model.Accessors.Add(model);
 
             BlockModelsStack.Push(model);

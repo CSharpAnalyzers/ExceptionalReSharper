@@ -1,10 +1,12 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text.RegularExpressions;
 using JetBrains.Application;
 using JetBrains.Application.Progress;
 using JetBrains.ReSharper.Psi;
 using JetBrains.ReSharper.Psi.CodeStyle;
+using JetBrains.ReSharper.Psi.CSharp.Tree;
 using JetBrains.ReSharper.Psi.ExtensionsAPI;
 using JetBrains.ReSharper.Psi.Resolve;
 using JetBrains.ReSharper.Psi.Tree;
@@ -15,114 +17,109 @@ namespace ReSharper.Exceptional.Models
     /// <summary>Stores data about processed <see cref="IDocCommentBlockNode"/>. </summary>
     internal class DocCommentBlockModel : TreeElementModelBase<IDocCommentBlockNode>
     {
-        private List<DocCommentModel> DocCommentModels { get; set; }
-
-        public DocCommentBlockModel(IAnalyzeUnit analyzeUnit)
-            : this(analyzeUnit, null)
-        {
-        }
+        private string _documentationText;
 
         public DocCommentBlockModel(IAnalyzeUnit analyzeUnit, IDocCommentBlockNode docCommentNode)
             : base(analyzeUnit, docCommentNode)
         {
-            DocCommentModels = new List<DocCommentModel>();
             References = new List<IReference>();
-
-            Initialize();
+            DocumentedExceptions = new List<ExceptionDocCommentModel>();
+            Update();
         }
 
-        public List<IReference> References { get; private set; }
-
-        private bool IsReal
+        public bool IsCreated
         {
             get { return Node != null; }
         }
 
-        public IEnumerable<ExceptionDocCommentModel> ExceptionDocCommentModels
-        {
-            get { return DocCommentModels.OfType<ExceptionDocCommentModel>(); }
-        }
+        public List<IReference> References { get; private set; }
+
+        public IEnumerable<ExceptionDocCommentModel> DocumentedExceptions { get; private set; }
 
         public override void Accept(AnalyzerBase analyzerBase)
         {
-            foreach (var docCommentModel in DocCommentModels)
-                docCommentModel.Accept(analyzerBase);
+            foreach (var exception in DocumentedExceptions)
+                exception.Accept(analyzerBase);
         }
 
         public ExceptionDocCommentModel AddExceptionDocumentation(IDeclaredType exceptionType, string exceptionDescription, IProgressIndicator progress)
         {
-            if (exceptionType == null) 
-              return null;
+            if (exceptionType == null)
+                return null;
+            
+            var exceptionDocumentation = string.IsNullOrEmpty(exceptionDescription)
+                ? string.Format("<exception cref=\"{0}\">" + Constants.ExceptionDescriptionMarker + ". </exception>{1}", exceptionType.GetClrName().ShortName, Environment.NewLine)
+                : string.Format("<exception cref=\"{0}\">{1}</exception>{2}", exceptionType.GetClrName().ShortName, exceptionDescription, Environment.NewLine);
 
-            Shell.Instance.GetComponent<IShellLocks>().AcquireWriteLock();
-            try
-            {
-                var exceptionDocumentation = string.IsNullOrEmpty(exceptionDescription)
-                    ? string.Format("<exception cref=\"{0}\">[MARKER]. </exception>{1}", exceptionType.GetClrName().ShortName, Environment.NewLine)
-                    : string.Format("<exception cref=\"{0}\">{1}</exception>{2}", exceptionType.GetClrName().ShortName, exceptionDescription, Environment.NewLine);
-
-                ExceptionDocCommentModel result;
-                if (IsReal == false)
-                {
-                    var docCommentNode = GetElementFactory().CreateDocCommentBlock(exceptionDocumentation);
-
-                    docCommentNode = AnalyzeUnit.AddDocCommentNode(docCommentNode);
-
-                    Node = docCommentNode;
-                    Initialize();
-
-                    Node.FormatNode(progress);
-
-                    result = DocCommentModels[1] as ExceptionDocCommentModel;
-                }
-                else
-                {
-                    var docCommentBlockNode = GetElementFactory().CreateDocComment(" " + exceptionDocumentation);
-                    var commentNode = docCommentBlockNode;
-
-                    var newLineNode = GetElementFactory().CreateWhitespaces(Environment.NewLine);
-                    if (Node.LastChild != null)
-                        LowLevelModificationUtil.AddChildAfter(Node.LastChild, newLineNode[0], commentNode);
-                    else
-                        LowLevelModificationUtil.AddChild(Node, newLineNode[0], commentNode);
-
-                    Node.FormatNode(progress);
-
-                    result = new ExceptionDocCommentModel(this);
-                    result.TreeNodes.Add(commentNode);
-                    result.Initialize();
-
-                    DocCommentModels.Add(result);
-                }
-                return result;
-            }
-            finally
-            {
-                Shell.Instance.GetComponent<IShellLocks>().ReleaseWriteLock();
-            }
+            ChangeDocumentation(_documentationText + "\n" + exceptionDocumentation);
+            
+            return DocumentedExceptions.LastOrDefault();
         }
 
-        public void RemoveExceptionDocumentation(ExceptionDocCommentModel exceptionDocCommentModel, IProgressIndicator progress)
+        public void RemoveExceptionDocumentation(ExceptionDocCommentModel exceptionDocumentation, IProgressIndicator progress)
         {
-            if (exceptionDocCommentModel == null)
+            if (exceptionDocumentation == null)
                 return;
 
-            if (exceptionDocCommentModel.DocCommentNodes.Count == 0) 
-                return;
-
-            var firstNode = exceptionDocCommentModel.TreeNodes[0];
-            var lastNode = exceptionDocCommentModel.TreeNodes[exceptionDocCommentModel.TreeNodes.Count - 1];
-
-            LowLevelModificationUtil.DeleteChildRange(firstNode, lastNode);
+            var regex = "<exception cref=\"" + Regex.Escape(exceptionDocumentation.ExceptionTypeName) + "\"(>((\r|\n|.)*?)</exception>)?";
+            var newDocumentation = Regex.Replace(_documentationText, regex, string.Empty);
+            ChangeDocumentation(newDocumentation);
         }
 
-        private void Initialize()
+        private void ChangeDocumentation(string text)
         {
-            if (Node == null) 
+            var newNode = GetElementFactory().CreateDocCommentBlock(text.Trim('\n').Trim('\r'));
+
+            //Shell.Instance.GetComponent<IShellLocks>().AcquireWriteLock();
+            //try
+            //{
+            //}
+            //finally
+            //{
+            //    Shell.Instance.GetComponent<IShellLocks>().ReleaseWriteLock();
+            //}
+
+            if (IsCreated)
+                LowLevelModificationUtil.ReplaceChildRange(Node, Node, newNode);
+            else
+                LowLevelModificationUtil.AddChildBefore(AnalyzeUnit.Node.FirstChild, newNode);
+            newNode.FormatNode();
+
+            Node = newNode;
+            Update();
+        }
+
+        private void Update()
+        {
+            if (!IsCreated)
                 return;
 
-            References.AddRange(Node.GetFirstClassReferences());
-            DocCommentModels = DocCommentReader.Read(Node, this);
+            _documentationText = GetDocumentationXml();
+
+            References = new List<IReference>(Node.GetFirstClassReferences());
+            DocumentedExceptions = GetDocumentedExceptions();
+        }
+
+        private IEnumerable<ExceptionDocCommentModel> GetDocumentedExceptions()
+        {
+            var regex = new Regex("<exception cref=\"(.*?)\"(>((\r|\n|.)*?)</exception>)?");
+            var exceptions = new List<ExceptionDocCommentModel>();
+            foreach (Match match in regex.Matches(_documentationText))
+            {
+                var exceptionType = match.Groups[1].Value;
+                var exceptionDescription = match.Groups[3].Value;
+
+                exceptions.Add(new ExceptionDocCommentModel(this, exceptionType, exceptionDescription));
+            }
+            return exceptions;
+        }
+
+        private string GetDocumentationXml()
+        {
+            var xml = string.Empty;
+            foreach (var node in Node.Children().OfType<IDocCommentNode>())
+                xml += node.GetText().Replace("///", "").Trim() + "\n";
+            return xml;
         }
     }
 }

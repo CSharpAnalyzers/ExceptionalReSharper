@@ -1,5 +1,4 @@
 using JetBrains.ReSharper.Psi;
-using JetBrains.ReSharper.Psi.ExtensionsAPI.Tree;
 using JetBrains.ReSharper.Psi.Modules;
 using JetBrains.ReSharper.Psi.Tree;
 using ReSharper.Exceptional.Analyzers;
@@ -15,17 +14,23 @@ namespace ReSharper.Exceptional.Models
             : base(analyzeUnit, node)
         {
             _settings = settings;
-            DocCommentBlock = new DocCommentBlockModel(this);
+
+            DocumentationBlock = new DocCommentBlockModel(this, null);
         }
 
-        public DocCommentBlockModel DocCommentBlock { get; set; }
+        public DocCommentBlockModel DocumentationBlock { get; set; }
+
+        ITreeNode IAnalyzeUnit.Node
+        {
+            get { return Node; }
+        }
 
         public bool IsInspected
         {
             get
             {
                 var accessRightsOwner = Node as IAccessRightsOwner;
-                if (accessRightsOwner == null) 
+                if (accessRightsOwner == null)
                     return false;
 
                 var inspectPublicMethods = _settings.InspectPublicMethods;
@@ -41,22 +46,12 @@ namespace ReSharper.Exceptional.Models
             }
         }
 
-        ITreeNode IAnalyzeUnit.Node
-        {
-            get { return Node; }
-        }
-
         public override void Accept(AnalyzerBase analyzerBase)
         {
-            if (DocCommentBlock != null)
-                DocCommentBlock.Accept(analyzerBase);
+            if (DocumentationBlock != null)
+                DocumentationBlock.Accept(analyzerBase);
 
             base.Accept(analyzerBase);
-        }
-
-        public IDocCommentBlockNode AddDocCommentNode(IDocCommentBlockNode docCommentBlockNode)
-        {
-            return ModificationUtil.AddChildBefore(Node, Node.FirstChild, docCommentBlockNode);
         }
 
         public IPsiModule GetPsiModule()
