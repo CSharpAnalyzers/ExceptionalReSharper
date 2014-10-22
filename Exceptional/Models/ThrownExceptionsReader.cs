@@ -72,7 +72,7 @@ namespace ReSharper.Exceptional.Models
                         psiModule.GetContextFromModule());
 
                     Logger.Assert(exceptionDeclaredType != null, "Created exception type was null!");
-                    result.Add(new ThrownExceptionModel(analyzeUnit, exceptionsOrigin, exceptionDeclaredType, exceptionNode.InnerText));
+                    result.Add(new ThrownExceptionModel(analyzeUnit, exceptionsOrigin, exceptionDeclaredType, exceptionNode.InnerXml));
                 }
             }
 

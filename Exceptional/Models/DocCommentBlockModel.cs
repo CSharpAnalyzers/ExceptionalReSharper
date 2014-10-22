@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text.RegularExpressions;
+using System.Windows.Documents;
 using JetBrains.Application;
 using JetBrains.Application.Progress;
 using JetBrains.ReSharper.Psi;
@@ -68,36 +69,44 @@ namespace ReSharper.Exceptional.Models
 
         private void ChangeDocumentation(string text)
         {
-            var newNode = GetElementFactory().CreateDocCommentBlock(text.Trim('\n').Trim('\r'));
+            text = text.Trim('\r', '\n');
 
-            //Shell.Instance.GetComponent<IShellLocks>().AcquireWriteLock();
-            //try
-            //{
-            //}
-            //finally
-            //{
-            //    Shell.Instance.GetComponent<IShellLocks>().ReleaseWriteLock();
-            //}
+            if (!string.IsNullOrEmpty(text))
+            {
+                var newNode = GetElementFactory().CreateDocCommentBlock(text);
+                if (IsCreated)
+                    LowLevelModificationUtil.ReplaceChildRange(Node, Node, newNode);
+                else
+                    LowLevelModificationUtil.AddChildBefore(AnalyzeUnit.Node.FirstChild, newNode);
+                newNode.FormatNode();
 
-            if (IsCreated)
-                LowLevelModificationUtil.ReplaceChildRange(Node, Node, newNode);
-            else
-                LowLevelModificationUtil.AddChildBefore(AnalyzeUnit.Node.FirstChild, newNode);
-            newNode.FormatNode();
+                Node = newNode;
+            }
+            else if (Node != null)
+            {
+                LowLevelModificationUtil.DeleteChild(Node);
+                Node = null;
+            }
 
-            Node = newNode;
             Update();
         }
 
         private void Update()
         {
             if (!IsCreated)
-                return;
+            {
+                _documentationText = string.Empty;
 
-            _documentationText = GetDocumentationXml();
+                References = new List<IReference>();
+                DocumentedExceptions = new List<ExceptionDocCommentModel>();
+            }
+            else
+            {
+                _documentationText = GetDocumentationXml();
 
-            References = new List<IReference>(Node.GetFirstClassReferences());
-            DocumentedExceptions = GetDocumentedExceptions();
+                References = new List<IReference>(Node.GetFirstClassReferences());
+                DocumentedExceptions = GetDocumentedExceptions();
+            }
         }
 
         private IEnumerable<ExceptionDocCommentModel> GetDocumentedExceptions()
