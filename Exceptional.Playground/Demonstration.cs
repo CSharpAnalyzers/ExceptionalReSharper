@@ -1,4 +1,5 @@
 ﻿using System;
+using System.IO;
 
 namespace Exceptional.Playground
 {
@@ -13,6 +14,7 @@ namespace Exceptional.Playground
         public void Test02()
         {
             var number = Decimal.Parse("3.4");
+            var file = File.Open("test", FileMode.Open);
         }
 
         /// <exception cref="InvalidOperationException">Condition. </exception>

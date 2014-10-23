@@ -14,7 +14,7 @@ using ReSharper.Exceptional.Models;
 
 namespace ReSharper.Exceptional.QuickFixes
 {
-    [QuickFix]
+    [QuickFix(null, BeforeOrAfter.Before)]
     internal class AddExceptionDocumentationFix : SingleActionFix
     {
         private ExceptionNotDocumentedOptionalHighlighting Error { get; set; }
