@@ -18,26 +18,32 @@ namespace ReSharper.Exceptional.Analyzers
         /// <param name="throwStatementModel">Throw statement model to analyze.</param>
         public override void Visit(ThrowStatementModel throwStatementModel)
         {
-            if (throwStatementModel == null) return;
-            if (AnalyzeIfHasInnerException(throwStatementModel)) return;
-
-            Process.Hightlightings.Add(new HighlightingInfo(throwStatementModel.DocumentRange, new ThrowFromCatchWithNoInnerExceptionHighlighting(throwStatementModel), null, null));            
+            if (throwStatementModel != null && RequiresInnerExceptionPassing(throwStatementModel))
+            {
+                var highlighting = new ThrowFromCatchWithNoInnerExceptionHighlighting(throwStatementModel);
+                Process.Hightlightings.Add(new HighlightingInfo(throwStatementModel.DocumentRange, highlighting, null));
+            }
         }
 
-        private static bool AnalyzeIfHasInnerException(ThrowStatementModel throwStatementModel)
+        private static bool RequiresInnerExceptionPassing(ThrowStatementModel throwStatementModel)
         {
+            if (!throwStatementModel.IsDirectExceptionInstantiation)
+                return false;
+
+            if (throwStatementModel.IsRethrow)
+                return false;
+            
             var outerCatchClause = throwStatementModel.FindOuterCatchClause();
-            if (outerCatchClause == null) return true;
+            if (outerCatchClause == null) 
+                return false;
+            
+            if (!outerCatchClause.IsExceptionTypeSpecified)
+                return true; 
 
-            if (outerCatchClause.IsExceptionTypeSpecified == false || throwStatementModel.IsRethrow)
-            {
-                //There is no variable declaration or there is no exception creation
-                return throwStatementModel.IsRethrow;
-            }
+            if (!outerCatchClause.HasVariable) 
+                return true;
 
-            if (outerCatchClause.HasVariable == false) return false;
-
-            return throwStatementModel.HasInnerException(outerCatchClause.Variable.VariableName.Name);
+            return !throwStatementModel.IsInnerExceptionPassed(outerCatchClause.Variable.VariableName.Name);
         }
     }
 }

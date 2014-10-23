@@ -17,6 +17,7 @@ namespace ReSharper.Exceptional
         private readonly IDaemonProcess _process;
         private IProcessContext _currentContext;
         private readonly ExceptionalSettings _settings;
+        private List<IDocCommentBlockNode> _eventComments = new List<IDocCommentBlockNode>();
 
         public ExceptionalRecursiveElementProcessor(CSharpDaemonStageProcessBase daemonProcess, IDaemonProcess process, ExceptionalSettings settings)
         {
@@ -33,8 +34,6 @@ namespace ReSharper.Exceptional
 
         public void ProcessBeforeInterior(ITreeNode element)
         {
-            var eventComments = new List<IDocCommentBlockNode>();
-
             if (element is IThrowStatement)
                 _currentContext.Process(element as IThrowStatement);
 
@@ -68,8 +67,9 @@ namespace ReSharper.Exceptional
                 _currentContext = new EventProcessContext();
                 _currentContext.StartProcess(new EventDeclarationModel(eventDeclaration, _settings));
 
-                foreach (var doc in eventComments)
+                foreach (var doc in _eventComments)
                     _currentContext.Process(doc);
+                _eventComments.Clear();
             }
             else if (element is IAccessorDeclaration)
                 _currentContext.EnterAccessor(element as IAccessorDeclaration);
@@ -79,7 +79,7 @@ namespace ReSharper.Exceptional
                     _currentContext.Process(element as IDocCommentBlockNode);
                 else
                 {
-                    eventComments.Add((IDocCommentBlockNode)element); 
+                    _eventComments.Add((IDocCommentBlockNode)element); 
                     // HACK: Event documentation blocks are processed before event declaration, 
                     // other documentation blocks are processed after the associated element declaration
                 }

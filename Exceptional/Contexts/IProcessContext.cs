@@ -10,16 +10,21 @@ namespace ReSharper.Exceptional.Contexts
     internal interface IProcessContext
     {
         IAnalyzeUnit Model { get; }
+
         void StartProcess(IAnalyzeUnit analyzeUnit);
         void EndProcess(CSharpDaemonStageProcessBase process, ExceptionalSettings settings);
+        
         void EnterTryBlock(ITryStatement tryStatement);
         void LeaveTryBlock();
+
         void EnterCatchClause(ICatchClause catchClauseNode);
         void LeaveCatchClause();
+
         void Process(IThrowStatement throwStatement);
         void Process(ICatchVariableDeclaration catchVariableDeclaration);
         void Process(IReferenceExpression invocationExpression);
         void Process(IDocCommentBlockNode docCommentBlockNode);
+
         void EnterAccessor(IAccessorDeclaration accessorDeclarationNode);
         void LeaveAccessor();
     }

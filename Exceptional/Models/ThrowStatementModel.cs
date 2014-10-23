@@ -132,7 +132,12 @@ namespace ReSharper.Exceptional.Models
             return ranges.ToArray();
         }
 
-        public bool HasInnerException(string variableName)
+        public bool IsDirectExceptionInstantiation
+        {
+            get { return Node.Exception is IObjectCreationExpression; }
+        }
+
+        public bool IsInnerExceptionPassed(string variableName)
         {
             var objectCreationExpressionNode = Node.Exception as IObjectCreationExpression;
             if (objectCreationExpressionNode == null)
@@ -149,7 +154,7 @@ namespace ReSharper.Exceptional.Models
         {
             if (Node.Exception != null)
                 return Node.Exception.GetExpressionType() as IDeclaredType;
-            return null;
+            return FindOuterCatchClause().CaughtException; // Node.Exception == null when this is a "throw;" statement
         }
 
         private static string GetThrownExceptionMessage(IThrowStatement throwStatement)
