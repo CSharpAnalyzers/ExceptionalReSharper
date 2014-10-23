@@ -54,7 +54,6 @@
     <Compile Include="Fixed\InsertExceptionDescriptionOfFrameworkMethod.cs" />
     <Compile Include="Fixed\RemovingExceptionDocumentationRemovesTooMuch.cs" />
     <Compile Include="Features\RemoveQuickFixAddTryCatch.cs" />
-    <Compile Include="Issues\EventWithExceptionNotConsidered.cs" />
     <Compile Include="Issues\MissingInnerExceptionNotShown.cs" />
     <Compile Include="OptionalMethodExceptions.cs" />
     <Compile Include="NotDocumentedOrCaughtException.cs" />

@@ -23,9 +23,6 @@ namespace ReSharper.Exceptional.Analyzers
             if (exceptionDocumentationModel == null) 
                 return;
 
-            if (exceptionDocumentationModel.AnalyzeUnit is EventDeclarationModel)
-                return; 
-
             if (!exceptionDocumentationModel.AnalyzeUnit.IsInspected)
                 return;
 
