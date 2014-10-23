@@ -1,4 +1,5 @@
 ﻿using System;
+using System.IO;
 using System.Security;
 
 namespace Exceptional.Playground
@@ -9,7 +10,8 @@ namespace Exceptional.Playground
 
         /// <summary>Abc. </summary>
         /// <exception cref="Exception">Sample. </exception>
-        /// <exception cref="SecurityException">Sample. </exception>
+        /// <exception cref="SecurityException" />
+        /// <exception cref="IOException">Sample. </exception>
         public void Test2()
         {
         }
