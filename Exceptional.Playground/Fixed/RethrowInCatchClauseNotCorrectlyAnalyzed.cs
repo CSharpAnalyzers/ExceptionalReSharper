@@ -1,7 +1,7 @@
 ﻿using System.Diagnostics;
 using System.Security;
 
-namespace Exceptional.Playground.Issues
+namespace Exceptional.Playground.Fixed
 {
     class RethrowInCatchClauseNotCorrectlyAnalyzed
     {

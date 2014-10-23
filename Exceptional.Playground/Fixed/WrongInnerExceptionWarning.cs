@@ -1,7 +1,7 @@
 ﻿using System.Diagnostics;
 using System.Security;
 
-namespace Exceptional.Playground.Issues
+namespace Exceptional.Playground.Fixed
 {
     class WrongInnerExceptionWarning
     {
@@ -15,7 +15,7 @@ namespace Exceptional.Playground.Issues
             catch (SecurityException exception)
             {
                 Debug.WriteLine(exception.Message);
-                throw exception; // No warning: No new exception without inner exception is constructed
+                throw exception; // No exceptional warning: No new exception without inner exception is constructed
             }
         }
     }
