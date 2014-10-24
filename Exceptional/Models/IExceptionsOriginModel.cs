@@ -14,15 +14,10 @@ namespace ReSharper.Exceptional.Models
         /// <summary>Gets the parent block which contains this block. </summary>
         IBlockModel ContainingBlock { get; }
 
-        /// <summary>Checks whether this object can throw the given exception type. </summary>
-        /// <param name="exceptionType">The exception type. </param>
-        /// <returns><c>true</c> if the object may be throwing the given exception type; otherwise, <c>false</c>. </returns>
-        bool Throws(IDeclaredType exceptionType);
-        
         DocumentRange DocumentRange { get; }
-        
-        void Accept(AnalyzerBase analyzeBase);
-        
+
+        void Accept(AnalyzerBase analyzer);
+
         bool SurroundWithTryBlock(IDeclaredType exceptionType);
     }
 }

@@ -9,6 +9,7 @@ namespace ReSharper.Exceptional.Models
         {
         }
 
+        /// <summary>Gets the content block of the object. </summary>
         public override IBlock Contents
         {
             get { return Node.Body; }

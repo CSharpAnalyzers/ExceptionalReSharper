@@ -19,18 +19,18 @@ namespace ReSharper.Exceptional.QuickFixes
 
         public override string Text
         {
-            get { return String.Format(Resources.QuickFixCatchException, Error.ThrownExceptionModel.ExceptionType.GetClrName().ShortName); }
+            get { return String.Format(Resources.QuickFixCatchException, Error.ThrownException.ExceptionType.GetClrName().ShortName); }
         }
 
         protected override Action<ITextControl> ExecutePsiTransaction(ISolution solution, IProgressIndicator progress)
         {
-            var exceptionsOriginModel = Error.ThrownExceptionModel.ExceptionsOrigin;
+            var exceptionsOriginModel = Error.ThrownException.ExceptionsOrigin;
 
             var nearestTryBlock = exceptionsOriginModel.ContainingBlock.FindNearestTryStatement();
             if (nearestTryBlock == null)
-                exceptionsOriginModel.SurroundWithTryBlock(Error.ThrownExceptionModel.ExceptionType);
+                exceptionsOriginModel.SurroundWithTryBlock(Error.ThrownException.ExceptionType);
             else
-                nearestTryBlock.AddCatchClause(Error.ThrownExceptionModel.ExceptionType);
+                nearestTryBlock.AddCatchClause(Error.ThrownException.ExceptionType);
 
             return null;
         }

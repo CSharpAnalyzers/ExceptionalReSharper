@@ -20,33 +20,48 @@ namespace ReSharper.Exceptional.Analyzers
         {
         }
 
-        /// <summary>Performs analyze of <paramref name="thrownExceptionModel"/>.</summary>
-        /// <param name="thrownExceptionModel">Thrown exception to analyze.</param>
-        public override void Visit(ThrownExceptionModel thrownExceptionModel)
+        /// <summary>Performs analyze of <paramref name="thrownException"/>.</summary>
+        /// <param name="thrownException">Thrown exception to analyze.</param>
+        public override void Visit(ThrownExceptionModel thrownException)
         {
-            if (thrownExceptionModel == null)
+            if (thrownException == null)
                 return;
 
-            if (thrownExceptionModel.IsCaught)
+            if (!thrownException.AnalyzeUnit.IsInspectionRequired || thrownException.IsCaught || thrownException.IsExceptionDocumented)
                 return;
 
-            if (thrownExceptionModel.IsDocumented)
-                return;
+            var isOptional = IsSubtypeDocumented(thrownException) ||
+                             IsThrownExceptionSubclassOfOptionalException(thrownException) ||
+                             IsThrownExceptionThrownFromExcludedMethod(thrownException);
 
-            if (!thrownExceptionModel.AnalyzeUnit.IsInspected)
-                return;
+            var highlighting = isOptional
+                ? new ExceptionNotDocumentedOptionalHighlighting(thrownException)
+                : new ExceptionNotDocumentedHighlighting(thrownException);
 
-            if (IsThrownExceptionSubclassOfOptionalException(thrownExceptionModel) || IsThrownExceptionThrownFromExcludedMethod(thrownExceptionModel))
-                Process.Hightlightings.Add(new HighlightingInfo(thrownExceptionModel.DocumentRange, new ExceptionNotDocumentedOptionalHighlighting(thrownExceptionModel), null, null));
+            Process.Hightlightings.Add(new HighlightingInfo(thrownException.DocumentRange, highlighting, null, null));
+        }
+
+        private bool IsSubtypeDocumented(ThrownExceptionModel thrownException)
+        {
+            if (thrownException.IsThrownFromThrowStatement)
+            {
+                if (Settings.IsDocumentationOfExceptionSubtypeSufficientForThrowStatements && thrownException.IsExceptionOrSubtypeDocumented)
+                    return true;
+            }
             else
-                Process.Hightlightings.Add(new HighlightingInfo(thrownExceptionModel.DocumentRange, new ExceptionNotDocumentedHighlighting(thrownExceptionModel), null, null));
+            {
+                if (Settings.IsDocumentationOfExceptionSubtypeSufficientForReferenceExpressions && thrownException.IsExceptionOrSubtypeDocumented)
+                    return true;
+            }
+
+            return false;
         }
 
         private bool IsThrownExceptionSubclassOfOptionalException(ThrownExceptionModel thrownExceptionModel)
         {
             var optionalExceptions = Settings.GetOptionalExceptions(Process);
 
-            if (thrownExceptionModel.ExceptionsOrigin is ThrowStatementModel)
+            if (thrownExceptionModel.IsThrownFromThrowStatement)
                 return optionalExceptions.Any(e => e.ReplacementType != OptionalExceptionReplacementType.InvocationOnly &&
                     thrownExceptionModel.ExceptionType.IsSubtypeOf(e.ExceptionType));
             else
@@ -54,9 +69,9 @@ namespace ReSharper.Exceptional.Analyzers
                     thrownExceptionModel.ExceptionType.IsSubtypeOf(e.ExceptionType));
         }
 
-        private bool IsThrownExceptionThrownFromExcludedMethod(ThrownExceptionModel thrownExceptionModel)
+        private bool IsThrownExceptionThrownFromExcludedMethod(ThrownExceptionModel thrownException)
         {
-            var parent = thrownExceptionModel.ExceptionsOrigin as ReferenceExpressionModel;
+            var parent = thrownException.ExceptionsOrigin as ReferenceExpressionModel;
             if (parent != null)
             {
                 var node = parent.Node;
@@ -70,11 +85,22 @@ namespace ReSharper.Exceptional.Analyzers
                         var fullMethodName = Regex.Replace(element.XMLDocId.Substring(2), "(``[0-9]+)|(\\(.*?\\))", "");
 
                         var excludedMethods = Settings.GetOptionalMethodExceptions(Process);
-                        return excludedMethods.Any(t => t.FullMethodName == fullMethodName && thrownExceptionModel.IsSubtypeOf(t, Process));
+                        return excludedMethods
+                            .Any(t => t.FullMethodName == fullMethodName && IsSubtypeOfOptionalException(t, thrownException, Process));
                     }
                 }
             }
             return false;
+        }
+
+        private bool IsSubtypeOfOptionalException(OptionalMethodExceptionConfiguration optionalMethodException,
+            ThrownExceptionModel thrownException, ExceptionalDaemonStageProcess process)
+        {
+            var exceptionType = optionalMethodException.GetExceptionType(process);
+            if (exceptionType == null)
+                return false;
+
+            return thrownException.ExceptionType.IsSubtypeOf(optionalMethodException.GetExceptionType(process));
         }
     }
 }

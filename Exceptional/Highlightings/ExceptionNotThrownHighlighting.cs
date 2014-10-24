@@ -5,22 +5,22 @@ using ReSharper.Exceptional.Models;
 
 namespace ReSharper.Exceptional.Highlightings
 {
-	[StaticSeverityHighlighting(Severity.WARNING, Constants.HighlightingTitle)]
-    public class ExceptionNotThrownHighlighting : HighlightingBase
+    [StaticSeverityHighlighting(Severity.WARNING, Constants.HighlightingTitle)]
+    public class ExceptionNotThrownHighlighting : ExceptionNotThrownOptionalHighlighting
     {
-        internal ExceptionDocCommentModel ExceptionDocumentationModel { get; private set; }
-
-        internal ExceptionNotThrownHighlighting(ExceptionDocCommentModel exceptionDocumentationModel)
+        /// <summary>Initializes a new instance of the <see cref="ExceptionNotThrownHighlighting"/> class. </summary>
+        /// <param name="exceptionDocumentation">The exception documentation. </param>
+        internal ExceptionNotThrownHighlighting(ExceptionDocCommentModel exceptionDocumentation)
+            :base(exceptionDocumentation)
         {
-            ExceptionDocumentationModel = exceptionDocumentationModel;
         }
 
+        /// <summary>Gets the message which is shown in the editor. </summary>
         protected override string Message
         {
             get
             {
-                return String.Format(Resources.HighlightNotThrownDocumentedExceptions, 
-                    ExceptionDocumentationModel.ExceptionType.GetClrName().ShortName);
+                return String.Format(Resources.HighlightNotThrownDocumentedExceptions, ExceptionDocumentation.ExceptionType.GetClrName().ShortName);
             }
         }
     }

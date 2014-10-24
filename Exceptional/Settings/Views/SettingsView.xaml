@@ -22,10 +22,17 @@
         </Grid.RowDefinitions>
         
         <StackPanel>
-            <controls:CheckBoxDisabledNoCheck2 Content="Inspect public methods" x:Name="InspectPublicMethods" Margin="0,0,0,4" />
-            <controls:CheckBoxDisabledNoCheck2 Content="Inspect internal methods" x:Name="InspectInternalMethods" Margin="0,0,0,4" />
-            <controls:CheckBoxDisabledNoCheck2 Content="Inspect protected methods" x:Name="InspectProtectedMethods" Margin="0,0,0,4" />
-            <controls:CheckBoxDisabledNoCheck2 Content="Inspect private methods" x:Name="InspectPrivateMethods" Margin="0,0,0,8" />
+            <TextBlock Text="Documentation of thrown exception's subtype is sufficient..." FontWeight="Bold" Margin="0,0,0,4" />
+            <controls:CheckBoxDisabledNoCheck2 Content="... for throw statements" Margin="0,0,0,4" 
+                                               x:Name="IsDocumentationOfExceptionSubtypeSufficientForThrowStatements" />
+            <controls:CheckBoxDisabledNoCheck2 Content="... for method or property invocations" Margin="0,0,0,12" 
+                                               x:Name="IsDocumentationOfExceptionSubtypeSufficientForReferenceExpressions" />
+
+            <TextBlock Text="Method and property visibility" FontWeight="Bold" Margin="0,0,0,4" />
+            <controls:CheckBoxDisabledNoCheck2 Content="Inspect public methods and properties" x:Name="InspectPublicMethods" Margin="0,0,0,4" />
+            <controls:CheckBoxDisabledNoCheck2 Content="Inspect internal methods and properties" x:Name="InspectInternalMethods" Margin="0,0,0,4" />
+            <controls:CheckBoxDisabledNoCheck2 Content="Inspect protected methods and properties" x:Name="InspectProtectedMethods" Margin="0,0,0,4" />
+            <controls:CheckBoxDisabledNoCheck2 Content="Inspect private methods and properties" x:Name="InspectPrivateMethods" Margin="0,0,0,8" />
         </StackPanel>
 
         <TextBlock Grid.Row="1" Text="Optional exceptions (shown as hint instead of warning): " FontWeight="Bold" Margin="0,0,0,4" />

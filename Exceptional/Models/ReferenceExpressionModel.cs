@@ -29,15 +29,10 @@ namespace ReSharper.Exceptional.Models
             get { return Node.Reference.GetDocumentRange(); }
         }
 
-        public bool Throws(IDeclaredType exceptionType)
-        {
-            return ThrownExceptions.Any(e => e.Throws(exceptionType));
-        }
-
-        public override void Accept(AnalyzerBase analyzerBase)
+        public override void Accept(AnalyzerBase analyzer)
         {
             foreach (var thrownExceptionModel in ThrownExceptions)
-                thrownExceptionModel.Accept(analyzerBase);
+                thrownExceptionModel.Accept(analyzer);
         }
 
         public bool SurroundWithTryBlock(IDeclaredType exceptionType)
@@ -57,9 +52,9 @@ namespace ReSharper.Exceptional.Models
                 tryStatement.SetTry(block);
 
                 containingStatement.ReplaceBy(tryStatement);
-                return true; 
+                return true;
             }
-            return false; 
+            return false;
         }
     }
 }

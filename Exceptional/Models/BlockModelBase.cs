@@ -16,22 +16,20 @@ namespace ReSharper.Exceptional.Models
             ThrownExceptions = new List<IExceptionsOriginModel>();
         }
 
-
         /// <summary>Gets the try statements defined in the block. </summary>
         public List<TryStatementModel> TryStatements { get; private set; }
 
         /// <summary>Gets the list of exception which can be thrown from this block. </summary>
         public List<IExceptionsOriginModel> ThrownExceptions { get; private set; }
-
-
+        
         /// <summary>Gets the parent block. </summary>
         public IBlockModel ParentBlock { get; set; }
 
         /// <summary>Gets the content block of the object. </summary>
         public abstract IBlock Contents { get; }
-        
+
         /// <summary>Gets the list of not caught thrown exceptions. </summary>
-        public virtual IEnumerable<ThrownExceptionModel> NotCaughtThrownExceptions
+        public virtual IEnumerable<ThrownExceptionModel> UncaughtThrownExceptions
         {
             get
             {
@@ -41,7 +39,7 @@ namespace ReSharper.Exceptional.Models
                         yield return thrownExceptionModel;
                 }
 
-                foreach (var model in TryStatements.SelectMany(m => m.NotCaughtThrownExceptions))
+                foreach (var model in TryStatements.SelectMany(m => m.UncaughtThrownExceptions))
                     yield return model;
             }
         }
@@ -55,14 +53,14 @@ namespace ReSharper.Exceptional.Models
         }
 
         /// <summary>Analyzes the object and its children. </summary>
-        /// <param name="analyzerBase">The analyzer base. </param>
-        public override void Accept(AnalyzerBase analyzerBase)
+        /// <param name="analyzer">The analyzer base. </param>
+        public override void Accept(AnalyzerBase analyzer)
         {
             foreach (var tryStatement in TryStatements)
-                tryStatement.Accept(analyzerBase);
+                tryStatement.Accept(analyzer);
 
             foreach (var thrownException in ThrownExceptions)
-                thrownException.Accept(analyzerBase);
+                thrownException.Accept(analyzer);
         }
 
         /// <summary>Finds the nearest parent try statement which encloses this block. </summary>

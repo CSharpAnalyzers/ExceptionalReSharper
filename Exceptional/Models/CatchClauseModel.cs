@@ -49,11 +49,11 @@ namespace ReSharper.Exceptional.Models
         }
 
         /// <summary>Gets the list of not caught thrown exceptions. </summary>
-        public override IEnumerable<ThrownExceptionModel> NotCaughtThrownExceptions
+        public override IEnumerable<ThrownExceptionModel> UncaughtThrownExceptions
         {
             get
             {
-                return base.NotCaughtThrownExceptions;
+                return base.UncaughtThrownExceptions;
             }
         }
 
@@ -68,10 +68,10 @@ namespace ReSharper.Exceptional.Models
             return exception.IsSubtypeOf(Node.ExceptionType);
         }
 
-        public override void Accept(AnalyzerBase analyzerBase)
+        public override void Accept(AnalyzerBase analyzer)
         {
-            analyzerBase.Visit(this);
-            base.Accept(analyzerBase);
+            analyzer.Visit(this);
+            base.Accept(analyzer);
         }
 
         public override bool CatchesException(IDeclaredType exception)

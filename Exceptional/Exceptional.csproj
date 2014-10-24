@@ -135,8 +135,11 @@
     <Compile Include="Analyzers\HasInnerExceptionFromOuterCatchClauseAnalyzer.cs" />
     <Compile Include="Analyzers\IsDocumentedExceptionThrownAnalyzer.cs" />
     <Compile Include="Analyzers\IsThrownExceptionDocumentedAnalyzer.cs" />
+    <Compile Include="Analyzers\IsThrowingSystemExceptionAnalyzer.cs" />
     <Compile Include="Contexts\ConstructorProcessContext.cs" />
     <Compile Include="Contexts\EventProcessContext.cs" />
+    <Compile Include="Highlightings\ExceptionNotThrownOptionalHighlighting.cs" />
+    <Compile Include="Highlightings\ThrowingSystemExceptionHighlighting.cs" />
     <Compile Include="Models\ConstructorDeclarationModel.cs" />
     <Compile Include="Models\EventDeclarationModel.cs" />
     <Compile Include="Utilities\CodeElementFactory.cs" />

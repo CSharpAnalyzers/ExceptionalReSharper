@@ -11,17 +11,17 @@ namespace ReSharper.Exceptional.Analyzers
         /// <summary>Initializes a new instance of the <see cref="AnalyzerBase"/> class. </summary>
         /// <param name="process">The process. </param>
         /// <param name="settings">The settings. </param>
-        public HasInnerExceptionFromOuterCatchClauseAnalyzer(ExceptionalDaemonStageProcess process, ExceptionalSettings settings) 
+        public HasInnerExceptionFromOuterCatchClauseAnalyzer(ExceptionalDaemonStageProcess process, ExceptionalSettings settings)
             : base(process, settings) { }
 
-        /// <summary>Performs analyze of throw <paramref name="throwStatementModel"/>.</summary>
-        /// <param name="throwStatementModel">Throw statement model to analyze.</param>
-        public override void Visit(ThrowStatementModel throwStatementModel)
+        /// <summary>Performs analyze of throw <paramref name="throwStatement"/>.</summary>
+        /// <param name="throwStatement">Throw statement model to analyze.</param>
+        public override void Visit(ThrowStatementModel throwStatement)
         {
-            if (throwStatementModel != null && RequiresInnerExceptionPassing(throwStatementModel))
+            if (throwStatement != null && RequiresInnerExceptionPassing(throwStatement))
             {
-                var highlighting = new ThrowFromCatchWithNoInnerExceptionHighlighting(throwStatementModel);
-                Process.Hightlightings.Add(new HighlightingInfo(throwStatementModel.DocumentRange, highlighting, null));
+                var highlighting = new ThrowFromCatchWithNoInnerExceptionHighlighting(throwStatement);
+                Process.Hightlightings.Add(new HighlightingInfo(throwStatement.DocumentRange, highlighting, null));
             }
         }
 
@@ -32,15 +32,15 @@ namespace ReSharper.Exceptional.Analyzers
 
             if (throwStatementModel.IsRethrow)
                 return false;
-            
-            var outerCatchClause = throwStatementModel.FindOuterCatchClause();
-            if (outerCatchClause == null) 
-                return false;
-            
-            if (!outerCatchClause.IsExceptionTypeSpecified)
-                return true; 
 
-            if (!outerCatchClause.HasVariable) 
+            var outerCatchClause = throwStatementModel.FindOuterCatchClause();
+            if (outerCatchClause == null)
+                return false;
+
+            if (!outerCatchClause.IsExceptionTypeSpecified)
+                return true;
+
+            if (!outerCatchClause.HasVariable)
                 return true;
 
             return !throwStatementModel.IsInnerExceptionPassed(outerCatchClause.Variable.VariableName.Name);

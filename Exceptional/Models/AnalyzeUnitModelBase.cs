@@ -25,7 +25,7 @@ namespace ReSharper.Exceptional.Models
             get { return Node; }
         }
 
-        public bool IsInspected
+        public bool IsInspectionRequired
         {
             get
             {
@@ -46,12 +46,12 @@ namespace ReSharper.Exceptional.Models
             }
         }
 
-        public override void Accept(AnalyzerBase analyzerBase)
+        public override void Accept(AnalyzerBase analyzer)
         {
             if (DocumentationBlock != null)
-                DocumentationBlock.Accept(analyzerBase);
+                DocumentationBlock.Accept(analyzer);
 
-            base.Accept(analyzerBase);
+            base.Accept(analyzer);
         }
 
         public IPsiModule GetPsiModule()

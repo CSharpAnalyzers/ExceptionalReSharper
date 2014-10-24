@@ -24,8 +24,8 @@ namespace ReSharper.Exceptional.QuickFixes
 
         protected override Action<ITextControl> ExecutePsiTransaction(ISolution solution, IProgressIndicator progress)
         {
-            var docCommentModel = Error.ExceptionDocumentationModel.AnalyzeUnit.DocumentationBlock;
-            docCommentModel.RemoveExceptionDocumentation(Error.ExceptionDocumentationModel, progress);
+            var docCommentModel = Error.ExceptionDocumentation.AnalyzeUnit.DocumentationBlock;
+            docCommentModel.RemoveExceptionDocumentation(Error.ExceptionDocumentation, progress);
             return null;
         }
     }

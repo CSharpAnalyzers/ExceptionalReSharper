@@ -5,8 +5,10 @@ namespace ReSharper.Exceptional.Models
 {
     internal abstract class ModelBase
     {
+        /// <summary>Gets the analyze unit. </summary>
         public IAnalyzeUnit AnalyzeUnit { get; private set; }
 
+        /// <summary>Gets the document range of this object. </summary>
         public abstract DocumentRange DocumentRange { get; }
 
         protected ModelBase(IAnalyzeUnit analyzeUnit)
@@ -14,7 +16,9 @@ namespace ReSharper.Exceptional.Models
             AnalyzeUnit = analyzeUnit;
         }
 
-        public virtual void Accept(AnalyzerBase analyzerBase)
+        /// <summary>Runs the analyzer against all defined elements. </summary>
+        /// <param name="analyzer">The analyzer. </param>
+        public virtual void Accept(AnalyzerBase analyzer)
         {
         }
     }

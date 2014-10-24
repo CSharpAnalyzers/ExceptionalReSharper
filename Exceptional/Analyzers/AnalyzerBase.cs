@@ -21,20 +21,20 @@ namespace ReSharper.Exceptional.Analyzers
         /// <summary>Gets the current settings. </summary>
         protected ExceptionalSettings Settings { get; private set; }
 
-        /// <summary>Performs analyze of throw <paramref name="throwStatementModel"/>.</summary>
-        /// <param name="throwStatementModel">Throw statement model to analyze.</param>
-        public virtual void Visit(ThrowStatementModel throwStatementModel) { }
+        /// <summary>Performs analyze of throw <paramref name="throwStatement"/>.</summary>
+        /// <param name="throwStatement">Throw statement model to analyze.</param>
+        public virtual void Visit(ThrowStatementModel throwStatement) { }
 
-        /// <summary>Performs analyze of <paramref name="catchClauseModel"/>.</summary>
-        /// <param name="catchClauseModel">Catch clause to analyze.</param>
-        public virtual void Visit(CatchClauseModel catchClauseModel) { }
+        /// <summary>Performs analyze of <paramref name="catchClause"/>.</summary>
+        /// <param name="catchClause">Catch clause to analyze.</param>
+        public virtual void Visit(CatchClauseModel catchClause) { }
 
-        /// <summary>Performs analyze of <paramref name="exceptionDocumentationModel"/>.</summary>
-        /// <param name="exceptionDocumentationModel">Exception documentation to analyze.</param>
-        public virtual void Visit(ExceptionDocCommentModel exceptionDocumentationModel) { }
+        /// <summary>Performs analyze of <paramref name="exceptionDocumentation"/>.</summary>
+        /// <param name="exceptionDocumentation">Exception documentation to analyze.</param>
+        public virtual void Visit(ExceptionDocCommentModel exceptionDocumentation) { }
 
-        /// <summary>Performs analyze of <paramref name="thrownExceptionModel"/>.</summary>
-        /// <param name="thrownExceptionModel">Thrown exception to analyze.</param>
-        public virtual void Visit(ThrownExceptionModel thrownExceptionModel) { }
+        /// <summary>Performs analyze of <paramref name="thrownException"/>.</summary>
+        /// <param name="thrownException">Thrown exception to analyze.</param>
+        public virtual void Visit(ThrownExceptionModel thrownException) { }
     }
 }

@@ -33,9 +33,9 @@ namespace ReSharper.Exceptional.Models
             get { return GetCommentRange(); }
         }
 
-        public override void Accept(AnalyzerBase analyzerBase)
+        public override void Accept(AnalyzerBase analyzer)
         {
-            analyzerBase.Visit(this);
+            analyzer.Visit(this);
         }
 
         private IDeclaredType GetExceptionType(string exceptionType)
@@ -80,7 +80,7 @@ namespace ReSharper.Exceptional.Models
             var documentRange = DocumentationBlock.DocumentRange;
             var textRange = documentRange.TextRange;
 
-            var tagStart = "<exception cref=\""; 
+            var tagStart = "<exception cref=\"";
             var xml = tagStart + ExceptionTypeName + "\"";
             var index = text.IndexOf(xml, StringComparison.InvariantCulture);
 

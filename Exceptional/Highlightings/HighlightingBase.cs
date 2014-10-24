@@ -22,6 +22,7 @@ namespace ReSharper.Exceptional.Highlightings
             get { return Message; }
         }
 
+        /// <summary>Gets the message which is shown in the editor. </summary>
         protected abstract string Message { get; }
 
         public virtual int NavigationOffsetPatch

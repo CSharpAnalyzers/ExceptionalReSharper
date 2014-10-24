@@ -16,17 +16,17 @@ namespace ReSharper.Exceptional.Models
             Accessors = new List<AccessorDeclarationModel>();
         }
 
-        public override void Accept(AnalyzerBase analyzerBase)
+        public override void Accept(AnalyzerBase analyzer)
         {
             foreach (var accessorDeclarationModel in Accessors)
-                accessorDeclarationModel.Accept(analyzerBase);
+                accessorDeclarationModel.Accept(analyzer);
 
-            base.Accept(analyzerBase);
+            base.Accept(analyzer);
         }
 
-        public override IEnumerable<ThrownExceptionModel> NotCaughtThrownExceptions
+        public override IEnumerable<ThrownExceptionModel> UncaughtThrownExceptions
         {
-            get { return Accessors.SelectMany(m => m.NotCaughtThrownExceptions); }
+            get { return Accessors.SelectMany(m => m.UncaughtThrownExceptions); }
         }
 
         public override IBlock Contents

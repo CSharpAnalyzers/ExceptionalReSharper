@@ -27,6 +27,7 @@ namespace ReSharper.Exceptional.Contexts
             yield return new IsThrownExceptionDocumentedAnalyzer(stageProcess, settings);
             yield return new IsDocumentedExceptionThrownAnalyzer(stageProcess, settings);
             yield return new CatchAllClauseAnalyzer(stageProcess, settings);
+            yield return new IsThrowingSystemExceptionAnalyzer(stageProcess, settings);
             yield return new HasInnerExceptionFromOuterCatchClauseAnalyzer(stageProcess, settings);
         }
 
@@ -97,7 +98,7 @@ namespace ReSharper.Exceptional.Contexts
                 .Find(catchClauseModel => catchClauseModel.Node.Equals(catchClauseNode));
 
             Logger.Assert(model != null, "[Exceptional] Cannot find catch model!");
-            
+
             _catchClauseModelsStack.Push(model);
             BlockModelsStack.Push(model);
         }

@@ -11,8 +11,8 @@ namespace ReSharper.Exceptional.Models
 
         DocCommentBlockModel DocumentationBlock { get; set; }
 
-        bool IsInspected { get; }
+        bool IsInspectionRequired { get; }
 
-        void Accept(AnalyzerBase analyzerBase);
+        void Accept(AnalyzerBase analyzer);
     }
 }

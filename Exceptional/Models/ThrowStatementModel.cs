@@ -65,10 +65,10 @@ namespace ReSharper.Exceptional.Models
             return outerBlock as CatchClauseModel;
         }
 
-        public override void Accept(AnalyzerBase analyzerBase)
+        public override void Accept(AnalyzerBase analyzer)
         {
-            analyzerBase.Visit(this);
-            _thrownException.Accept(analyzerBase);
+            analyzer.Visit(this);
+            _thrownException.Accept(analyzer);
         }
 
         public bool SurroundWithTryBlock(IDeclaredType exceptionType)
@@ -77,13 +77,13 @@ namespace ReSharper.Exceptional.Models
             var exceptionVariableName = NameFactory.CatchVariableName(Node, exceptionType);
             var tryStatement = codeElementFactory.CreateTryStatement(exceptionType, exceptionVariableName);
             var block = codeElementFactory.CreateBlock(Node);
-            
+
             tryStatement.SetTry(block);
             Node.ReplaceBy(tryStatement);
 
-            return true; 
+            return true;
         }
-        
+
         public IEnumerable<ThrownExceptionModel> ThrownExceptions
         {
             get { return new List<ThrownExceptionModel>(new[] { _thrownException }); }
@@ -92,7 +92,7 @@ namespace ReSharper.Exceptional.Models
         /// <summary>Checks whether this throw statement throws given <paramref name="exceptionType"/>.</summary>
         public bool Throws(IDeclaredType exceptionType)
         {
-            return _thrownException.Throws(exceptionType);
+            return _thrownException.IsException(exceptionType);
         }
 
         public TextRange[] AddInnerException(string variableName)

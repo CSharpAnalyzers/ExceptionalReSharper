@@ -13,31 +13,60 @@ namespace ReSharper.Exceptional.Analyzers
         /// <summary>Initializes a new instance of the <see cref="AnalyzerBase"/> class. </summary>
         /// <param name="process">The process. </param>
         /// <param name="settings">The settings. </param>
-        public IsDocumentedExceptionThrownAnalyzer(ExceptionalDaemonStageProcess process, ExceptionalSettings settings) 
+        public IsDocumentedExceptionThrownAnalyzer(ExceptionalDaemonStageProcess process, ExceptionalSettings settings)
             : base(process, settings) { }
 
-        /// <summary>Performs analyze of <paramref name="exceptionDocumentationModel"/>.</summary>
-        /// <param name="exceptionDocumentationModel">Exception documentation to analyze.</param>
-        public override void Visit(ExceptionDocCommentModel exceptionDocumentationModel)
+        /// <summary>Performs analyze of <paramref name="exceptionDocumentation"/>.</summary>
+        /// <param name="exceptionDocumentation">Exception documentation to analyze.</param>
+        public override void Visit(ExceptionDocCommentModel exceptionDocumentation)
         {
-            if (exceptionDocumentationModel == null) 
+            if (exceptionDocumentation == null)
                 return;
 
-            if (!exceptionDocumentationModel.AnalyzeUnit.IsInspected)
+            if (!exceptionDocumentation.AnalyzeUnit.IsInspectionRequired)
                 return;
 
-            if (AnalyzeIfExceptionThrown(exceptionDocumentationModel))
+            if (IsDocumentedExceptionThrown(exceptionDocumentation))
                 return;
 
-            Process.Hightlightings.Add(new HighlightingInfo(exceptionDocumentationModel.DocumentRange, new ExceptionNotThrownHighlighting(exceptionDocumentationModel), null, null));            
+            var isOptional = IsDocumentedExceptionOrSubtypeThrown(exceptionDocumentation);
+
+            var highlighting = isOptional
+                ? new ExceptionNotThrownOptionalHighlighting(exceptionDocumentation)
+                : new ExceptionNotThrownHighlighting(exceptionDocumentation);
+
+            Process.Hightlightings.Add(new HighlightingInfo(exceptionDocumentation.DocumentRange, highlighting, null, null));
         }
 
-        private static bool AnalyzeIfExceptionThrown(ExceptionDocCommentModel exceptionDocumentationModel)
+        private bool IsDocumentedExceptionThrown(ExceptionDocCommentModel exceptionDocumentation)
         {
-            return exceptionDocumentationModel
+            return exceptionDocumentation
                 .AnalyzeUnit
-                .NotCaughtThrownExceptions
-                .Any(m => m.Throws(exceptionDocumentationModel.ExceptionType));
+                .UncaughtThrownExceptions
+                .Any(m => m.IsException(exceptionDocumentation.ExceptionType));
+        }
+
+        private bool IsDocumentedExceptionOrSubtypeThrown(ExceptionDocCommentModel exceptionDocumentation)
+        {
+            return exceptionDocumentation
+                .AnalyzeUnit
+                .UncaughtThrownExceptions
+                .Any(m => ThrowsExceptionOrSubtype(exceptionDocumentation, m));
+        }
+
+        private bool ThrowsExceptionOrSubtype(ExceptionDocCommentModel exceptionDocumentation, ThrownExceptionModel thrownException)
+        {
+            if (thrownException.IsThrownFromThrowStatement)
+            {
+                if (Settings.IsDocumentationOfExceptionSubtypeSufficientForThrowStatements)
+                    return thrownException.IsExceptionOrSubtype(exceptionDocumentation.ExceptionType);
+            }
+            else
+            {
+                if (Settings.IsDocumentationOfExceptionSubtypeSufficientForReferenceExpressions)
+                    return thrownException.IsExceptionOrSubtype(exceptionDocumentation.ExceptionType);
+            }
+            return false;
         }
     }
 }

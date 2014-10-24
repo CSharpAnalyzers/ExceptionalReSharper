@@ -1,8 +1,9 @@
 ﻿namespace ReSharper.Exceptional
 {
-	public class Constants
-	{
-		public const string HighlightingTitle = "ErrorHandling";
+    public class Constants
+    {
+        public const string HighlightingTitle = "ErrorHandling";
         public const string ExceptionDescriptionMarker = "[MARKER]";
-	}
+        public const string OptionalPrefix = "(optional) ";
+    }
 }

@@ -22,24 +22,34 @@ namespace ReSharper.Exceptional.Settings
 
         [SettingsEntry(false, "Inspect private methods")]
         public bool InspectPrivateMethods { get; set; }
-        
+
+
+        [SettingsEntry(false, "Is documentation of exception subtype sufficient for throw statements")]
+        public bool IsDocumentationOfExceptionSubtypeSufficientForThrowStatements { get; set; }
+
+        [SettingsEntry(false, "Is documentation of exception subtype sufficient for reference expressions")]
+        public bool IsDocumentationOfExceptionSubtypeSufficientForReferenceExpressions { get; set; }
+
+
         [SettingsEntry(DefaultOptionalExceptions, "Optional exceptions")]
         public string OptionalExceptions { get; set; }
 
         [SettingsEntry(true, "Use default optional exceptions")]
-        public bool UseDefaultOptionalExceptions { get; set; }        
-        
+        public bool UseDefaultOptionalExceptions { get; set; }
+
         [SettingsEntry(DefaultOptionalMethodExceptions, "Optional method exceptions")]
         public string OptionalMethodExceptions { get; set; }
 
         [SettingsEntry(true, "Use default optional method exceptions")]
         public bool UseDefaultOptionalMethodExceptions { get; set; }
 
+
         private const string DefaultOptionalExceptions = "System.ArgumentException,InvocationOnly\n" +
                                                          "System.FormatException,InvocationOnly\n" +
                                                          "System.NotImplementedException,ThrowOnly";
 
         private const string DefaultOptionalMethodExceptions = "System.NotSupportedException,System.Collections.IDictionary.Add";
+
 
         private List<OptionalExceptionConfiguration> _optionalExceptionsCache = null;
         private List<OptionalMethodExceptionConfiguration> _optionalMethodExceptionsCache = null;
@@ -87,7 +97,7 @@ namespace ReSharper.Exceptional.Settings
             {
                 var optionalException = TryLoadOptionalException(process, line);
                 if (optionalException != null)
-                    list.Add(optionalException); 
+                    list.Add(optionalException);
             }
             return list;
         }
@@ -113,7 +123,7 @@ namespace ReSharper.Exceptional.Settings
                 if (arr.Length == 2)
                 {
                     var exceptionType = TypeFactory.CreateTypeByCLRName(arr[0], process.PsiModule, process.PsiModule.GetContextFromModule());
-                   
+
                     OptionalExceptionReplacementType replacementType;
                     if (Enum.TryParse(arr[1], out replacementType))
                         return new OptionalExceptionConfiguration(exceptionType, replacementType);
@@ -131,7 +141,7 @@ namespace ReSharper.Exceptional.Settings
             var arr = line.Split(',');
             if (arr.Length == 2)
                 return new OptionalMethodExceptionConfiguration(arr[0], arr[1]);
-            return null; 
+            return null;
         }
     }
 }

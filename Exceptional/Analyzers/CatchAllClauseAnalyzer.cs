@@ -11,20 +11,15 @@ namespace ReSharper.Exceptional.Analyzers
         /// <summary>Initializes a new instance of the <see cref="CatchAllClauseAnalyzer"/> class. </summary>
         /// <param name="process">The process. </param>
         /// <param name="settings">The settings. </param>
-        public CatchAllClauseAnalyzer(ExceptionalDaemonStageProcess process, ExceptionalSettings settings) 
+        public CatchAllClauseAnalyzer(ExceptionalDaemonStageProcess process, ExceptionalSettings settings)
             : base(process, settings) { }
 
-        /// <summary>Performs analyze of <paramref name="catchClauseModel"/>.</summary>
-        /// <param name="catchClauseModel">Catch clause to analyze.</param>
-        public override void Visit(CatchClauseModel catchClauseModel)
+        /// <summary>Performs analyze of <paramref name="catchClause"/>.</summary>
+        /// <param name="catchClause">Catch clause to analyze.</param>
+        public override void Visit(CatchClauseModel catchClause)
         {
-            if (catchClauseModel == null) 
-                return;
-
-            if (catchClauseModel.IsCatchAll == false) 
-                return;
-
-            Process.Hightlightings.Add(new HighlightingInfo(catchClauseModel.DocumentRange, new CatchAllClauseHighlighting(), null, null));
+            if (catchClause.IsCatchAll)
+                Process.Hightlightings.Add(new HighlightingInfo(catchClause.DocumentRange, new CatchAllClauseHighlighting(), null));
         }
     }
 }

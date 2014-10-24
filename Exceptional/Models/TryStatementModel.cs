@@ -20,14 +20,14 @@ namespace ReSharper.Exceptional.Models
         public List<CatchClauseModel> CatchClauses { get; private set; }
 
         /// <summary>Gets the list of not caught thrown exceptions. </summary>
-        public override IEnumerable<ThrownExceptionModel> NotCaughtThrownExceptions
+        public override IEnumerable<ThrownExceptionModel> UncaughtThrownExceptions
         {
             get
             {
-                foreach (var throwStatementModel in base.NotCaughtThrownExceptions)
+                foreach (var throwStatementModel in base.UncaughtThrownExceptions)
                     yield return throwStatementModel;
 
-                foreach (var model in CatchClauses.SelectMany(m => m.NotCaughtThrownExceptions))
+                foreach (var model in CatchClauses.SelectMany(m => m.UncaughtThrownExceptions))
                     yield return model;
             }
         }
@@ -57,12 +57,12 @@ namespace ReSharper.Exceptional.Models
         }
 
         /// <summary>Analyzes the object and its children. </summary>
-        /// <param name="analyzerBase">The analyzer base. </param>
-        public override void Accept(AnalyzerBase analyzerBase)
+        /// <param name="analyzer">The analyzer base. </param>
+        public override void Accept(AnalyzerBase analyzer)
         {
-            base.Accept(analyzerBase);
+            base.Accept(analyzer);
             foreach (var catchClauseModel in CatchClauses)
-                catchClauseModel.Accept(analyzerBase);
+                catchClauseModel.Accept(analyzer);
         }
 
         /// <summary>Adds a catch clause to the try statement. </summary>
@@ -72,7 +72,7 @@ namespace ReSharper.Exceptional.Models
             var codeElementFactory = new CodeElementFactory(GetElementFactory());
             var variableName = NameFactory.CatchVariableName(Node, exceptionType);
             var catchClauseNode = codeElementFactory.CreateSpecificCatchClause(exceptionType, null, variableName);
-            
+
             Node.AddCatchClause(catchClauseNode);
         }
 

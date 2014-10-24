@@ -37,23 +37,23 @@ namespace ReSharper.Exceptional.Models
 
         public IEnumerable<ExceptionDocCommentModel> DocumentedExceptions { get; private set; }
 
-        public override void Accept(AnalyzerBase analyzerBase)
+        public override void Accept(AnalyzerBase analyzer)
         {
             foreach (var exception in DocumentedExceptions)
-                exception.Accept(analyzerBase);
+                exception.Accept(analyzer);
         }
 
         public ExceptionDocCommentModel AddExceptionDocumentation(IDeclaredType exceptionType, string exceptionDescription, IProgressIndicator progress)
         {
             if (exceptionType == null)
                 return null;
-            
+
             var exceptionDocumentation = string.IsNullOrEmpty(exceptionDescription)
                 ? string.Format("<exception cref=\"{0}\">" + Constants.ExceptionDescriptionMarker + ". </exception>{1}", exceptionType.GetClrName().ShortName, Environment.NewLine)
                 : string.Format("<exception cref=\"{0}\">{1}</exception>{2}", exceptionType.GetClrName().ShortName, exceptionDescription, Environment.NewLine);
 
             ChangeDocumentation(_documentationText + "\n" + exceptionDocumentation);
-            
+
             return DocumentedExceptions.LastOrDefault();
         }
 
@@ -127,7 +127,7 @@ namespace ReSharper.Exceptional.Models
         {
             var xml = string.Empty;
             foreach (var node in Node.Children().OfType<IDocCommentNode>())
-                xml += node.GetText().Replace("///", "").Trim() + "\n";
+                xml += node.GetText().Replace("/// ", "").Replace("///", "") + "\n";
             return xml;
         }
     }

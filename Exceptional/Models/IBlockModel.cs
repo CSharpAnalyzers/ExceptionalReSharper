@@ -21,7 +21,7 @@ namespace ReSharper.Exceptional.Models
         bool CatchesException(IDeclaredType exception);
 
         /// <summary>Gets the list of not caught thrown exceptions. </summary>
-        IEnumerable<ThrownExceptionModel> NotCaughtThrownExceptions { get; }
+        IEnumerable<ThrownExceptionModel> UncaughtThrownExceptions { get; }
 
         /// <summary>Finds the nearest parent try statement which encloses this block. </summary>
         /// <returns>The try statement. </returns>

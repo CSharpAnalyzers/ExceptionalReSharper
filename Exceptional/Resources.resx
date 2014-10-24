@@ -123,9 +123,6 @@
   <data name="HighlightNotDocumentedExceptions" xml:space="preserve">
     <value>The '{0}' exception is not documented in XML documentation. [Exceptional]</value>
   </data>
-  <data name="HighlightNotDocumentedOptionalExceptions" xml:space="preserve">
-    <value>(optional) The '{0}' exception is not documented in XML documentation. [Exceptional]</value>
-  </data>
   <data name="HighlightNotThrownDocumentedExceptions" xml:space="preserve">
     <value>The '{0}' exception is not thrown from documented method. [Exceptional]</value>
   </data>
@@ -133,7 +130,10 @@
     <value>Swallowing exceptions in catch-all clause is not recommended. [Exceptional]</value>
   </data>
   <data name="HighlightThrowingFromCatchWithoutInnerException" xml:space="preserve">
-    <value>While throwing from catch clause include substituted exception as inner exception. [Exceptional]</value>
+    <value>Include substituted exception as inner exception when throwing from catch clause. [Exceptional]</value>
+  </data>
+  <data name="HighlightThrowingSystemException" xml:space="preserve">
+    <value>Throwing 'System.Exception' is not recommended. [Exceptional]</value>
   </data>
   <data name="QuickFixCatchException" xml:space="preserve">
     <value>Catch '{0}' exception [Exceptional]</value>
@@ -142,7 +142,7 @@
     <value>Include caught exception as inner exception [Exceptional]</value>
   </data>
   <data name="QuickFixInsertExceptionDocumentation" xml:space="preserve">
-    <value>Add documentation for {0} exception [Exceptional]</value>
+    <value>Add documentation for '{0}' exception [Exceptional]</value>
   </data>
   <data name="QuickFixRemoveExceptionDocumentation" xml:space="preserve">
     <value>Remove unnecessary exception documentation [Exceptional]</value>

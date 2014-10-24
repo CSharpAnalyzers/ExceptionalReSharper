@@ -29,18 +29,18 @@ namespace ReSharper.Exceptional.QuickFixes
             get
             {
                 return String.Format(Resources.QuickFixInsertExceptionDocumentation,
-                    Error.ThrownExceptionModel.ExceptionType.GetClrName().ShortName);
+                    Error.ThrownException.ExceptionType.GetClrName().ShortName);
             }
         }
 
         protected override Action<ITextControl> ExecutePsiTransaction(ISolution solution, IProgressIndicator progress)
         {
-            var methodDeclaration = Error.ThrownExceptionModel.AnalyzeUnit;
+            var methodDeclaration = Error.ThrownException.AnalyzeUnit;
 
             ExceptionDocCommentModel insertedExceptionModel = null;
 
             insertedExceptionModel = methodDeclaration.DocumentationBlock.AddExceptionDocumentation(
-                Error.ThrownExceptionModel.ExceptionType, Error.ThrownExceptionModel.ExceptionDescription, progress);
+                Error.ThrownException.ExceptionType, Error.ThrownException.ExceptionDescription, progress);
 
             if (insertedExceptionModel == null)
                 return null;
