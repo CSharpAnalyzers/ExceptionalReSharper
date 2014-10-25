@@ -33,7 +33,7 @@ namespace ReSharper.Exceptional.Models
         }
 
         /// <summary>Gets the content block of the object. </summary>
-        public override IBlock Contents
+        public override IBlock Content
         {
             get { return Node.Try; }
         }

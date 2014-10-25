@@ -14,10 +14,16 @@ namespace ReSharper.Exceptional.Models
         /// <summary>Gets the parent block which contains this block. </summary>
         IBlockModel ContainingBlock { get; }
 
+        /// <summary>Gets the document range of this block. </summary>
         DocumentRange DocumentRange { get; }
 
+        /// <summary>Analyzes the object and its children. </summary>
+        /// <param name="analyzer">The analyzer. </param>
         void Accept(AnalyzerBase analyzer);
 
+        /// <summary>Creates a try-catch block around this block. </summary>
+        /// <param name="exceptionType">The exception type to catch. </param>
+        /// <returns><c>true</c> if the try-catch block could be created; otherwise, <c>false</c>. </returns>
         bool SurroundWithTryBlock(IDeclaredType exceptionType);
     }
 }

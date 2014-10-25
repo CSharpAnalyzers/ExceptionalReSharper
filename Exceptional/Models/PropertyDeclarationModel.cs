@@ -8,13 +8,13 @@ namespace ReSharper.Exceptional.Models
 {
     internal class PropertyDeclarationModel : AnalyzeUnitModelBase<IPropertyDeclaration>
     {
-        public List<AccessorDeclarationModel> Accessors { get; private set; }
-
         public PropertyDeclarationModel(IPropertyDeclaration node, ExceptionalSettings settings)
             : base(null, node, settings)
         {
             Accessors = new List<AccessorDeclarationModel>();
         }
+
+        public List<AccessorDeclarationModel> Accessors { get; private set; }
 
         public override void Accept(AnalyzerBase analyzer)
         {
@@ -29,7 +29,8 @@ namespace ReSharper.Exceptional.Models
             get { return Accessors.SelectMany(m => m.UncaughtThrownExceptions); }
         }
 
-        public override IBlock Contents
+        /// <summary>Gets the content block of the object. </summary>
+        public override IBlock Content
         {
             get { return null; }
         }

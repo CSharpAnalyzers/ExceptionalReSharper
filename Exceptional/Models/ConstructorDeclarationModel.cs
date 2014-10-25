@@ -11,7 +11,7 @@ namespace ReSharper.Exceptional.Models
         {
         }
 
-        public override IBlock Contents
+        public override IBlock Content
         {
             get { return Node.Body; }
         }

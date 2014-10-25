@@ -43,7 +43,7 @@ namespace ReSharper.Exceptional.Models
             get { return Node.ExceptionType; }
         }
 
-        public override IBlock Contents
+        public override IBlock Content
         {
             get { return Node.Body; }
         }

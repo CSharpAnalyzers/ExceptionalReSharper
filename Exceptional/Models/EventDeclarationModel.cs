@@ -29,7 +29,7 @@ namespace ReSharper.Exceptional.Models
             get { return Accessors.SelectMany(m => m.UncaughtThrownExceptions); }
         }
 
-        public override IBlock Contents
+        public override IBlock Content
         {
             get { return null; }
         }

@@ -37,12 +37,14 @@
 
         <TextBlock Grid.Row="1" Text="Optional exceptions (shown as hint instead of warning): " FontWeight="Bold" Margin="0,0,0,4" />
         <controls:CheckBoxDisabledNoCheck2 Grid.Row="2" Content="Use defaults" x:Name="UseOptionalExceptionsDefaults" Margin="0,0,0,4" />
-        <TextBox Grid.Row="3" x:Name="OptionalExceptions" AcceptsReturn="True" Margin="0,0,0,4" />
+        <TextBox Grid.Row="3" x:Name="OptionalExceptions" AcceptsReturn="True" Margin="0,0,0,4"
+                 ScrollViewer.HorizontalScrollBarVisibility="Disabled" ScrollViewer.VerticalScrollBarVisibility="Auto" />
         <Button Grid.Row="4" Content="Reset optional exceptions" Padding="4" Click="OnResetOptionalExceptions" Margin="0,0,0,8" />
 
         <TextBlock Grid.Row="5" Text="Optional method exceptions (shown as hint instead of warning): " FontWeight="Bold" Margin="0,0,0,4" />
         <controls:CheckBoxDisabledNoCheck2 Grid.Row="6" Content="Use defaults" x:Name="UseOptionalMethodExceptionsDefaults" Margin="0,0,0,4"/>
-        <TextBox Grid.Row="7" x:Name="OptionalMethodExceptions" AcceptsReturn="True" Margin="0,0,0,4" />
+        <TextBox Grid.Row="7" x:Name="OptionalMethodExceptions" AcceptsReturn="True" Margin="0,0,0,4"
+                 ScrollViewer.HorizontalScrollBarVisibility="Disabled" ScrollViewer.VerticalScrollBarVisibility="Auto"  />
         <Button Grid.Row="8" Content="Reset optional method exceptions" Padding="4" Click="OnResetOptionalMethodExceptions" />
     </Grid>
 </UserControl>

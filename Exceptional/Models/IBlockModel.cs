@@ -28,6 +28,6 @@ namespace ReSharper.Exceptional.Models
         TryStatementModel FindNearestTryStatement();
 
         /// <summary>Gets the content block of the object. </summary>
-        IBlock Contents { get; }
+        IBlock Content { get; }
     }
 }

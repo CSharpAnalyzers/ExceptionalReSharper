@@ -26,7 +26,7 @@ namespace ReSharper.Exceptional.Models
         public IBlockModel ParentBlock { get; set; }
 
         /// <summary>Gets the content block of the object. </summary>
-        public abstract IBlock Contents { get; }
+        public abstract IBlock Content { get; }
 
         /// <summary>Gets the list of not caught thrown exceptions. </summary>
         public virtual IEnumerable<ThrownExceptionModel> UncaughtThrownExceptions
@@ -53,7 +53,7 @@ namespace ReSharper.Exceptional.Models
         }
 
         /// <summary>Analyzes the object and its children. </summary>
-        /// <param name="analyzer">The analyzer base. </param>
+        /// <param name="analyzer">The analyzer. </param>
         public override void Accept(AnalyzerBase analyzer)
         {
             foreach (var tryStatement in TryStatements)
