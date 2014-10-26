@@ -7,7 +7,7 @@ namespace Exceptional.Playground
         /// <exception cref="Exception">Test. </exception>
         public void Test03()
         {
-            throw new Exception(); // Should show a warning because throwing System.Exception is considered bad. 
+            throw new Exception(); // Suggestion: Should show a suggestion because throwing System.Exception is considered bad. 
         }
     }
 }
