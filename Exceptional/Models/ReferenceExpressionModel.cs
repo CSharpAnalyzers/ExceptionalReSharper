@@ -1,11 +1,11 @@
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using JetBrains.DocumentModel;
 using JetBrains.ReSharper.Psi;
 using JetBrains.ReSharper.Psi.CSharp.Tree;
 using JetBrains.ReSharper.Psi.ExtensionsAPI;
 using JetBrains.ReSharper.Psi.Resolve;
+using JetBrains.ReSharper.Psi.Tree;
 using ReSharper.Exceptional.Analyzers;
 using ReSharper.Exceptional.Utilities;
 
@@ -13,20 +13,54 @@ namespace ReSharper.Exceptional.Models
 {
     internal class ReferenceExpressionModel : TreeElementModelBase<IReferenceExpression>, IExceptionsOriginModel
     {
+        private IEnumerable<ThrownExceptionModel> _thrownExceptions;
+
         public ReferenceExpressionModel(IAnalyzeUnit analyzeUnit, IReferenceExpression invocationExpression, IBlockModel containingBlock)
             : base(analyzeUnit, invocationExpression)
         {
             ContainingBlock = containingBlock;
-            ThrownExceptions = ThrownExceptionsReader.Read(AnalyzeUnit, this, Node);
         }
-
-        public IEnumerable<ThrownExceptionModel> ThrownExceptions { get; set; }
 
         public IBlockModel ContainingBlock { get; private set; }
 
         public override DocumentRange DocumentRange
         {
             get { return Node.Reference.GetDocumentRange(); }
+        }
+
+        /// <summary>Gets a list of exceptions which may be thrown from this reference expression (empty if <see cref="IsInvocation"/> is false). </summary>
+        public IEnumerable<ThrownExceptionModel> ThrownExceptions
+        {
+            get
+            {
+                if (_thrownExceptions == null)
+                {
+                    _thrownExceptions = IsInvocation
+                        ? ThrownExceptionsReader.Read(AnalyzeUnit, this, Node)
+                        : new List<ThrownExceptionModel>();
+                }
+                return _thrownExceptions;
+            }
+        }
+
+        /// <summary>Gets a value indicating whether this is a method or property invocation. </summary>
+        public bool IsInvocation
+        {
+            get
+            {
+                ITreeNode parent = Node.Parent;
+                while (parent != null)
+                {
+                    if (parent == AnalyzeUnit.Node || parent is ICSharpArgument)
+                        return false;
+
+                    if (parent is IInvocationExpression || parent is IExpressionInitializer)
+                        return true;
+
+                    parent = parent.Parent;
+                }
+                return false;
+            }
         }
 
         public override void Accept(AnalyzerBase analyzer)

@@ -6,7 +6,7 @@ namespace Exceptional.Playground
     {
         public void Foo()
         {
-            Bar(); // When inserting exception documentation from this method, then the text below should be copied. 
+            Bar(); // Warning: When inserting exception documentation from this method, then the text below should be copied. 
         }
 
         /// <exception cref="SecurityException">This text should be inserted. </exception>

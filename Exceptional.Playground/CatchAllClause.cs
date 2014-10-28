@@ -13,7 +13,7 @@ namespace Exceptional.Playground
             }
             catch (Exception exception) // Warning: When catching System.Exception a warning should be shown
             {
-                Console.WriteLine(exception.Message);
+                Console.WriteLine(exception.Message); // Warning: IOException not documented
             }
         }
 

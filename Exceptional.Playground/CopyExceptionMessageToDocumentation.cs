@@ -6,7 +6,7 @@ namespace Exceptional.Playground
     {
         public void Foo()
         {
-            throw new ArgumentException("abc"); // When inserting exception to documentation then "abc" should be used as exception description/condition. 
+            throw new ArgumentException("abc"); // Warning: When inserting exception to documentation then "abc" should be used as exception description/condition. 
         }
     }
 }
