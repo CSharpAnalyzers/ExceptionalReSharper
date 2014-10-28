@@ -3,7 +3,6 @@ using System.Text.RegularExpressions;
 using JetBrains.ReSharper.Daemon;
 using JetBrains.ReSharper.Psi;
 using ReSharper.Exceptional.Highlightings;
-
 using ReSharper.Exceptional.Models;
 using ReSharper.Exceptional.Settings;
 
@@ -34,11 +33,21 @@ namespace ReSharper.Exceptional.Analyzers
                              IsThrownExceptionSubclassOfOptionalException(thrownException) ||
                              IsThrownExceptionThrownFromExcludedMethod(thrownException);
 
-            var highlighting = isOptional
-                ? new ExceptionNotDocumentedOptionalHighlighting(thrownException)
-                : new ExceptionNotDocumentedHighlighting(thrownException);
-
-            Process.Hightlightings.Add(new HighlightingInfo(thrownException.DocumentRange, highlighting, null, null));
+            if (thrownException.IsEventInvocationException)
+            {
+                if (Settings.EventInvocationsMayThrowExceptions)
+                {
+                    var highlighting = new EventExceptionNotDocumentedHighlighting(thrownException);
+                    Process.Hightlightings.Add(new HighlightingInfo(thrownException.DocumentRange, highlighting, null));
+                }
+            }
+            else
+            {
+                var highlighting = isOptional
+                    ? new ExceptionNotDocumentedOptionalHighlighting(thrownException)
+                    : new ExceptionNotDocumentedHighlighting(thrownException);
+                Process.Hightlightings.Add(new HighlightingInfo(thrownException.DocumentRange, highlighting, null));
+            }
         }
 
         private bool IsSubtypeDocumented(ThrownExceptionModel thrownException)

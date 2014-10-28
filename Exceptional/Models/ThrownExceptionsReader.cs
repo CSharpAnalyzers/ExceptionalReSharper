@@ -12,8 +12,8 @@ namespace ReSharper.Exceptional.Models
     internal static class ThrownExceptionsReader
     {
         /// <summary>Reads the specified reference expression. </summary>
-        /// <param name="analyzeUnit"></param>
-        /// <param name="exceptionsOrigin"></param>
+        /// <param name="analyzeUnit">The analyze unit. </param>
+        /// <param name="exceptionsOrigin">The exceptions origin. </param>
         /// <param name="referenceExpression">The reference expression.</param>
         /// <returns>The list of thrown exceptions. </returns>
         public static IEnumerable<ThrownExceptionModel> Read(IAnalyzeUnit analyzeUnit, IExceptionsOriginModel exceptionsOrigin, IReferenceExpression referenceExpression)
@@ -41,13 +41,14 @@ namespace ReSharper.Exceptional.Models
 
                 var docCommentBlockModel = new DocCommentBlockModel(null, docCommentBlockNode);
                 foreach (var comment in docCommentBlockModel.DocumentedExceptions)
-                    result.Add(new ThrownExceptionModel(analyzeUnit, exceptionsOrigin, comment.ExceptionType, comment.ExceptionDescription));
+                    result.Add(new ThrownExceptionModel(analyzeUnit, exceptionsOrigin, comment.ExceptionType, comment.ExceptionDescription, false));
             }
 
             return result;
         }
 
-        private static IEnumerable<ThrownExceptionModel> GetFromXmlDoc(IAnalyzeUnit analyzeUnit, IExceptionsOriginModel exceptionsOrigin, IDeclaredElement declaredElement, IPsiModule psiModule)
+        private static IEnumerable<ThrownExceptionModel> GetFromXmlDoc(
+            IAnalyzeUnit analyzeUnit, IExceptionsOriginModel exceptionsOrigin, IDeclaredElement declaredElement, IPsiModule psiModule)
         {
             var result = new List<ThrownExceptionModel>();
 
@@ -72,7 +73,7 @@ namespace ReSharper.Exceptional.Models
                         psiModule.GetContextFromModule());
 
                     Logger.Assert(exceptionDeclaredType != null, "Created exception type was null!");
-                    result.Add(new ThrownExceptionModel(analyzeUnit, exceptionsOrigin, exceptionDeclaredType, exceptionNode.InnerXml));
+                    result.Add(new ThrownExceptionModel(analyzeUnit, exceptionsOrigin, exceptionDeclaredType, exceptionNode.InnerXml, false));
                 }
             }
 

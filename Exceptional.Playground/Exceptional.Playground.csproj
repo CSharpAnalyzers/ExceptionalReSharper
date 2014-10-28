@@ -41,6 +41,7 @@
   <ItemGroup>
     <Compile Include="CatchAllClause.cs" />
     <Compile Include="Demonstration.cs" />
+    <Compile Include="Features\EventMayThrowException.cs" />
     <Compile Include="Fixed\EventRegistrationShowsWarning.cs" />
     <Compile Include="ThrowingSystemExceptionShowsWarning.cs" />
     <Compile Include="Fixed\RethrowInCatchClauseNotCorrectlyAnalyzed.cs" />
@@ -50,7 +51,6 @@
     <Compile Include="Fixed\DocumentationInsertedOnWrongPlace.cs" />
     <Compile Include="CopyExceptionMessageToDocumentation.cs" />
     <Compile Include="Fixed\DocumentationInsertedWrong.cs" />
-    <Compile Include="Fixed\EventsAreNotScanned.cs" />
     <Compile Include="Fixed\ExceptionsInConstructorNotConsidered.cs" />
     <Compile Include="HideWarningWhenBaseExceptionAlreadyDocumented.cs" />
     <Compile Include="Fixed\InsertExceptionDescriptionOfFrameworkMethod.cs" />
@@ -62,9 +62,7 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="UnnecessaryExceptionDocumented.cs" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Features\" />
-  </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

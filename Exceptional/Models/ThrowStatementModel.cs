@@ -26,7 +26,7 @@ namespace ReSharper.Exceptional.Models
             var exceptionType = GetExceptionType();
             var exceptionDescription = GetThrownExceptionMessage(throwStatement);
 
-            _thrownException = new ThrownExceptionModel(analyzeUnit, this, exceptionType, exceptionDescription);
+            _thrownException = new ThrownExceptionModel(analyzeUnit, this, exceptionType, exceptionDescription, false);
         }
 
         /// <summary>Gets the parent block which contains this block. </summary>
@@ -65,12 +65,17 @@ namespace ReSharper.Exceptional.Models
             return outerBlock as CatchClauseModel;
         }
 
+        /// <summary>Runs the analyzer against all defined elements. </summary>
+        /// <param name="analyzer">The analyzer. </param>
         public override void Accept(AnalyzerBase analyzer)
         {
             analyzer.Visit(this);
             _thrownException.Accept(analyzer);
         }
 
+        /// <summary>Creates a try-catch block around this block. </summary>
+        /// <param name="exceptionType">The exception type to catch. </param>
+        /// <returns><c>true</c> if the try-catch block could be created; otherwise, <c>false</c>. </returns>
         public bool SurroundWithTryBlock(IDeclaredType exceptionType)
         {
             var codeElementFactory = new CodeElementFactory(GetElementFactory());
@@ -84,6 +89,7 @@ namespace ReSharper.Exceptional.Models
             return true;
         }
 
+        /// <summary>Gets the list of exception which can be thrown from this object. </summary>
         public IEnumerable<ThrownExceptionModel> ThrownExceptions
         {
             get { return new List<ThrownExceptionModel>(new[] { _thrownException }); }

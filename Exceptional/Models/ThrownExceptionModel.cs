@@ -2,7 +2,6 @@ using System.Linq;
 using JetBrains.DocumentModel;
 using JetBrains.ReSharper.Psi;
 using ReSharper.Exceptional.Analyzers;
-using ReSharper.Exceptional.Settings;
 
 namespace ReSharper.Exceptional.Models
 {
@@ -12,14 +11,21 @@ namespace ReSharper.Exceptional.Models
         private bool? _isExceptionDocumented = null;
         private bool? _isExceptionOrSubtypeDocumented = null;
 
-        public ThrownExceptionModel(IAnalyzeUnit analyzeUnit, IExceptionsOriginModel exceptionsOrigin,
-            IDeclaredType exceptionType, string exceptionDescription)
+        public ThrownExceptionModel(
+            IAnalyzeUnit analyzeUnit,
+            IExceptionsOriginModel exceptionsOrigin,
+            IDeclaredType exceptionType,
+            string exceptionDescription,
+            bool isEventInvocationException)
             : base(analyzeUnit)
         {
             ExceptionType = exceptionType;
             ExceptionDescription = exceptionDescription;
             ExceptionsOrigin = exceptionsOrigin;
+            IsEventInvocationException = isEventInvocationException;
         }
+
+        public bool IsEventInvocationException { get; set; }
 
         public IDeclaredType ExceptionType { get; private set; }
 
@@ -27,6 +33,7 @@ namespace ReSharper.Exceptional.Models
 
         public IExceptionsOriginModel ExceptionsOrigin { get; private set; }
 
+        /// <summary>Gets the document range of this object. </summary>
         public override DocumentRange DocumentRange
         {
             get { return ExceptionsOrigin.DocumentRange; }
@@ -121,6 +128,8 @@ namespace ReSharper.Exceptional.Models
             return ExceptionType.IsSubtypeOf(exceptionType);
         }
 
+        /// <summary>Runs the analyzer against all defined elements. </summary>
+        /// <param name="analyzer">The analyzer. </param>
         public override void Accept(AnalyzerBase analyzer)
         {
             analyzer.Visit(this);

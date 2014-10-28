@@ -8,7 +8,7 @@ namespace Exceptional.Playground.Features
         {
             MyEvent(); // Suggestion: May throw System.Exception
         }
-
+        
         public event Action MyEvent;
     }
 }

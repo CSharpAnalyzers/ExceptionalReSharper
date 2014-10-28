@@ -138,6 +138,7 @@
     <Compile Include="Analyzers\IsThrowingSystemExceptionAnalyzer.cs" />
     <Compile Include="Contexts\ConstructorProcessContext.cs" />
     <Compile Include="Contexts\EventProcessContext.cs" />
+    <Compile Include="Highlightings\EventExceptionNotDocumentedHighlighting.cs" />
     <Compile Include="Highlightings\ExceptionNotThrownOptionalHighlighting.cs" />
     <Compile Include="Highlightings\ThrowingSystemExceptionHighlighting.cs" />
     <Compile Include="Models\ConstructorDeclarationModel.cs" />

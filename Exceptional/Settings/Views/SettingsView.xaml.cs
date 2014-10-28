@@ -21,6 +21,9 @@ namespace ReSharper.Exceptional.Settings.Views
             _lifetime = lifetime;
             _settings = settings;
 
+            settings.SetBinding(lifetime, (ExceptionalSettings x) => x.EventInvocationsMayThrowExceptions,
+                EventInvocationsMayThrowExceptions, CheckBoxDisabledNoCheck2.IsCheckedLogicallyDependencyProperty);
+            
             settings.SetBinding(lifetime, (ExceptionalSettings x) => x.IsDocumentationOfExceptionSubtypeSufficientForThrowStatements,
                 IsDocumentationOfExceptionSubtypeSufficientForThrowStatements, CheckBoxDisabledNoCheck2.IsCheckedLogicallyDependencyProperty);
             settings.SetBinding(lifetime, (ExceptionalSettings x) => x.IsDocumentationOfExceptionSubtypeSufficientForReferenceExpressions,
