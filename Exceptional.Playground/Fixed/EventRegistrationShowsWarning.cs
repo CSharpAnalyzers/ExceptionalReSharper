@@ -10,7 +10,7 @@ namespace Exceptional.Playground.Fixed
             Test1(Xyz); // No warning: Not called here so no warning should be shown
 
             MyEvent += Bar; // No warning: Not called here so no warning should be shown
-            MyEvent(); // TODO: Should this show that it may throw any exception (System.Exception)?
+            MyEvent(); // Suggestion: May throw exception
 
             var value = 10;
             value += Xyz(); // Warning: SecurityException not documented

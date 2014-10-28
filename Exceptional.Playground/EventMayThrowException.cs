@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Exceptional.Playground.Features
+namespace Exceptional.Playground
 {
     class EventMayThrowException
     {

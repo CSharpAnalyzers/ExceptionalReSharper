@@ -141,6 +141,7 @@
     <Compile Include="Highlightings\EventExceptionNotDocumentedHighlighting.cs" />
     <Compile Include="Highlightings\ExceptionNotThrownOptionalHighlighting.cs" />
     <Compile Include="Highlightings\ThrowingSystemExceptionHighlighting.cs" />
+    <Compile Include="Images\ThemedIcons.Unnamed.Generated.cs" />
     <Compile Include="Models\ConstructorDeclarationModel.cs" />
     <Compile Include="Models\EventDeclarationModel.cs" />
     <Compile Include="Utilities\CodeElementFactory.cs" />
@@ -153,7 +154,6 @@
     <Compile Include="Highlightings\SwallowedExceptionsHighlighting.cs" />
     <Compile Include="Highlightings\ThrowFromCatchWithNoInnerExceptionHighlighting.cs" />
     <Compile Include="Constants.cs" />
-    <Compile Include="Images\ThemedIcons.Unnamed.Generated.cs" />
     <Compile Include="Contexts\IProcessContext.cs" />
     <Compile Include="Contexts\MethodProcessContext.cs" />
     <Compile Include="Models\AccessorDeclarationModel.cs" />
