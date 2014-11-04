@@ -8,7 +8,6 @@ namespace Exceptional.Playground.Fixed
         public void Test01()
         {
             var x = AppDomain.CurrentDomain.FriendlyName; // Warning: Should insert "The operation is attempted on an unloaded application domain. " as exception description
-            // see http://msdn.microsoft.com/en-us/library/vstudio/system.appdomain.friendlyname(v=vs.90).aspx
 
             var y = AppDomain.CurrentDomain.FriendlyName.Split('a'); // Warning: On FriendlyName
             var z = AppDomain.CurrentDomain.FriendlyName.Length; // Warning: On FriendlyName

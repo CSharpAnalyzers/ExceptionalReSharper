@@ -43,6 +43,8 @@
     <Compile Include="Demonstration.cs" />
     <Compile Include="EventMayThrowException.cs" />
     <Compile Include="Fixed\EventRegistrationShowsWarning.cs" />
+    <Compile Include="Fixed\AddingElementToListDoesNotShowException.cs" />
+    <Compile Include="Fixed\ExceptionOnInterfaceMarkedAsUnnecessary.cs" />
     <Compile Include="ThrowingSystemExceptionShowsWarning.cs" />
     <Compile Include="Fixed\RethrowInCatchClauseNotCorrectlyAnalyzed.cs" />
     <Compile Include="Fixed\WrongInnerExceptionWarning.cs" />

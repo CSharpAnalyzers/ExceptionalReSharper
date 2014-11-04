@@ -138,8 +138,11 @@ namespace ReSharper.Exceptional.Models
             var parent = Node.Parent;
             while (parent != null)
             {
-                if (parent == AnalyzeUnit.Node || parent is ICSharpArgument)
-                    return false;
+                if (parent == AnalyzeUnit.Node)
+                    return false; 
+  
+                if (parent is ICSharpArgument)
+                    return parent.Parent is ICollectionElementInitializer;
 
                 if (parent is IInvocationExpression || parent is IExpressionInitializer)
                     return true;

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq.Expressions;
 using System.Security;
 
 namespace Exceptional.Playground.Fixed
@@ -20,27 +21,29 @@ namespace Exceptional.Playground.Fixed
 
             Xyz(); // Warning
             var x = Xyz(); // Warning
+            x = Xyz() + Xyz(); // Two warnings
+            x = Xyz() + 10 + Xyz(); // Two warnings
         }
-
+        
         public event Action MyEvent;
-
+        
         /// <exception cref="SecurityException">Condition. </exception>
         public void Bar()
         {
             throw new SecurityException();
         }
-
+        
         /// <exception cref="SecurityException">Condition. </exception>
         public int Xyz()
         {
             throw new SecurityException();
             return 42;
         }
-
+        
         public void Test1(Func<int> func)
         {
         }
-
+        
         public void Test2(int val)
         {
         }

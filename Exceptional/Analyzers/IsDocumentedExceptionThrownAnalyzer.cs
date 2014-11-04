@@ -1,7 +1,6 @@
 using System.Linq;
 using JetBrains.ReSharper.Daemon;
 using ReSharper.Exceptional.Highlightings;
-
 using ReSharper.Exceptional.Models;
 using ReSharper.Exceptional.Settings;
 
@@ -23,6 +22,9 @@ namespace ReSharper.Exceptional.Analyzers
             if (exceptionDocumentation == null)
                 return;
 
+            if (IsAbstractOrInterfaceMethod(exceptionDocumentation))
+                return;
+
             if (!exceptionDocumentation.AnalyzeUnit.IsInspectionRequired)
                 return;
 
@@ -36,6 +38,17 @@ namespace ReSharper.Exceptional.Analyzers
                 : new ExceptionNotThrownHighlighting(exceptionDocumentation);
 
             Process.Hightlightings.Add(new HighlightingInfo(exceptionDocumentation.DocumentRange, highlighting, null, null));
+        }
+
+        private bool IsAbstractOrInterfaceMethod(ExceptionDocCommentModel exceptionDocumentation)
+        {
+            if (exceptionDocumentation.AnalyzeUnit is MethodDeclarationModel)
+            {
+                var declaredElement = ((MethodDeclarationModel)exceptionDocumentation.AnalyzeUnit).Node.DeclaredElement;
+                if (declaredElement != null && declaredElement.IsAbstract)
+                    return true;
+            }
+            return false;
         }
 
         private bool IsDocumentedExceptionThrown(ExceptionDocCommentModel exceptionDocumentation)
