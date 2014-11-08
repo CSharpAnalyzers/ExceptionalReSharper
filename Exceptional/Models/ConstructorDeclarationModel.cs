@@ -9,6 +9,7 @@ namespace ReSharper.Exceptional.Models
         public ConstructorDeclarationModel(IConstructorDeclaration constructorDeclaration, ExceptionalSettings settings)
             : base(null, constructorDeclaration, settings)
         {
+
         }
 
         public override IBlock Content

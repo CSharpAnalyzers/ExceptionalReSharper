@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Security;
 
 namespace Exceptional.Playground.Fixed
@@ -8,7 +9,7 @@ namespace Exceptional.Playground.Fixed
         public void Foo()
         {
             var x = new Bar();
-            var y = new List<string> { x.MyProperty, x.Test() }; // Two warnings: Exception of Test not documented
+            var y = new List<object> { x.Foo, x.MyProperty, x.Test() }; // Two warnings: Exception of Test not documented
         }
 
         public class Bar
@@ -27,6 +28,8 @@ namespace Exceptional.Playground.Fixed
             {
                 throw new SecurityException();
             }
+
+            public Action Foo { get; set; }
         }
     }
 }

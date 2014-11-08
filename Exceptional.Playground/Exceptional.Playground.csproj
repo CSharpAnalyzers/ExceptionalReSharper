@@ -45,6 +45,8 @@
     <Compile Include="Fixed\EventRegistrationShowsWarning.cs" />
     <Compile Include="Fixed\AddingElementToListDoesNotShowException.cs" />
     <Compile Include="Fixed\ExceptionOnInterfaceMarkedAsUnnecessary.cs" />
+    <Compile Include="Fixed\EventHandling.cs" />
+    <Compile Include="Issues\WrongWarningOnCtor.cs" />
     <Compile Include="ThrowingSystemExceptionShowsWarning.cs" />
     <Compile Include="Fixed\RethrowInCatchClauseNotCorrectlyAnalyzed.cs" />
     <Compile Include="Fixed\WrongInnerExceptionWarning.cs" />

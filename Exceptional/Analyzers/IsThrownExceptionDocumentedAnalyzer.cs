@@ -35,7 +35,7 @@ namespace ReSharper.Exceptional.Analyzers
 
             if (thrownException.IsEventInvocationException)
             {
-                if (Settings.EventInvocationsMayThrowExceptions)
+                if (Settings.DelegateInvocationsMayThrowExceptions)
                 {
                     var highlighting = new EventExceptionNotDocumentedHighlighting(thrownException);
                     Process.Hightlightings.Add(new HighlightingInfo(thrownException.DocumentRange, highlighting, null));

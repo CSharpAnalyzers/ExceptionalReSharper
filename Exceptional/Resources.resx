@@ -121,7 +121,7 @@
     <value>Usage of catch-all clauses is not recommended. [Exceptional]</value>
   </data>
   <data name="HighlightEventNotDocumentedExceptions" xml:space="preserve">
-    <value>The possible 'System.Exception' from event invocation is not documented in XML documentation. [Exceptional]</value>
+    <value>The possible 'System.Exception' from delegate invocation is not documented in XML documentation. [Exceptional]</value>
   </data>
   <data name="HighlightNotDocumentedExceptions" xml:space="preserve">
     <value>The '{0}' exception is not documented in XML documentation. [Exceptional]</value>

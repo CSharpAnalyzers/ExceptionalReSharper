@@ -22,8 +22,8 @@
         </Grid.RowDefinitions>
         
         <StackPanel>
-            <controls:CheckBoxDisabledNoCheck2 Content="Event invocations may throw System.Exception" Margin="0,0,0,12" 
-                                               x:Name="EventInvocationsMayThrowExceptions" />
+            <controls:CheckBoxDisabledNoCheck2 Content="Delegate invocations may throw System.Exception" Margin="0,0,0,12" 
+                                               x:Name="DelegateInvocationsMayThrowExceptions" />
 
             <TextBlock Text="Documentation of thrown exception's subtype is sufficient..." FontWeight="Bold" Margin="0,0,0,4" />
             <controls:CheckBoxDisabledNoCheck2 Content="... for throw statements" Margin="0,0,0,4" 

@@ -24,8 +24,8 @@ namespace ReSharper.Exceptional.Settings
         public bool InspectPrivateMethods { get; set; }
 
 
-        [SettingsEntry(true, "Event invocations may throw System.Exception")]
-        public bool EventInvocationsMayThrowExceptions { get; set; }
+        [SettingsEntry(true, "Delegate invocations may throw System.Exception")]
+        public bool DelegateInvocationsMayThrowExceptions { get; set; }
 
 
         [SettingsEntry(false, "Is documentation of exception subtype sufficient for throw statements")]

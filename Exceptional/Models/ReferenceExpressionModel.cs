@@ -1,11 +1,13 @@
 using System;
 using System.Collections.Generic;
 using JetBrains.DocumentModel;
+using JetBrains.ReSharper.Feature.Services.CSharp.Generate.MemberBody;
 using JetBrains.ReSharper.Psi;
 using JetBrains.ReSharper.Psi.CSharp.Tree;
 using JetBrains.ReSharper.Psi.ExtensionsAPI;
 using JetBrains.ReSharper.Psi.Modules;
 using JetBrains.ReSharper.Psi.Resolve;
+using JetBrains.ReSharper.Psi.Tree;
 using JetBrains.ReSharper.Psi.Util;
 using ReSharper.Exceptional.Analyzers;
 using ReSharper.Exceptional.Utilities;
@@ -40,7 +42,7 @@ namespace ReSharper.Exceptional.Models
             {
                 if (_thrownExceptions == null)
                 {
-                    if (IsEventInvocation)
+                    if (IsDelegateInvocation)
                     {
                         var thrownException = CreateThrownSystemException();
                         _thrownExceptions = new List<ThrownExceptionModel> { thrownException };
@@ -65,8 +67,8 @@ namespace ReSharper.Exceptional.Models
             }
         }
 
-        /// <summary>Gets a value indicating whether this is an event invocation. </summary>
-        public bool IsEventInvocation
+        /// <summary>Gets a value indicating whether this is an delegate invocation. </summary>
+        public bool IsDelegateInvocation
         {
             get
             {
@@ -139,12 +141,21 @@ namespace ReSharper.Exceptional.Models
             while (parent != null)
             {
                 if (parent == AnalyzeUnit.Node)
-                    return false; 
-  
-                if (parent is ICSharpArgument)
-                    return parent.Parent is ICollectionElementInitializer;
+                    return false;
 
-                if (parent is IInvocationExpression || parent is IExpressionInitializer)
+                if (parent is ICSharpArgument || parent is IExpressionInitializer)
+                {
+                    var property = Node.Reference.Resolve().DeclaredElement as IProperty;
+                    if (property != null)
+                    {
+                        var psiModule = Node.GetPsiModule();
+                        var delegateType = TypeFactory.CreateTypeByCLRName("System.Delegate", psiModule, psiModule.GetContextFromModule());
+                        return !property.Type.IsSubtypeOf(delegateType);
+                    }
+                    return false;
+                }
+
+                if (parent is IInvocationExpression)
                     return true;
 
                 parent = parent.Parent;

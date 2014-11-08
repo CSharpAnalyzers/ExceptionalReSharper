@@ -70,7 +70,7 @@ namespace ReSharper.Exceptional {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to The possible &apos;System.Exception&apos; from event invocation is not documented in XML documentation. [Exceptional].
+        ///   Looks up a localized string similar to The possible &apos;System.Exception&apos; from delegate invocation is not documented in XML documentation. [Exceptional].
         /// </summary>
         internal static string HighlightEventNotDocumentedExceptions {
             get {
