@@ -27,7 +27,7 @@ namespace ReSharper.Exceptional.Models
 
             var declarations = declaredElement.GetDeclarations();
             if (declarations.Count == 0)
-                return GetFromXmlDoc(analyzeUnit, exceptionsOrigin, declaredElement, referenceExpression.GetPsiModule());
+                return Read(analyzeUnit, exceptionsOrigin, declaredElement);
 
             foreach (var declaration in declarations)
             {
@@ -47,8 +47,7 @@ namespace ReSharper.Exceptional.Models
             return result;
         }
 
-        private static IEnumerable<ThrownExceptionModel> GetFromXmlDoc(
-            IAnalyzeUnit analyzeUnit, IExceptionsOriginModel exceptionsOrigin, IDeclaredElement declaredElement, IPsiModule psiModule)
+        public static IEnumerable<ThrownExceptionModel> Read(IAnalyzeUnit analyzeUnit, IExceptionsOriginModel exceptionsOrigin, IDeclaredElement declaredElement)
         {
             var result = new List<ThrownExceptionModel>();
 
@@ -60,6 +59,7 @@ namespace ReSharper.Exceptional.Models
             if (exceptionNodes == null)
                 return result;
 
+            var psiModule = analyzeUnit.GetPsiModule();
             foreach (XmlNode exceptionNode in exceptionNodes)
             {
                 if (exceptionNode.Attributes != null)
@@ -69,8 +69,7 @@ namespace ReSharper.Exceptional.Models
                     if (exceptionType.StartsWith("T:"))
                         exceptionType = exceptionType.Substring(2);
 
-                    var exceptionDeclaredType = TypeFactory.CreateTypeByCLRName(exceptionType, psiModule,
-                        psiModule.GetContextFromModule());
+                    var exceptionDeclaredType = TypeFactory.CreateTypeByCLRName(exceptionType, psiModule, psiModule.GetContextFromModule());
 
                     Logger.Assert(exceptionDeclaredType != null, "Created exception type was null!");
                     result.Add(new ThrownExceptionModel(analyzeUnit, exceptionsOrigin, exceptionDeclaredType, exceptionNode.InnerXml, false));

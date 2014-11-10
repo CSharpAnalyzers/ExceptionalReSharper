@@ -52,9 +52,7 @@
     <Compile Include="Fixed\WrongInnerExceptionWarning.cs" />
     <Compile Include="InnerExceptions.cs" />
     <Compile Include="InsertingCorrectComment.cs" />
-    <Compile Include="Fixed\DocumentationInsertedOnWrongPlace.cs" />
     <Compile Include="CopyExceptionMessageToDocumentation.cs" />
-    <Compile Include="Fixed\DocumentationInsertedWrong.cs" />
     <Compile Include="Fixed\ExceptionsInConstructorNotConsidered.cs" />
     <Compile Include="HideWarningWhenBaseExceptionAlreadyDocumented.cs" />
     <Compile Include="Fixed\InsertExceptionDescriptionOfFrameworkMethod.cs" />

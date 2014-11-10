@@ -79,7 +79,7 @@ namespace ReSharper.Exceptional
                     _currentContext.Process(element as IDocCommentBlockNode);
                 else
                 {
-                    _eventComments.Add((IDocCommentBlockNode)element); 
+                    _eventComments.Add((IDocCommentBlockNode)element);
                     // HACK: Event documentation blocks are processed before event declaration, 
                     // other documentation blocks are processed after the associated element declaration
                 }
