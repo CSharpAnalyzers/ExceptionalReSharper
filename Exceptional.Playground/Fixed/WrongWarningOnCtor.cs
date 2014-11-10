@@ -2,7 +2,7 @@
 using System.IO;
 using System.Security;
 
-namespace Exceptional.Playground.Issues
+namespace Exceptional.Playground.Fixed
 {
     public class Foo : Bar
     {
