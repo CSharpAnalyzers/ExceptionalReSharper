@@ -3,6 +3,7 @@ using System.Security;
 
 namespace Exceptional.Playground.Issues
 {
+    // Issue priority: Low
     class MissingInnerExceptionNotShown
     {
         /// <exception cref="Exception">Condition. </exception>

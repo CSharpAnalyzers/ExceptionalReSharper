@@ -131,7 +131,7 @@ namespace ReSharper.Exceptional.Models
             var systemExceptionType = TypeFactory.CreateTypeByCLRName("System.Exception", psiModule,
                 psiModule.GetContextFromModule());
             var thrownException = new ThrownExceptionModel(
-                AnalyzeUnit, this, systemExceptionType, "An event callback throws an exception. ", true);
+                AnalyzeUnit, this, systemExceptionType, "A delegate callback throws an exception. ", true);
             return thrownException;
         }
 
