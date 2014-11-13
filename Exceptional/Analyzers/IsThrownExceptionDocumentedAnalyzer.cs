@@ -4,6 +4,7 @@ using JetBrains.ReSharper.Daemon;
 using JetBrains.ReSharper.Psi;
 using ReSharper.Exceptional.Highlightings;
 using ReSharper.Exceptional.Models;
+using ReSharper.Exceptional.Models.ExceptionsOrigins;
 using ReSharper.Exceptional.Settings;
 
 namespace ReSharper.Exceptional.Analyzers

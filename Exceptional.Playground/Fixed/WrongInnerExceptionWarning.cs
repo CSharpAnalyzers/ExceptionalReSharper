@@ -15,7 +15,7 @@ namespace Exceptional.Playground.Fixed
             catch (SecurityException exception)
             {
                 Debug.WriteLine(exception.Message);
-                throw exception; // No exceptional warning: No new exception without inner exception is constructed
+                throw exception; // No [Exceptional] warning: No new exception without inner exception is constructed
             }
         }
     }

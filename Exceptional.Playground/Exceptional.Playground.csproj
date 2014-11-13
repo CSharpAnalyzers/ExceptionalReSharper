@@ -46,8 +46,9 @@
     <Compile Include="Fixed\AddingElementToListDoesNotShowException.cs" />
     <Compile Include="Fixed\ExceptionOnInterfaceMarkedAsUnnecessary.cs" />
     <Compile Include="Fixed\EventHandling.cs" />
+    <Compile Include="Fixed\ExceptionsOfCtorNotConsidered.cs" />
     <Compile Include="Fixed\WrongWarningOnCtor.cs" />
-    <Compile Include="Issues\ExceptionsOfCtorNotConsidered.cs" />
+    <Compile Include="Fixed\PropertyInPropertyInvocation.cs" />
     <Compile Include="Issues\WrongHandlingOfDelegates.cs" />
     <Compile Include="ThrowingSystemExceptionShowsWarning.cs" />
     <Compile Include="Fixed\RethrowInCatchClauseNotCorrectlyAnalyzed.cs" />

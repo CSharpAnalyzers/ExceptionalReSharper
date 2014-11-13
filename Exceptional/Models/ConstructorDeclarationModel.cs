@@ -1,9 +1,8 @@
 using System.Linq;
-using JetBrains.ReSharper.Feature.Services.LinqTools;
-using JetBrains.ReSharper.I18n.Services;
 using JetBrains.ReSharper.Psi;
 using JetBrains.ReSharper.Psi.CSharp.Tree;
 using JetBrains.ReSharper.Psi.Util;
+using ReSharper.Exceptional.Models.ExceptionsOrigins;
 using ReSharper.Exceptional.Settings;
 
 namespace ReSharper.Exceptional.Models
@@ -36,6 +35,7 @@ namespace ReSharper.Exceptional.Models
             }
         }
 
+        /// <summary>Gets the content block of the object. </summary>
         public override IBlock Content
         {
             get { return Node.Body; }

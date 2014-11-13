@@ -1,33 +1,24 @@
-using System;
 using System.Collections.Generic;
 using JetBrains.DocumentModel;
-using JetBrains.ReSharper.Feature.Services.CSharp.Generate.MemberBody;
 using JetBrains.ReSharper.Psi;
 using JetBrains.ReSharper.Psi.CSharp.Tree;
-using JetBrains.ReSharper.Psi.ExtensionsAPI;
 using JetBrains.ReSharper.Psi.Modules;
 using JetBrains.ReSharper.Psi.Resolve;
-using JetBrains.ReSharper.Psi.Tree;
 using JetBrains.ReSharper.Psi.Util;
 using ReSharper.Exceptional.Analyzers;
-using ReSharper.Exceptional.Utilities;
 
-namespace ReSharper.Exceptional.Models
+namespace ReSharper.Exceptional.Models.ExceptionsOrigins
 {
-    internal class ReferenceExpressionModel : TreeElementModelBase<IReferenceExpression>, IExceptionsOriginModel
+    internal class ReferenceExpressionModel : ExpressionExceptionsOriginModelBase<IReferenceExpression>
     {
         private IEnumerable<ThrownExceptionModel> _thrownExceptions;
         private bool? _isInvocation = null;
         private bool? _isEventInvocation = null;
 
         public ReferenceExpressionModel(IAnalyzeUnit analyzeUnit, IReferenceExpression invocationExpression, IBlockModel containingBlock)
-            : base(analyzeUnit, invocationExpression)
+            : base(analyzeUnit, invocationExpression, containingBlock)
         {
-            ContainingBlock = containingBlock;
         }
-
-        /// <summary>Gets the parent block which contains this block. </summary>
-        public IBlockModel ContainingBlock { get; private set; }
 
         /// <summary>Gets the document range of this block. </summary>
         public override DocumentRange DocumentRange
@@ -36,7 +27,7 @@ namespace ReSharper.Exceptional.Models
         }
 
         /// <summary>Gets a list of exceptions which may be thrown from this reference expression (empty if <see cref="IsInvocation"/> is false). </summary>
-        public IEnumerable<ThrownExceptionModel> ThrownExceptions
+        public override IEnumerable<ThrownExceptionModel> ThrownExceptions
         {
             get
             {
@@ -100,31 +91,6 @@ namespace ReSharper.Exceptional.Models
                 thrownExceptionModel.Accept(analyzer);
         }
 
-        /// <summary>Creates a try-catch block around this block. </summary>
-        /// <param name="exceptionType">The exception type to catch. </param>
-        /// <returns><c>true</c> if the try-catch block could be created; otherwise, <c>false</c>. </returns>
-        public bool SurroundWithTryBlock(IDeclaredType exceptionType)
-        {
-            var containingStatement = Node.GetContainingStatement();
-            if (containingStatement != null && containingStatement.LastChild != null)
-            {
-                var codeElementFactory = new CodeElementFactory(GetElementFactory());
-                var exceptionVariableName = NameFactory.CatchVariableName(Node, exceptionType);
-                var tryStatement = codeElementFactory.CreateTryStatement(exceptionType, exceptionVariableName);
-
-                var spaces = GetElementFactory().CreateWhitespaces(Environment.NewLine);
-
-                LowLevelModificationUtil.AddChildAfter(containingStatement.LastChild, spaces[0]);
-
-                var block = codeElementFactory.CreateBlock(containingStatement);
-                tryStatement.SetTry(block);
-
-                containingStatement.ReplaceBy(tryStatement);
-                return true;
-            }
-            return false;
-        }
-
         private ThrownExceptionModel CreateThrownSystemException()
         {
             var psiModule = Node.GetPsiModule();
@@ -143,7 +109,7 @@ namespace ReSharper.Exceptional.Models
                 if (parent == AnalyzeUnit.Node)
                     return false;
 
-                if (parent is ICSharpArgument || parent is IExpressionInitializer)
+                if (parent is ICSharpArgument || parent is IExpressionInitializer || parent is IAccessorDeclaration)
                 {
                     var property = Node.Reference.Resolve().DeclaredElement as IProperty;
                     if (property != null)

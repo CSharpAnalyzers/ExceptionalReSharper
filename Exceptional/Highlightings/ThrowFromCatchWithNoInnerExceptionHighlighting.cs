@@ -1,12 +1,22 @@
 using JetBrains.ReSharper.Daemon;
+using JetBrains.ReSharper.Psi.CSharp;
+using ReSharper.Exceptional;
+using ReSharper.Exceptional.Highlightings;
+using ReSharper.Exceptional.Models.ExceptionsOrigins;
 
-using ReSharper.Exceptional.Models;
+[assembly: RegisterConfigurableSeverity(ThrowFromCatchWithNoInnerExceptionHighlighting.Id, Constants.CompoundName, HighlightingGroupIds.BestPractice,
+    "Exceptional.ThrowFromCatchWithNoInnerException",
+    "Exceptional.ThrowFromCatchWithNoInnerException",
+    Severity.WARNING,
+    false)]
 
 namespace ReSharper.Exceptional.Highlightings
 {
-    [StaticSeverityHighlighting(Severity.WARNING, Constants.HighlightingTitle)]
+    [ConfigurableSeverityHighlighting(Id, CSharpLanguage.Name)]
     public class ThrowFromCatchWithNoInnerExceptionHighlighting : HighlightingBase
     {
+        public const string Id = "ThrowFromCatchWithNoInnerException";
+
         /// <summary>Initializes a new instance of the <see cref="ThrowFromCatchWithNoInnerExceptionHighlighting"/> class. </summary>
         /// <param name="throwStatement">The throw statement. </param>
         internal ThrowFromCatchWithNoInnerExceptionHighlighting(ThrowStatementModel throwStatement)

@@ -1,11 +1,22 @@
 using System;
 using JetBrains.ReSharper.Daemon;
+using JetBrains.ReSharper.Psi.CSharp;
+using ReSharper.Exceptional;
+using ReSharper.Exceptional.Highlightings;
+
+[assembly: RegisterConfigurableSeverity(CatchAllClauseHighlighting.Id, Constants.CompoundName, HighlightingGroupIds.BestPractice,
+    "Exceptional.CatchAllClause",
+    "Exceptional.CatchAllClause",
+    Severity.SUGGESTION,
+    false)]
 
 namespace ReSharper.Exceptional.Highlightings
 {
-    [StaticSeverityHighlighting(Severity.SUGGESTION, Constants.HighlightingTitle)]
+    [ConfigurableSeverityHighlighting(Id, CSharpLanguage.Name)]
     public class CatchAllClauseHighlighting : HighlightingBase
     {
+        public const string Id = "CatchAllClause";
+
         /// <summary>Gets the message which is shown in the editor. </summary>
         protected override string Message
         {

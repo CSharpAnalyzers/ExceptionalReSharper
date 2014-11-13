@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using JetBrains.ReSharper.Psi;
 using JetBrains.ReSharper.Psi.CSharp.Tree;
+using ReSharper.Exceptional.Models.ExceptionsOrigins;
 
 namespace ReSharper.Exceptional.Models
 {

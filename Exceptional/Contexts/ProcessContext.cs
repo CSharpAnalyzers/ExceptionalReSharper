@@ -4,8 +4,8 @@ using JetBrains.ReSharper.Psi.CSharp.Tree;
 using JetBrains.ReSharper.Psi.Tree;
 using JetBrains.Util.Logging;
 using ReSharper.Exceptional.Analyzers;
-
 using ReSharper.Exceptional.Models;
+using ReSharper.Exceptional.Models.ExceptionsOrigins;
 using ReSharper.Exceptional.Settings;
 
 namespace ReSharper.Exceptional.Contexts
@@ -150,6 +150,21 @@ namespace ReSharper.Exceptional.Contexts
             var containingBlockModel = BlockModelsStack.Peek();
             containingBlockModel.ThrownExceptions.Add(
                 new ReferenceExpressionModel(AnalyzeUnit, invocationExpression, containingBlockModel));
+        }
+
+        public void Process(IObjectCreationExpression objectCreationExpression)
+        {
+            if (IsValid() == false)
+                return;
+
+            if (objectCreationExpression == null)
+                return;
+
+            Logger.Assert(BlockModelsStack.Count > 0, "[Exceptional] There is no block for invocation statement.");
+
+            var containingBlockModel = BlockModelsStack.Peek();
+            containingBlockModel.ThrownExceptions.Add(
+                new ObjectCreationExpressionModel(AnalyzeUnit, objectCreationExpression, containingBlockModel));
         }
 
         protected bool IsValid()

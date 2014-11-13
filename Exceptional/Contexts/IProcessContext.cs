@@ -13,7 +13,7 @@ namespace ReSharper.Exceptional.Contexts
 
         void StartProcess(IAnalyzeUnit analyzeUnit);
         void EndProcess(CSharpDaemonStageProcessBase process, ExceptionalSettings settings);
-        
+
         void EnterTryBlock(ITryStatement tryStatement);
         void LeaveTryBlock();
 
@@ -23,6 +23,7 @@ namespace ReSharper.Exceptional.Contexts
         void Process(IThrowStatement throwStatement);
         void Process(ICatchVariableDeclaration catchVariableDeclaration);
         void Process(IReferenceExpression invocationExpression);
+        void Process(IObjectCreationExpression objectCreationExpression);
         void Process(IDocCommentBlockNode docCommentBlockNode);
 
         void EnterAccessor(IAccessorDeclaration accessorDeclarationNode);

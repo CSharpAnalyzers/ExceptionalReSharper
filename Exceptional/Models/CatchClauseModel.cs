@@ -1,5 +1,4 @@
 using System;
-using System.Collections.Generic;
 using JetBrains.DocumentModel;
 using JetBrains.ReSharper.Psi;
 using JetBrains.ReSharper.Psi.CSharp.Tree;
@@ -37,7 +36,7 @@ namespace ReSharper.Exceptional.Models
         {
             get { return Node.CatchKeyword.GetDocumentRange(); }
         }
-        
+
         public IDeclaredType CaughtException
         {
             get { return Node.ExceptionType; }
@@ -46,15 +45,6 @@ namespace ReSharper.Exceptional.Models
         public override IBlock Content
         {
             get { return Node.Body; }
-        }
-
-        /// <summary>Gets the list of not caught thrown exceptions. </summary>
-        public override IEnumerable<ThrownExceptionModel> UncaughtThrownExceptions
-        {
-            get
-            {
-                return base.UncaughtThrownExceptions;
-            }
         }
 
         public bool Catches(IDeclaredType exception)
@@ -68,12 +58,17 @@ namespace ReSharper.Exceptional.Models
             return exception.IsSubtypeOf(Node.ExceptionType);
         }
 
+        /// <summary>Analyzes the object and its children. </summary>
+        /// <param name="analyzer">The analyzer. </param>
         public override void Accept(AnalyzerBase analyzer)
         {
             analyzer.Visit(this);
             base.Accept(analyzer);
         }
 
+        /// <summary>Checks whether the block catches the given exception. </summary>
+        /// <param name="exception">The exception. </param>
+        /// <returns><c>true</c> if the exception is caught in the block; otherwise, <c>false</c>. </returns>
         public override bool CatchesException(IDeclaredType exception)
         {
             return ParentBlock.ParentBlock.CatchesException(exception); // Warning: ParentBlock of CatchClause is TryStatement and not the method!
@@ -83,7 +78,7 @@ namespace ReSharper.Exceptional.Models
         {
             if (Node is IGeneralCatchClause)
             {
-                if (HasVariable) 
+                if (HasVariable)
                     return;
 
                 if (String.IsNullOrEmpty(variableName))
@@ -92,7 +87,7 @@ namespace ReSharper.Exceptional.Models
                 var codeFactory = new CodeElementFactory(GetElementFactory());
 
                 var newCatch = codeFactory.CreateSpecificCatchClause(null, Node.Body, variableName);
-                if (newCatch == null) 
+                if (newCatch == null)
                     return;
 
                 Node.ReplaceBy(newCatch);
@@ -102,7 +97,8 @@ namespace ReSharper.Exceptional.Models
             }
             else
             {
-                if (HasVariable) return;
+                if (HasVariable)
+                    return;
 
                 if (String.IsNullOrEmpty(variableName))
                     variableName = NameFactory.CatchVariableName(Node, CaughtException);
@@ -112,11 +108,11 @@ namespace ReSharper.Exceptional.Models
                 var exceptionTypeName = exceptionType.TypeName.NameIdentifier.Name;
 
                 var tempTry = GetElementFactory().CreateStatement("try {} catch($0 $1) {}", exceptionTypeName, variableName) as ITryStatement;
-                if (tempTry == null) 
+                if (tempTry == null)
                     return;
 
                 var tempCatch = tempTry.Catches[0] as ISpecificCatchClause;
-                if (tempCatch == null) 
+                if (tempCatch == null)
                     return;
 
                 var resultVariable = specificNode.SetExceptionDeclaration(tempCatch.ExceptionDeclaration);

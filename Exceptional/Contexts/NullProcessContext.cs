@@ -8,7 +8,7 @@ namespace ReSharper.Exceptional.Contexts
 {
     internal class NullProcessContext : IProcessContext
     {
-        public IAnalyzeUnit Model { get { return null; }}
+        public IAnalyzeUnit Model { get { return null; } }
 
         public void StartProcess(IAnalyzeUnit analyzeUnit)
         {
@@ -44,6 +44,11 @@ namespace ReSharper.Exceptional.Contexts
 
         public void Process(IReferenceExpression invocationExpression)
         {
+        }
+
+        public void Process(IObjectCreationExpression objectCreationExpression)
+        {
+
         }
 
         public void Process(IDocCommentBlockNode docCommentBlockNode)

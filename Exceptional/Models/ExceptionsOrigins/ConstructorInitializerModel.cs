@@ -4,16 +4,16 @@ using JetBrains.ReSharper.Psi.CSharp.Tree;
 using JetBrains.ReSharper.Psi.Tree;
 using ReSharper.Exceptional.Analyzers;
 
-namespace ReSharper.Exceptional.Models
+namespace ReSharper.Exceptional.Models.ExceptionsOrigins
 {
     internal class ConstructorInitializerModel : TreeElementModelBase<ITreeNode>, IExceptionsOriginModel
     {
         public ConstructorInitializerModel(IAnalyzeUnit analyzeUnit, IConstructorInitializer node, IBlockModel containingBlock)
-          : base(analyzeUnit, node)
+            : base(analyzeUnit, node)
         {
             ContainingBlock = containingBlock;
             ThrownExceptions = node.Reference != null ?
-                ThrownExceptionsReader.Read(analyzeUnit, this, node.Reference.Resolve().DeclaredElement) : 
+                ThrownExceptionsReader.Read(analyzeUnit, this, node.Reference.Resolve().DeclaredElement) :
                 new List<ThrownExceptionModel>();
         }
 
@@ -37,10 +37,8 @@ namespace ReSharper.Exceptional.Models
         {
             throw new System.NotSupportedException();
         }
-        
-        /// <summary>
-        /// Analyzes the object and its children. 
-        /// </summary>
+
+        /// <summary>Analyzes the object and its children. </summary>
         /// <param name="analyzer">The analyzer. </param>
         public override void Accept(AnalyzerBase analyzer)
         {

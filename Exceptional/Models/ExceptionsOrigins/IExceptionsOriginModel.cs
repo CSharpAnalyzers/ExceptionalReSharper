@@ -3,7 +3,7 @@ using JetBrains.DocumentModel;
 using JetBrains.ReSharper.Psi;
 using ReSharper.Exceptional.Analyzers;
 
-namespace ReSharper.Exceptional.Models
+namespace ReSharper.Exceptional.Models.ExceptionsOrigins
 {
     /// <summary>Describes a location where exceptions can be thrown. </summary>
     internal interface IExceptionsOriginModel

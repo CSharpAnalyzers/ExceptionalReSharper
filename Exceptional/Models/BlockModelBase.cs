@@ -4,6 +4,7 @@ using JetBrains.ReSharper.Psi;
 using JetBrains.ReSharper.Psi.CSharp.Tree;
 using JetBrains.ReSharper.Psi.Tree;
 using ReSharper.Exceptional.Analyzers;
+using ReSharper.Exceptional.Models.ExceptionsOrigins;
 
 namespace ReSharper.Exceptional.Models
 {
@@ -21,7 +22,7 @@ namespace ReSharper.Exceptional.Models
 
         /// <summary>Gets the list of exception which can be thrown from this block. </summary>
         public List<IExceptionsOriginModel> ThrownExceptions { get; private set; }
-        
+
         /// <summary>Gets the parent block. </summary>
         public IBlockModel ParentBlock { get; set; }
 

@@ -2,6 +2,7 @@ using System.Linq;
 using JetBrains.DocumentModel;
 using JetBrains.ReSharper.Psi;
 using ReSharper.Exceptional.Analyzers;
+using ReSharper.Exceptional.Models.ExceptionsOrigins;
 
 namespace ReSharper.Exceptional.Models
 {

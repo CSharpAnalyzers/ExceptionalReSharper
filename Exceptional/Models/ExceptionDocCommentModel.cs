@@ -38,24 +38,6 @@ namespace ReSharper.Exceptional.Models
             analyzer.Visit(this);
         }
 
-        private IDeclaredType GetExceptionType(string exceptionType)
-        {
-            var exceptionReference = DocumentationBlock.References.Find(reference => reference.GetName().Equals(exceptionType));
-            var psiModule = DocumentationBlock.Node.GetPsiModule();
-
-            if (exceptionReference == null)
-                return TypeFactory.CreateTypeByCLRName(exceptionType, psiModule, psiModule.GetContextFromModule());
-            else
-            {
-                var resolveResult = exceptionReference.Resolve();
-                var declaredType = resolveResult.DeclaredElement as ITypeElement;
-                if (declaredType == null)
-                    return TypeFactory.CreateTypeByCLRName(exceptionType, psiModule, psiModule.GetContextFromModule());
-                else
-                    return TypeFactory.CreateType(declaredType);
-            }
-        }
-
         public DocumentRange GetMarkerRange()
         {
             var text = DocumentationBlock.Node.GetText();
@@ -72,6 +54,24 @@ namespace ReSharper.Exceptional.Models
                 return new DocumentRange(documentRange.Document, newTextRange);
             }
             return DocumentRange.InvalidRange;
+        }
+
+        private IDeclaredType GetExceptionType(string exceptionType)
+        {
+            var exceptionReference = DocumentationBlock.References.Find(reference => reference.GetName().Equals(exceptionType));
+            var psiModule = DocumentationBlock.Node.GetPsiModule();
+
+            if (exceptionReference == null)
+                return TypeFactory.CreateTypeByCLRName(exceptionType, psiModule, psiModule.GetContextFromModule());
+            else
+            {
+                var resolveResult = exceptionReference.Resolve();
+                var declaredType = resolveResult.DeclaredElement as ITypeElement;
+                if (declaredType == null)
+                    return TypeFactory.CreateTypeByCLRName(exceptionType, psiModule, psiModule.GetContextFromModule());
+                else
+                    return TypeFactory.CreateType(declaredType);
+            }
         }
 
         private DocumentRange GetCommentRange()

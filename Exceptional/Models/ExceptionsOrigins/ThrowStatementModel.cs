@@ -8,7 +8,7 @@ using JetBrains.Util;
 using ReSharper.Exceptional.Analyzers;
 using ReSharper.Exceptional.Utilities;
 
-namespace ReSharper.Exceptional.Models
+namespace ReSharper.Exceptional.Models.ExceptionsOrigins
 {
     internal class ThrowStatementModel : TreeElementModelBase<IThrowStatement>, IExceptionsOriginModel
     {
@@ -47,14 +47,13 @@ namespace ReSharper.Exceptional.Models
         }
 
         /// <summary>Gets a value indicating whether the throw statement is a rethrow statement. </summary>
-        /// <value><c>true</c> if this instance is rethrow; otherwise, <c>false</c>. </value>
         public bool IsRethrow
         {
             get { return Node.Exception == null; }
         }
 
         /// <summary>Searches for the nearest containing catch clause. </summary>
-        /// <returns></returns>
+        /// <returns>The catch clause. </returns>
         public CatchClauseModel FindOuterCatchClause()
         {
             var outerBlock = ContainingBlock;

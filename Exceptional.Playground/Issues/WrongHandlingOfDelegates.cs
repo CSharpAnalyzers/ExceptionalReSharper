@@ -9,7 +9,7 @@ namespace Exceptional.Playground.Issues
         {
             Bar(delegate
             {
-                throw new SecurityException("Test"); // Should show no warning: Issue => when throwing in delegate no warning should be shown
+                throw new SecurityException("Test"); // Should not show warning: Issue => when throwing in delegate no warning should be shown
             });
         }
 

@@ -1,12 +1,23 @@
 using System;
 using JetBrains.ReSharper.Daemon;
+using JetBrains.ReSharper.Psi.CSharp;
+using ReSharper.Exceptional;
+using ReSharper.Exceptional.Highlightings;
 using ReSharper.Exceptional.Models;
+
+[assembly: RegisterConfigurableSeverity(ExceptionNotThrownOptionalHighlighting.Id, Constants.CompoundName, HighlightingGroupIds.BestPractice,
+    "Exceptional.ExceptionNotThrownOptional",
+    "Exceptional.ExceptionNotThrownOptional",
+    Severity.HINT,
+    false)]
 
 namespace ReSharper.Exceptional.Highlightings
 {
-    [StaticSeverityHighlighting(Severity.HINT, Constants.HighlightingTitle)]
+    [ConfigurableSeverityHighlighting(Id, CSharpLanguage.Name)]
     public class ExceptionNotThrownOptionalHighlighting : HighlightingBase
     {
+        public const string Id = "ExceptionNotThrownOptional";
+
         /// <summary>Initializes a new instance of the <see cref="ExceptionNotThrownOptionalHighlighting"/> class. </summary>
         /// <param name="exceptionDocumentation">The exception documentation. </param>
         internal ExceptionNotThrownOptionalHighlighting(ExceptionDocCommentModel exceptionDocumentation)

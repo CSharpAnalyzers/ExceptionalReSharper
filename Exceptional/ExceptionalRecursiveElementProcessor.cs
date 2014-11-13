@@ -43,6 +43,9 @@ namespace ReSharper.Exceptional
             if (element is IReferenceExpression)
                 _currentContext.Process(element as IReferenceExpression);
 
+            if (element is IObjectCreationExpression)
+                _currentContext.Process(element as IObjectCreationExpression);
+            
             if (element is IMethodDeclaration)
             {
                 var methodDeclaration = element as IMethodDeclaration;

@@ -1,12 +1,12 @@
 ﻿using System.Security;
 
-namespace Exceptional.Playground.Issues
+namespace Exceptional.Playground.Fixed
 {
     public class ExceptionsOfCtorNotConsidered
     {
         public void Foo()
         {
-            var test = new ExceptionsOfCtorNotConsidered2(); // Should show warning
+            var test = new ExceptionsOfCtorNotConsidered2(); // Warning
         }
     }
 
