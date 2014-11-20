@@ -52,7 +52,8 @@ namespace ReSharper.Exceptional.Settings
                                                          "System.FormatException,InvocationOnly\n" +
                                                          "System.NotImplementedException,ThrowOnly";
 
-        private const string DefaultOptionalMethodExceptions = "System.NotSupportedException,System.Collections.IDictionary.Add";
+        private const string DefaultOptionalMethodExceptions = "System.NotSupportedException,System.Collections.IDictionary.Add\n" +
+                                                               "System.InvalidOperationException,System.Nullable.Value";
 
 
         private List<OptionalExceptionConfiguration> _optionalExceptionsCache = null;

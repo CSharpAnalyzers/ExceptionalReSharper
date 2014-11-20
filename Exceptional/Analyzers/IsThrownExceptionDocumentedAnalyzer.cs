@@ -6,6 +6,7 @@ using ReSharper.Exceptional.Highlightings;
 using ReSharper.Exceptional.Models;
 using ReSharper.Exceptional.Models.ExceptionsOrigins;
 using ReSharper.Exceptional.Settings;
+using IProperty = JetBrains.ReSharper.Psi.BuildScripts.Tree.IProperty;
 
 namespace ReSharper.Exceptional.Analyzers
 {
@@ -88,11 +89,11 @@ namespace ReSharper.Exceptional.Analyzers
                 var resolveResult = node.Reference.CurrentResolveResult;
                 if (resolveResult != null)
                 {
-                    var element = resolveResult.DeclaredElement as IMethod;
-                    if (element != null)
+                    var element = resolveResult.DeclaredElement as IXmlDocIdOwner;
+                    if (element != null && (resolveResult.DeclaredElement is IMethod || resolveResult.DeclaredElement is JetBrains.ReSharper.Psi.IProperty))
                     {
-                        // remove generic placeholders and method signature
-                        var fullMethodName = Regex.Replace(element.XMLDocId.Substring(2), "(``[0-9]+)|(\\(.*?\\))", "");
+                        // remove generic placeholders ("`1") and method signature ("(...)")
+                        var fullMethodName = Regex.Replace(element.XMLDocId.Substring(2), "(`[0-9]+)|(\\(.*?\\))", "");
 
                         var excludedMethods = Settings.GetOptionalMethodExceptions(Process);
                         return excludedMethods
