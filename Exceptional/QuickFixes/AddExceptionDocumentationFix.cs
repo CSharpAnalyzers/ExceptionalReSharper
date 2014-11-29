@@ -37,25 +37,32 @@ namespace ReSharper.Exceptional.QuickFixes
         {
             var methodDeclaration = Error.ThrownException.AnalyzeUnit;
 
-            ExceptionDocCommentModel insertedExceptionModel = null;
+            var exceptionDescription = Error.ThrownException.ExceptionDescription;
+            if (Error.ThrownException.ExceptionType.GetClrName().FullName == "System.ArgumentNullException")
+                exceptionDescription = string.Format("The value of '{0}' cannot be null. ", exceptionDescription);
 
-            insertedExceptionModel = methodDeclaration.DocumentationBlock.AddExceptionDocumentation(
-                Error.ThrownException.ExceptionType, Error.ThrownException.ExceptionDescription, progress);
+            var insertedExceptionModel = methodDeclaration.DocumentationBlock.AddExceptionDocumentation(
+                Error.ThrownException.ExceptionType, exceptionDescription, progress);
 
             if (insertedExceptionModel == null)
                 return null;
 
+            return MarkInsertedDescription(solution, insertedExceptionModel);
+        }
+
+        private Action<ITextControl> MarkInsertedDescription(ISolution solution, ExceptionDocCommentModel insertedExceptionModel)
+        {
             var exceptionCommentRange = insertedExceptionModel.GetMarkerRange();
             if (exceptionCommentRange == DocumentRange.InvalidRange)
                 return null;
 
-            var copyExceptionDescription = 
-                string.IsNullOrEmpty(insertedExceptionModel.ExceptionDescription) || 
+            var copyExceptionDescription =
+                string.IsNullOrEmpty(insertedExceptionModel.ExceptionDescription) ||
                 insertedExceptionModel.ExceptionDescription.Contains("[MARKER]");
 
             var exceptionDescription = copyExceptionDescription ? "Condition" : insertedExceptionModel.ExceptionDescription;
 
-            var nameSuggestionsExpression = new NameSuggestionsExpression(new[] { exceptionDescription });
+            var nameSuggestionsExpression = new NameSuggestionsExpression(new[] {exceptionDescription});
             var field = new TemplateField("name", nameSuggestionsExpression, 0);
             var fieldInfo = new HotspotInfo(field, exceptionCommentRange);
 
@@ -63,7 +70,8 @@ namespace ReSharper.Exceptional.QuickFixes
             {
                 var hotspotSession = Shell.Instance.GetComponent<LiveTemplatesManager>()
                     .CreateHotspotSessionAtopExistingText(
-                        solution, TextRange.InvalidRange, textControl, LiveTemplatesManager.EscapeAction.LeaveTextAndCaret, new[] { fieldInfo });
+                        solution, TextRange.InvalidRange, textControl, LiveTemplatesManager.EscapeAction.LeaveTextAndCaret,
+                        new[] {fieldInfo});
 
                 hotspotSession.Execute();
             };
