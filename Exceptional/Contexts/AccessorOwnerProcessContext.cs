@@ -4,7 +4,7 @@ using ReSharper.Exceptional.Models;
 
 namespace ReSharper.Exceptional.Contexts
 {
-    internal class PropertyProcessContext : ProcessContext<PropertyDeclarationModel>
+    internal class AccessorOwnerProcessContext : ProcessContext<AccessorOwnerDeclarationModel>
     {
         public override void EnterAccessor(IAccessorDeclaration accessorDeclarationNode)
         {

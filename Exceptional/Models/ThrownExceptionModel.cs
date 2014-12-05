@@ -1,6 +1,8 @@
 using System.Linq;
 using JetBrains.DocumentModel;
 using JetBrains.ReSharper.Psi;
+using JetBrains.ReSharper.Psi.CSharp.Tree;
+using JetBrains.ReSharper.Psi.Tree;
 using ReSharper.Exceptional.Analyzers;
 using ReSharper.Exceptional.Models.ExceptionsOrigins;
 
@@ -11,6 +13,7 @@ namespace ReSharper.Exceptional.Models
         private bool? _isCaught = null;
         private bool? _isExceptionDocumented = null;
         private bool? _isExceptionOrSubtypeDocumented = null;
+        private bool? _isThrownFromAnonymousMethod = null;
 
         public ThrownExceptionModel(
             IAnalyzeUnit analyzeUnit,
@@ -44,6 +47,29 @@ namespace ReSharper.Exceptional.Models
         public bool IsThrownFromThrowStatement
         {
             get { return ExceptionsOrigin is ThrowStatementModel; }
+        }
+
+        public bool IsThrownFromAnonymousMethod
+        {
+            get
+            {
+                if (!_isThrownFromAnonymousMethod.HasValue)
+                {
+                    if (ExceptionsOrigin is ThrowStatementModel)
+                    {
+                        var parent = ((ThrowStatementModel)ExceptionsOrigin).Node;
+                        _isThrownFromAnonymousMethod = IsParentAnonymousMethodExpression(parent);
+                    }
+                    else if (ExceptionsOrigin is ReferenceExpressionModel)
+                    {
+                        var parent = ((ReferenceExpressionModel)ExceptionsOrigin).Node;
+                        _isThrownFromAnonymousMethod = IsParentAnonymousMethodExpression(parent);
+                    }
+                    else
+                        _isThrownFromAnonymousMethod = false;
+                }
+                return _isThrownFromAnonymousMethod.Value;
+            }
         }
 
         public bool IsCaught
@@ -134,6 +160,17 @@ namespace ReSharper.Exceptional.Models
         public override void Accept(AnalyzerBase analyzer)
         {
             analyzer.Visit(this);
+        }
+
+        private bool IsParentAnonymousMethodExpression(ITreeNode parent)
+        {
+            while (parent != null)
+            {
+                if (parent is IAnonymousMethodExpression)
+                    return true;
+                parent = parent.Parent;
+            }
+            return false;
         }
     }
 }

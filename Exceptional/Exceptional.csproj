@@ -172,7 +172,7 @@
     <Compile Include="Models\IBlockModel.cs" />
     <Compile Include="Models\MethodDeclarationModel.cs" />
     <Compile Include="Models\ModelBase.cs" />
-    <Compile Include="Models\PropertyDeclarationModel.cs" />
+    <Compile Include="Models\AccessorOwnerDeclarationModel.cs" />
     <Compile Include="Models\ThrownExceptionModel.cs" />
     <Compile Include="Models\ExceptionsOrigins\ThrowStatementModel.cs" />
     <Compile Include="Analyzers\AnalyzerBase.cs" />
@@ -181,7 +181,7 @@
     <Compile Include="Utilities\NameFactory.cs" />
     <Compile Include="Contexts\NullProcessContext.cs" />
     <Compile Include="Contexts\ProcessContext.cs" />
-    <Compile Include="Contexts\PropertyProcessContext.cs" />
+    <Compile Include="Contexts\AccessorOwnerProcessContext.cs" />
     <Compile Include="QuickFixes\AddToOptionalMethodExceptionsFix.cs" />
     <Compile Include="QuickFixes\CatchExceptionFix.cs" />
     <Compile Include="QuickFixes\IncludeInnerExceptionFix.cs" />

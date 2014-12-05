@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Security;
 
-namespace Exceptional.Playground.Issues
+namespace Exceptional.Playground.Fixed
 {
     public class WrongHandlingOfDelegates
     {
@@ -9,7 +9,7 @@ namespace Exceptional.Playground.Issues
         {
             Bar(delegate
             {
-                throw new SecurityException("Test"); // Should not show warning: Issue => when throwing in delegate no warning should be shown
+                throw new SecurityException("Test"); // Optional warning: Should not show warning: Issue => when throwing in delegate no warning should be shown
             });
         }
 

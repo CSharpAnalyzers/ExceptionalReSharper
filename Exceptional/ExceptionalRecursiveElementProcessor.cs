@@ -15,9 +15,10 @@ namespace ReSharper.Exceptional
     {
         private readonly CSharpDaemonStageProcessBase _daemonProcess;
         private readonly IDaemonProcess _process;
-        private IProcessContext _currentContext;
         private readonly ExceptionalSettings _settings;
-        private List<IDocCommentBlockNode> _eventComments = new List<IDocCommentBlockNode>();
+        private readonly List<IDocCommentBlockNode> _eventComments = new List<IDocCommentBlockNode>();
+
+        private IProcessContext _currentContext;
 
         public ExceptionalRecursiveElementProcessor(CSharpDaemonStageProcessBase daemonProcess, IDaemonProcess process, ExceptionalSettings settings)
         {
@@ -45,7 +46,7 @@ namespace ReSharper.Exceptional
 
             if (element is IObjectCreationExpression)
                 _currentContext.Process(element as IObjectCreationExpression);
-            
+
             if (element is IMethodDeclaration)
             {
                 var methodDeclaration = element as IMethodDeclaration;
@@ -58,11 +59,11 @@ namespace ReSharper.Exceptional
                 _currentContext = new ConstructorProcessContext();
                 _currentContext.StartProcess(new ConstructorDeclarationModel(constructorDeclaration, _settings));
             }
-            else if (element is IPropertyDeclaration)
+            else if (element is IPropertyDeclaration || element is IIndexerDeclaration)
             {
-                var propertyDeclaration = element as IPropertyDeclaration;
-                _currentContext = new PropertyProcessContext();
-                _currentContext.StartProcess(new PropertyDeclarationModel(propertyDeclaration, _settings));
+                var accessorOwnerDeclaration = element as IAccessorOwnerDeclaration;
+                _currentContext = new AccessorOwnerProcessContext();
+                _currentContext.StartProcess(new AccessorOwnerDeclarationModel(accessorOwnerDeclaration, _settings));
             }
             else if (element is IEventDeclaration)
             {
@@ -104,7 +105,10 @@ namespace ReSharper.Exceptional
             else if (element is IConstructorDeclaration)
                 _currentContext.EndProcess(_daemonProcess, _settings);
             else if (element is IAccessorDeclaration)
+            {
+                _currentContext.EndProcess(_daemonProcess, _settings);
                 _currentContext.LeaveAccessor();
+            }
             else if (element is ITryStatement)
                 _currentContext.LeaveTryBlock();
             else if (element is ICatchClause)

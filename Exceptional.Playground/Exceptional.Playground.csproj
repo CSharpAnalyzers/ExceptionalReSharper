@@ -47,9 +47,11 @@
     <Compile Include="Fixed\ExceptionOnInterfaceMarkedAsUnnecessary.cs" />
     <Compile Include="Fixed\EventHandling.cs" />
     <Compile Include="Fixed\ExceptionsOfCtorNotConsidered.cs" />
+    <Compile Include="Fixed\InsertingArgumentNullExceptionDocumentation.cs" />
     <Compile Include="Fixed\WrongWarningOnCtor.cs" />
     <Compile Include="Fixed\PropertyInPropertyInvocation.cs" />
-    <Compile Include="Issues\WrongHandlingOfDelegates.cs" />
+    <Compile Include="Fixed\IndexerNotAnalyzed.cs" />
+    <Compile Include="Fixed\WrongHandlingOfDelegates.cs" />
     <Compile Include="ThrowingSystemExceptionShowsWarning.cs" />
     <Compile Include="Fixed\RethrowInCatchClauseNotCorrectlyAnalyzed.cs" />
     <Compile Include="Fixed\WrongInnerExceptionWarning.cs" />

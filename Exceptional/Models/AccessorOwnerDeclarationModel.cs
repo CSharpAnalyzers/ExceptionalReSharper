@@ -6,9 +6,9 @@ using ReSharper.Exceptional.Settings;
 
 namespace ReSharper.Exceptional.Models
 {
-    internal class PropertyDeclarationModel : AnalyzeUnitModelBase<IPropertyDeclaration>
+    internal class AccessorOwnerDeclarationModel : AnalyzeUnitModelBase<IAccessorOwnerDeclaration>
     {
-        public PropertyDeclarationModel(IPropertyDeclaration node, ExceptionalSettings settings)
+        public AccessorOwnerDeclarationModel(IAccessorOwnerDeclaration node, ExceptionalSettings settings)
             : base(null, node, settings)
         {
             Accessors = new List<AccessorDeclarationModel>();

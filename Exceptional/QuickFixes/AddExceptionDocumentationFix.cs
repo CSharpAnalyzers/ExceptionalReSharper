@@ -11,6 +11,7 @@ using JetBrains.TextControl;
 using JetBrains.Util;
 using ReSharper.Exceptional.Highlightings;
 using ReSharper.Exceptional.Models;
+using ReSharper.Exceptional.Models.ExceptionsOrigins;
 
 namespace ReSharper.Exceptional.QuickFixes
 {
@@ -36,9 +37,10 @@ namespace ReSharper.Exceptional.QuickFixes
         protected override Action<ITextControl> ExecutePsiTransaction(ISolution solution, IProgressIndicator progress)
         {
             var methodDeclaration = Error.ThrownException.AnalyzeUnit;
-
             var exceptionDescription = Error.ThrownException.ExceptionDescription;
-            if (Error.ThrownException.ExceptionType.GetClrName().FullName == "System.ArgumentNullException")
+
+            if (Error.ThrownException.ExceptionsOrigin is ThrowStatementModel && 
+                Error.ThrownException.ExceptionType.GetClrName().FullName == "System.ArgumentNullException")
                 exceptionDescription = string.Format("The value of '{0}' cannot be null. ", exceptionDescription);
 
             var insertedExceptionModel = methodDeclaration.DocumentationBlock.AddExceptionDocumentation(

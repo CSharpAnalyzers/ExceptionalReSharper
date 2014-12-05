@@ -33,7 +33,8 @@ namespace ReSharper.Exceptional.Analyzers
 
             var isOptional = IsSubtypeDocumented(thrownException) ||
                              IsThrownExceptionSubclassOfOptionalException(thrownException) ||
-                             IsThrownExceptionThrownFromExcludedMethod(thrownException);
+                             IsThrownExceptionThrownFromExcludedMethod(thrownException) ||
+                             thrownException.IsThrownFromAnonymousMethod;
 
             if (thrownException.IsEventInvocationException)
             {
