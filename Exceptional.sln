@@ -1,24 +1,26 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 2013
-VisualStudioVersion = 12.0.30723.0
+VisualStudioVersion = 12.0.31101.0
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Exceptional", "Exceptional\Exceptional.csproj", "{42BCDAE2-D1D1-4D98-A6CD-605A31EAD26C}"
-EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".nuget", ".nuget", "{DDCE9BCA-EF40-4231-982C-CC1B00A1EAD3}"
 	ProjectSection(SolutionItems) = preProject
 		.nuget\NuGet.Config = .nuget\NuGet.Config
 		.nuget\NuGet.exe = .nuget\NuGet.exe
-		.nuget\NuGet.targets = .nuget\NuGet.targets
 	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{8B9A71DA-04F0-43E1-A364-8B774F5755A5}"
 	ProjectSection(SolutionItems) = preProject
-		NuGet\Exceptional.nuspec = NuGet\Exceptional.nuspec
+		NuGet\Exceptional.R8.nuspec = NuGet\Exceptional.R8.nuspec
+		NuGet\Exceptional.R9.nuspec = NuGet\Exceptional.R9.nuspec
 		Readme.txt = Readme.txt
 	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Exceptional.Playground", "Exceptional.Playground\Exceptional.Playground.csproj", "{D59BE8E6-FE1E-48B9-B001-0CBAEB707B3F}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Exceptional.R9", "Exceptional.R9\Exceptional.R9.csproj", "{C03CA943-2275-4D7B-8B75-1351BA8FBB7A}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Exceptional.R8", "Exceptional.R8\Exceptional.R8.csproj", "{42BCDAE2-D1D1-4D98-A6CD-605A31EAD26C}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -26,14 +28,18 @@ Global
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{42BCDAE2-D1D1-4D98-A6CD-605A31EAD26C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{42BCDAE2-D1D1-4D98-A6CD-605A31EAD26C}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{42BCDAE2-D1D1-4D98-A6CD-605A31EAD26C}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{42BCDAE2-D1D1-4D98-A6CD-605A31EAD26C}.Release|Any CPU.Build.0 = Release|Any CPU
 		{D59BE8E6-FE1E-48B9-B001-0CBAEB707B3F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{D59BE8E6-FE1E-48B9-B001-0CBAEB707B3F}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{D59BE8E6-FE1E-48B9-B001-0CBAEB707B3F}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{D59BE8E6-FE1E-48B9-B001-0CBAEB707B3F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C03CA943-2275-4D7B-8B75-1351BA8FBB7A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C03CA943-2275-4D7B-8B75-1351BA8FBB7A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C03CA943-2275-4D7B-8B75-1351BA8FBB7A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C03CA943-2275-4D7B-8B75-1351BA8FBB7A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{42BCDAE2-D1D1-4D98-A6CD-605A31EAD26C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{42BCDAE2-D1D1-4D98-A6CD-605A31EAD26C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{42BCDAE2-D1D1-4D98-A6CD-605A31EAD26C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{42BCDAE2-D1D1-4D98-A6CD-605A31EAD26C}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

@@ -6,7 +6,9 @@ namespace Exceptional.Playground
     {
         public void Foo()
         {
-            MyEvent(); // Suggestion: May throw System.Exception
+            var copy = MyEvent;
+            if (copy != null)
+                copy(); // Suggestion: May throw System.Exception
         }
         
         public event Action MyEvent;

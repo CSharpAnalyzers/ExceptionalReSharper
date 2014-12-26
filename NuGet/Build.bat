@@ -1,1 +1,0 @@
-nuget.exe pack Exceptional.nuspec -OutputDirectory "Packages"

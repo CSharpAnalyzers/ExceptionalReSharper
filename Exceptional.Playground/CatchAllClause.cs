@@ -11,7 +11,7 @@ namespace Exceptional.Playground
             {
                 throw new SecurityException();
             }
-            catch (Exception exception) // Warning: When catching System.Exception a warning should be shown
+            catch (Exception exception) // Suggestion: When catching System.Exception a warning should be shown
             {
                 Console.WriteLine(exception.Message); // Warning: IOException not documented
             }
