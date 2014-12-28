@@ -52,6 +52,12 @@ namespace ReSharper.Exceptional.Models.ExceptionsOrigins
             get { return Node.Exception == null; }
         }
 
+        /// <summary>Gets the node. </summary>
+        ITreeNode IExceptionsOriginModel.Node
+        {
+            get { return Node; }
+        }
+
         /// <summary>Searches for the nearest containing catch clause. </summary>
         /// <returns>The catch clause. </returns>
         public CatchClauseModel FindOuterCatchClause()

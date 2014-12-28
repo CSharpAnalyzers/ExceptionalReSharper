@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Security;
 
-namespace Exceptional.Playground.Issues
+namespace Exceptional.Playground.Fixed
 {
     class DelegateIssues
     {
@@ -9,18 +9,18 @@ namespace Exceptional.Playground.Issues
         {
             Action x = delegate
             {
-                throw new SecurityException(); // Optional warning
+                throw new SecurityException(); // Hint
             };
 
             Action y = delegate
             {
                 var a = 10;
-                Bar(); // Optional warning
+                Bar(); // Hint
             };
 
             Action z = delegate
             {
-                var b = new DelegateIssues(); // Issue: Should be optional warning  
+                var b = new DelegateIssues(); // Hint  
             };
         }
 
@@ -28,26 +28,32 @@ namespace Exceptional.Playground.Issues
         {
             Action x = () =>
             {
-                throw new SecurityException(); // Issue: Should be optional warning 
+                throw new SecurityException(); // Hint 
             };
 
             Action y = () =>
             {
                 var a = 10;
-                Bar(); // // Issue: Optional warning
+                Bar(); // Hint
             };
 
             Action z = () =>
             {
-                var b = new DelegateIssues(); // Issue: Should be optional warning 
+                var b = new DelegateIssues(); // Hint 
             };
         }
 
+        public void FooDirectCalls()
+        {
+            Bar(); // Warning
+            var c = new DelegateIssues(); // Warning 
+        }
+        
         public void Foo3()
         {
             Action y = Bar; // No warning
         }
-
+        
         /// <exception cref="SecurityException">Condition. </exception>
         public void Bar()
         {

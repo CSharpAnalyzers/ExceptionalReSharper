@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using JetBrains.ReSharper.Psi;
 using JetBrains.ReSharper.Psi.CSharp.Tree;
 using JetBrains.ReSharper.Psi.ExtensionsAPI;
+using JetBrains.ReSharper.Psi.Tree;
 using ReSharper.Exceptional.Utilities;
 
 namespace ReSharper.Exceptional.Models.ExceptionsOrigins
@@ -21,6 +22,12 @@ namespace ReSharper.Exceptional.Models.ExceptionsOrigins
 
         /// <summary>Gets the parent block which contains this block. </summary>
         public IBlockModel ContainingBlock { get; private set; }
+
+        /// <summary>Gets the node. </summary>
+        ITreeNode IExceptionsOriginModel.Node
+        {
+            get { return Node; }
+        }
 
         /// <summary>Creates a try-catch block around this block. </summary>
         /// <param name="exceptionType">The exception type to catch. </param>

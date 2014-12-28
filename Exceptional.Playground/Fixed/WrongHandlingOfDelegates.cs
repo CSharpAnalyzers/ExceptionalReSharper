@@ -9,7 +9,7 @@ namespace Exceptional.Playground.Fixed
         {
             Bar(delegate
             {
-                throw new SecurityException("Test"); // Optional warning: Should not show warning: Issue => when throwing in delegate no warning should be shown
+                throw new SecurityException("Test"); // Hint: Should not show warning: Issue => when throwing in delegate no warning should be shown
             });
         }
 
@@ -19,7 +19,7 @@ namespace Exceptional.Playground.Fixed
             {
                 test();
             }
-            catch (Exception ex)
+            catch (Exception ex) // Suggestion
             {
                 // Catch all exceptions. 
             }

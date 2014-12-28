@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using JetBrains.DocumentModel;
 using JetBrains.ReSharper.Psi;
+using JetBrains.ReSharper.Psi.Tree;
 using ReSharper.Exceptional.Analyzers;
 
 namespace ReSharper.Exceptional.Models.ExceptionsOrigins
@@ -16,6 +17,9 @@ namespace ReSharper.Exceptional.Models.ExceptionsOrigins
 
         /// <summary>Gets the document range of this block. </summary>
         DocumentRange DocumentRange { get; }
+
+        /// <summary>Gets the node. </summary>
+        ITreeNode Node { get; }
 
         /// <summary>Analyzes the object and its children. </summary>
         /// <param name="analyzer">The analyzer. </param>

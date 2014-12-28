@@ -55,18 +55,8 @@ namespace ReSharper.Exceptional.Models
             {
                 if (!_isThrownFromAnonymousMethod.HasValue)
                 {
-                    if (ExceptionsOrigin is ThrowStatementModel)
-                    {
-                        var parent = ((ThrowStatementModel)ExceptionsOrigin).Node;
-                        _isThrownFromAnonymousMethod = IsParentAnonymousMethodExpression(parent);
-                    }
-                    else if (ExceptionsOrigin is ReferenceExpressionModel)
-                    {
-                        var parent = ((ReferenceExpressionModel)ExceptionsOrigin).Node;
-                        _isThrownFromAnonymousMethod = IsParentAnonymousMethodExpression(parent);
-                    }
-                    else
-                        _isThrownFromAnonymousMethod = false;
+                    var parent = ExceptionsOrigin.Node;
+                    _isThrownFromAnonymousMethod = IsParentAnonymousMethodExpression(parent);
                 }
                 return _isThrownFromAnonymousMethod.Value;
             }
@@ -166,7 +156,7 @@ namespace ReSharper.Exceptional.Models
         {
             while (parent != null)
             {
-                if (parent is IAnonymousMethodExpression)
+                if (parent is IAnonymousMethodExpression || parent is IAnonymousFunctionExpression)
                     return true;
                 parent = parent.Parent;
             }
