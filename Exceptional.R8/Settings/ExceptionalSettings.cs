@@ -50,7 +50,8 @@ namespace ReSharper.Exceptional.Settings
 
         private const string DefaultOptionalExceptions = "System.ArgumentException,InvocationOnly\n" +
                                                          "System.FormatException,InvocationOnly\n" +
-                                                         "System.NotImplementedException,ThrowOnly";
+                                                         "System.NotImplementedException,ThrowOnly\n" +
+                                                         "Microsoft.VisualStudio.TestTools.UnitTesting.AssertFailedException,InvocationOnly";
 
         private const string DefaultOptionalMethodExceptions = "System.NotSupportedException,System.Collections.IDictionary.Add\n" +
                                                                "System.InvalidOperationException,System.Nullable.Value";
