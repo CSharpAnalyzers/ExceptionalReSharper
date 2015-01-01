@@ -37,6 +37,7 @@
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System.Data" />
     <Reference Include="System.Xml" />
+    <Reference Include="WindowsBase" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="CatchAllClause.cs" />
@@ -53,6 +54,7 @@
     <Compile Include="Fixed\IndexerNotAnalyzed.cs" />
     <Compile Include="Fixed\WrongHandlingOfDelegates.cs" />
     <Compile Include="Fixed\DelegateIssues.cs" />
+    <Compile Include="Fixed\DependencyPropertyEvaluation.cs" />
     <Compile Include="ThrowingSystemExceptionShowsWarning.cs" />
     <Compile Include="Fixed\RethrowInCatchClauseNotCorrectlyAnalyzed.cs" />
     <Compile Include="Fixed\WrongInnerExceptionWarning.cs" />

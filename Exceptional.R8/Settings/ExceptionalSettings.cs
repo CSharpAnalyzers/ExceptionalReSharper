@@ -53,9 +53,10 @@ namespace ReSharper.Exceptional.Settings
                                                          "System.NotImplementedException,ThrowOnly\n" +
                                                          "Microsoft.VisualStudio.TestTools.UnitTesting.AssertFailedException,InvocationOnly";
 
-        private const string DefaultOptionalMethodExceptions = "System.NotSupportedException,System.Collections.IDictionary.Add\n" +
-                                                               "System.InvalidOperationException,System.Nullable.Value";
-
+        private const string DefaultOptionalMethodExceptions = "System.Collections.IDictionary.Add,System.NotSupportedException\n" +
+                                                               "System.Nullable.Value,System.InvalidOperationException\n" +
+                                                               "System.Windows.DependencyObject.GetValue,System.InvalidOperationException\n" +
+                                                               "System.Windows.DependencyObject.SetValue,System.InvalidOperationException";
 
         private List<OptionalExceptionConfiguration> _optionalExceptionsCache = null;
         private List<OptionalMethodExceptionConfiguration> _optionalMethodExceptionsCache = null;
@@ -146,7 +147,7 @@ namespace ReSharper.Exceptional.Settings
         {
             var arr = line.Split(',');
             if (arr.Length == 2)
-                return new OptionalMethodExceptionConfiguration(arr[0], arr[1]);
+                return new OptionalMethodExceptionConfiguration(arr[1], arr[0]);
             return null;
         }
     }
