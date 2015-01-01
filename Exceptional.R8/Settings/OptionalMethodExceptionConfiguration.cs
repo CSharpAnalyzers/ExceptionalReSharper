@@ -10,7 +10,7 @@ namespace ReSharper.Exceptional.Settings
         private IDeclaredType _exceptionType = null;
         private bool _exceptionTypeLoaded = false; 
 
-        public OptionalMethodExceptionConfiguration(string exceptionType, string fullMethodName)
+        public OptionalMethodExceptionConfiguration(string fullMethodName, string exceptionType)
         {
             FullMethodName = fullMethodName;
             ExceptionType = exceptionType;

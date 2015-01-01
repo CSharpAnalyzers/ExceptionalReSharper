@@ -147,7 +147,7 @@ namespace ReSharper.Exceptional.Settings
         {
             var arr = line.Split(',');
             if (arr.Length == 2)
-                return new OptionalMethodExceptionConfiguration(arr[1], arr[0]);
+                return new OptionalMethodExceptionConfiguration(arr[0], arr[1]);
             return null;
         }
     }

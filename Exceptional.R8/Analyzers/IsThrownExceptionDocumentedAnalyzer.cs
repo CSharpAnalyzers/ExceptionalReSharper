@@ -7,7 +7,6 @@ using ReSharper.Exceptional.Highlightings;
 using ReSharper.Exceptional.Models;
 using ReSharper.Exceptional.Models.ExceptionsOrigins;
 using ReSharper.Exceptional.Settings;
-using IProperty = JetBrains.ReSharper.Psi.BuildScripts.Tree.IProperty;
 
 namespace ReSharper.Exceptional.Analyzers
 {

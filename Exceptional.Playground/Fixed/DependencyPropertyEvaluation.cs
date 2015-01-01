@@ -13,5 +13,8 @@ namespace Exceptional.Playground.Fixed
             get { return (Boolean)GetValue(SampleProperty); }
             set { SetValue(SampleProperty, value); }
         }
+
+
+
     }
 }
