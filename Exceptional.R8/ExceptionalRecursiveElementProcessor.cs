@@ -46,16 +46,12 @@ namespace ReSharper.Exceptional
         {
             if (element is IThrowStatement)
                 _currentContext.Process(element as IThrowStatement);
-
-            if (element is ICatchVariableDeclaration)
+            else if (element is ICatchVariableDeclaration)
                 _currentContext.Process(element as ICatchVariableDeclaration);
-
-            if (element is IReferenceExpression)
+            else if (element is IReferenceExpression)
                 _currentContext.Process(element as IReferenceExpression);
-
-            if (element is IObjectCreationExpression)
+            else if (element is IObjectCreationExpression)
                 _currentContext.Process(element as IObjectCreationExpression);
-
             if (element is IMethodDeclaration)
             {
                 var methodDeclaration = element as IMethodDeclaration;
@@ -74,6 +70,8 @@ namespace ReSharper.Exceptional
                 _currentContext = new AccessorOwnerProcessContext();
                 _currentContext.StartProcess(new AccessorOwnerDeclarationModel(accessorOwnerDeclaration, _settings));
             }
+            else if (element is IAccessorDeclaration && !(_currentContext is AccessorOwnerProcessContext)) // already in accessor block (e.g. property)
+                _currentContext.EnterAccessor(element as IAccessorDeclaration);
             else if (element is IEventDeclaration)
             {
                 var eventDeclaration = element as IEventDeclaration;
@@ -84,8 +82,6 @@ namespace ReSharper.Exceptional
                     _currentContext.Process(doc);
                 _eventComments.Clear();
             }
-            else if (element is IAccessorDeclaration)
-                _currentContext.EnterAccessor(element as IAccessorDeclaration);
 #if R8
             else if (element is IDocCommentBlockNode)
             {
@@ -122,17 +118,17 @@ namespace ReSharper.Exceptional
         {
             if (element is IMethodDeclaration)
                 _currentContext.EndProcess(_daemonProcess, _settings);
-            else if (element is IPropertyDeclaration)
+            else if (element is IPropertyDeclaration || element is IIndexerDeclaration)
                 _currentContext.EndProcess(_daemonProcess, _settings);
-            else if (element is IEventDeclaration)
-                _currentContext.EndProcess(_daemonProcess, _settings);
-            else if (element is IConstructorDeclaration)
-                _currentContext.EndProcess(_daemonProcess, _settings);
-            else if (element is IAccessorDeclaration)
+            else if (element is IAccessorDeclaration && !(_currentContext is AccessorOwnerProcessContext)) // already in accessor block (e.g. property)
             {
                 _currentContext.EndProcess(_daemonProcess, _settings);
                 _currentContext.LeaveAccessor();
             }
+            else if (element is IEventDeclaration)
+                _currentContext.EndProcess(_daemonProcess, _settings);
+            else if (element is IConstructorDeclaration)
+                _currentContext.EndProcess(_daemonProcess, _settings);
             else if (element is ITryStatement)
                 _currentContext.LeaveTryBlock();
             else if (element is ICatchClause)

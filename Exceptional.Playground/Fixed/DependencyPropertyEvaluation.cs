@@ -10,11 +10,8 @@ namespace Exceptional.Playground.Fixed
 
         public Boolean Sample
         {
-            get { return (Boolean)GetValue(SampleProperty); }
-            set { SetValue(SampleProperty, value); }
+            get { return (Boolean)GetValue(SampleProperty); } // Hint
+            set { SetValue(SampleProperty, value); } // Hint
         }
-
-
-
     }
 }
