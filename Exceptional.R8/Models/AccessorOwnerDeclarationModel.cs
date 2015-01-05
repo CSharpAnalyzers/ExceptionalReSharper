@@ -18,8 +18,8 @@ namespace ReSharper.Exceptional.Models
 
         public override void Accept(AnalyzerBase analyzer)
         {
-            foreach (var accessorDeclarationModel in Accessors)
-                accessorDeclarationModel.Accept(analyzer);
+            foreach (var accessor in Accessors)
+                accessor.Accept(analyzer);
 
             base.Accept(analyzer);
         }

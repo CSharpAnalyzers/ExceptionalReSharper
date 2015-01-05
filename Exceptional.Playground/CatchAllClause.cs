@@ -16,7 +16,7 @@ namespace Exceptional.Playground
                 Console.WriteLine(exception.Message); // Warning: IOException not documented
             }
         }
-
+        
         public void Test02()
         {
             try

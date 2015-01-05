@@ -48,15 +48,24 @@ namespace ReSharper.Exceptional.Settings
         public bool UseDefaultOptionalMethodExceptions { get; set; }
 
 
-        private const string DefaultOptionalExceptions = "System.ArgumentException,InvocationOnly\n" +
-                                                         "System.FormatException,InvocationOnly\n" +
-                                                         "System.NotImplementedException,ThrowOnly\n" +
-                                                         "Microsoft.VisualStudio.TestTools.UnitTesting.AssertFailedException,InvocationOnly";
+        private const string DefaultOptionalExceptions =
+@"-- Contracts
+System.ArgumentException,InvocationOnly
+System.InvalidOperationException,InvocationOnly
+System.FormatException,InvocationOnly
 
-        private const string DefaultOptionalMethodExceptions = "System.Collections.IDictionary.Add,System.NotSupportedException\n" +
-                                                               "System.Nullable.Value,System.InvalidOperationException\n" +
-                                                               "System.Windows.DependencyObject.GetValue,System.InvalidOperationException\n" +
-                                                               "System.Windows.DependencyObject.SetValue,System.InvalidOperationException";
+System.NotSupportedException,InvocationOnly
+System.NotImplementedException,ThrowOnly
+
+-- Unit testing
+Microsoft.VisualStudio.TestTools.UnitTesting.AssertFailedException,InvocationOnly";
+
+        private const string DefaultOptionalMethodExceptions = 
+@"System.Collections.IDictionary.Add,System.NotSupportedException
+System.Nullable.Value,System.InvalidOperationException
+System.Windows.DependencyObject.GetValue,System.InvalidOperationException
+System.Windows.DependencyObject.SetValue,System.InvalidOperationException
+System.Console.WriteLine,System.IO.IOException";
 
         private List<OptionalExceptionConfiguration> _optionalExceptionsCache = null;
         private List<OptionalMethodExceptionConfiguration> _optionalMethodExceptionsCache = null;

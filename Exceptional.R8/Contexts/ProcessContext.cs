@@ -47,7 +47,7 @@ namespace ReSharper.Exceptional.Contexts
             BlockModelsStack.Push(AnalyzeUnit);
         }
 
-        public void EndProcess(CSharpDaemonStageProcessBase process, ExceptionalSettings settings)
+        public void RunAnalyzers(CSharpDaemonStageProcessBase process, ExceptionalSettings settings)
         {
             if (IsValid() == false)
                 return;

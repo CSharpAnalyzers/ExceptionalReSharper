@@ -14,7 +14,7 @@ namespace ReSharper.Exceptional.Contexts
         {
         }
 
-        public void EndProcess(CSharpDaemonStageProcessBase process, ExceptionalSettings settings)
+        public void RunAnalyzers(CSharpDaemonStageProcessBase process, ExceptionalSettings settings)
         {
         }
 

@@ -12,7 +12,7 @@ namespace ReSharper.Exceptional.Contexts
         IAnalyzeUnit Model { get; }
 
         void StartProcess(IAnalyzeUnit analyzeUnit);
-        void EndProcess(CSharpDaemonStageProcessBase process, ExceptionalSettings settings);
+        void RunAnalyzers(CSharpDaemonStageProcessBase process, ExceptionalSettings settings);
 
         void EnterTryBlock(ITryStatement tryStatement);
         void LeaveTryBlock();
