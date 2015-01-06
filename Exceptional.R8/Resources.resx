@@ -118,25 +118,25 @@
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
   <data name="HighlightCatchAllClauses" xml:space="preserve">
-    <value>Usage of catch-all clauses is not recommended. [Exceptional]</value>
+    <value>Usage of catch-all clauses is not recommended [Exceptional]</value>
   </data>
   <data name="HighlightEventNotDocumentedExceptions" xml:space="preserve">
-    <value>The possible 'System.Exception' from delegate invocation is not documented in XML documentation. [Exceptional]</value>
+    <value>Possible 'System.Exception' from delegate invocation is not documented [Exceptional]</value>
   </data>
   <data name="HighlightNotDocumentedExceptions" xml:space="preserve">
-    <value>The '{0}' exception is not documented in XML documentation. [Exceptional]</value>
+    <value>Exception '{0}' is not documented [Exceptional]</value>
   </data>
   <data name="HighlightNotThrownDocumentedExceptions" xml:space="preserve">
-    <value>The '{0}' exception is not thrown from documented method. [Exceptional]</value>
+    <value>Exception '{0}' is not thrown [Exceptional]</value>
   </data>
   <data name="HighlightSwallowingExceptions" xml:space="preserve">
-    <value>Swallowing exceptions in catch-all clause is not recommended. [Exceptional]</value>
+    <value>Swallowing exceptions in catch-all clause is not recommended [Exceptional]</value>
   </data>
   <data name="HighlightThrowingFromCatchWithoutInnerException" xml:space="preserve">
-    <value>Include substituted exception as inner exception when throwing from catch clause. [Exceptional]</value>
+    <value>Caught exception should be passed as inner exception [Exceptional]</value>
   </data>
   <data name="HighlightThrowingSystemException" xml:space="preserve">
-    <value>Throwing 'System.Exception' is not recommended. [Exceptional]</value>
+    <value>Throwing 'System.Exception' is not recommended [Exceptional]</value>
   </data>
   <data name="QuickFixCatchException" xml:space="preserve">
     <value>Catch '{0}' exception [Exceptional]</value>

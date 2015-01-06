@@ -51,11 +51,14 @@
     <Compile Include="Fixed\InsertingArgumentNullExceptionDocumentation.cs" />
     <Compile Include="Fixed\WrongWarningOnCtor.cs" />
     <Compile Include="Fixed\PropertyInPropertyInvocation.cs" />
-    <Compile Include="Issues\IndexerNotAnalyzed.cs" />
+    <Compile Include="Issues\IndexerGetDemo.cs" />
+    <Compile Include="Issues\PropertySetDemo.cs" />
     <Compile Include="Fixed\WrongHandlingOfDelegates.cs" />
     <Compile Include="Fixed\DelegateIssues.cs" />
     <Compile Include="Fixed\DependencyPropertyEvaluation.cs" />
     <Compile Include="Fixed\PropertyAnalysisIssues.cs" />
+    <Compile Include="Issues\IndexerSetDemo.cs" />
+    <Compile Include="Issues\PropertyGetDemo.cs" />
     <Compile Include="ThrowingSystemExceptionShowsWarning.cs" />
     <Compile Include="Fixed\RethrowInCatchClauseNotCorrectlyAnalyzed.cs" />
     <Compile Include="Fixed\WrongInnerExceptionWarning.cs" />
