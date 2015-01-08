@@ -12,7 +12,7 @@ namespace Exceptional.Playground.Fixed
         /// asdfasdf</exception><filterpriority>2</filterpriority>
         public override bool Equals(object obj)
         {
-            throw new SecurityException();
+            throw new SecurityException(); // Warning
             // Removing the NullReferenceException also removes the <filterpriority> and the </param> on the same line
             return false;
         }

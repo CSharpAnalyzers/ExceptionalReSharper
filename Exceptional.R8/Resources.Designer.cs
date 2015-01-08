@@ -124,7 +124,7 @@ namespace ReSharper.Exceptional {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Catch &apos;{0}&apos; exception [Exceptional].
+        ///   Looks up a localized string similar to Catch exception &apos;{0}&apos; [Exceptional].
         /// </summary>
         internal static string QuickFixCatchException {
             get {
@@ -142,7 +142,7 @@ namespace ReSharper.Exceptional {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Add documentation for &apos;{0}&apos; exception [Exceptional].
+        ///   Looks up a localized string similar to Add documentation for exception &apos;{0}&apos; [Exceptional].
         /// </summary>
         internal static string QuickFixInsertExceptionDocumentation {
             get {

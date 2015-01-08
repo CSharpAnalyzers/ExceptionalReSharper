@@ -11,7 +11,7 @@ namespace Exceptional.Playground.Fixed
         {
         }
 
-        // Warning: Exception from base ctor not documented
+        // Warning on base call: Exception from base ctor not documented
         public Foo(int test)
             : base(test)
         {

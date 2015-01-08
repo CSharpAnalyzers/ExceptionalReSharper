@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using JetBrains.DocumentModel;
+using JetBrains.ReSharper.Feature.Services.Util;
 using JetBrains.ReSharper.Psi;
 using JetBrains.ReSharper.Psi.CSharp.Tree;
 using JetBrains.ReSharper.Psi.Modules;
@@ -23,7 +24,16 @@ namespace ReSharper.Exceptional.Models.ExceptionsOrigins
         /// <summary>Gets the document range of this block. </summary>
         public override DocumentRange DocumentRange
         {
-            get { return Node.Reference.GetDocumentRange(); }
+            get
+            {
+                if (Node.Parent is IElementAccessExpression)
+                    return Node.Parent.GetExtendedDocumentRange();
+
+                //if (Node.Parent is IAssignmentExpression)
+                //    return Node.Parent.GetExtendedDocumentRange();
+
+                return Node.Reference.GetDocumentRange();
+            }
         }
 
         /// <summary>Gets a list of exceptions which may be thrown from this reference expression (empty if <see cref="IsInvocation"/> is false). </summary>
@@ -121,7 +131,7 @@ namespace ReSharper.Exceptional.Models.ExceptionsOrigins
                     return false;
                 }
 
-                if (parent is IInvocationExpression)
+                if (parent is IAssignmentExpression || parent is IElementAccessExpression || parent is IInvocationExpression)
                     return true;
 
                 parent = parent.Parent;

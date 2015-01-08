@@ -22,7 +22,10 @@ namespace ReSharper.Exceptional.Models
         {
             var result = new List<ThrownExceptionModel>();
 
-            var resolveResult = referenceExpression.Reference.Resolve();
+            var resolveResult = referenceExpression.Parent is IElementAccessExpression ? 
+                ((IElementAccessExpression)referenceExpression.Parent).Reference.Resolve() : 
+                referenceExpression.Reference.Resolve();
+
             var declaredElement = resolveResult.DeclaredElement;
             if (declaredElement == null)
                 return result;
