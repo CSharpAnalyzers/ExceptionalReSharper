@@ -75,7 +75,7 @@ namespace ReSharper.Exceptional.Models.ExceptionsOrigins
             {
                 if (!_isEventInvocation.HasValue)
                 {
-                    if (IsInvocation)
+                    if (!(Node.Parent is IAssignmentExpression) && IsInvocation)
                     {
                         var psiModule = Node.GetPsiModule();
                         var delegateType = TypeFactory.CreateTypeByCLRName("System.Delegate", psiModule, psiModule.GetContextFromModule());
