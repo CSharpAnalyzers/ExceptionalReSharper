@@ -4,7 +4,7 @@ namespace Exceptional.Playground.Fixed
 {
     class PropertyAnalysisIssues
     {
-        // No warning (issue => warning is shown)
+        // No warning 
         /// <exception cref="SecurityException">Foo</exception>
         public string Foo
         {
@@ -12,7 +12,7 @@ namespace Exceptional.Playground.Fixed
             get { throw new SecurityException("Foo"); }
         }
 
-        // No warning (issue => warning is shown)
+        // No warning 
         /// <exception cref="SecurityException">Bar</exception>
         public string Bar
         {

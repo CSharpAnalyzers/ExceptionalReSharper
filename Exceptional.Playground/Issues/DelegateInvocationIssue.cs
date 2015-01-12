@@ -7,9 +7,9 @@ namespace Exceptional.Playground.Issues
     {
         public void Foo(Action foo)
         {
-            //_myAction = foo; // No suggestions 
+            _myAction = foo; // No suggestions 
 
-            //this["foo"] = null; // No suggestion
+            this["foo"] = null; // No suggestion
             this["bar"](); // Suggestion (issue)
         }
 

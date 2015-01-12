@@ -119,7 +119,10 @@ namespace ReSharper.Exceptional.Models.ExceptionsOrigins
                 if (parent == AnalyzeUnit.Node)
                     return false;
 
-                if (parent is ICSharpArgument || parent is IExpressionInitializer || parent is IAccessorDeclaration)
+                if (parent is IAssignmentExpression || 
+                    parent is ICSharpArgument || 
+                    parent is IExpressionInitializer || 
+                    parent is IAccessorDeclaration)
                 {
                     var property = Node.Reference.Resolve().DeclaredElement as IProperty;
                     if (property != null)
@@ -130,8 +133,9 @@ namespace ReSharper.Exceptional.Models.ExceptionsOrigins
                     }
                     return false;
                 }
-
-                if (parent is IAssignmentExpression || parent is IElementAccessExpression || parent is IInvocationExpression)
+                
+                if (parent is IElementAccessExpression ||
+                    parent is IInvocationExpression)
                     return true;
 
                 parent = parent.Parent;
