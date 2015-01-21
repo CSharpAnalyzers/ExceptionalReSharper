@@ -10,15 +10,18 @@ namespace ReSharper.Exceptional.Models
 {
     internal class ExceptionDocCommentModel : ModelBase
     {
-        public ExceptionDocCommentModel(DocCommentBlockModel documentationBlock, string exceptionType, string exceptionDescription)
+        public ExceptionDocCommentModel(DocCommentBlockModel documentationBlock, string exceptionType, string exceptionDescription, string accessor)
             : base(documentationBlock.AnalyzeUnit)
         {
             DocumentationBlock = documentationBlock;
+            Accessor = accessor;
 
             ExceptionTypeName = exceptionType;
             ExceptionType = GetExceptionType(exceptionType);
             ExceptionDescription = exceptionDescription;
         }
+
+        public string Accessor { get; set; }
 
         public DocCommentBlockModel DocumentationBlock { get; private set; }
 

@@ -106,8 +106,14 @@ namespace ReSharper.Exceptional.Models.ExceptionsOrigins
             var psiModule = Node.GetPsiModule();
             var systemExceptionType = TypeFactory.CreateTypeByCLRName("System.Exception", psiModule,
                 psiModule.GetContextFromModule());
-            var thrownException = new ThrownExceptionModel(
-                AnalyzeUnit, this, systemExceptionType, "A delegate callback throws an exception. ", true);
+
+            string accessor = null;
+            if (ContainingBlock is AccessorDeclarationModel)
+                accessor = ((AccessorDeclarationModel)ContainingBlock).Node.NameIdentifier.Name;
+
+            var thrownException = new ThrownExceptionModel(AnalyzeUnit, this, systemExceptionType, 
+                "A delegate callback throws an exception. ", true, accessor);
+
             return thrownException;
         }
 

@@ -61,6 +61,7 @@
     <Compile Include="Fixed\PropertyGetDemo.cs" />
     <Compile Include="Fixed\EventRegistrationIssue.cs" />
     <Compile Include="Issues\DelegateInvocationIssue.cs" />
+    <Compile Include="Issues\ImprovedPropertyHandling.cs" />
     <Compile Include="ThrowingSystemExceptionShowsWarning.cs" />
     <Compile Include="Fixed\RethrowInCatchClauseNotCorrectlyAnalyzed.cs" />
     <Compile Include="Fixed\WrongInnerExceptionWarning.cs" />

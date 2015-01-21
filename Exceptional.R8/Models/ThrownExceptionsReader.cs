@@ -57,7 +57,10 @@ namespace ReSharper.Exceptional.Models
 
                 var docCommentBlockModel = new DocCommentBlockModel(null, docCommentBlockNode);
                 foreach (var comment in docCommentBlockModel.DocumentedExceptions)
-                    result.Add(new ThrownExceptionModel(analyzeUnit, exceptionsOrigin, comment.ExceptionType, comment.ExceptionDescription, false));
+                {
+                    result.Add(new ThrownExceptionModel(analyzeUnit, exceptionsOrigin, comment.ExceptionType,
+                        comment.ExceptionDescription, false, comment.Accessor));
+                }
             }
 
             return result;
@@ -98,16 +101,18 @@ namespace ReSharper.Exceptional.Models
             {
                 if (exceptionNode.Attributes != null)
                 {
-                    var exceptionType = exceptionNode.Attributes["cref"].Value;
+                    var accessorNode = exceptionNode.Attributes["accessor"];
+                    var accessor = accessorNode != null ? accessorNode.Value : null;
 
+                    var exceptionType = exceptionNode.Attributes["cref"].Value;
                     if (exceptionType.StartsWith("T:"))
                         exceptionType = exceptionType.Substring(2);
 
                     var exceptionDeclaredType = TypeFactory.CreateTypeByCLRName(exceptionType, psiModule,
                         psiModule.GetContextFromModule());
 
-                    Logger.Assert(exceptionDeclaredType != null, "Created exception type was null!");
-                    result.Add(new ThrownExceptionModel(analyzeUnit, exceptionsOrigin, exceptionDeclaredType, exceptionNode.InnerXml, false));
+                    result.Add(new ThrownExceptionModel(analyzeUnit, exceptionsOrigin, exceptionDeclaredType, 
+                        exceptionNode.InnerXml, false, accessor));
                 }
             }
 

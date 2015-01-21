@@ -57,7 +57,7 @@ namespace ReSharper.Exceptional.Analyzers
             return exceptionDocumentation
                 .AnalyzeUnit
                 .UncaughtThrownExceptions
-                .Any(m => m.IsException(exceptionDocumentation.ExceptionType));
+                .Any(m => m.IsException(exceptionDocumentation));
         }
 
         private bool IsDocumentedExceptionOrSubtypeThrown(ExceptionDocCommentModel exceptionDocumentation)
@@ -73,12 +73,12 @@ namespace ReSharper.Exceptional.Analyzers
             if (thrownException.IsThrownFromThrowStatement)
             {
                 if (Settings.IsDocumentationOfExceptionSubtypeSufficientForThrowStatements)
-                    return thrownException.IsExceptionOrSubtype(exceptionDocumentation.ExceptionType);
+                    return thrownException.IsExceptionOrSubtype(exceptionDocumentation);
             }
             else
             {
                 if (Settings.IsDocumentationOfExceptionSubtypeSufficientForReferenceExpressions)
-                    return thrownException.IsExceptionOrSubtype(exceptionDocumentation.ExceptionType);
+                    return thrownException.IsExceptionOrSubtype(exceptionDocumentation);
             }
             return false;
         }

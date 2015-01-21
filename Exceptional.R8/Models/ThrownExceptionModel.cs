@@ -1,3 +1,4 @@
+using System;
 using System.Linq;
 using JetBrains.DocumentModel;
 using JetBrains.ReSharper.Psi;
@@ -15,19 +16,19 @@ namespace ReSharper.Exceptional.Models
         private bool? _isExceptionOrSubtypeDocumented = null;
         private bool? _isThrownFromAnonymousMethod = null;
 
-        public ThrownExceptionModel(
-            IAnalyzeUnit analyzeUnit,
-            IExceptionsOriginModel exceptionsOrigin,
-            IDeclaredType exceptionType,
-            string exceptionDescription,
-            bool isEventInvocationException)
+        public ThrownExceptionModel(IAnalyzeUnit analyzeUnit, IExceptionsOriginModel exceptionsOrigin,
+            IDeclaredType exceptionType, string exceptionDescription, bool isEventInvocationException, string accessor)
             : base(analyzeUnit)
         {
             ExceptionType = exceptionType;
             ExceptionDescription = exceptionDescription;
             ExceptionsOrigin = exceptionsOrigin;
+
+            Accessor = accessor;
             IsEventInvocationException = isEventInvocationException;
         }
+
+        public string Accessor { get; private set; }
 
         public bool IsEventInvocationException { get; set; }
 
@@ -83,18 +84,7 @@ namespace ReSharper.Exceptional.Models
             get
             {
                 if (!_isExceptionDocumented.HasValue)
-                {
-                    var docCommentBlockNode = AnalyzeUnit.DocumentationBlock;
-                    if (docCommentBlockNode != null)
-                    {
-                        _isExceptionDocumented = docCommentBlockNode
-                            .DocumentedExceptions
-                            .Any(m => IsException(m.ExceptionType));
-                    }
-                    else
-                        _isExceptionDocumented = false;
-
-                }
+                    _isExceptionDocumented = IsExceptionDocumentedInternal(IsException);
                 return _isExceptionDocumented.Value;
             }
         }
@@ -105,23 +95,63 @@ namespace ReSharper.Exceptional.Models
             get
             {
                 if (!_isExceptionOrSubtypeDocumented.HasValue)
-                {
-                    var docCommentBlockNode = AnalyzeUnit.DocumentationBlock;
-                    if (docCommentBlockNode != null)
-                    {
-                        _isExceptionOrSubtypeDocumented = docCommentBlockNode
-                            .DocumentedExceptions
-                            .Any(m => IsExceptionOrSubtype(m.ExceptionType));
-                    }
-                    else
-                        _isExceptionOrSubtypeDocumented = false;
-
-                }
+                    _isExceptionOrSubtypeDocumented = IsExceptionDocumentedInternal(IsExceptionOrSubtype);
                 return _isExceptionOrSubtypeDocumented.Value;
             }
         }
 
-        /// <summary>Checks whether the thrown exception is <paramref name="exceptionType"/>.</summary>
+        private bool IsExceptionDocumentedInternal(Func<ExceptionDocCommentModel, bool> check)
+        {
+            var docCommentBlockNode = AnalyzeUnit.DocumentationBlock;
+            if (docCommentBlockNode != null)
+            {
+                var parent = ExceptionsOrigin.Node.Parent;
+
+                // property
+                if (Accessor == "get" &&
+                    parent is IAssignmentExpression &&
+                    parent.FirstChild == ExceptionsOrigin.Node)
+                {
+                    return true; // no warning
+                }
+
+                if (Accessor == "set" &&
+                    parent is IExpressionInitializer &&
+                    parent.LastChild == ExceptionsOrigin.Node)
+                {
+                    return true; // no warning
+                }
+
+                // indexer
+                if (Accessor == "get" && parent is IElementAccessExpression)
+                {
+                    parent = parent.Parent;
+                    while (parent != null && parent.FirstChild == parent.LastChild)
+                        parent = parent.Parent;
+
+                    if (parent != null && parent.FirstChild != null && parent.FirstChild.FirstChild == ExceptionsOrigin.Node)
+                        return true; // no warning
+                }
+
+                if (Accessor == "set" && parent is IElementAccessExpression)
+                {
+                    parent = parent.Parent;
+                    while (parent != null && parent.FirstChild == parent.LastChild)
+                        parent = parent.Parent;
+
+                    if (parent != null && parent.LastChild != null && parent.LastChild.LastChild != null &&
+                        parent.LastChild.LastChild.FirstChild == ExceptionsOrigin.Node)
+                        return true; // no warning
+                }
+
+                return docCommentBlockNode
+                    .DocumentedExceptions
+                    .Any(check);
+            }
+            else
+                return false;
+        }
+
         public bool IsException(IDeclaredType exceptionType)
         {
             if (ExceptionType == null)
@@ -133,16 +163,28 @@ namespace ReSharper.Exceptional.Models
             return ExceptionType.Equals(exceptionType);
         }
 
-        /// <summary>Checks whether the thrown exception is a subtype or equal to <paramref name="exceptionType"/>.</summary>
-        public bool IsExceptionOrSubtype(IDeclaredType exceptionType)
+        /// <summary>Checks whether the thrown exception is the same as <paramref name="exceptionDocumentation"/>.</summary>
+        public bool IsException(ExceptionDocCommentModel exceptionDocumentation)
         {
+            if (exceptionDocumentation.Accessor != null && exceptionDocumentation.Accessor != Accessor)
+                return false;
+
+            return IsException(exceptionDocumentation.ExceptionType);
+        }
+
+        /// <summary>Checks whether the thrown exception is a subtype or equal to <paramref name="exceptionType"/>.</summary>
+        public bool IsExceptionOrSubtype(ExceptionDocCommentModel exceptionDocumentation)
+        {
+            if (exceptionDocumentation.Accessor != null && exceptionDocumentation.Accessor != Accessor)
+                return false;
+
             if (ExceptionType == null)
                 return false;
 
-            if (exceptionType == null)
+            if (exceptionDocumentation.ExceptionType == null)
                 return false;
 
-            return ExceptionType.IsSubtypeOf(exceptionType);
+            return ExceptionType.IsSubtypeOf(exceptionDocumentation.ExceptionType);
         }
 
         /// <summary>Runs the analyzer against all defined elements. </summary>

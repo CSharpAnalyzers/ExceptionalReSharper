@@ -46,14 +46,7 @@ namespace ReSharper.Exceptional.QuickFixes
         protected override Action<ITextControl> ExecutePsiTransaction(ISolution solution, IProgressIndicator progress)
         {
             var methodDeclaration = Error.ThrownException.AnalyzeUnit;
-            var exceptionDescription = Error.ThrownException.ExceptionDescription;
-
-            if (Error.ThrownException.ExceptionsOrigin is ThrowStatementModel && 
-                Error.ThrownException.ExceptionType.GetClrName().FullName == "System.ArgumentNullException")
-                exceptionDescription = string.Format("The value of '{0}' cannot be null. ", exceptionDescription);
-
-            var insertedExceptionModel = methodDeclaration.DocumentationBlock.AddExceptionDocumentation(
-                Error.ThrownException.ExceptionType, exceptionDescription, progress);
+            var insertedExceptionModel = methodDeclaration.DocumentationBlock.AddExceptionDocumentation(Error.ThrownException, progress);
 
             if (insertedExceptionModel == null)
                 return null;

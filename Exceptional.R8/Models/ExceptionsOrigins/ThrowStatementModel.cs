@@ -26,7 +26,11 @@ namespace ReSharper.Exceptional.Models.ExceptionsOrigins
             var exceptionType = GetExceptionType();
             var exceptionDescription = GetThrownExceptionMessage(throwStatement);
 
-            _thrownException = new ThrownExceptionModel(analyzeUnit, this, exceptionType, exceptionDescription, false);
+            string accessor = null; 
+            if (containingBlock is AccessorDeclarationModel)
+                accessor = ((AccessorDeclarationModel)containingBlock).Node.NameIdentifier.Name;
+
+            _thrownException = new ThrownExceptionModel(analyzeUnit, this, exceptionType, exceptionDescription, false, accessor);
         }
 
         /// <summary>Gets the parent block which contains this block. </summary>

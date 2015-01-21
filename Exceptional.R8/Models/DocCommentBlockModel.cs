@@ -10,6 +10,7 @@ using JetBrains.ReSharper.Psi.ExtensionsAPI;
 using JetBrains.ReSharper.Psi.Resolve;
 using JetBrains.ReSharper.Psi.Tree;
 using ReSharper.Exceptional.Analyzers;
+using ReSharper.Exceptional.Models.ExceptionsOrigins;
 
 namespace ReSharper.Exceptional.Models
 {
@@ -51,14 +52,28 @@ namespace ReSharper.Exceptional.Models
                 exception.Accept(analyzer);
         }
 
-        public ExceptionDocCommentModel AddExceptionDocumentation(IDeclaredType exceptionType, string exceptionDescription, IProgressIndicator progress)
+        public ExceptionDocCommentModel AddExceptionDocumentation(ThrownExceptionModel thrownException, IProgressIndicator progressIndicator)
         {
-            if (exceptionType == null)
+            if (thrownException.ExceptionType == null)
                 return null;
 
+            var exceptionDescription = thrownException.ExceptionDescription;
+
+            if (thrownException.ExceptionsOrigin is ThrowStatementModel &&
+                thrownException.ExceptionType.GetClrName().FullName == "System.ArgumentNullException")
+                exceptionDescription = string.Format("The value of '{0}' cannot be null. ", exceptionDescription);
+
             var exceptionDocumentation = string.IsNullOrEmpty(exceptionDescription)
-                ? string.Format("<exception cref=\"{0}\">" + Constants.ExceptionDescriptionMarker + ". </exception>{1}", exceptionType.GetClrName().ShortName, Environment.NewLine)
-                : string.Format("<exception cref=\"{0}\">{1}</exception>{2}", exceptionType.GetClrName().ShortName, exceptionDescription, Environment.NewLine);
+                ? string.Format("<exception cref=\"{0}\">" + Constants.ExceptionDescriptionMarker + ". </exception>{1}", thrownException.ExceptionType.GetClrName().ShortName, Environment.NewLine)
+                : string.Format("<exception cref=\"{0}\">{1}</exception>{2}", thrownException.ExceptionType.GetClrName().ShortName, exceptionDescription, Environment.NewLine);
+
+            if (thrownException.ExceptionsOrigin.ContainingBlock is AccessorDeclarationModel)
+            {
+                var accessor = ((AccessorDeclarationModel)thrownException.ExceptionsOrigin.ContainingBlock).Node.NameIdentifier.Name;
+                exceptionDocumentation = string.IsNullOrEmpty(exceptionDescription)
+                    ? string.Format("<exception cref=\"{0}\" accessor=\"{1}\">" + Constants.ExceptionDescriptionMarker + ". </exception>{2}", thrownException.ExceptionType.GetClrName().ShortName, accessor, Environment.NewLine)
+                    : string.Format("<exception cref=\"{0}\" accessor=\"{1}\">{2}</exception>{3}", thrownException.ExceptionType.GetClrName().ShortName, accessor, exceptionDescription, Environment.NewLine);
+            }
 
             ChangeDocumentation(_documentationText + "\n" + exceptionDocumentation);
 
@@ -119,14 +134,15 @@ namespace ReSharper.Exceptional.Models
 
         private IEnumerable<ExceptionDocCommentModel> GetDocumentedExceptions()
         {
-            var regex = new Regex("<exception cref=\"(.*?)\"(>((\r|\n|.)*?)</exception>)?");
+            var regex = new Regex("<exception cref=\"(.*?)\"( accessor=\"(.*?)\")?(>((\r|\n|.)*?)</exception>)?");
             var exceptions = new List<ExceptionDocCommentModel>();
             foreach (Match match in regex.Matches(_documentationText))
             {
                 var exceptionType = match.Groups[1].Value;
-                var exceptionDescription = match.Groups[3].Value;
+                var accessor = !string.IsNullOrEmpty(match.Groups[3].Value) ? match.Groups[3].Value : null;
+                var exceptionDescription = match.Groups[5].Value;
 
-                exceptions.Add(new ExceptionDocCommentModel(this, exceptionType, exceptionDescription));
+                exceptions.Add(new ExceptionDocCommentModel(this, exceptionType, exceptionDescription, accessor));
             }
             return exceptions;
         }
