@@ -68,6 +68,9 @@ namespace ReSharper.Exceptional.Models
 
         public static IEnumerable<ThrownExceptionModel> Read(IAnalyzeUnit analyzeUnit, IExceptionsOriginModel exceptionsOrigin, IDeclaredElement declaredElement)
         {
+            if (declaredElement == null)
+                return new List<ThrownExceptionModel>();
+
             var xmlDoc = declaredElement.GetXMLDoc(true);
             if (xmlDoc == null)
                 return new List<ThrownExceptionModel>();

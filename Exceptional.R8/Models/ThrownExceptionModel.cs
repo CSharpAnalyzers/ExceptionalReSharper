@@ -15,6 +15,7 @@ namespace ReSharper.Exceptional.Models
         private bool? _isExceptionDocumented = null;
         private bool? _isExceptionOrSubtypeDocumented = null;
         private bool? _isThrownFromAnonymousMethod = null;
+        private bool? _isWrongAccessor = null; 
 
         public ThrownExceptionModel(IAnalyzeUnit analyzeUnit, IExceptionsOriginModel exceptionsOrigin,
             IDeclaredType exceptionType, string exceptionDescription, bool isEventInvocationException, string accessor)
@@ -68,12 +69,7 @@ namespace ReSharper.Exceptional.Models
             get
             {
                 if (!_isCaught.HasValue)
-                {
-                    if (ExceptionType != null)
-                        _isCaught = ExceptionsOrigin.ContainingBlock.CatchesException(ExceptionType);
-                    else
-                        _isCaught = false;
-                }
+                    _isCaught = ExceptionType != null && ExceptionsOrigin.ContainingBlock.CatchesException(ExceptionType);
                 return _isCaught.Value;
             }
         }
@@ -105,44 +101,8 @@ namespace ReSharper.Exceptional.Models
             var docCommentBlockNode = AnalyzeUnit.DocumentationBlock;
             if (docCommentBlockNode != null)
             {
-                var parent = ExceptionsOrigin.Node.Parent;
-
-                // property
-                if (Accessor == "get" &&
-                    parent is IAssignmentExpression &&
-                    parent.FirstChild == ExceptionsOrigin.Node)
-                {
-                    return true; // no warning
-                }
-
-                if (Accessor == "set" &&
-                    parent is IExpressionInitializer &&
-                    parent.LastChild == ExceptionsOrigin.Node)
-                {
-                    return true; // no warning
-                }
-
-                // indexer
-                if (Accessor == "get" && parent is IElementAccessExpression)
-                {
-                    parent = parent.Parent;
-                    while (parent != null && parent.FirstChild == parent.LastChild)
-                        parent = parent.Parent;
-
-                    if (parent != null && parent.FirstChild != null && parent.FirstChild.FirstChild == ExceptionsOrigin.Node)
-                        return true; // no warning
-                }
-
-                if (Accessor == "set" && parent is IElementAccessExpression)
-                {
-                    parent = parent.Parent;
-                    while (parent != null && parent.FirstChild == parent.LastChild)
-                        parent = parent.Parent;
-
-                    if (parent != null && parent.LastChild != null && parent.LastChild.LastChild != null &&
-                        parent.LastChild.LastChild.FirstChild == ExceptionsOrigin.Node)
-                        return true; // no warning
-                }
+                if (IsWrongAccessor) 
+                    return true;
 
                 return docCommentBlockNode
                     .DocumentedExceptions
@@ -150,6 +110,53 @@ namespace ReSharper.Exceptional.Models
             }
             else
                 return false;
+        }
+
+        private bool IsWrongAccessor
+        {
+            get
+            {
+                if (_isWrongAccessor == null)
+                {
+                    var parent = ExceptionsOrigin.Node.Parent;
+
+                    // property
+                    if (Accessor == "get" && parent is IAssignmentExpression && parent.FirstChild == ExceptionsOrigin.Node)
+                        _isWrongAccessor = true; 
+                    else if (Accessor == "set" && parent is IExpressionInitializer && parent.LastChild == ExceptionsOrigin.Node)
+                        _isWrongAccessor = true; 
+
+                    // indexer
+                    else if (Accessor == "get" && parent is IElementAccessExpression)
+                    {
+                        parent = parent.Parent;
+                        while (parent != null && parent.FirstChild == parent.LastChild)
+                            parent = parent.Parent;
+
+                        if (parent != null &&
+                            parent.FirstChild != null && 
+                            parent.FirstChild.Children().Contains(ExceptionsOrigin.Node))
+                            _isWrongAccessor = true; 
+                    }
+                    else if (Accessor == "set" && parent is IElementAccessExpression)
+                    {
+                        parent = parent.Parent;
+                        while (parent != null && parent.FirstChild == parent.LastChild)
+                            parent = parent.Parent;
+
+                        if (parent != null && 
+                            parent.LastChild != null && 
+                            parent.LastChild.LastChild != null && 
+                            parent.LastChild.LastChild.Children().Contains(ExceptionsOrigin.Node))
+                            _isWrongAccessor = true;
+                    }
+                    
+                    if (_isWrongAccessor == null)
+                        _isWrongAccessor = false;
+
+                }
+                return _isWrongAccessor.Value;
+            }
         }
 
         public bool IsException(IDeclaredType exceptionType)
@@ -172,7 +179,6 @@ namespace ReSharper.Exceptional.Models
             return IsException(exceptionDocumentation.ExceptionType);
         }
 
-        /// <summary>Checks whether the thrown exception is a subtype or equal to <paramref name="exceptionType"/>.</summary>
         public bool IsExceptionOrSubtype(ExceptionDocCommentModel exceptionDocumentation)
         {
             if (exceptionDocumentation.Accessor != null && exceptionDocumentation.Accessor != Accessor)

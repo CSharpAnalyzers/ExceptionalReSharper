@@ -85,7 +85,11 @@ namespace ReSharper.Exceptional.Models
             if (exceptionDocumentation == null)
                 return;
 
-            var regex = "<exception cref=\"" + Regex.Escape(exceptionDocumentation.ExceptionTypeName) + "\"((>((\r|\n|.)*?)</exception>)|((\r|\n|.)*?/>))";
+            var attributes = "cref=\"" + Regex.Escape(exceptionDocumentation.ExceptionTypeName) + "\"";
+            if (exceptionDocumentation.Accessor != null)
+                attributes += " accessor=\"" + Regex.Escape(exceptionDocumentation.Accessor) + "\"";
+
+            var regex = "<exception " + attributes + "((>((\r|\n|.)*?)</exception>)|((\r|\n|.)*?/>))";
             var newDocumentation = Regex.Replace(_documentationText, regex, string.Empty);
             ChangeDocumentation(newDocumentation);
         }
