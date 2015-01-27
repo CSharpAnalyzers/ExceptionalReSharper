@@ -36,24 +36,24 @@ namespace ReSharper.Exceptional.Settings
 
 
         [SettingsEntry("", "Optional exceptions")]
-        public string OptionalExceptions { get; set; }
+        public string OptionalExceptions2 { get; set; }
 
         [SettingsEntry(true, "Use default optional exceptions")]
-        public bool UseDefaultOptionalExceptions { get; set; }
+        public bool UseDefaultOptionalExceptions2 { get; set; }
 
 
         [SettingsEntry("", "Optional method exceptions")]
-        public string OptionalMethodExceptions { get; set; }
+        public string OptionalMethodExceptions2 { get; set; }
 
         [SettingsEntry(true, "Use default optional method exceptions")]
-        public bool UseDefaultOptionalMethodExceptions { get; set; }
+        public bool UseDefaultOptionalMethodExceptions2 { get; set; }
 
 
         [SettingsEntry("", "Accessor overrides")]
-        public string AccessorOverrides { get; set; }
+        public string AccessorOverrides2 { get; set; }
 
         [SettingsEntry(true, "Use default accessor overrides")]
-        public bool UseDefaultAccessorOverrides { get; set; }
+        public bool UseDefaultAccessorOverrides2 { get; set; }
 
 
         public const string DefaultOptionalExceptions =
@@ -136,7 +136,7 @@ System.Collections.Generic.Dictionary.Item,System.Collections.Generic.KeyNotFoun
         private List<OptionalExceptionConfiguration> LoadOptionalExceptions()
         {
             var list = new List<OptionalExceptionConfiguration>();
-            var value = UseDefaultOptionalExceptions ? OptionalExceptions + DefaultOptionalExceptions : OptionalExceptions;
+            var value = UseDefaultOptionalExceptions2 ? OptionalExceptions2 + DefaultOptionalExceptions : OptionalExceptions2;
             foreach (var line in value.Replace("\r", "").Split('\n').Where(n => !string.IsNullOrEmpty(n)))
             {
                 var optionalException = TryLoadOptionalException(line);
@@ -149,7 +149,7 @@ System.Collections.Generic.Dictionary.Item,System.Collections.Generic.KeyNotFoun
         private List<OptionalMethodExceptionConfiguration> LoadOptionalMethodExceptions()
         {
             var list = new List<OptionalMethodExceptionConfiguration>();
-            var value = UseDefaultOptionalMethodExceptions ? OptionalMethodExceptions + DefaultOptionalMethodExceptions : OptionalMethodExceptions;
+            var value = UseDefaultOptionalMethodExceptions2 ? OptionalMethodExceptions2 + DefaultOptionalMethodExceptions : OptionalMethodExceptions2;
             foreach (var line in value.Replace("\r", "").Split('\n').Where(n => !string.IsNullOrEmpty(n)))
             {
                 var excludedMethodException = TryLoadOptionalMethodException(line);
@@ -162,7 +162,7 @@ System.Collections.Generic.Dictionary.Item,System.Collections.Generic.KeyNotFoun
         private List<ExceptionAccessorOverride> LoadExceptionAccessorOverrides()
         {
             var list = new List<ExceptionAccessorOverride>();
-            var value = UseDefaultAccessorOverrides ? AccessorOverrides + DefaultAccessorOverrides : AccessorOverrides;
+            var value = UseDefaultAccessorOverrides2 ? AccessorOverrides2 + DefaultAccessorOverrides : AccessorOverrides2;
             foreach (var line in value.Replace("\r", "").Split('\n').Where(n => !string.IsNullOrEmpty(n)))
             {
                 var exceptionAccessorOverride = TryExceptionAccessorOverride(line);

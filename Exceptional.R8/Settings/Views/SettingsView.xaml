@@ -70,8 +70,7 @@
                     <RowDefinition Height="*" />
                 </Grid.RowDefinitions>
                 <StackPanel>
-                    <TextBlock Text="Accessor overrides for BCL types: " 
-                               FontWeight="Bold" Margin="0,0,0,8" />
+                    <TextBlock Text="Accessor overrides for BCL types: " FontWeight="Bold" Margin="0,0,0,8" />
                     <controls:CheckBoxDisabledNoCheck2 Content="Use predefined accessor overrides" 
                                                        x:Name="UseDefaultAccessorOverrides" Margin="0,0,0,8"/>
                     <Button Content="Show predefined accessor overrides" Margin="0,0,0,8" Padding="4"

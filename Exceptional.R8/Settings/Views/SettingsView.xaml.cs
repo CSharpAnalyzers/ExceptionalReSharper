@@ -38,19 +38,19 @@ namespace ReSharper.Exceptional.Settings.Views
             settings.SetBinding(lifetime, (ExceptionalSettings x) => x.InspectPrivateMethods,
                 InspectPrivateMethods, CheckBoxDisabledNoCheck2.IsCheckedLogicallyDependencyProperty);
 
-            settings.SetBinding(lifetime, (ExceptionalSettings x) => x.OptionalExceptions,
+            settings.SetBinding(lifetime, (ExceptionalSettings x) => x.OptionalExceptions2,
                 OptionalExceptions, TextBox.TextProperty);
-            settings.SetBinding(lifetime, (ExceptionalSettings x) => x.UseDefaultOptionalExceptions,
+            settings.SetBinding(lifetime, (ExceptionalSettings x) => x.UseDefaultOptionalExceptions2,
                 UseOptionalExceptionsDefaults, CheckBoxDisabledNoCheck2.IsCheckedLogicallyDependencyProperty);
 
-            settings.SetBinding(lifetime, (ExceptionalSettings x) => x.OptionalMethodExceptions,
+            settings.SetBinding(lifetime, (ExceptionalSettings x) => x.OptionalMethodExceptions2,
                 OptionalMethodExceptions, TextBox.TextProperty);
-            settings.SetBinding(lifetime, (ExceptionalSettings x) => x.UseDefaultOptionalMethodExceptions,
+            settings.SetBinding(lifetime, (ExceptionalSettings x) => x.UseDefaultOptionalMethodExceptions2,
                 UseOptionalMethodExceptionsDefaults, CheckBoxDisabledNoCheck2.IsCheckedLogicallyDependencyProperty);
 
-            settings.SetBinding(lifetime, (ExceptionalSettings x) => x.AccessorOverrides,
+            settings.SetBinding(lifetime, (ExceptionalSettings x) => x.AccessorOverrides2,
                 AccessorOverrides, TextBox.TextProperty);
-            settings.SetBinding(lifetime, (ExceptionalSettings x) => x.UseDefaultAccessorOverrides,
+            settings.SetBinding(lifetime, (ExceptionalSettings x) => x.UseDefaultAccessorOverrides2,
                 UseDefaultAccessorOverrides, CheckBoxDisabledNoCheck2.IsCheckedLogicallyDependencyProperty);
 
             //settings.Changed.Advise(lifetime, delegate { Dispatcher.BeginInvoke((Action)(UpdateTextFields)); });

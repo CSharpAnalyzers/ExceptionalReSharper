@@ -30,12 +30,19 @@ namespace ReSharper.Exceptional.Models
 
             IsEventInvocationException = isEventInvocationException;
             
+            CheckAccessorOverride(exceptionsOrigin, exceptionType);
+        }
+
+        private void CheckAccessorOverride(IExceptionsOriginModel exceptionsOrigin, IDeclaredType exceptionType)
+        {
             var doc = GetXmlDocId(exceptionsOrigin.Node);
             if (doc != null)
             {
                 var fullMethodName = Regex.Replace(doc.Substring(2), "(`[0-9]+)|(\\(.*?\\))", ""); // TODO: merge with other
                 var overrides = ServiceLocator.Settings.GetExceptionAccessorOverrides();
-                var ov = overrides.SingleOrDefault(o => o.FullMethodName == fullMethodName && o.GetExceptionType().Equals(exceptionType));
+                var ov =
+                    overrides.SingleOrDefault(
+                        o => o.FullMethodName == fullMethodName && o.GetExceptionType().Equals(exceptionType));
                 if (ov != null)
                     ExceptionAccessor = ov.ExceptionAccessor;
             }
