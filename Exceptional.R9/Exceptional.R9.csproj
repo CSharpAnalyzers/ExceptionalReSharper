@@ -378,6 +378,9 @@
       <Link>Resources.Designer.cs</Link>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
+    <Compile Include="..\Exceptional.R8\Settings\ExceptionAccessorOverride.cs">
+      <Link>Settings\ExceptionAccessorOverride.cs</Link>
+    </Compile>
     <Compile Include="..\Exceptional.R8\Settings\ExceptionalOptionsPage.cs">
       <Link>Settings\ExceptionalOptionsPage.cs</Link>
     </Compile>

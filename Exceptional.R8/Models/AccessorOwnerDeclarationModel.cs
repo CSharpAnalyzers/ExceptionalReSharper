@@ -8,8 +8,8 @@ namespace ReSharper.Exceptional.Models
 {
     internal class AccessorOwnerDeclarationModel : AnalyzeUnitModelBase<IAccessorOwnerDeclaration>
     {
-        public AccessorOwnerDeclarationModel(IAccessorOwnerDeclaration node, ExceptionalSettings settings)
-            : base(null, node, settings)
+        public AccessorOwnerDeclarationModel(IAccessorOwnerDeclaration node)
+            : base(null, node)
         {
             Accessors = new List<AccessorDeclarationModel>();
         }

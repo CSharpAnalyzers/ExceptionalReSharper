@@ -2,6 +2,7 @@ using System;
 using JetBrains.ReSharper.Psi;
 using JetBrains.ReSharper.Psi.Modules;
 using JetBrains.Util.Logging;
+using ReSharper.Exceptional.Models;
 
 namespace ReSharper.Exceptional.Settings
 {
@@ -16,18 +17,27 @@ namespace ReSharper.Exceptional.Settings
             ExceptionType = exceptionType;
         }
 
-        public string FullMethodName { get; private set; }
+        internal string FullMethodName { get; private set; }
 
-        public string ExceptionType { get; private set; }
+        internal string ExceptionType { get; private set; }
 
-        public IDeclaredType GetExceptionType(ExceptionalDaemonStageProcess process)
+        internal bool IsSupertypeOf(ThrownExceptionModel thrownException)
+        {
+            var exceptionType = GetExceptionType();
+            if (exceptionType == null)
+                return false;
+
+            return thrownException.ExceptionType.IsSubtypeOf(exceptionType);
+        }
+
+        private IDeclaredType GetExceptionType()
         {
             if (_exceptionTypeLoaded)
                 return _exceptionType;
 
             try
             {
-                _exceptionType = TypeFactory.CreateTypeByCLRName(ExceptionType, process.PsiModule, process.PsiModule.GetContextFromModule());
+                _exceptionType = TypeFactory.CreateTypeByCLRName(ExceptionType, ServiceLocator.StageProcess.PsiModule, ServiceLocator.StageProcess.PsiModule.GetContextFromModule());
             }
             catch (Exception ex)
             {

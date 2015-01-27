@@ -19,32 +19,28 @@ namespace ReSharper.Exceptional
     /// This object is short-lived. It executes the target highlighting logic.</remarks>
     public class ExceptionalDaemonStageProcess : CSharpDaemonStageProcessBase
     {
-        private readonly IDaemonProcess _process;
         private readonly List<HighlightingInfo> _hightlightings = new List<HighlightingInfo>();
-        private readonly ExceptionalSettings _settings;
+
+        public ExceptionalDaemonStageProcess(ICSharpFile file)
+            : base(ServiceLocator.Process, file)
+        {
+        }
 
         public List<HighlightingInfo> Hightlightings
         {
             get { return _hightlightings; }
         }
 
-        public ExceptionalDaemonStageProcess(IDaemonProcess process, ICSharpFile file, ExceptionalSettings settings)
-            : base(process, file)
-        {
-            _process = process;
-            _settings = settings;
-        }
-
         public override void Execute(Action<DaemonStageResult> commiter)
         {
-            var file = _process.SourceFile.GetTheOnlyPsiFile(CSharpLanguage.Instance) as ICSharpFile;
+            var file = ServiceLocator.Process.SourceFile.GetTheOnlyPsiFile(CSharpLanguage.Instance) as ICSharpFile;
             if (file == null)
                 return;
 
-            var elementProcessor = new ExceptionalRecursiveElementProcessor(this, _process, _settings);
+            var elementProcessor = new ExceptionalRecursiveElementProcessor(this);
             file.ProcessDescendants(elementProcessor);
 
-            if (_process.InterruptFlag)
+            if (ServiceLocator.Process.InterruptFlag)
                 throw new ProcessCancelledException();
 
             commiter(new DaemonStageResult(Hightlightings));

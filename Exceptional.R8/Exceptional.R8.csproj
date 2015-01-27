@@ -149,6 +149,7 @@
     <Compile Include="Models\EventDeclarationModel.cs" />
     <Compile Include="Models\ExceptionsOrigins\ExpressionExceptionsOriginModelBase.cs" />
     <Compile Include="Models\ExceptionsOrigins\ObjectCreationExpressionModel.cs" />
+    <Compile Include="Settings\ExceptionAccessorOverride.cs" />
     <Compile Include="Utilities\CodeElementFactory.cs" />
     <Compile Include="ExceptionalRecursiveElementProcessor.cs">
       <SubType>Code</SubType>

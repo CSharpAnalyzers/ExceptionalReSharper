@@ -35,21 +35,30 @@ namespace ReSharper.Exceptional.Settings
         public bool IsDocumentationOfExceptionSubtypeSufficientForReferenceExpressions { get; set; }
 
 
-        [SettingsEntry(DefaultOptionalExceptions, "Optional exceptions")]
+        [SettingsEntry("", "Optional exceptions")]
         public string OptionalExceptions { get; set; }
 
         [SettingsEntry(true, "Use default optional exceptions")]
         public bool UseDefaultOptionalExceptions { get; set; }
 
-        [SettingsEntry(DefaultOptionalMethodExceptions, "Optional method exceptions")]
+
+        [SettingsEntry("", "Optional method exceptions")]
         public string OptionalMethodExceptions { get; set; }
 
         [SettingsEntry(true, "Use default optional method exceptions")]
         public bool UseDefaultOptionalMethodExceptions { get; set; }
 
 
-        private const string DefaultOptionalExceptions =
-@"-- Contracts
+        [SettingsEntry("", "Accessor overrides")]
+        public string AccessorOverrides { get; set; }
+
+        [SettingsEntry(true, "Use default accessor overrides")]
+        public bool UseDefaultAccessorOverrides { get; set; }
+
+
+        public const string DefaultOptionalExceptions =
+@"
+-- Contracts
 System.ArgumentException,InvocationOnly
 System.InvalidOperationException,InvocationOnly
 System.FormatException,InvocationOnly
@@ -60,15 +69,21 @@ System.NotImplementedException,ThrowOnly
 -- Unit testing
 Microsoft.VisualStudio.TestTools.UnitTesting.AssertFailedException,InvocationOnly";
 
-        private const string DefaultOptionalMethodExceptions = 
-@"System.Collections.IDictionary.Add,System.NotSupportedException
+        public const string DefaultOptionalMethodExceptions =
+@"
+System.Collections.IDictionary.Add,System.NotSupportedException
 System.Nullable.Value,System.InvalidOperationException
 System.Windows.DependencyObject.GetValue,System.InvalidOperationException
 System.Windows.DependencyObject.SetValue,System.InvalidOperationException
 System.Console.WriteLine,System.IO.IOException";
 
+        public const string DefaultAccessorOverrides =
+@"
+System.Collections.Generic.Dictionary.Item,System.Collections.Generic.KeyNotFoundException,get";
+
         private List<OptionalExceptionConfiguration> _optionalExceptionsCache = null;
         private List<OptionalMethodExceptionConfiguration> _optionalMethodExceptionsCache = null;
+        private List<ExceptionAccessorOverride> _exceptionAccessorOverridesCache = null;
 
         public void InvalidateCaches()
         {
@@ -79,20 +94,20 @@ System.Console.WriteLine,System.IO.IOException";
             }
         }
 
-        public IEnumerable<OptionalExceptionConfiguration> GetOptionalExceptions(ExceptionalDaemonStageProcess process)
+        public IEnumerable<OptionalExceptionConfiguration> GetOptionalExceptions()
         {
             if (_optionalExceptionsCache == null)
             {
                 lock (typeof(ExceptionalSettings))
                 {
                     if (_optionalExceptionsCache == null)
-                        _optionalExceptionsCache = LoadOptionalExceptions(process);
+                        _optionalExceptionsCache = LoadOptionalExceptions();
                 }
             }
             return _optionalExceptionsCache;
         }
 
-        public IEnumerable<OptionalMethodExceptionConfiguration> GetOptionalMethodExceptions(ExceptionalDaemonStageProcess process)
+        public IEnumerable<OptionalMethodExceptionConfiguration> GetOptionalMethodExceptions()
         {
             if (_optionalMethodExceptionsCache == null)
             {
@@ -105,13 +120,26 @@ System.Console.WriteLine,System.IO.IOException";
             return _optionalMethodExceptionsCache;
         }
 
-        private List<OptionalExceptionConfiguration> LoadOptionalExceptions(ExceptionalDaemonStageProcess process)
+        public IEnumerable<ExceptionAccessorOverride> GetExceptionAccessorOverrides()
+        {
+            if (_exceptionAccessorOverridesCache == null)
+            {
+                lock (typeof(ExceptionalSettings))
+                {
+                    if (_exceptionAccessorOverridesCache == null)
+                        _exceptionAccessorOverridesCache = LoadExceptionAccessorOverrides();
+                }
+            }
+            return _exceptionAccessorOverridesCache;
+        }
+
+        private List<OptionalExceptionConfiguration> LoadOptionalExceptions()
         {
             var list = new List<OptionalExceptionConfiguration>();
-            var value = UseDefaultOptionalExceptions ? DefaultOptionalExceptions : OptionalExceptions;
+            var value = UseDefaultOptionalExceptions ? OptionalExceptions + DefaultOptionalExceptions : OptionalExceptions;
             foreach (var line in value.Replace("\r", "").Split('\n').Where(n => !string.IsNullOrEmpty(n)))
             {
-                var optionalException = TryLoadOptionalException(process, line);
+                var optionalException = TryLoadOptionalException(line);
                 if (optionalException != null)
                     list.Add(optionalException);
             }
@@ -121,7 +149,7 @@ System.Console.WriteLine,System.IO.IOException";
         private List<OptionalMethodExceptionConfiguration> LoadOptionalMethodExceptions()
         {
             var list = new List<OptionalMethodExceptionConfiguration>();
-            var value = UseDefaultOptionalMethodExceptions ? DefaultOptionalMethodExceptions : OptionalMethodExceptions;
+            var value = UseDefaultOptionalMethodExceptions ? OptionalMethodExceptions + DefaultOptionalMethodExceptions : OptionalMethodExceptions;
             foreach (var line in value.Replace("\r", "").Split('\n').Where(n => !string.IsNullOrEmpty(n)))
             {
                 var excludedMethodException = TryLoadOptionalMethodException(line);
@@ -131,14 +159,28 @@ System.Console.WriteLine,System.IO.IOException";
             return list;
         }
 
-        private static OptionalExceptionConfiguration TryLoadOptionalException(ExceptionalDaemonStageProcess process, string line)
+        private List<ExceptionAccessorOverride> LoadExceptionAccessorOverrides()
+        {
+            var list = new List<ExceptionAccessorOverride>();
+            var value = UseDefaultAccessorOverrides ? AccessorOverrides + DefaultAccessorOverrides : AccessorOverrides;
+            foreach (var line in value.Replace("\r", "").Split('\n').Where(n => !string.IsNullOrEmpty(n)))
+            {
+                var exceptionAccessorOverride = TryExceptionAccessorOverride(line);
+                if (exceptionAccessorOverride != null)
+                    list.Add(exceptionAccessorOverride);
+            }
+            return list;
+        }
+
+        private static OptionalExceptionConfiguration TryLoadOptionalException(string line)
         {
             try
             {
                 var arr = line.Split(',');
                 if (arr.Length == 2)
                 {
-                    var exceptionType = TypeFactory.CreateTypeByCLRName(arr[0], process.PsiModule, process.PsiModule.GetContextFromModule());
+                    var exceptionType = TypeFactory.CreateTypeByCLRName(arr[0], 
+                        ServiceLocator.StageProcess.PsiModule, ServiceLocator.StageProcess.PsiModule.GetContextFromModule());
 
                     OptionalExceptionReplacementType replacementType;
                     if (Enum.TryParse(arr[1], out replacementType))
@@ -157,6 +199,14 @@ System.Console.WriteLine,System.IO.IOException";
             var arr = line.Split(',');
             if (arr.Length == 2)
                 return new OptionalMethodExceptionConfiguration(arr[0], arr[1]);
+            return null;
+        }
+
+        private static ExceptionAccessorOverride TryExceptionAccessorOverride(string line)
+        {
+            var arr = line.Split(',');
+            if (arr.Length == 3)
+                return new ExceptionAccessorOverride(arr[0], arr[1], arr[2]);
             return null;
         }
     }

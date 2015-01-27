@@ -6,8 +6,8 @@ namespace ReSharper.Exceptional.Models
     /// <summary>Stores data about processed <see cref="IMethodDeclaration"/></summary>
     internal class MethodDeclarationModel : AnalyzeUnitModelBase<IMethodDeclaration>
     {
-        public MethodDeclarationModel(IMethodDeclaration methodDeclaration, ExceptionalSettings settings)
-            : base(null, methodDeclaration, settings)
+        public MethodDeclarationModel(IMethodDeclaration methodDeclaration)
+            : base(null, methodDeclaration)
         {
         }
 

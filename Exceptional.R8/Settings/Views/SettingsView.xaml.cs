@@ -48,34 +48,31 @@ namespace ReSharper.Exceptional.Settings.Views
             settings.SetBinding(lifetime, (ExceptionalSettings x) => x.UseDefaultOptionalMethodExceptions,
                 UseOptionalMethodExceptionsDefaults, CheckBoxDisabledNoCheck2.IsCheckedLogicallyDependencyProperty);
 
-            settings.Changed.Advise(lifetime, delegate { Dispatcher.BeginInvoke((Action)(UpdateTextFields)); });
+            settings.SetBinding(lifetime, (ExceptionalSettings x) => x.AccessorOverrides,
+                AccessorOverrides, TextBox.TextProperty);
+            settings.SetBinding(lifetime, (ExceptionalSettings x) => x.UseDefaultAccessorOverrides,
+                UseDefaultAccessorOverrides, CheckBoxDisabledNoCheck2.IsCheckedLogicallyDependencyProperty);
+
+            //settings.Changed.Advise(lifetime, delegate { Dispatcher.BeginInvoke((Action)(UpdateTextFields)); });
             lifetime.AddAction(delegate
             {
                 // TODO: Force rescan of all documents if settings have changed
             });
-
-            UpdateTextFields();
         }
 
-        private void UpdateTextFields()
+        private void ShowPredefinedOptionalExceptions(object sender, RoutedEventArgs e)
         {
-            var settings = _settings.GetKey<ExceptionalSettings>(SettingsOptimization.OptimizeDefault);
-            OptionalExceptions.IsEnabled = !settings.UseDefaultOptionalExceptions;
-            OptionalMethodExceptions.IsEnabled = !settings.UseDefaultOptionalMethodExceptions;
+            MessageBox.Show(ExceptionalSettings.DefaultOptionalExceptions);
         }
 
-        private void OnResetOptionalExceptions(object sender, RoutedEventArgs e)
+        private void ShowPredefinedOptionalMethodAndPropertyExceptions(object sender, RoutedEventArgs e)
         {
-            _settings.ResetValue((ExceptionalSettings x) => x.OptionalExceptions);
-            _settings.SetBinding(_lifetime, (ExceptionalSettings x) => x.OptionalExceptions,
-                OptionalExceptions, TextBox.TextProperty);
+            MessageBox.Show(ExceptionalSettings.DefaultOptionalMethodExceptions);
         }
 
-        private void OnResetOptionalMethodExceptions(object sender, RoutedEventArgs e)
+        private void ShowPredefinedAccessorOverrides(object sender, RoutedEventArgs e)
         {
-            _settings.ResetValue((ExceptionalSettings x) => x.OptionalMethodExceptions);
-            _settings.SetBinding(_lifetime, (ExceptionalSettings x) => x.OptionalMethodExceptions,
-                OptionalMethodExceptions, TextBox.TextProperty);
+            MessageBox.Show(ExceptionalSettings.DefaultAccessorOverrides);
         }
     }
 }

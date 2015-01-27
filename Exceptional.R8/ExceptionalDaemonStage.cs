@@ -29,6 +29,13 @@ namespace ReSharper.Exceptional
     }
 #endif
 
+    internal static class ServiceLocator
+    {
+        public static IDaemonProcess Process { get; set; }
+        public static ExceptionalDaemonStageProcess StageProcess { get; set; }
+        public static ExceptionalSettings Settings { get; set; }
+    }
+
     /// <summary>Daemon stage that is responsible for creating daemon stage process.</summary>
     /// <remarks>The daemon stage is needed to plug-in into a ReSharper's highlighting infrastructure.
     /// It is responsible for creating daemon stage process. The <see cref="DaemonStageAttribute"/>
@@ -52,7 +59,11 @@ namespace ReSharper.Exceptional
             var exceptionalSettings = settings.GetKey<ExceptionalSettings>(SettingsOptimization.OptimizeDefault);
             exceptionalSettings.InvalidateCaches();
 
-            return new ExceptionalDaemonStageProcess(process, file, exceptionalSettings);
+            ServiceLocator.Process = process;
+            ServiceLocator.Settings = exceptionalSettings;
+            ServiceLocator.StageProcess = new ExceptionalDaemonStageProcess(file);
+
+            return ServiceLocator.StageProcess;
         }
     }
 }

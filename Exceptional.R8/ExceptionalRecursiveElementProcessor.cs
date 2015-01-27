@@ -18,8 +18,6 @@ namespace ReSharper.Exceptional
     public class ExceptionalRecursiveElementProcessor : IRecursiveElementProcessor
     {
         private readonly CSharpDaemonStageProcessBase _daemonProcess;
-        private readonly IDaemonProcess _process;
-        private readonly ExceptionalSettings _settings;
 #if R8
         private readonly List<IDocCommentBlockNode> _eventComments = new List<IDocCommentBlockNode>();
 #endif
@@ -29,11 +27,9 @@ namespace ReSharper.Exceptional
 
         private IProcessContext _currentContext;
 
-        public ExceptionalRecursiveElementProcessor(CSharpDaemonStageProcessBase daemonProcess, IDaemonProcess process, ExceptionalSettings settings)
+        public ExceptionalRecursiveElementProcessor(CSharpDaemonStageProcessBase daemonProcess)
         {
-            _settings = settings;
             _daemonProcess = daemonProcess;
-            _process = process;
             _currentContext = new NullProcessContext();
         }
 
@@ -56,19 +52,19 @@ namespace ReSharper.Exceptional
             {
                 var methodDeclaration = element as IMethodDeclaration;
                 _currentContext = new MethodProcessContext();
-                _currentContext.StartProcess(new MethodDeclarationModel(methodDeclaration, _settings));
+                _currentContext.StartProcess(new MethodDeclarationModel(methodDeclaration));
             }
             else if (element is IConstructorDeclaration)
             {
                 var constructorDeclaration = element as IConstructorDeclaration;
                 _currentContext = new ConstructorProcessContext();
-                _currentContext.StartProcess(new ConstructorDeclarationModel(constructorDeclaration, _settings));
+                _currentContext.StartProcess(new ConstructorDeclarationModel(constructorDeclaration));
             }
             else if (element is IEventDeclaration)
             {
                 var eventDeclaration = element as IEventDeclaration;
                 _currentContext = new EventProcessContext();
-                _currentContext.StartProcess(new EventDeclarationModel(eventDeclaration, _settings));
+                _currentContext.StartProcess(new EventDeclarationModel(eventDeclaration));
 
                 foreach (var doc in _eventComments)
                     _currentContext.Process(doc);
@@ -78,7 +74,7 @@ namespace ReSharper.Exceptional
             {
                 var accessorOwnerDeclaration = element as IAccessorOwnerDeclaration;
                 _currentContext = new AccessorOwnerProcessContext();
-                _currentContext.StartProcess(new AccessorOwnerDeclarationModel(accessorOwnerDeclaration, _settings));
+                _currentContext.StartProcess(new AccessorOwnerDeclarationModel(accessorOwnerDeclaration));
             }
             else if (element is IAccessorDeclaration)
                 _currentContext.EnterAccessor(element as IAccessorDeclaration);
@@ -117,12 +113,12 @@ namespace ReSharper.Exceptional
         public void ProcessAfterInterior(ITreeNode element)
         {
             if (element is IMethodDeclaration)
-                _currentContext.RunAnalyzers(_daemonProcess, _settings);
+                _currentContext.RunAnalyzers();
             else if (element is IEventDeclaration)
-                _currentContext.RunAnalyzers(_daemonProcess, _settings);
+                _currentContext.RunAnalyzers();
             else if (element is IAccessorOwnerDeclaration)
             {
-                _currentContext.RunAnalyzers(_daemonProcess, _settings);
+                _currentContext.RunAnalyzers();
             }
             else if (element is IAccessorDeclaration)
             {
@@ -130,7 +126,7 @@ namespace ReSharper.Exceptional
                 _currentContext.LeaveAccessor();
             }
             else if (element is IConstructorDeclaration)
-                _currentContext.RunAnalyzers(_daemonProcess, _settings);
+                _currentContext.RunAnalyzers();
             else if (element is ITryStatement)
                 _currentContext.LeaveTryBlock();
             else if (element is ICatchClause)
@@ -139,7 +135,7 @@ namespace ReSharper.Exceptional
 
         public bool ProcessingIsFinished
         {
-            get { return _process.InterruptFlag; }
+            get { return ServiceLocator.Process.InterruptFlag; }
         }
     }
 }

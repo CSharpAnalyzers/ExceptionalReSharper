@@ -1,16 +1,16 @@
 ﻿using System.Runtime.Serialization;
 using System.Security;
 
-namespace Exceptional.Playground.Issues
+namespace Exceptional.Playground.Fixed
 {
-    public class ImprovedPropertyHandling
+    public class PropertyAccessorSpecificExceptions
     {
         public void Bar()
         {
             var x = Foo; // one warning (SecurityException)
             Foo = "test"; // one warning (SerializationException)
 
-            var y = new ImprovedPropertyHandling();
+            var y = new PropertyAccessorSpecificExceptions();
             var b = y["abc"]; // one warning (SecurityException)
             y["abc"] = "h"; // one warning (SerializationException)
 

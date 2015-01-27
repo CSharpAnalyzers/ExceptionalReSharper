@@ -12,9 +12,8 @@ namespace ReSharper.Exceptional.Models
     {
         /// <summary>Initializes a new instance of the <see cref="ConstructorDeclarationModel"/> class. </summary>
         /// <param name="constructorDeclaration">The constructor declaration. </param>
-        /// <param name="settings">The settings. </param>
-        public ConstructorDeclarationModel(IConstructorDeclaration constructorDeclaration, ExceptionalSettings settings)
-            : base(null, constructorDeclaration, settings)
+        public ConstructorDeclarationModel(IConstructorDeclaration constructorDeclaration)
+            : base(null, constructorDeclaration)
         {
             if (constructorDeclaration.Initializer != null)
                 ThrownExceptions.Add(new ConstructorInitializerModel(this, constructorDeclaration.Initializer, this));

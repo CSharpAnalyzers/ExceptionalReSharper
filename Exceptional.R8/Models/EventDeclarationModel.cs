@@ -8,8 +8,8 @@ namespace ReSharper.Exceptional.Models
 {
     internal class EventDeclarationModel : AnalyzeUnitModelBase<IEventDeclaration>
     {
-        public EventDeclarationModel(IEventDeclaration node, ExceptionalSettings settings)
-            : base(null, node, settings)
+        public EventDeclarationModel(IEventDeclaration node)
+            : base(null, node)
         {
             Accessors = new List<AccessorDeclarationModel>();
         }

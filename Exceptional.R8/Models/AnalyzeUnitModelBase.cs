@@ -8,13 +8,9 @@ namespace ReSharper.Exceptional.Models
 {
     internal abstract class AnalyzeUnitModelBase<T> : BlockModelBase<T>, IAnalyzeUnit where T : ITreeNode
     {
-        private readonly ExceptionalSettings _settings;
-
-        protected AnalyzeUnitModelBase(IAnalyzeUnit analyzeUnit, T node, ExceptionalSettings settings)
+        protected AnalyzeUnitModelBase(IAnalyzeUnit analyzeUnit, T node)
             : base(analyzeUnit, node)
         {
-            _settings = settings;
-
             DocumentationBlock = new DocCommentBlockModel(this, null);
         }
 
@@ -33,10 +29,10 @@ namespace ReSharper.Exceptional.Models
                 if (accessRightsOwner == null)
                     return false;
 
-                var inspectPublicMethods = _settings.InspectPublicMethods;
-                var inspectInternalMethods = _settings.InspectInternalMethods;
-                var inspectProtectedMethods = _settings.InspectProtectedMethods;
-                var inspectPrivateMethods = _settings.InspectPrivateMethods;
+                var inspectPublicMethods = ServiceLocator.Settings.InspectPublicMethods;
+                var inspectInternalMethods = ServiceLocator.Settings.InspectInternalMethods;
+                var inspectProtectedMethods = ServiceLocator.Settings.InspectProtectedMethods;
+                var inspectPrivateMethods = ServiceLocator.Settings.InspectPrivateMethods;
 
                 var rights = accessRightsOwner.GetAccessRights();
                 return (rights == AccessRights.PUBLIC && inspectPublicMethods) ||

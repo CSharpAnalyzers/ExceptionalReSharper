@@ -6,48 +6,81 @@
              xmlns:controls="urn:schemas-jetbrains-com:jetbrains-ui-controls" mc:Ignorable="d" 
              d:DesignHeight="300" d:DesignWidth="300">
 
-    <Grid Margin="8">
-        <Grid.RowDefinitions>
-            <RowDefinition Height="Auto" />
-            
-            <RowDefinition Height="Auto" />
-            <RowDefinition Height="Auto" />
-            <RowDefinition Height="*" />
-            <RowDefinition Height="Auto" />
+    <TabControl Margin="0,8,0,0">
+        <TabItem Header="General">
+            <StackPanel Margin="8">
+                <controls:CheckBoxDisabledNoCheck2 Content="Delegate invocations may throw System.Exception" Margin="0,0,0,12" 
+                                                   x:Name="DelegateInvocationsMayThrowExceptions" />
 
-            <RowDefinition Height="Auto" />
-            <RowDefinition Height="Auto" />
-            <RowDefinition Height="*" />
-            <RowDefinition Height="Auto" />
-        </Grid.RowDefinitions>
-        
-        <StackPanel>
-            <controls:CheckBoxDisabledNoCheck2 Content="Delegate invocations may throw System.Exception" Margin="0,0,0,12" 
-                                               x:Name="DelegateInvocationsMayThrowExceptions" />
+                <TextBlock Text="Documentation of thrown exception's subtype is sufficient..." FontWeight="Bold" Margin="0,0,0,4" />
+                <controls:CheckBoxDisabledNoCheck2 Content="... for throw statements" Margin="0,0,0,4" 
+                                                   x:Name="IsDocumentationOfExceptionSubtypeSufficientForThrowStatements" />
+                <controls:CheckBoxDisabledNoCheck2 Content="... for method or property invocations" Margin="0,0,0,12" 
+                                                   x:Name="IsDocumentationOfExceptionSubtypeSufficientForReferenceExpressions" />
 
-            <TextBlock Text="Documentation of thrown exception's subtype is sufficient..." FontWeight="Bold" Margin="0,0,0,4" />
-            <controls:CheckBoxDisabledNoCheck2 Content="... for throw statements" Margin="0,0,0,4" 
-                                               x:Name="IsDocumentationOfExceptionSubtypeSufficientForThrowStatements" />
-            <controls:CheckBoxDisabledNoCheck2 Content="... for method or property invocations" Margin="0,0,0,12" 
-                                               x:Name="IsDocumentationOfExceptionSubtypeSufficientForReferenceExpressions" />
-
-            <TextBlock Text="Method and property visibility" FontWeight="Bold" Margin="0,0,0,4" />
-            <controls:CheckBoxDisabledNoCheck2 Content="Inspect public methods and properties" x:Name="InspectPublicMethods" Margin="0,0,0,4" />
-            <controls:CheckBoxDisabledNoCheck2 Content="Inspect internal methods and properties" x:Name="InspectInternalMethods" Margin="0,0,0,4" />
-            <controls:CheckBoxDisabledNoCheck2 Content="Inspect protected methods and properties" x:Name="InspectProtectedMethods" Margin="0,0,0,4" />
-            <controls:CheckBoxDisabledNoCheck2 Content="Inspect private methods and properties" x:Name="InspectPrivateMethods" Margin="0,0,0,8" />
-        </StackPanel>
-
-        <TextBlock Grid.Row="1" Text="Optional exceptions (shown as hint instead of warning): " FontWeight="Bold" Margin="0,0,0,4" />
-        <controls:CheckBoxDisabledNoCheck2 Grid.Row="2" Content="Use defaults" x:Name="UseOptionalExceptionsDefaults" Margin="0,0,0,4" />
-        <TextBox Grid.Row="3" x:Name="OptionalExceptions" AcceptsReturn="True" Margin="0,0,0,4"
-                 ScrollViewer.HorizontalScrollBarVisibility="Disabled" ScrollViewer.VerticalScrollBarVisibility="Auto" />
-        <Button Grid.Row="4" Content="Reset optional exceptions" Padding="4" Click="OnResetOptionalExceptions" Margin="0,0,0,8" />
-
-        <TextBlock Grid.Row="5" Text="Optional method and property exceptions (shown as hint instead of warning): " FontWeight="Bold" Margin="0,0,0,4" />
-        <controls:CheckBoxDisabledNoCheck2 Grid.Row="6" Content="Use defaults" x:Name="UseOptionalMethodExceptionsDefaults" Margin="0,0,0,4"/>
-        <TextBox Grid.Row="7" x:Name="OptionalMethodExceptions" AcceptsReturn="True" Margin="0,0,0,4"
-                 ScrollViewer.HorizontalScrollBarVisibility="Disabled" ScrollViewer.VerticalScrollBarVisibility="Auto"  />
-        <Button Grid.Row="8" Content="Reset optional method exceptions" Padding="4" Click="OnResetOptionalMethodExceptions" />
-    </Grid>
+                <TextBlock Text="Method and property visibility" FontWeight="Bold" Margin="0,0,0,4" />
+                <controls:CheckBoxDisabledNoCheck2 Content="Inspect public methods and properties" x:Name="InspectPublicMethods" Margin="0,0,0,4" />
+                <controls:CheckBoxDisabledNoCheck2 Content="Inspect internal methods and properties" x:Name="InspectInternalMethods" Margin="0,0,0,4" />
+                <controls:CheckBoxDisabledNoCheck2 Content="Inspect protected methods and properties" x:Name="InspectProtectedMethods" Margin="0,0,0,4" />
+                <controls:CheckBoxDisabledNoCheck2 Content="Inspect private methods and properties" x:Name="InspectPrivateMethods" Margin="0,0,0,8" />
+            </StackPanel>
+        </TabItem>
+        <TabItem Header="Optional exceptions">
+            <Grid Margin="8">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="*" />
+                </Grid.RowDefinitions>
+                <StackPanel>
+                    <TextBlock Text="Optional exceptions (shown as hint instead of warning): " 
+                               FontWeight="Bold" Margin="0,0,0,8" />
+                    <controls:CheckBoxDisabledNoCheck2 Content="Use predefined optional exceptions" 
+                                                       x:Name="UseOptionalExceptionsDefaults" Margin="0,0,0,8" />
+                    <Button Content="Show predefined optional exceptions" Margin="0,0,0,8" Padding="4"
+                            Click="ShowPredefinedOptionalExceptions" />
+                </StackPanel>
+                <TextBox Grid.Row="1" x:Name="OptionalExceptions" AcceptsReturn="True" 
+                         ScrollViewer.HorizontalScrollBarVisibility="Disabled" 
+                         ScrollViewer.VerticalScrollBarVisibility="Auto" />
+            </Grid>
+        </TabItem>
+        <TabItem Header="Optional method and property exceptions">
+            <Grid Margin="8">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="*" />
+                </Grid.RowDefinitions>
+                <StackPanel>
+                    <TextBlock Text="Optional method and property exceptions (shown as hint instead of warning): " 
+                               FontWeight="Bold" Margin="0,0,0,8" />
+                    <controls:CheckBoxDisabledNoCheck2 Content="Use predefined optional method and property exceptions" 
+                                                       x:Name="UseOptionalMethodExceptionsDefaults" Margin="0,0,0,8"/>
+                    <Button Content="Show predefined optional method and property exceptions" Margin="0,0,0,8" Padding="4"
+                            Click="ShowPredefinedOptionalMethodAndPropertyExceptions" />
+                </StackPanel>
+                <TextBox Grid.Row="1" x:Name="OptionalMethodExceptions" AcceptsReturn="True" 
+                         ScrollViewer.HorizontalScrollBarVisibility="Disabled" 
+                         ScrollViewer.VerticalScrollBarVisibility="Auto"  />
+            </Grid>
+        </TabItem>
+        <TabItem Header="Accessor overrides">
+            <Grid Margin="8">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="*" />
+                </Grid.RowDefinitions>
+                <StackPanel>
+                    <TextBlock Text="Accessor overrides for BCL types: " 
+                               FontWeight="Bold" Margin="0,0,0,8" />
+                    <controls:CheckBoxDisabledNoCheck2 Content="Use predefined accessor overrides" 
+                                                       x:Name="UseDefaultAccessorOverrides" Margin="0,0,0,8"/>
+                    <Button Content="Show predefined accessor overrides" Margin="0,0,0,8" Padding="4"
+                            Click="ShowPredefinedAccessorOverrides" />
+                </StackPanel>
+                <TextBox Grid.Row="1" x:Name="AccessorOverrides" AcceptsReturn="True" 
+                         ScrollViewer.HorizontalScrollBarVisibility="Disabled" 
+                         ScrollViewer.VerticalScrollBarVisibility="Auto"  />
+            </Grid>
+        </TabItem>
+    </TabControl>
 </UserControl>

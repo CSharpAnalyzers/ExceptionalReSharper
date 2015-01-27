@@ -3,19 +3,12 @@ using JetBrains.ReSharper.Daemon;
 using JetBrains.ReSharper.Feature.Services.Daemon;
 using ReSharper.Exceptional.Highlightings;
 using ReSharper.Exceptional.Models;
-using ReSharper.Exceptional.Settings;
 
 namespace ReSharper.Exceptional.Analyzers
 {
     /// <summary>Analyzes an exception documentation and checks if it is thrown from the documented element.</summary>
     internal class IsDocumentedExceptionThrownAnalyzer : AnalyzerBase
     {
-        /// <summary>Initializes a new instance of the <see cref="AnalyzerBase"/> class. </summary>
-        /// <param name="process">The process. </param>
-        /// <param name="settings">The settings. </param>
-        public IsDocumentedExceptionThrownAnalyzer(ExceptionalDaemonStageProcess process, ExceptionalSettings settings)
-            : base(process, settings) { }
-
         /// <summary>Performs analyze of <paramref name="exceptionDocumentation"/>.</summary>
         /// <param name="exceptionDocumentation">Exception documentation to analyze.</param>
         public override void Visit(ExceptionDocCommentModel exceptionDocumentation)
@@ -38,7 +31,7 @@ namespace ReSharper.Exceptional.Analyzers
                 ? new ExceptionNotThrownOptionalHighlighting(exceptionDocumentation)
                 : new ExceptionNotThrownHighlighting(exceptionDocumentation);
 
-            Process.Hightlightings.Add(new HighlightingInfo(exceptionDocumentation.DocumentRange, highlighting, null, null));
+            ServiceLocator.StageProcess.Hightlightings.Add(new HighlightingInfo(exceptionDocumentation.DocumentRange, highlighting, null, null));
         }
 
         private bool IsAbstractOrInterfaceMethod(ExceptionDocCommentModel exceptionDocumentation)
@@ -72,12 +65,12 @@ namespace ReSharper.Exceptional.Analyzers
         {
             if (thrownException.IsThrownFromThrowStatement)
             {
-                if (Settings.IsDocumentationOfExceptionSubtypeSufficientForThrowStatements)
+                if (ServiceLocator.Settings.IsDocumentationOfExceptionSubtypeSufficientForThrowStatements)
                     return thrownException.IsExceptionOrSubtype(exceptionDocumentation);
             }
             else
             {
-                if (Settings.IsDocumentationOfExceptionSubtypeSufficientForReferenceExpressions)
+                if (ServiceLocator.Settings.IsDocumentationOfExceptionSubtypeSufficientForReferenceExpressions)
                     return thrownException.IsExceptionOrSubtype(exceptionDocumentation);
             }
             return false;

@@ -19,16 +19,13 @@ namespace ReSharper.Exceptional.Contexts
         protected IAnalyzeUnit AnalyzeUnit { get; private set; }
         protected Stack<IBlockModel> BlockModelsStack { get; private set; }
 
-        private static IEnumerable<AnalyzerBase> ProvideAnalyzers(ExceptionalDaemonStageProcess stageProcess, ExceptionalSettings settings)
+        private static IEnumerable<AnalyzerBase> ProvideAnalyzers()
         {
-            if (stageProcess == null)
-                yield break;
-
-            yield return new IsThrownExceptionDocumentedAnalyzer(stageProcess, settings);
-            yield return new IsDocumentedExceptionThrownAnalyzer(stageProcess, settings);
-            yield return new CatchAllClauseAnalyzer(stageProcess, settings);
-            yield return new IsThrowingSystemExceptionAnalyzer(stageProcess, settings);
-            yield return new HasInnerExceptionFromOuterCatchClauseAnalyzer(stageProcess, settings);
+            yield return new IsThrownExceptionDocumentedAnalyzer();
+            yield return new IsDocumentedExceptionThrownAnalyzer();
+            yield return new CatchAllClauseAnalyzer();
+            yield return new IsThrowingSystemExceptionAnalyzer();
+            yield return new HasInnerExceptionFromOuterCatchClauseAnalyzer();
         }
 
         protected ProcessContext()
@@ -47,12 +44,12 @@ namespace ReSharper.Exceptional.Contexts
             BlockModelsStack.Push(AnalyzeUnit);
         }
 
-        public void RunAnalyzers(CSharpDaemonStageProcessBase process, ExceptionalSettings settings)
+        public void RunAnalyzers()
         {
             if (IsValid() == false)
                 return;
 
-            foreach (var analyzerBase in ProvideAnalyzers(process as ExceptionalDaemonStageProcess, settings))
+            foreach (var analyzerBase in ProvideAnalyzers())
                 AnalyzeUnit.Accept(analyzerBase);
         }
 
