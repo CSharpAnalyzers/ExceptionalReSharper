@@ -33,7 +33,7 @@ namespace ReSharper.Exceptional.Analyzers
                 if (ServiceLocator.Settings.DelegateInvocationsMayThrowExceptions)
                 {
                     var highlighting = new EventExceptionNotDocumentedHighlighting(thrownException);
-                    ServiceLocator.StageProcess.Hightlightings.Add(new HighlightingInfo(thrownException.DocumentRange, highlighting, null));
+                    ServiceLocator.StageProcess.AddHighlighting(highlighting, thrownException.DocumentRange);
                 }
             }
             else
@@ -41,7 +41,7 @@ namespace ReSharper.Exceptional.Analyzers
                 var highlighting = isOptional
                     ? new ExceptionNotDocumentedOptionalHighlighting(thrownException)
                     : new ExceptionNotDocumentedHighlighting(thrownException);
-                ServiceLocator.StageProcess.Hightlightings.Add(new HighlightingInfo(thrownException.DocumentRange, highlighting, null));
+                ServiceLocator.StageProcess.AddHighlighting(highlighting, thrownException.DocumentRange);
             }
         }
 

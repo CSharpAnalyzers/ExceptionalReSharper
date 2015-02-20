@@ -13,7 +13,7 @@ namespace ReSharper.Exceptional.Analyzers
         public override void Visit(CatchClauseModel catchClause)
         {
             if (catchClause.IsCatchAll)
-                ServiceLocator.StageProcess.Hightlightings.Add(new HighlightingInfo(catchClause.DocumentRange, new CatchAllClauseHighlighting(), null));
+                ServiceLocator.StageProcess.AddHighlighting(new CatchAllClauseHighlighting(), catchClause.DocumentRange);
         }
     }
 }

@@ -13,7 +13,7 @@ namespace ReSharper.Exceptional.Analyzers
         public override void Visit(ThrownExceptionModel thrownException)
         {
             if (thrownException.IsThrownFromThrowStatement && thrownException.ExceptionType.GetClrName().FullName == "System.Exception")
-                ServiceLocator.StageProcess.Hightlightings.Add(new HighlightingInfo(thrownException.DocumentRange, new ThrowingSystemExceptionHighlighting(), null));
+                ServiceLocator.StageProcess.AddHighlighting(new ThrowingSystemExceptionHighlighting(), thrownException.DocumentRange);
         }
     }
 }

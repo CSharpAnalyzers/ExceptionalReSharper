@@ -30,10 +30,10 @@
                 <Grid.RowDefinitions>
                     <RowDefinition Height="Auto" />
                     <RowDefinition Height="*" />
+                    <RowDefinition Height="Auto" />
                 </Grid.RowDefinitions>
                 <StackPanel>
-                    <TextBlock Text="Optional exceptions (shown as hint instead of warning): " 
-                               FontWeight="Bold" Margin="0,0,0,8" />
+                    <TextBlock Text="Define exception types which are shown as hints instead of warnings. " Margin="0,0,0,16" />
                     <controls:CheckBoxDisabledNoCheck2 Content="Use predefined optional exceptions" 
                                                        x:Name="UseOptionalExceptionsDefaults" Margin="0,0,0,8" />
                     <Button Content="Show predefined optional exceptions" Margin="0,0,0,8" Padding="4"
@@ -42,6 +42,8 @@
                 <TextBox Grid.Row="1" x:Name="OptionalExceptions" AcceptsReturn="True" 
                          ScrollViewer.HorizontalScrollBarVisibility="Disabled" 
                          ScrollViewer.VerticalScrollBarVisibility="Auto" />
+
+                <TextBlock Grid.Row="2" Text="Format: ExceptionType,[Always|InvocationOnly|ThrowOnly]" Margin="0,8,0,0" />
             </Grid>
         </TabItem>
         <TabItem Header="Optional method and property exceptions">
@@ -49,10 +51,12 @@
                 <Grid.RowDefinitions>
                     <RowDefinition Height="Auto" />
                     <RowDefinition Height="*" />
+                    <RowDefinition Height="Auto" />
                 </Grid.RowDefinitions>
                 <StackPanel>
-                    <TextBlock Text="Optional method and property exceptions (shown as hint instead of warning): " 
-                               FontWeight="Bold" Margin="0,0,0,8" />
+                    <TextBlock Text="Define exceptions that are thrown from methods or properties which are shown as hints instead of warnings. " 
+                               Margin="0,0,0,16" />
+
                     <controls:CheckBoxDisabledNoCheck2 Content="Use predefined optional method and property exceptions" 
                                                        x:Name="UseOptionalMethodExceptionsDefaults" Margin="0,0,0,8"/>
                     <Button Content="Show predefined optional method and property exceptions" Margin="0,0,0,8" Padding="4"
@@ -61,6 +65,8 @@
                 <TextBox Grid.Row="1" x:Name="OptionalMethodExceptions" AcceptsReturn="True" 
                          ScrollViewer.HorizontalScrollBarVisibility="Disabled" 
                          ScrollViewer.VerticalScrollBarVisibility="Auto"  />
+
+                <TextBlock Grid.Row="2" Text="Format: FullMethodOrPropertyPath,ExceptionType" Margin="0,8,0,0" />
             </Grid>
         </TabItem>
         <TabItem Header="Accessor overrides">
@@ -68,9 +74,10 @@
                 <Grid.RowDefinitions>
                     <RowDefinition Height="Auto" />
                     <RowDefinition Height="*" />
+                    <RowDefinition Height="Auto" />
                 </Grid.RowDefinitions>
                 <StackPanel>
-                    <TextBlock Text="Accessor overrides for BCL types: " FontWeight="Bold" Margin="0,0,0,8" />
+                    <TextBlock Text="Override the property accessors for thrown exceptions of existing types. " Margin="0,0,0,16" />
                     <controls:CheckBoxDisabledNoCheck2 Content="Use predefined accessor overrides" 
                                                        x:Name="UseDefaultAccessorOverrides" Margin="0,0,0,8"/>
                     <Button Content="Show predefined accessor overrides" Margin="0,0,0,8" Padding="4"
@@ -79,6 +86,8 @@
                 <TextBox Grid.Row="1" x:Name="AccessorOverrides" AcceptsReturn="True" 
                          ScrollViewer.HorizontalScrollBarVisibility="Disabled" 
                          ScrollViewer.VerticalScrollBarVisibility="Auto"  />
+
+                <TextBlock Grid.Row="2" Text="Format: FullPropertyPath,ExceptionType,[get|set]" Margin="0,8,0,0" />
             </Grid>
         </TabItem>
     </TabControl>

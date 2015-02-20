@@ -31,7 +31,7 @@ namespace ReSharper.Exceptional.Analyzers
                 ? new ExceptionNotThrownOptionalHighlighting(exceptionDocumentation)
                 : new ExceptionNotThrownHighlighting(exceptionDocumentation);
 
-            ServiceLocator.StageProcess.Hightlightings.Add(new HighlightingInfo(exceptionDocumentation.DocumentRange, highlighting, null, null));
+            ServiceLocator.StageProcess.AddHighlighting(highlighting, exceptionDocumentation.DocumentRange);
         }
 
         private bool IsAbstractOrInterfaceMethod(ExceptionDocCommentModel exceptionDocumentation)

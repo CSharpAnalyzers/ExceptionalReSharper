@@ -15,7 +15,7 @@ namespace ReSharper.Exceptional.Analyzers
             if (throwStatement != null && RequiresInnerExceptionPassing(throwStatement))
             {
                 var highlighting = new ThrowFromCatchWithNoInnerExceptionHighlighting(throwStatement);
-                ServiceLocator.StageProcess.Hightlightings.Add(new HighlightingInfo(throwStatement.DocumentRange, highlighting, null));
+                ServiceLocator.StageProcess.AddHighlighting(highlighting, throwStatement.DocumentRange);
             }
         }
 

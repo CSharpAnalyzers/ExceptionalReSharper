@@ -10,7 +10,7 @@ namespace Exceptional.Playground
             // There is no documentation for the exception. 
             throw new InvalidOperationException("Message"); // BAD
         }
-
+        
         public void Test02()
         {
             var number = Decimal.Parse("3.4");

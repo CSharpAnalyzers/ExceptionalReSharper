@@ -1,8 +1,11 @@
+using JetBrains.DocumentModel;
+using JetBrains.Application.Settings;
 using System;
 using System.Collections.Generic;
 using JetBrains.Application.Progress;
 using JetBrains.ReSharper.Daemon;
 using JetBrains.ReSharper.Daemon.CSharp.Stages;
+using JetBrains.ReSharper.Daemon.Stages;
 using JetBrains.ReSharper.Psi;
 using JetBrains.ReSharper.Psi.CSharp;
 using JetBrains.ReSharper.Psi.CSharp.Tree;
@@ -19,18 +22,22 @@ namespace ReSharper.Exceptional
     /// This object is short-lived. It executes the target highlighting logic.</remarks>
     public class ExceptionalDaemonStageProcess : CSharpDaemonStageProcessBase
     {
-        private readonly List<HighlightingInfo> _hightlightings = new List<HighlightingInfo>();
+        private readonly IContextBoundSettingsStore _settings;
+        private DefaultHighlightingConsumer _consumer;
 
-        public ExceptionalDaemonStageProcess(ICSharpFile file)
+        public ExceptionalDaemonStageProcess(ICSharpFile file, IContextBoundSettingsStore settings)
             : base(ServiceLocator.Process, file)
         {
+            _settings = settings;
+            _consumer = new DefaultHighlightingConsumer(this, _settings);
         }
 
-        public List<HighlightingInfo> Hightlightings
+        public void AddHighlighting(IHighlighting highlighting, DocumentRange range)
         {
-            get { return _hightlightings; }
+            _consumer.AddHighlighting(highlighting, range);
         }
 
+        /// <exception cref="ProcessCancelledException">The process has been cancelled. </exception>
         public override void Execute(Action<DaemonStageResult> commiter)
         {
             var file = ServiceLocator.Process.SourceFile.GetTheOnlyPsiFile(CSharpLanguage.Instance) as ICSharpFile;
@@ -43,7 +50,7 @@ namespace ReSharper.Exceptional
             if (ServiceLocator.Process.InterruptFlag)
                 throw new ProcessCancelledException();
 
-            commiter(new DaemonStageResult(Hightlightings));
+            commiter(new DaemonStageResult(_consumer.Highlightings));
         }
     }
 }
