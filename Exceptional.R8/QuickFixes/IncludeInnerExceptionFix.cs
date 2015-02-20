@@ -34,7 +34,6 @@ namespace ReSharper.Exceptional.QuickFixes
         protected override Action<ITextControl> ExecutePsiTransaction(ISolution solution, IProgressIndicator progress)
         {
             var throwStatementModel = Error.ThrowStatement;
-
             var outerCatchClause = throwStatementModel.FindOuterCatchClause();
 
             string variableName;

@@ -63,7 +63,7 @@
     <Compile Include="Issues\DelegateInvocationIssue.cs" />
     <Compile Include="Fixed\AccessorOverrideTests.cs" />
     <Compile Include="Fixed\PropertyAccessorSpecificExceptions.cs" />
-    <Compile Include="Issues\InnerExceptionNotBeingDetected.cs" />
+    <Compile Include="Fixed\InnerExceptionNotBeingDetected.cs" />
     <Compile Include="ThrowingSystemExceptionShowsWarning.cs" />
     <Compile Include="Fixed\RethrowInCatchClauseNotCorrectlyAnalyzed.cs" />
     <Compile Include="Fixed\WrongInnerExceptionWarning.cs" />

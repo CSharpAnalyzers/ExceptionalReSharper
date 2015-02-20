@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Linq;
 using JetBrains.DocumentModel;
 using JetBrains.ReSharper.Psi;
 using JetBrains.ReSharper.Psi.CSharp;
@@ -129,10 +130,9 @@ namespace ReSharper.Exceptional.Models.ExceptionsOrigins
                 messageArgument = objectCreationExpressionNode.AddArgumentAfter(messageArgument, null);
                 ranges.Add(messageArgument.GetDocumentRange().TextRange);
             }
-
-            if (objectCreationExpressionNode.Arguments.Count == 1)
+            else
             {
-                var messageArgument = objectCreationExpressionNode.ArgumentList.Arguments[0];
+                var lastArgument = objectCreationExpressionNode.ArgumentList.Arguments.Last();
 
                 var innerExceptionExpression = CSharpElementFactory.GetInstance(AnalyzeUnit.GetPsiModule())
                     .CreateExpressionAsIs(variableName);
@@ -140,7 +140,7 @@ namespace ReSharper.Exceptional.Models.ExceptionsOrigins
                 var innerExpressionArgument = CSharpElementFactory.GetInstance(AnalyzeUnit.GetPsiModule())
                     .CreateArgument(ParameterKind.VALUE, innerExceptionExpression);
 
-                innerExpressionArgument = objectCreationExpressionNode.AddArgumentAfter(innerExpressionArgument, messageArgument);
+                innerExpressionArgument = objectCreationExpressionNode.AddArgumentAfter(innerExpressionArgument, lastArgument);
                 ranges.Add(innerExpressionArgument.GetDocumentRange().TextRange);
             }
 
@@ -161,8 +161,9 @@ namespace ReSharper.Exceptional.Models.ExceptionsOrigins
             if (objectCreationExpressionNode.Arguments.Count < 2)
                 return false;
 
-            var secondArgument = objectCreationExpressionNode.Arguments[1];
-            return secondArgument.GetText().Equals(variableName);
+            return objectCreationExpressionNode.Arguments
+                .Skip(1)
+                .Any(a => a.GetText().Equals(variableName));
         }
 
         private IDeclaredType GetExceptionType()
