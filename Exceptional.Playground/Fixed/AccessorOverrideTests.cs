@@ -7,8 +7,8 @@ namespace Exceptional.Playground.Fixed
         public void Foo()
         {
             var x = new Dictionary<string, string>();
-            x["foo"] = "bar"; // No warning (disabled by predefined accessor override)
-            var u = x["foo"]; // Warning
+            x["foo"] = "bar"; // Hint (disabled by predefined accessor override)
+            var u = x["foo"]; // Hint (disabled by optional exception)
         }
     }
 }
