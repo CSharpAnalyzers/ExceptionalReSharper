@@ -63,6 +63,10 @@ System.ArgumentException,InvocationOnly
 System.InvalidOperationException,InvocationOnly
 System.FormatException,InvocationOnly
 
+System.Collections.Generic.KeyNotFoundException,InvocationOnly
+System.IndexOutOfRangeException,InvocationOnly
+System.IO.PathTooLongException,InvocationOnly
+
 System.NotSupportedException,InvocationOnly
 System.NotImplementedException,ThrowOnly
 

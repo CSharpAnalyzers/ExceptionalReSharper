@@ -27,3 +27,5 @@ obj/
 _ReSharper*/
 [Tt]est[Rr]esult*
 /packages
+/Exceptional.sln.ide
+/Exceptional.sln.GhostDoc.xml
