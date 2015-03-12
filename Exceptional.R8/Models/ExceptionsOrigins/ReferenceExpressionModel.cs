@@ -112,7 +112,7 @@ namespace ReSharper.Exceptional.Models.ExceptionsOrigins
                 accessor = ((AccessorDeclarationModel)ContainingBlock).Node.NameIdentifier.Name;
 
             var thrownException = new ThrownExceptionModel(AnalyzeUnit, this, systemExceptionType, 
-                "A delegate callback throws an exception. ", true, accessor);
+                "A delegate callback throws an exception.", true, accessor);
 
             return thrownException;
         }
