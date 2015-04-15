@@ -67,8 +67,8 @@
     <Compile Include="Fixed\AccessorOverrideTests.cs" />
     <Compile Include="Fixed\PropertyAccessorSpecificExceptions.cs" />
     <Compile Include="Fixed\InnerExceptionNotBeingDetected.cs" />
-    <Compile Include="Issues\InterfaceAbstractExceptions.cs" />
-    <Compile Include="Issues\OptionalLinqCount.cs" />
+    <Compile Include="Fixed\InterfaceAbstractExceptions.cs" />
+    <Compile Include="Fixed\OptionalLinqCount.cs" />
     <Compile Include="ThrowingSystemExceptionShowsWarning.cs" />
     <Compile Include="Fixed\RethrowInCatchClauseNotCorrectlyAnalyzed.cs" />
     <Compile Include="Fixed\WrongInnerExceptionWarning.cs" />

@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 
-namespace Exceptional.Playground.Issues
+namespace Exceptional.Playground.Fixed
 {
     public class OptionalLinqCount
     {

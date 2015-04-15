@@ -1,9 +1,10 @@
 ﻿using System;
 
-namespace Exceptional.Playground.Issues
+namespace Exceptional.Playground.Fixed
 {
     class ArgumentNullExceptionPropagation
     {
+        /// <exception cref="ArgumentNullException">abc is <see langword="null" />.</exception>
         public void Foo()
         {
             Bar(null); // Should insert "abc is <see langword="null" />." instead of "<paramref name="abc"/> is ..."
