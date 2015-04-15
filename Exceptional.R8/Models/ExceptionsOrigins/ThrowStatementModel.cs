@@ -90,7 +90,7 @@ namespace ReSharper.Exceptional.Models.ExceptionsOrigins
         {
             var codeElementFactory = new CodeElementFactory(GetElementFactory());
             var exceptionVariableName = NameFactory.CatchVariableName(Node, exceptionType);
-            var tryStatement = codeElementFactory.CreateTryStatement(exceptionType, exceptionVariableName);
+            var tryStatement = codeElementFactory.CreateTryStatement(exceptionType, exceptionVariableName, Node);
             var block = codeElementFactory.CreateBlock(Node);
 
             tryStatement.SetTry(block);

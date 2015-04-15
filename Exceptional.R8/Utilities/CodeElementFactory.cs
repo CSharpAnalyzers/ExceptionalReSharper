@@ -19,7 +19,8 @@ namespace ReSharper.Exceptional.Utilities
 
         /// <summary>Creates a variable declaration for catch clause.</summary>
         /// <param name="exceptionType">The type of a created variable.</param>
-        public ICatchVariableDeclaration CreateCatchVariableDeclarationNode(IDeclaredType exceptionType)
+        /// <param name="context">The context. </param>
+        public ICatchVariableDeclaration CreateCatchVariableDeclarationNode(IDeclaredType exceptionType, ITreeNode context)
         {
             var tryStatement = _factory.CreateStatement("try {} catch(Exception e) {}") as ITryStatement;
             if (tryStatement == null) 
@@ -35,7 +36,11 @@ namespace ReSharper.Exceptional.Utilities
 
             if (exceptionType != null)
             {
+#if R8
                 var declaredTypeUsageNode = _factory.CreateDeclaredTypeUsageNode(exceptionType);
+#else
+                var declaredTypeUsageNode = _factory.CreateDeclaredTypeUsageNode(exceptionType, context);
+#endif
                 exceptionDeclaration.SetDeclaredTypeUsage(declaredTypeUsageNode);
             }
 
@@ -69,8 +74,11 @@ namespace ReSharper.Exceptional.Utilities
                 var exceptionDeclaration = catchClause.ExceptionDeclaration;
                 if (exceptionDeclaration == null) 
                     return null;
-
+#if R8
                 var declaredTypeUsageNode = _factory.CreateDeclaredTypeUsageNode(exceptionType);
+#else
+                var declaredTypeUsageNode = _factory.CreateDeclaredTypeUsageNode(exceptionType, catchBody);
+#endif
                 exceptionDeclaration.SetDeclaredTypeUsage(declaredTypeUsageNode);
             }
 
@@ -86,8 +94,9 @@ namespace ReSharper.Exceptional.Utilities
         /// <summary>Creates a try statement for the given exception type and variable name. </summary>
         /// <param name="exceptionType">The exception type. </param>
         /// <param name="exceptionVariableName">The exception variable name. </param>
+        /// <param name="context">The context. </param>
         /// <returns>The try statement. </returns>
-        public ITryStatement CreateTryStatement(IDeclaredType exceptionType, string exceptionVariableName)
+        public ITryStatement CreateTryStatement(IDeclaredType exceptionType, string exceptionVariableName, ITreeNode context)
         {
             var tryStatement = _factory.CreateStatement("try {} catch($0 $1) {}", 
                 exceptionType.GetClrName().ShortName, exceptionVariableName) as ITryStatement;
@@ -102,7 +111,12 @@ namespace ReSharper.Exceptional.Utilities
             if (exceptionDeclaration == null) 
                 return tryStatement;
 
+#if R8
             var declaredTypeUsageNode = _factory.CreateDeclaredTypeUsageNode(exceptionType);
+#else
+            var declaredTypeUsageNode = _factory.CreateDeclaredTypeUsageNode(exceptionType, context);
+#endif
+
             exceptionDeclaration.SetDeclaredTypeUsage(declaredTypeUsageNode);
 
             return tryStatement;
