@@ -61,10 +61,14 @@
     <Compile Include="Fixed\IndexerSetDemo.cs" />
     <Compile Include="Fixed\PropertyGetDemo.cs" />
     <Compile Include="Fixed\EventRegistrationIssue.cs" />
+    <Compile Include="Fixed\WrongInnerExceptionWarningWhenOnlyOneArgument.cs" />
+    <Compile Include="Fixed\ArgumentNullExceptionPropagation.cs" />
     <Compile Include="Issues\DelegateInvocationIssue.cs" />
     <Compile Include="Fixed\AccessorOverrideTests.cs" />
     <Compile Include="Fixed\PropertyAccessorSpecificExceptions.cs" />
     <Compile Include="Fixed\InnerExceptionNotBeingDetected.cs" />
+    <Compile Include="Issues\InterfaceAbstractExceptions.cs" />
+    <Compile Include="Issues\OptionalLinqCount.cs" />
     <Compile Include="ThrowingSystemExceptionShowsWarning.cs" />
     <Compile Include="Fixed\RethrowInCatchClauseNotCorrectlyAnalyzed.cs" />
     <Compile Include="Fixed\WrongInnerExceptionWarning.cs" />
@@ -75,7 +79,7 @@
     <Compile Include="HideWarningWhenBaseExceptionAlreadyDocumented.cs" />
     <Compile Include="Fixed\InsertExceptionDescriptionOfFrameworkMethod.cs" />
     <Compile Include="Fixed\RemovingExceptionDocumentationRemovesTooMuch.cs" />
-    <Compile Include="Issues\MissingInnerExceptionNotShown.cs" />
+    <Compile Include="Fixed\MissingInnerExceptionNotShown.cs" />
     <Compile Include="OptionalMethodExceptions.cs" />
     <Compile Include="NotDocumentedOrCaughtException.cs" />
     <Compile Include="OptionalExceptions.cs" />

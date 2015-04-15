@@ -86,7 +86,7 @@ namespace ReSharper.Exceptional.Analyzers
                     if (element != null && (resolveResult.DeclaredElement is IMethod || resolveResult.DeclaredElement is IProperty))
                     {
                         // remove generic placeholders ("`1") and method signature ("(...)")
-                        var fullMethodName = Regex.Replace(element.XMLDocId.Substring(2), "(`[0-9]+)|(\\(.*?\\))", ""); // TODO: merge with other
+                        var fullMethodName = Regex.Replace(element.XMLDocId.Substring(2), "(`+[0-9]+)|(\\(.*?\\))", ""); // TODO: merge with other
 
                         var excludedMethods = ServiceLocator.Settings.GetOptionalMethodExceptions();
                         return excludedMethods.Any(t => t.FullMethodName == fullMethodName && t.IsSupertypeOf(thrownException));

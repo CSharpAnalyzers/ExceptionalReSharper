@@ -79,7 +79,8 @@ System.Collections.IDictionary.Add,System.NotSupportedException
 System.Nullable.Value,System.InvalidOperationException
 System.Windows.DependencyObject.GetValue,System.InvalidOperationException
 System.Windows.DependencyObject.SetValue,System.InvalidOperationException
-System.Console.WriteLine,System.IO.IOException";
+System.Console.WriteLine,System.IO.IOException
+System.Linq.Enumerable.Count,System.OverflowException";
 
         public const string DefaultAccessorOverrides =
 @"

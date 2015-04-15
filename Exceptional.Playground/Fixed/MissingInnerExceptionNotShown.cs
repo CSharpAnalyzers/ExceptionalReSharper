@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Security;
 
-namespace Exceptional.Playground.Issues
+namespace Exceptional.Playground.Fixed
 {
     // Issue priority: Low
     class MissingInnerExceptionNotShown
@@ -15,7 +15,7 @@ namespace Exceptional.Playground.Issues
             }
             catch (SecurityException securityException)
             {
-                var exception = new Exception(); // Issue: When instantiating an exception in catch clause then "Missing inner exception" warning should be shown
+                var exception = new Exception(); // Warning => Issue: When instantiating an exception in catch clause then "Missing inner exception" warning should be shown
                 throw exception;
             }
         }

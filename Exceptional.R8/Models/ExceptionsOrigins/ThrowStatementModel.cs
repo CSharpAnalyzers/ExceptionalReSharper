@@ -158,11 +158,10 @@ namespace ReSharper.Exceptional.Models.ExceptionsOrigins
             if (objectCreationExpressionNode == null)
                 return false;
 
-            if (objectCreationExpressionNode.Arguments.Count < 2)
+            if (objectCreationExpressionNode.Arguments.Count < 1)
                 return false;
 
             return objectCreationExpressionNode.Arguments
-                .Skip(1)
                 .Any(a => a.GetText().Equals(variableName));
         }
 

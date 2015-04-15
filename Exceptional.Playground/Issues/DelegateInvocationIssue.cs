@@ -10,7 +10,7 @@ namespace Exceptional.Playground.Issues
             _myAction = foo; // No suggestions 
 
             this["foo"] = null; // No suggestion
-            this["bar"](); // Suggestion (issue)
+            this["bar"](); // Suggestion => Issue: Suggestion not shown
         }
 
         private Action _myAction;
