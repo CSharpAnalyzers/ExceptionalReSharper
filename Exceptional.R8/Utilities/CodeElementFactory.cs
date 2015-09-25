@@ -1,3 +1,4 @@
+using System;
 using JetBrains.ReSharper.Psi;
 using JetBrains.ReSharper.Psi.CSharp;
 using JetBrains.ReSharper.Psi.CSharp.Tree;
@@ -69,25 +70,28 @@ namespace ReSharper.Exceptional.Utilities
             if (catchClause == null)
                 return null;
 
+            if (catchBody == null)
+            {
+                catchBody = _factory.CreateBlock("{$1    // TODO: Handle the $0 $1}",
+                    exceptionType.GetClrName().ShortName, Environment.NewLine);
+            }
+
             if (exceptionType != null)
             {
                 var exceptionDeclaration = catchClause.ExceptionDeclaration;
                 if (exceptionDeclaration == null) 
                     return null;
+
 #if R8
                 var declaredTypeUsageNode = _factory.CreateDeclaredTypeUsageNode(exceptionType);
 #else
                 var declaredTypeUsageNode = _factory.CreateDeclaredTypeUsageNode(exceptionType, catchBody);
+
 #endif
                 exceptionDeclaration.SetDeclaredTypeUsage(declaredTypeUsageNode);
             }
 
-            if (catchBody != null)
-            {
-                var catchWithBody = catchClause as ICatchClause;
-                catchWithBody.SetBody(catchBody);
-            }
-
+            catchClause.SetBody(catchBody);
             return catchClause;
         }
 
