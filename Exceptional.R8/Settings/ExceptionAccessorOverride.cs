@@ -30,8 +30,12 @@ namespace ReSharper.Exceptional.Settings
 
             try
             {
+#if R10
+                _exceptionType = TypeFactory.CreateTypeByCLRName(ExceptionType, ServiceLocator.StageProcess.PsiModule);
+#else
                 _exceptionType = TypeFactory.CreateTypeByCLRName(ExceptionType, 
                     ServiceLocator.StageProcess.PsiModule, ServiceLocator.StageProcess.PsiModule.GetContextFromModule());
+#endif
             }
             catch (Exception ex)
             {

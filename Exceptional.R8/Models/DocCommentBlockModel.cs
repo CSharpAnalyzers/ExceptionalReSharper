@@ -18,7 +18,7 @@ namespace ReSharper.Exceptional.Models
 #if R8
     internal class DocCommentBlockModel : TreeElementModelBase<IDocCommentBlockNode>
 #endif
-#if R9
+#if R9 || R10
     internal class DocCommentBlockModel : TreeElementModelBase<IDocCommentBlock>
 #endif
     {
@@ -27,7 +27,7 @@ namespace ReSharper.Exceptional.Models
 #if R8
         public DocCommentBlockModel(IAnalyzeUnit analyzeUnit, IDocCommentBlockNode docCommentNode)
 #endif
-#if R9
+#if R9 || R10
         public DocCommentBlockModel(IAnalyzeUnit analyzeUnit, IDocCommentBlock docCommentNode)
 #endif
             : base(analyzeUnit, docCommentNode)

@@ -78,7 +78,12 @@ namespace ReSharper.Exceptional.Models.ExceptionsOrigins
                     if (!(Node.Parent is IAssignmentExpression) && IsInvocation)
                     {
                         var psiModule = Node.GetPsiModule();
+
+#if R10
+                        var delegateType = TypeFactory.CreateTypeByCLRName("System.Delegate", psiModule);
+#else
                         var delegateType = TypeFactory.CreateTypeByCLRName("System.Delegate", psiModule, psiModule.GetContextFromModule());
+#endif
 
                         var type = Node.GetExpressionType().ToIType();
                         if (type != null)
@@ -104,8 +109,12 @@ namespace ReSharper.Exceptional.Models.ExceptionsOrigins
         private ThrownExceptionModel CreateThrownSystemException()
         {
             var psiModule = Node.GetPsiModule();
-            var systemExceptionType = TypeFactory.CreateTypeByCLRName("System.Exception", psiModule,
-                psiModule.GetContextFromModule());
+
+#if R10
+            var systemExceptionType = TypeFactory.CreateTypeByCLRName("System.Exception", psiModule);
+#else
+            var systemExceptionType = TypeFactory.CreateTypeByCLRName("System.Exception", psiModule, psiModule.GetContextFromModule());
+#endif
 
             string accessor = null;
             if (ContainingBlock is AccessorDeclarationModel)
@@ -134,7 +143,11 @@ namespace ReSharper.Exceptional.Models.ExceptionsOrigins
                     if (property != null)
                     {
                         var psiModule = Node.GetPsiModule();
+#if R10
+                        var delegateType = TypeFactory.CreateTypeByCLRName("System.Delegate", psiModule);
+#else
                         var delegateType = TypeFactory.CreateTypeByCLRName("System.Delegate", psiModule, psiModule.GetContextFromModule());
+#endif
                         return !property.Type.IsSubtypeOf(delegateType);
                     }
                     return false;

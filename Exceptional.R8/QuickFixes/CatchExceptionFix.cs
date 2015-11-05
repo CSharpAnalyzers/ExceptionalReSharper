@@ -8,7 +8,7 @@ using ReSharper.Exceptional.Highlightings;
 #if R8
 using JetBrains.ReSharper.Intentions.Extensibility;
 #endif
-#if R9
+#if R9 || R10
 using JetBrains.ReSharper.Feature.Services.QuickFixes;
 #endif
 

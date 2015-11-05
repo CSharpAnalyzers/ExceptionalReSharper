@@ -11,7 +11,7 @@ using JetBrains.ReSharper.Psi.CSharp;
 using JetBrains.ReSharper.Psi.CSharp.Tree;
 using ReSharper.Exceptional.Settings;
 
-#if R9
+#if R9 || R10
 using JetBrains.ReSharper.Feature.Services.Daemon;
 #endif
 

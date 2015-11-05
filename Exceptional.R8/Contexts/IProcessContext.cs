@@ -27,7 +27,7 @@ namespace ReSharper.Exceptional.Contexts
 #if R8
         void Process(IDocCommentBlockNode docCommentBlockNode);
 #endif
-#if R9
+#if R9 || R10
         void Process(IDocCommentBlock docCommentBlockNode);
 #endif
 

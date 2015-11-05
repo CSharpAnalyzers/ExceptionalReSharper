@@ -6,7 +6,7 @@ using JetBrains.ReSharper.Daemon.CSharp.Stages;
 using JetBrains.ReSharper.Psi;
 using JetBrains.ReSharper.Psi.CSharp.Tree;
 #endif
-#if R9
+#if R9 || R10
 using JetBrains.Application.BuildScript.Application.Zones;
 using JetBrains.Application.Settings;
 using JetBrains.ReSharper.Daemon;
@@ -22,7 +22,7 @@ using JetBrains.ReSharper.Psi.CSharp.Tree;
 
 namespace ReSharper.Exceptional
 {
-#if R9
+#if R9 || R10
     [ZoneMarker]
     public class ZoneMarker : IPsiLanguageZone, IRequire<ILanguageCSharpZone>, IRequire<ICodeEditingZone>, IRequire<DaemonZone>, IRequire<NavigationZone>
     {

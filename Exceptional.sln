@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 2013
-VisualStudioVersion = 12.0.31101.0
+# Visual Studio 14
+VisualStudioVersion = 14.0.23107.0
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".nuget", ".nuget", "{DDCE9BCA-EF40-4231-982C-CC1B00A1EAD3}"
 	ProjectSection(SolutionItems) = preProject
@@ -22,6 +22,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Exceptional.R9", "Exception
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Exceptional.R8", "Exceptional.R8\Exceptional.R8.csproj", "{42BCDAE2-D1D1-4D98-A6CD-605A31EAD26C}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Exceptional.R10", "Exceptional.R10\Exceptional.R10.csproj", "{38E4465D-3887-405E-9E19-2AC848F66AF1}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -40,6 +42,10 @@ Global
 		{42BCDAE2-D1D1-4D98-A6CD-605A31EAD26C}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{42BCDAE2-D1D1-4D98-A6CD-605A31EAD26C}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{42BCDAE2-D1D1-4D98-A6CD-605A31EAD26C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{38E4465D-3887-405E-9E19-2AC848F66AF1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{38E4465D-3887-405E-9E19-2AC848F66AF1}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{38E4465D-3887-405E-9E19-2AC848F66AF1}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{38E4465D-3887-405E-9E19-2AC848F66AF1}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

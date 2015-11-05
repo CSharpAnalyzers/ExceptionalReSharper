@@ -5,7 +5,7 @@ using JetBrains.ReSharper.Feature.Services.Bulbs;
 using JetBrains.TextControl;
 using ReSharper.Exceptional.Highlightings;
 
-#if R9
+#if R9 || R10
 using JetBrains.ReSharper.Feature.Services.QuickFixes;
 #endif
 

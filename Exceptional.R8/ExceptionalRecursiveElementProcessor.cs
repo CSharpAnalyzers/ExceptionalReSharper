@@ -9,7 +9,7 @@ using ReSharper.Exceptional.Contexts;
 using ReSharper.Exceptional.Models;
 using ReSharper.Exceptional.Settings;
 
-#if R9
+#if R9 || R10
 using JetBrains.ReSharper.Feature.Services.Daemon;
 #endif
 
@@ -21,7 +21,7 @@ namespace ReSharper.Exceptional
 #if R8
         private readonly List<IDocCommentBlockNode> _eventComments = new List<IDocCommentBlockNode>();
 #endif
-#if R9
+#if R9 || R10
         private readonly List<IDocCommentBlock> _eventComments = new List<IDocCommentBlock>();
 #endif
 
@@ -91,7 +91,7 @@ namespace ReSharper.Exceptional
                 }
             }
 #endif
-#if R9
+#if R9 || R10
             else if (element is IDocCommentBlock)
             {
                 if (_currentContext.Model == null || _currentContext.Model.Node == element.Parent)

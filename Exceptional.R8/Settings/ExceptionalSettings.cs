@@ -184,8 +184,12 @@ System.Collections.Generic.Dictionary.Item,System.Collections.Generic.KeyNotFoun
                 var arr = line.Split(',');
                 if (arr.Length == 2)
                 {
+#if R10
+                    var exceptionType = TypeFactory.CreateTypeByCLRName(arr[0], ServiceLocator.StageProcess.PsiModule);
+#else
                     var exceptionType = TypeFactory.CreateTypeByCLRName(arr[0], 
                         ServiceLocator.StageProcess.PsiModule, ServiceLocator.StageProcess.PsiModule.GetContextFromModule());
+#endif
 
                     OptionalExceptionReplacementType replacementType;
                     if (Enum.TryParse(arr[1], out replacementType))

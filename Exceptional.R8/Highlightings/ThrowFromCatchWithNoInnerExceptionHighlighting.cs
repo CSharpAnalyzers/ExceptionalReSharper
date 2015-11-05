@@ -6,7 +6,7 @@ using ReSharper.Exceptional.Highlightings;
 using ReSharper.Exceptional.Models;
 using ReSharper.Exceptional.Models.ExceptionsOrigins;
 
-#if R9
+#if R9 || R10
 using JetBrains.ReSharper.Feature.Services.Daemon;
 #endif
 

@@ -45,7 +45,7 @@ namespace ReSharper.Exceptional.Models
                 if (docCommentBlockNode == null)
                     return result;
 #endif
-#if R9
+#if R9 || R10
                 var docCommentBlockOwnerNode = declaration as IDocCommentBlockOwner;
                 if (docCommentBlockOwnerNode == null)
                     return result;
@@ -111,8 +111,11 @@ namespace ReSharper.Exceptional.Models
                     if (exceptionType.StartsWith("T:"))
                         exceptionType = exceptionType.Substring(2);
 
-                    var exceptionDeclaredType = TypeFactory.CreateTypeByCLRName(exceptionType, psiModule,
-                        psiModule.GetContextFromModule());
+#if R10
+                    var exceptionDeclaredType = TypeFactory.CreateTypeByCLRName(exceptionType, psiModule);
+#else
+                    var exceptionDeclaredType = TypeFactory.CreateTypeByCLRName(exceptionType, psiModule, psiModule.GetContextFromModule());
+#endif
 
                     result.Add(new ThrownExceptionModel(analyzeUnit, exceptionsOrigin, exceptionDeclaredType, 
                         exceptionNode.InnerXml, false, accessor));
