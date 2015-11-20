@@ -10,7 +10,7 @@ Generally, the public API should be documented and thrown exceptions should be p
 
 ## Installation
 
-Requires ReSharper v8.2 or v9 
+Requires ReSharper v8.2, v9 or v10
 
 - Open the ReSharper menu in Visual Studio and select Extension Manager... 
 - Search for Exceptional and install the extension
