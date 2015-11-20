@@ -41,29 +41,29 @@ Check out the extension in the ReSharper plugin gallery:
 
 **Fix:** Document or catch thrown exception.
 
-![](http://download-codeplex.sec.s-msft.com/Download?ProjectName=exceptional&DownloadId=922443)
+![](http://download-codeplex.sec.s-msft.com/Download?ProjectName=exceptional&DownloadId=922442)
 
 ### Documented exception is not thrown
 
 **Warning:** Exceptions documented in XML documentation that are not thrown from method/property.
 
-![](http://download-codeplex.sec.s-msft.com/Download?ProjectName=exceptional&DownloadId=922445)
+![](http://download-codeplex.sec.s-msft.com/Download?ProjectName=exceptional&DownloadId=922443)
 
 **Fix:** Remove documentation of not thrown exception.
 
-![](http://download-codeplex.sec.s-msft.com/Download?ProjectName=exceptional&DownloadId=922446)
+![](http://download-codeplex.sec.s-msft.com/Download?ProjectName=exceptional&DownloadId=922445)
 
 ### Catch-all clauses
 
 **Warning:** General catch-all clauses should be avoided.
 
-![](http://download-codeplex.sec.s-msft.com/Download?ProjectName=exceptional&DownloadId=922447)
+![](http://download-codeplex.sec.s-msft.com/Download?ProjectName=exceptional&DownloadId=922446)
 
 ### Not passing inner exception
 
 **Warning:** Throwing new exception from catch clause should include message and inner exception.
 
-![](http://download-codeplex.sec.s-msft.com/Download?ProjectName=exceptional&DownloadId=922448)
+![](http://download-codeplex.sec.s-msft.com/Download?ProjectName=exceptional&DownloadId=922447)
 
 ### Do not throw System.Exception
 
