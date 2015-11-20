@@ -1,19 +1,19 @@
 ﻿<?xml version="1.0"?>
 <package>
     <metadata>
-        <id>Exceptional.R10</id>
-        <version>0.7.6.0</version>
-        <title>Exceptional for ReSharper 10</title>
+        <id>Exceptional.R9</id>
+        <version>0.7.7.0</version>
+        <title>Exceptional for ReSharper 9</title>
         <description>Analyzes thrown and documented C# exceptions and suggests improvements. </description>
         <authors>ExceptionalDevs</authors>
         <projectUrl>http://exceptional.codeplex.com</projectUrl>
         <copyright>Copyright &#x00A9; 2015 ExceptionalDevs</copyright>
         <tags>Exception XMLdoc</tags>
         <dependencies>
-            <dependency id="Wave" version="[4.0, 5.0)" />
+            <dependency id="Wave" version="[2.0, 4.0)" />
         </dependencies>
     </metadata>
     <files>
-        <file src="..\Exceptional.R10\bin\Release\ReSharper.Exceptional.R10.dll" target="DotFiles" />
+        <file src="..\src\Exceptional.R9\bin\Release\ReSharper.Exceptional.R9.dll" target="DotFiles" />
     </files>
 </package>
