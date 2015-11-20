@@ -1,6 +1,8 @@
 # Exceptional for ReSharper
 
-**Exceptional is an extension for ReSharper which analyzes thrown and documented C# exceptions and suggests improvements.** 
+Exceptional is an extension for ReSharper which analyzes thrown and documented C# exceptions and suggests improvements.
+
+**Motivation**
 
 When working with a code base - whether it is a small one or a big one - developers constantly encounter issues caused by wrong exception handling. There may be an excellent exception handling policy, but it is the developer who must execute this policy on its own code. Even with no policy defined, there are good practices on how to properly handle exceptions. This extension allows you to seamlessly apply these good practices with a couple of key strokes. 
 
