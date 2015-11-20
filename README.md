@@ -19,6 +19,54 @@ Open the menu ReSharper / Options... / Exceptional to configure the extension.
 
 Check out the extension in the ReSharper plugin gallery: 
  
-- Exceptional for ReSharper 8 in the plugin gallery 
-- Exceptional for ReSharper 9 in the plugin gallery 
-- Exceptional for ReSharper 10 in the plugin gallery
+- [Exceptional for ReSharper 8 in the plugin gallery](https://resharper-plugins.jetbrains.com/packages/Exceptional)
+- [Exceptional for ReSharper 9 in the plugin gallery](https://resharper-plugins.jetbrains.com/packages/Exceptional.R9)
+- [Exceptional for ReSharper 10 in the plugin gallery](https://resharper-plugins.jetbrains.com/packages/Exceptional.R10)
+
+## Features
+
+### Thrown exception not documented or caught
+
+**Warning:** Exceptions thrown outside the scope of method\property that are not documented in methods xml documentation (thrown with use of throw keyword).
+
+![](http://download-codeplex.sec.s-msft.com/Download?ProjectName=exceptional&DownloadId=922440)
+
+**Fix:** Document or catch thrown exception.
+
+![](http://download-codeplex.sec.s-msft.com/Download?ProjectName=exceptional&DownloadId=922441)
+
+**Warning:** Exception thrown outside the scope of method\property that are not documented in methods xml documentation (thrown from another invocation).
+
+![](http://download-codeplex.sec.s-msft.com/Download?ProjectName=exceptional&DownloadId=922442)
+
+**Fix:** Document or catch thrown exception.
+
+![](http://download-codeplex.sec.s-msft.com/Download?ProjectName=exceptional&DownloadId=922443)
+
+### Documented exception is not thrown
+
+**Warning:** Exceptions documented in XML documentation that are not thrown from method/property.
+
+![](http://download-codeplex.sec.s-msft.com/Download?ProjectName=exceptional&DownloadId=922445)
+
+**Fix:** Remove documentation of not thrown exception.
+
+![](http://download-codeplex.sec.s-msft.com/Download?ProjectName=exceptional&DownloadId=922446)
+
+### Catch-all clauses
+
+**Warning:** General catch-all clauses should be avoided.
+
+![](http://download-codeplex.sec.s-msft.com/Download?ProjectName=exceptional&DownloadId=922447)
+
+### Not passing inner exception
+
+**Warning:** Throwing new exception from catch clause should include message and inner exception.
+
+![](http://download-codeplex.sec.s-msft.com/Download?ProjectName=exceptional&DownloadId=922448)
+
+### Do not throw System.Exception
+
+**Warning:** Throwing System.Exception should be avoided.
+
+More features to come...
