@@ -6,7 +6,7 @@
         <title>Exceptional for ReSharper 9</title>
         <description>Analyzes thrown and documented C# exceptions and suggests improvements. </description>
         <authors>ExceptionalDevs</authors>
-        <projectUrl>https://github.com/csharp-analyzers/exceptional-resharper</projectUrl>
+        <projectUrl>https://github.com/CSharpAnalyzers/ExceptionalReSharper</projectUrl>
         <copyright>Copyright &#x00A9; 2015 ExceptionalDevs</copyright>
         <tags>Exception XMLdoc</tags>
         <dependencies>
