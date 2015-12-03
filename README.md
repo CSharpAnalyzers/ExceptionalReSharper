@@ -70,3 +70,5 @@ Check out the extension in the ReSharper plugin gallery:
 **Warning:** Throwing System.Exception should be avoided.
 
 More features to come...
+
+(This project has originally been [hosted on CodePlex](https://exceptional.codeplex.com/))
