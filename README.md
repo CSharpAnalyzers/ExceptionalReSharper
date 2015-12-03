@@ -71,4 +71,6 @@ Check out the extension in the ReSharper plugin gallery:
 
 More features to come...
 
+
+
 (This project has originally been [hosted on CodePlex](https://exceptional.codeplex.com/))
