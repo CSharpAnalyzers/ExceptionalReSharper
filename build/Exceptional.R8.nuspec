@@ -2,7 +2,7 @@
 <package>
     <metadata>
         <id>Exceptional</id>
-        <version>0.7.7.0</version>
+        <version>0.7.8.0</version>
         <title>Exceptional for ReSharper 8</title>
         <description>Analyzes thrown and documented C# exceptions and suggests improvements. </description>
         <authors>ExceptionalDevs</authors>

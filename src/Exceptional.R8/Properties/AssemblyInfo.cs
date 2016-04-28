@@ -13,7 +13,7 @@ using JetBrains.Application.PluginSupport;
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 
-[assembly: AssemblyVersion("0.7.7.0")]
+[assembly: AssemblyVersion("0.7.8.0")]
 [assembly: ComVisible(false)]
 [assembly: Guid("3628d589-e118-4c2c-bd8e-fdef6b6ed07c")]
 
