@@ -38,5 +38,17 @@ namespace Exceptional.Playground
             {
             }
         }
+
+        public void Test04()
+        {
+            try
+            {
+                throw new ArgumentNullException();
+            }
+            catch (Exception e) when (e is ArgumentNullException)
+            {
+                // there shouldn't be any warnings in the catch
+            }
+        }
     }
 }
