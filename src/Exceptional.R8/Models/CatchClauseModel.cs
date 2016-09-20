@@ -124,8 +124,14 @@ namespace ReSharper.Exceptional.Models
         {
             if (Node.ExceptionType == null)
                 return false;
+#if R9 || R10
+            bool hasConditionalClause = Node.ConditionClause?.WhenKeyword != null;
+            bool isSystemException = Node.ExceptionType.GetClrName().FullName == "System.Exception";
 
+            return isSystemException && !hasConditionalClause;
+#else
             return Node.ExceptionType.GetClrName().FullName == "System.Exception";
+#endif
         }
     }
 }
