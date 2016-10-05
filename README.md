@@ -23,6 +23,7 @@ Check out the extension in the ReSharper plugin gallery:
 - [Exceptional for ReSharper 9 in the plugin gallery](https://resharper-plugins.jetbrains.com/packages/Exceptional.R9)
 - [Exceptional for ReSharper 10 in the plugin gallery](https://resharper-plugins.jetbrains.com/packages/Exceptional.R10)
 - [Exceptional for ReSharper 2016.1 in the plugin gallery](https://resharper-plugins.jetbrains.com/packages/Exceptional.2016.1)
+- [Exceptional for ReSharper 2016.2 in the plugin gallery](https://resharper-plugins.jetbrains.com/packages/Exceptional.2016.2)
 
 ## Features
 
