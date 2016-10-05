@@ -5,6 +5,7 @@ using JetBrains.ReSharper.Psi.CSharp;
 using ReSharper.Exceptional;
 using ReSharper.Exceptional.Highlightings;
 using ReSharper.Exceptional.Models;
+using JetBrains.DocumentModel;
 
 #if R9 || R10
 using JetBrains.ReSharper.Feature.Services.CSharp.Daemon;
@@ -15,11 +16,15 @@ namespace ReSharper.Exceptional.Highlightings
 {
     /// <summary>Base class for all highlightings.</summary>
     /// <remarks>Provides default implementation.</remarks>
-    public abstract class HighlightingBase : CSharpHighlightingBase, IHighlighting
+    public abstract class HighlightingBase :  IHighlighting
     {
-        public override bool IsValid()
+        public bool IsValid()
         {
             return true;
+        }
+
+        public DocumentRange CalculateRange() {
+            throw new NotImplementedException();
         }
 
         public virtual string ToolTip
