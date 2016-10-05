@@ -2,7 +2,7 @@
 <package>
     <metadata>
         <id>Exceptional.2016.2</id>
-        <version>0.7.11.0</version>
+        <version>0.7.12.0</version>
         <title>Exceptional for ReSharper 2016.2</title>
         <description>Analyzes thrown and documented C# exceptions and suggests improvements. </description>
         <authors>ExceptionalDevs</authors>
@@ -10,7 +10,7 @@
         <copyright>Copyright &#x00A9; 2016 ExceptionalDevs</copyright>
         <tags>Exception XMLdoc</tags>
         <dependencies>
-            <dependency id="Wave" version="[7.0, 8.0)" />
+            <dependency id="Wave" version="[5.0, 8.0)" />
         </dependencies>
     </metadata>
     <files>
