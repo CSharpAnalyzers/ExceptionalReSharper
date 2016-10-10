@@ -24,7 +24,8 @@ using JetBrains.ReSharper.Resources.Shell;
 
 namespace ReSharper.Exceptional.QuickFixes
 {
-    [QuickFix(null, BeforeOrAfter.Before)]
+    //[QuickFix(null, BeforeOrAfter.Before)]
+    [QuickFix()]
     internal class AddExceptionDocumentationFix : SingleActionFix
     {
         private ExceptionNotDocumentedOptionalHighlighting Error { get; set; }
