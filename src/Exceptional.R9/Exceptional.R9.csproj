@@ -309,6 +309,9 @@
     <Compile Include="..\Exceptional.R8\Models\AnalyzeUnitModelBase.cs">
       <Link>Models\AnalyzeUnitModelBase.cs</Link>
     </Compile>
+    <Compile Include="..\Exceptional.R8\Models\ArgumentNullExceptionDescription.cs">
+      <Link>Models\ArgumentNullExceptionDescription.cs</Link>
+    </Compile>
     <Compile Include="..\Exceptional.R8\Models\BlockModelBase.cs">
       <Link>Models\BlockModelBase.cs</Link>
     </Compile>
