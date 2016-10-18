@@ -62,7 +62,7 @@ namespace ReSharper.Exceptional.Models
             if (thrownException.ExceptionsOrigin is ThrowStatementModel)
             {
                 if (thrownException.ExceptionType.GetClrName().FullName == "System.ArgumentNullException")
-                    exceptionDescription = string.Format("<paramref name=\"{0}\"/> is <see langword=\"null\" />.", exceptionDescription);
+                    exceptionDescription = ArgumentNullExceptionDescription.CreateFrom(thrownException).GetDescription();
             }
             else
                 exceptionDescription = Regex.Replace(exceptionDescription, "<paramref name=\"(.*?)\"/>", m => m.Groups[1].Value);
