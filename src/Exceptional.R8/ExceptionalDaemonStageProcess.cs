@@ -23,13 +23,18 @@ namespace ReSharper.Exceptional
     public class ExceptionalDaemonStageProcess : CSharpDaemonStageProcessBase
     {
         private readonly IContextBoundSettingsStore _settings;
-        private DefaultHighlightingConsumer _consumer;
+        private readonly IHighlightingConsumer _consumer;
 
         public ExceptionalDaemonStageProcess(ICSharpFile file, IContextBoundSettingsStore settings)
             : base(ServiceLocator.Process, file)
         {
             _settings = settings;
+
+#if R2016_1 || R2016_2
+            _consumer = new FilteringHighlightingConsumer(this, _settings, file);
+#else
             _consumer = new DefaultHighlightingConsumer(this, _settings);
+#endif
         }
 
         public void AddHighlighting(IHighlighting highlighting, DocumentRange range)
