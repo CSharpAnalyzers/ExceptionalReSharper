@@ -8,8 +8,6 @@ using ReSharper.Exceptional.Utilities;
 
 namespace ReSharper.Exceptional.Models
 {
-    using System.Text;
-
     internal class CatchClauseModel : BlockModelBase<ICatchClause>
     {
         public CatchClauseModel(ICatchClause catchClauseNode, TryStatementModel tryStatementModel, IAnalyzeUnit analyzeUnit)
