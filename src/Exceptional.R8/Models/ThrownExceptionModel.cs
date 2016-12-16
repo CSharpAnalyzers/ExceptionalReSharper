@@ -101,7 +101,9 @@ namespace ReSharper.Exceptional.Models
             get { return ExceptionsOrigin.DocumentRange; }
         }
 
-        /// <summary>Gets a value indicating whether this exception is thrown from a throw statement. </summary>
+        /// <summary>
+        /// Gets a value indicating whether this exception is thrown from a throw statement.
+        /// </summary>
         public bool IsThrownFromThrowStatement
         {
             get { return ExceptionsOrigin is ThrowStatementModel; }
@@ -213,6 +215,28 @@ namespace ReSharper.Exceptional.Models
                 }
                 return _isWrongAccessor.Value;
             }
+        }
+
+        /// <summary>
+        /// Gets a value indicating whether the thrown exception is coming from a re-throw statement.
+        /// </summary>
+        /// <value>
+        /// <c>true</c> if this instance is a re-throw; otherwise, <c>false</c>.
+        /// </value>
+        public bool IsRethrow
+        {
+            get
+            {
+                return (ExceptionsOrigin as ThrowStatementModel)?.IsRethrow ?? false;
+            }
+        }
+
+        public string FullName
+        {
+            get
+            {
+                return ExceptionType.GetClrName().FullName;
+            }            
         }
 
         public bool IsException(IDeclaredType exceptionType)

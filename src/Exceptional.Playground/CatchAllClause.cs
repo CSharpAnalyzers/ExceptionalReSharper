@@ -50,5 +50,33 @@ namespace Exceptional.Playground
                 // there shouldn't be any warnings in the catch
             }
         }
+
+        public void Test05()
+        {
+            try
+            {
+                throw new ArgumentNullException();
+            }
+            catch (Exception e)
+            {                
+                Console.WriteLine(e.Message);
+                throw; // one warning about un-documented Exception
+            }
+        }
+
+
+        /// <exception cref="Exception"></exception>
+        public void Test06()
+        {
+            try
+            {
+                throw new ArgumentNullException();
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e.Message);
+                throw; // no warnings
+            }
+        }
     }
 }
