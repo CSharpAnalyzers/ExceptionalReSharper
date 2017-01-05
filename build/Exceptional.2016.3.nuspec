@@ -14,6 +14,6 @@
         </dependencies>
     </metadata>
     <files>
-        <file src="..\src\Exceptional.2016.2\bin\Release\ReSharper.Exceptional.2016.3.dll" target="DotFiles" />
+        <file src="..\src\Exceptional.2016.3\bin\Release\ReSharper.Exceptional.2016.3.dll" target="DotFiles" />
     </files>
 </package>
