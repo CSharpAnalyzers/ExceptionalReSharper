@@ -8,6 +8,8 @@ using ReSharper.Exceptional.Utilities;
 
 namespace ReSharper.Exceptional.Models
 {
+    using System.Linq;
+
     internal class CatchClauseModel : BlockModelBase<ICatchClause>
     {
         public CatchClauseModel(ICatchClause catchClauseNode, TryStatementModel tryStatementModel, IAnalyzeUnit analyzeUnit)
@@ -125,11 +127,17 @@ namespace ReSharper.Exceptional.Models
             if (Node.ExceptionType == null)
                 return false;
 #if R9 || R10
-            bool noConditionalClause = Node.ConditionClause?.WhenKeyword == null;
+
+            bool hasConditionalClause = 
+#if !R2016_3
+            Node.ConditionClause?.WhenKeyword != null;
+#else
+            Node.Filter != null;
+#endif
             bool rethrows = ContainsRethrowStatement(Node.Body);
             bool isSystemException = Node.ExceptionType.GetClrName().FullName == "System.Exception";
 
-            return isSystemException && noConditionalClause && !rethrows;
+            return isSystemException && !hasConditionalClause && !rethrows;
 #else
             return Node.ExceptionType.GetClrName().FullName == "System.Exception";
 #endif
@@ -139,16 +147,7 @@ namespace ReSharper.Exceptional.Models
         {
             var statements = body.Statements;
 
-            foreach (var statement in statements)
-            {
-                var throwStatement = statement as IThrowStatement;
-                if (throwStatement?.Exception == null)
-                {
-                    return true;
-                }
-            }
-
-            return false;
+            return Enumerable.OfType<IThrowStatement>(statements).Any();
         }
     }
 }

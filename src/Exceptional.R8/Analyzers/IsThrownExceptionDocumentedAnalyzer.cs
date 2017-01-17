@@ -79,7 +79,7 @@ namespace ReSharper.Exceptional.Analyzers
             if (parent != null)
             {
                 var node = parent.Node;
-                var resolveResult = node.Reference.CurrentResolveResult;
+                var resolveResult = node.Reference.Resolve();
                 if (resolveResult != null)
                 {
                     var element = resolveResult.DeclaredElement as IXmlDocIdOwner;

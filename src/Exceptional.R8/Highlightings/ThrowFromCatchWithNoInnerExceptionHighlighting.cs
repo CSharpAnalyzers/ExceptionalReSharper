@@ -13,8 +13,12 @@ using JetBrains.ReSharper.Feature.Services.Daemon;
 [assembly: RegisterConfigurableSeverity(ThrowFromCatchWithNoInnerExceptionHighlighting.Id, Constants.CompoundName, HighlightingGroupIds.BestPractice,
     "Exceptional.ThrowFromCatchWithNoInnerException",
     "Exceptional.ThrowFromCatchWithNoInnerException",
-    Severity.WARNING,
-    false)]
+    Severity.WARNING
+#if !R2016_3
+    ,
+    false
+#endif
+    )]
 
 namespace ReSharper.Exceptional.Highlightings
 {

@@ -12,8 +12,14 @@ using JetBrains.ReSharper.Feature.Services.Daemon;
 [assembly: RegisterConfigurableSeverity(ExceptionNotDocumentedOptionalHighlighting.Id, Constants.CompoundName, HighlightingGroupIds.BestPractice,
     "Exceptional.ExceptionNotDocumentedOptional",
     "Exceptional.ExceptionNotDocumentedOptional",
-    Severity.HINT,
-    false)]
+    Severity.HINT
+#if !R2016_3
+    ,
+    false
+#endif
+    )]
+
+
 
 namespace ReSharper.Exceptional.Highlightings
 {

@@ -16,7 +16,7 @@ namespace Exceptional.Playground
                 Console.WriteLine(exception.Message); // Warning: IOException not documented
             }
         }
-        
+
         public void Test02()
         {
             try
@@ -58,7 +58,7 @@ namespace Exceptional.Playground
                 throw new ArgumentNullException();
             }
             catch (Exception e)
-            {                
+            {
                 Console.WriteLine(e.Message);
                 throw; // one warning about un-documented Exception
             }
