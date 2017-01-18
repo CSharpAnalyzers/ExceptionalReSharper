@@ -9,7 +9,7 @@
 //------------------------------------------------------------------------------
 
 [assembly: global::System.Windows.Markup.XmlnsDefinitionAttribute("urn:shemas-jetbrains-com:ui-application-icons-unnamed", "ReSharper.Exceptional")]
-[assembly: global::JetBrains.UI.Icons.CompiledIcons.CompiledIconsPackAttribute(IconPackResourceIdentification="ReSharper.Exceptional.2016.2;component/Images/ThemedIcons.Unnamed.Generated.Xaml", IconNames=new string[] {
+[assembly: global::JetBrains.UI.Icons.CompiledIcons.CompiledIconsPackAttribute(IconPackResourceIdentification="ReSharper.Exceptional.2016.3;component/Images/ThemedIcons.Unnamed.Generated.Xaml", IconNames=new string[] {
 		"ExceptionalSettings"})]
 
 namespace ReSharper.Exceptional
@@ -76,7 +76,7 @@ namespace ReSharper.Exceptional
 		///<example>
 		///  <code>themediconmanager.GetIcon&lt;UnnamedThemedIcons.ExceptionalSettings&gt;()        // Icon image for rendering</code>
 		///</example>
-		[global::JetBrains.UI.Icons.CompiledIcons.CompiledIconClassAttribute("ReSharper.Exceptional.2016.2;component/Images/ThemedIcons.Unnamed.Generated.Xaml", 0, "ExceptionalSettings")]
+		[global::JetBrains.UI.Icons.CompiledIcons.CompiledIconClassAttribute("ReSharper.Exceptional.2016.3;component/Images/ThemedIcons.Unnamed.Generated.Xaml", 0, "ExceptionalSettings")]
 		public sealed class ExceptionalSettings : global::JetBrains.UI.Icons.CompiledIcons.CompiledIconClass
 		{
 			
@@ -102,7 +102,7 @@ namespace ReSharper.Exceptional
 			///<example>
 			///  <code>themediconmanager.GetIcon&lt;UnnamedThemedIcons.ExceptionalSettings&gt;()        // Icon image for rendering</code>
 			///</example>
-			public static global::JetBrains.UI.Icons.IconId Id = new global::JetBrains.UI.Icons.CompiledIcons.CompiledIconId("ReSharper.Exceptional.2016.2;component/Images/ThemedIcons.Unnamed.Generated.Xaml", 0, "ExceptionalSettings");
+			public static global::JetBrains.UI.Icons.IconId Id = new global::JetBrains.UI.Icons.CompiledIcons.CompiledIconId("ReSharper.Exceptional.2016.3;component/Images/ThemedIcons.Unnamed.Generated.Xaml", 0, "ExceptionalSettings");
 		}
 	}
 }
