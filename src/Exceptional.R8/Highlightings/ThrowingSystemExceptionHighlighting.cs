@@ -11,8 +11,12 @@ using JetBrains.ReSharper.Feature.Services.Daemon;
 [assembly: RegisterConfigurableSeverity(ThrowingSystemExceptionHighlighting.Id, Constants.CompoundName, HighlightingGroupIds.BestPractice,
     "Exceptional.ThrowingSystemException",
     "Exceptional.ThrowingSystemException",
-    Severity.SUGGESTION,
-    false)]
+    Severity.SUGGESTION
+#if !R2016_3
+    ,
+    false
+#endif
+    )]
 
 namespace ReSharper.Exceptional.Highlightings
 {

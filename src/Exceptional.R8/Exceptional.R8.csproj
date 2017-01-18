@@ -276,5 +276,4 @@
   <Target Name="AfterBuild">
   </Target>
   -->
-  <Import Project="$(ReSharperSdkTools)\MSBuild\JetBrains.Build.Platform.ThemedIconsConverter.Targets" />
 </Project>
