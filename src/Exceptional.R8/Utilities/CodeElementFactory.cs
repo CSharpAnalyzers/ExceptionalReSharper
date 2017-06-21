@@ -42,7 +42,7 @@ namespace ReSharper.Exceptional.Utilities
 #else
                 var declaredTypeUsageNode = _factory.CreateDeclaredTypeUsageNode(exceptionType, context);
 #endif
-#if R2016_3
+#if R2016_3 || R2017_1
                 catchClause.SetExceptionTypeUsage(declaredTypeUsageNode);
 #else
                 exceptionDeclaration.SetDeclaredTypeUsage(declaredTypeUsageNode);
@@ -92,7 +92,7 @@ namespace ReSharper.Exceptional.Utilities
                 var declaredTypeUsageNode = _factory.CreateDeclaredTypeUsageNode(exceptionType, catchBody);
 
 #endif
-#if R2016_3
+#if R2016_3 || R2017_1
                 catchClause.SetExceptionTypeUsage(declaredTypeUsageNode);
 #else
                 exceptionDeclaration.SetDeclaredTypeUsage(declaredTypeUsageNode);
@@ -128,7 +128,7 @@ namespace ReSharper.Exceptional.Utilities
 #else
             var declaredTypeUsageNode = _factory.CreateDeclaredTypeUsageNode(exceptionType, context);
 #endif
-#if R2016_3
+#if R2016_3 || R2017_1
             catchClause.SetExceptionTypeUsage(declaredTypeUsageNode);
 #else
                 exceptionDeclaration.SetDeclaredTypeUsage(declaredTypeUsageNode);

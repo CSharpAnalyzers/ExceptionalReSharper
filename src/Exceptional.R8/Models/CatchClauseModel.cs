@@ -129,7 +129,7 @@ namespace ReSharper.Exceptional.Models
 #if R9 || R10
 
             bool hasConditionalClause = 
-#if !R2016_3
+#if !R2016_3 && !R2017_1
             Node.ConditionClause?.WhenKeyword != null;
 #else
             Node.Filter != null;

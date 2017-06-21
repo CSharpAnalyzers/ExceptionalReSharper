@@ -13,7 +13,7 @@ using JetBrains.ReSharper.Feature.Services.Daemon;
     "Exceptional.ExceptionNotDocumentedOptional",
     "Exceptional.ExceptionNotDocumentedOptional",
     Severity.HINT
-#if !R2016_3
+#if !R2016_3 && !R2017_1
     ,
     false
 #endif

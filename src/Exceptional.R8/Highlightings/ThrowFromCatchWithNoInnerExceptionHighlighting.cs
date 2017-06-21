@@ -14,7 +14,7 @@ using JetBrains.ReSharper.Feature.Services.Daemon;
     "Exceptional.ThrowFromCatchWithNoInnerException",
     "Exceptional.ThrowFromCatchWithNoInnerException",
     Severity.WARNING
-#if !R2016_3
+#if !R2016_3 && !R2017_1
     ,
     false
 #endif

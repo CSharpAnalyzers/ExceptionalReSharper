@@ -12,7 +12,7 @@ using JetBrains.ReSharper.Feature.Services.Daemon;
     "Exceptional.ThrowingSystemException",
     "Exceptional.ThrowingSystemException",
     Severity.SUGGESTION
-#if !R2016_3
+#if !R2016_3 && !R2017_1
     ,
     false
 #endif
