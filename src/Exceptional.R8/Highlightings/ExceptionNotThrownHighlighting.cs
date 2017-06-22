@@ -13,7 +13,7 @@ using JetBrains.ReSharper.Feature.Services.Daemon;
     "Exceptional.ExceptionNotThrown",
     "Exceptional.ExceptionNotThrown",
     Severity.WARNING
-    #if !R2016_3
+#if !R2016_3 && !R2017_1
     ,
     false
 #endif

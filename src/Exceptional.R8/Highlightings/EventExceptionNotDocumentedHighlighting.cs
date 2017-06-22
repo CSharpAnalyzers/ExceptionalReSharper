@@ -12,7 +12,7 @@ using JetBrains.ReSharper.Feature.Services.Daemon;
     "Exceptional.EventExceptionNotDocumented",
     "Exceptional.EventExceptionNotDocumented",
     Severity.SUGGESTION
-#if !R2016_3
+#if !R2016_3 && !R2017_1
     ,
     false
 #endif
