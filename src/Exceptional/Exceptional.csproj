@@ -1,0 +1,377 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{4A9F937D-0046-4087-AFBF-780683BF233A}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>ReSharper.Exceptional</RootNamespace>
+    <AssemblyName>ReSharper.Exceptional</AssemblyName>
+    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <NuGetPackageImportStamp>
+    </NuGetPackageImportStamp>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>TRACE;DEBUG;R10 R2017_1</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE;R10 R2017_1</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="antlr.runtime, Version=2.7.7.1, Culture=neutral, PublicKeyToken=0f493c87b190d7e9, processorArchitecture=MSIL">
+      <HintPath>..\packages\Antlr2.Runtime.2.7.7.02\lib\antlr.runtime.dll</HintPath>
+    </Reference>
+    <Reference Include="Appccelerate.Fundamentals, Version=2.3.0.0, Culture=neutral, PublicKeyToken=917bca444d1f2b4c, processorArchitecture=MSIL">
+      <HintPath>..\packages\Appccelerate.StateMachine.JetBrains.2.2.0.1\lib\net45\Appccelerate.Fundamentals.dll</HintPath>
+    </Reference>
+    <Reference Include="Appccelerate.StateMachine, Version=2.2.0.0, Culture=neutral, PublicKeyToken=917bca444d1f2b4c, processorArchitecture=MSIL">
+      <HintPath>..\packages\Appccelerate.StateMachine.JetBrains.2.2.0.1\lib\net45\Appccelerate.StateMachine.dll</HintPath>
+    </Reference>
+    <Reference Include="CookComputing.XmlRpcV2, Version=2.5.0.0, Culture=neutral, PublicKeyToken=a7d6e17aa302004d, processorArchitecture=MSIL">
+      <HintPath>..\packages\xmlrpcnet.2.5.0\lib\net20\CookComputing.XmlRpcV2.dll</HintPath>
+    </Reference>
+    <Reference Include="DevExpress.Data.v7.1, Version=7.1.3.0, Culture=neutral, PublicKeyToken=ac81f19954537d54, processorArchitecture=MSIL">
+      <HintPath>..\packages\JetBrains.Platform.Lib.DevExpress.2.0.20150224.0\lib\Net\DevExpress.Data.v7.1.dll</HintPath>
+    </Reference>
+    <Reference Include="DevExpress.Utils.v7.1, Version=7.1.3.0, Culture=neutral, PublicKeyToken=ac81f19954537d54, processorArchitecture=MSIL">
+      <HintPath>..\packages\JetBrains.Platform.Lib.DevExpress.2.0.20150224.0\lib\Net\DevExpress.Utils.v7.1.dll</HintPath>
+    </Reference>
+    <Reference Include="DevExpress.XtraEditors.v7.1, Version=7.1.3.0, Culture=neutral, PublicKeyToken=ac81f19954537d54, processorArchitecture=MSIL">
+      <HintPath>..\packages\JetBrains.Platform.Lib.DevExpress.2.0.20150224.0\lib\Net\DevExpress.XtraEditors.v7.1.dll</HintPath>
+    </Reference>
+    <Reference Include="DevExpress.XtraTreeList.v7.1, Version=7.1.3.0, Culture=neutral, PublicKeyToken=ac81f19954537d54, processorArchitecture=MSIL">
+      <HintPath>..\packages\JetBrains.Platform.Lib.DevExpress.2.0.20150224.0\lib\Net\DevExpress.XtraTreeList.v7.1.dll</HintPath>
+    </Reference>
+    <Reference Include="ICSharpCode.SharpZipLib, Version=1.0.6144.33521, Culture=neutral, PublicKeyToken=1b03e6acf1164f73, processorArchitecture=MSIL">
+      <HintPath>..\packages\SharpZipLib.JetBrains.Stripped.0.87.20161027.6\lib\net40\ICSharpCode.SharpZipLib.dll</HintPath>
+    </Reference>
+    <Reference Include="Ionic.Zip.Reduced, Version=1.9.1.8, Culture=neutral, PublicKeyToken=edbe51ad942a3f5c, processorArchitecture=MSIL">
+      <HintPath>..\packages\DotNetZip.Reduced.1.9.1.8\lib\net20\Ionic.Zip.Reduced.dll</HintPath>
+    </Reference>
+    <Reference Include="JetBrains.Annotations, Version=10.4.0.0, Culture=neutral, PublicKeyToken=1010a0d8d6380325, processorArchitecture=MSIL">
+      <HintPath>..\packages\JetBrains.Annotations.10.4.0\lib\net\JetBrains.Annotations.dll</HintPath>
+    </Reference>
+    <Reference Include="JetBrains.MSBuild.Logger, Version=1.0.0.0, Culture=neutral, PublicKeyToken=1982a8b0ca24c5dc, processorArchitecture=MSIL">
+      <HintPath>..\packages\JetBrains.Platform.MSBuild.Logger.1.0.20170130.0\lib\net\JetBrains.MSBuild.Logger.dll</HintPath>
+      <EmbedInteropTypes>True</EmbedInteropTypes>
+    </Reference>
+    <Reference Include="JetBrains.System.Reflection.Metadata, Version=1.0.0.0, Culture=neutral, PublicKeyToken=4fea49dae943e013, processorArchitecture=MSIL">
+      <HintPath>..\packages\JetBrains.System.Reflection.Metadata.1.0.0\lib\net45\JetBrains.System.Reflection.Metadata.dll</HintPath>
+    </Reference>
+    <Reference Include="MahApps.Metro, Version=1.3.0.0, Culture=neutral, PublicKeyToken=f4fb5a3c4d1e5b4f, processorArchitecture=MSIL">
+      <HintPath>..\packages\JetBrains.MahApps.Metro.1.3.1\lib\net45\MahApps.Metro.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Deployment.Compression, Version=3.0.0.0, Culture=neutral, PublicKeyToken=ce35f76fcda82bad, processorArchitecture=MSIL">
+      <HintPath>..\packages\JetBrains.Platform.Lib.Microsoft.Deployment.Compression.Cab.2.0.20140304.0\lib\Microsoft.Deployment.Compression.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Deployment.Compression.Cab, Version=3.0.0.0, Culture=neutral, PublicKeyToken=ce35f76fcda82bad, processorArchitecture=MSIL">
+      <HintPath>..\packages\JetBrains.Platform.Lib.Microsoft.Deployment.Compression.Cab.2.0.20140304.0\lib\Microsoft.Deployment.Compression.Cab.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Owin, Version=3.0.1.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.Owin.3.0.1\lib\net45\Microsoft.Owin.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Owin.FileSystems, Version=3.0.1.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.Owin.FileSystems.3.0.1\lib\net45\Microsoft.Owin.FileSystems.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Owin.Host.HttpListener, Version=3.0.1.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.Owin.Host.HttpListener.3.0.1\lib\net45\Microsoft.Owin.Host.HttpListener.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Owin.Hosting, Version=3.0.1.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.Owin.Hosting.3.0.1\lib\net45\Microsoft.Owin.Hosting.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Owin.StaticFiles, Version=3.0.1.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.Owin.StaticFiles.3.0.1\lib\net45\Microsoft.Owin.StaticFiles.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.Web.XmlTransform, Version=2.1.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.Web.Xdt.2.1.1\lib\net40\Microsoft.Web.XmlTransform.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.WindowsAPICodePack, Version=1.1.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Windows7APICodePack.JetBrains.Stripped.1.1.20150225.0\lib\Net\Microsoft.WindowsAPICodePack.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.WindowsAPICodePack.Shell, Version=1.1.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Windows7APICodePack.JetBrains.Stripped.1.1.20150225.0\lib\Net\Microsoft.WindowsAPICodePack.Shell.dll</HintPath>
+    </Reference>
+    <Reference Include="Newtonsoft.Json, Version=6.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <HintPath>..\packages\Newtonsoft.Json.6.0.4\lib\net45\Newtonsoft.Json.dll</HintPath>
+    </Reference>
+    <Reference Include="NuGet.Client, Version=4.0.0.0, Culture=neutral, PublicKeyToken=5aaa11a165479571, processorArchitecture=MSIL">
+      <HintPath>..\packages\JetBrains.NuGet.Ultimate.4.0.0\lib\net45\NuGet.Client.dll</HintPath>
+    </Reference>
+    <Reference Include="NuGet.Commands, Version=4.0.0.0, Culture=neutral, PublicKeyToken=5aaa11a165479571, processorArchitecture=MSIL">
+      <HintPath>..\packages\JetBrains.NuGet.Ultimate.4.0.0\lib\net45\NuGet.Commands.dll</HintPath>
+    </Reference>
+    <Reference Include="NuGet.Common, Version=4.0.0.0, Culture=neutral, PublicKeyToken=5aaa11a165479571, processorArchitecture=MSIL">
+      <HintPath>..\packages\JetBrains.NuGet.Ultimate.4.0.0\lib\net45\NuGet.Common.dll</HintPath>
+    </Reference>
+    <Reference Include="NuGet.Configuration, Version=4.0.0.0, Culture=neutral, PublicKeyToken=5aaa11a165479571, processorArchitecture=MSIL">
+      <HintPath>..\packages\JetBrains.NuGet.Ultimate.4.0.0\lib\net45\NuGet.Configuration.dll</HintPath>
+    </Reference>
+    <Reference Include="NuGet.ContentModel, Version=4.0.0.0, Culture=neutral, PublicKeyToken=5aaa11a165479571, processorArchitecture=MSIL">
+      <HintPath>..\packages\JetBrains.NuGet.Ultimate.4.0.0\lib\net45\NuGet.ContentModel.dll</HintPath>
+    </Reference>
+    <Reference Include="NuGet.Core, Version=2.14.0.832, Culture=neutral, PublicKeyToken=5aaa11a165479571, processorArchitecture=MSIL">
+      <HintPath>..\packages\JetBrains.NuGet.Core.2.14.1\lib\net40-Client\NuGet.Core.dll</HintPath>
+    </Reference>
+    <Reference Include="NuGet.DependencyResolver.Core, Version=4.0.0.0, Culture=neutral, PublicKeyToken=5aaa11a165479571, processorArchitecture=MSIL">
+      <HintPath>..\packages\JetBrains.NuGet.Ultimate.4.0.0\lib\net45\NuGet.DependencyResolver.Core.dll</HintPath>
+    </Reference>
+    <Reference Include="NuGet.Frameworks, Version=4.0.0.0, Culture=neutral, PublicKeyToken=5aaa11a165479571, processorArchitecture=MSIL">
+      <HintPath>..\packages\JetBrains.NuGet.Frameworks.4.0.0\lib\net45\NuGet.Frameworks.dll</HintPath>
+    </Reference>
+    <Reference Include="NuGet.LibraryModel, Version=4.0.0.0, Culture=neutral, PublicKeyToken=5aaa11a165479571, processorArchitecture=MSIL">
+      <HintPath>..\packages\JetBrains.NuGet.Ultimate.4.0.0\lib\net45\NuGet.LibraryModel.dll</HintPath>
+    </Reference>
+    <Reference Include="NuGet.PackageManagement, Version=4.0.0.0, Culture=neutral, PublicKeyToken=5aaa11a165479571, processorArchitecture=MSIL">
+      <HintPath>..\packages\JetBrains.NuGet.Ultimate.4.0.0\lib\net45\NuGet.PackageManagement.dll</HintPath>
+    </Reference>
+    <Reference Include="NuGet.Packaging, Version=4.0.0.0, Culture=neutral, PublicKeyToken=5aaa11a165479571, processorArchitecture=MSIL">
+      <HintPath>..\packages\JetBrains.NuGet.Ultimate.4.0.0\lib\net45\NuGet.Packaging.dll</HintPath>
+    </Reference>
+    <Reference Include="NuGet.Packaging.Core, Version=4.0.0.0, Culture=neutral, PublicKeyToken=5aaa11a165479571, processorArchitecture=MSIL">
+      <HintPath>..\packages\JetBrains.NuGet.Ultimate.4.0.0\lib\net45\NuGet.Packaging.Core.dll</HintPath>
+    </Reference>
+    <Reference Include="NuGet.Packaging.Core.Types, Version=4.0.0.0, Culture=neutral, PublicKeyToken=5aaa11a165479571, processorArchitecture=MSIL">
+      <HintPath>..\packages\JetBrains.NuGet.Ultimate.4.0.0\lib\net45\NuGet.Packaging.Core.Types.dll</HintPath>
+    </Reference>
+    <Reference Include="NuGet.ProjectManagement, Version=4.0.0.0, Culture=neutral, PublicKeyToken=5aaa11a165479571, processorArchitecture=MSIL">
+      <HintPath>..\packages\JetBrains.NuGet.Ultimate.4.0.0\lib\net45\NuGet.ProjectManagement.dll</HintPath>
+    </Reference>
+    <Reference Include="NuGet.ProjectModel, Version=4.0.0.0, Culture=neutral, PublicKeyToken=5aaa11a165479571, processorArchitecture=MSIL">
+      <HintPath>..\packages\JetBrains.NuGet.Ultimate.4.0.0\lib\net45\NuGet.ProjectModel.dll</HintPath>
+    </Reference>
+    <Reference Include="NuGet.Protocol.Core.Types, Version=4.0.0.0, Culture=neutral, PublicKeyToken=5aaa11a165479571, processorArchitecture=MSIL">
+      <HintPath>..\packages\JetBrains.NuGet.Ultimate.4.0.0\lib\net45\NuGet.Protocol.Core.Types.dll</HintPath>
+    </Reference>
+    <Reference Include="NuGet.Protocol.Core.v2, Version=4.0.0.0, Culture=neutral, PublicKeyToken=5aaa11a165479571, processorArchitecture=MSIL">
+      <HintPath>..\packages\JetBrains.NuGet.Ultimate.4.0.0\lib\net45\NuGet.Protocol.Core.v2.dll</HintPath>
+    </Reference>
+    <Reference Include="NuGet.Protocol.Core.v3, Version=4.0.0.0, Culture=neutral, PublicKeyToken=5aaa11a165479571, processorArchitecture=MSIL">
+      <HintPath>..\packages\JetBrains.NuGet.Ultimate.4.0.0\lib\net45\NuGet.Protocol.Core.v3.dll</HintPath>
+    </Reference>
+    <Reference Include="NuGet.Protocol.VisualStudio, Version=4.0.0.0, Culture=neutral, PublicKeyToken=5aaa11a165479571, processorArchitecture=MSIL">
+      <HintPath>..\packages\JetBrains.NuGet.Ultimate.4.0.0\lib\net45\NuGet.Protocol.VisualStudio.dll</HintPath>
+    </Reference>
+    <Reference Include="NuGet.Repositories, Version=4.0.0.0, Culture=neutral, PublicKeyToken=5aaa11a165479571, processorArchitecture=MSIL">
+      <HintPath>..\packages\JetBrains.NuGet.Ultimate.4.0.0\lib\net45\NuGet.Repositories.dll</HintPath>
+    </Reference>
+    <Reference Include="NuGet.Resolver, Version=4.0.0.0, Culture=neutral, PublicKeyToken=5aaa11a165479571, processorArchitecture=MSIL">
+      <HintPath>..\packages\JetBrains.NuGet.Ultimate.4.0.0\lib\net45\NuGet.Resolver.dll</HintPath>
+    </Reference>
+    <Reference Include="NuGet.RuntimeModel, Version=4.0.0.0, Culture=neutral, PublicKeyToken=5aaa11a165479571, processorArchitecture=MSIL">
+      <HintPath>..\packages\JetBrains.NuGet.Ultimate.4.0.0\lib\net45\NuGet.RuntimeModel.dll</HintPath>
+    </Reference>
+    <Reference Include="NuGet.Versioning, Version=4.0.0.0, Culture=neutral, PublicKeyToken=5aaa11a165479571, processorArchitecture=MSIL">
+      <HintPath>..\packages\JetBrains.NuGet.Versioning.4.0.0\lib\net45\NuGet.Versioning.dll</HintPath>
+    </Reference>
+    <Reference Include="nunit.framework, Version=2.6.4.14350, Culture=neutral, PublicKeyToken=96d09a1eb7f44a77, processorArchitecture=MSIL">
+      <HintPath>..\packages\NUnit.2.6.4\lib\nunit.framework.dll</HintPath>
+    </Reference>
+    <Reference Include="NVelocity, Version=1.0.3.0, Culture=neutral, PublicKeyToken=407dd0808d44fbdc, processorArchitecture=MSIL">
+      <HintPath>..\packages\NVelocity.1.0.3\lib\NVelocity.dll</HintPath>
+    </Reference>
+    <Reference Include="Owin, Version=1.0.0.0, Culture=neutral, PublicKeyToken=f0ebd12fd5e55cc5, processorArchitecture=MSIL">
+      <HintPath>..\packages\Owin.1.0\lib\net40\Owin.dll</HintPath>
+    </Reference>
+    <Reference Include="PresentationCore" />
+    <Reference Include="PresentationFramework" />
+    <Reference Include="SharpCompress, Version=0.11.6.0, Culture=neutral, PublicKeyToken=beaf6f427e128133, processorArchitecture=MSIL">
+      <HintPath>..\packages\sharpcompress.0.11.6\lib\net40\SharpCompress.dll</HintPath>
+    </Reference>
+    <Reference Include="Sprache, Version=2.1.0.0, Culture=neutral, PublicKeyToken=f763bc865f9b2be9, processorArchitecture=MSIL">
+      <HintPath>..\packages\Sprache.JetBrains.2.1.0\lib\net40\Sprache.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.ComponentModel.Composition" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.IdentityModel" />
+    <Reference Include="System.IO.Compression" />
+    <Reference Include="System.Net.Http.WebRequest" />
+    <Reference Include="System.Runtime.Serialization" />
+    <Reference Include="System.Security" />
+    <Reference Include="System.ServiceModel" />
+    <Reference Include="System.Windows.Forms" />
+    <Reference Include="System.Windows.Interactivity, Version=4.5.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\JetBrains.Platform.Lib.System.Windows.Interactivity.3.0.40218\lib\System.Windows.Interactivity.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System.Xaml" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Net.Http" />
+    <Reference Include="System.Xml" />
+    <Reference Include="Vestris.ResourceLib, Version=1.4.33.0, Culture=neutral, PublicKeyToken=ec632d8ba5e5750d, processorArchitecture=MSIL">
+      <HintPath>..\packages\Vestris.ResourceLib.JetBrains.1.4.20150303.0\lib\Net\Vestris.ResourceLib.dll</HintPath>
+    </Reference>
+    <Reference Include="WindowsBase" />
+    <Reference Include="WpfContrib, Version=1.1.0.0, Culture=neutral, PublicKeyToken=1010a0d8d6380325, processorArchitecture=MSIL">
+      <HintPath>..\packages\JetBrains.Platform.Lib.WpfContrib.2.0.20150225.0\lib\Net\WpfContrib.dll</HintPath>
+    </Reference>
+    <Reference Include="xunit, Version=1.9.2.1705, Culture=neutral, PublicKeyToken=8d05b1bb7a6fdb6c, processorArchitecture=MSIL">
+      <HintPath>..\packages\xunit.JetBrains.1.9.2\lib\net20\xunit.dll</HintPath>
+    </Reference>
+    <Reference Include="xunit.abstractions, Version=2.0.0.0, Culture=neutral, PublicKeyToken=8d05b1bb7a6fdb6c, processorArchitecture=MSIL">
+      <HintPath>..\packages\xunit.abstractions.2.0.1\lib\net35\xunit.abstractions.dll</HintPath>
+    </Reference>
+    <Reference Include="xunit.runner.utility.net35, Version=2.2.0.3545, Culture=neutral, PublicKeyToken=8d05b1bb7a6fdb6c, processorArchitecture=MSIL">
+      <HintPath>..\packages\xunit.runner.utility.2.2.0\lib\net35\xunit.runner.utility.net35.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Analyzers\AnalyzerBase.cs" />
+    <Compile Include="Analyzers\CatchAllClauseAnalyzer.cs" />
+    <Compile Include="Analyzers\HasInnerExceptionFromOuterCatchClauseAnalyzer.cs" />
+    <Compile Include="Analyzers\IsDocumentedExceptionThrownAnalyzer.cs" />
+    <Compile Include="Analyzers\IsThrowingSystemExceptionAnalyzer.cs" />
+    <Compile Include="Analyzers\IsThrownExceptionDocumentedAnalyzer.cs" />
+    <Compile Include="Constants.cs" />
+    <Compile Include="Contexts\AccessorOwnerProcessContext.cs" />
+    <Compile Include="Contexts\ConstructorProcessContext.cs" />
+    <Compile Include="Contexts\EventProcessContext.cs" />
+    <Compile Include="Contexts\IProcessContext.cs" />
+    <Compile Include="Contexts\MethodProcessContext.cs" />
+    <Compile Include="Contexts\NullProcessContext.cs" />
+    <Compile Include="Contexts\ProcessContext.cs" />
+    <Compile Include="ExceptionalDaemonStage.cs" />
+    <Compile Include="ExceptionalDaemonStageProcess.cs" />
+    <Compile Include="ExceptionalRecursiveElementProcessor.cs" />
+    <Compile Include="Highlightings\CatchAllClauseHighlighting.cs" />
+    <Compile Include="Highlightings\EventExceptionNotDocumentedHighlighting.cs" />
+    <Compile Include="Highlightings\ExceptionNotDocumentedHighlighting.cs" />
+    <Compile Include="Highlightings\ExceptionNotDocumentedOptionalHighlighting.cs" />
+    <Compile Include="Highlightings\ExceptionNotThrownHighlighting.cs" />
+    <Compile Include="Highlightings\ExceptionNotThrownOptionalHighlighting.cs" />
+    <Compile Include="Highlightings\HighlightingBase.cs" />
+    <Compile Include="Highlightings\ThrowFromCatchWithNoInnerExceptionHighlighting.cs" />
+    <Compile Include="Highlightings\ThrowingSystemExceptionHighlighting.cs" />
+    <Compile Include="Images\ThemedIcons.Unnamed.Generated.cs" />
+    <Compile Include="Models\AccessorDeclarationModel.cs" />
+    <Compile Include="Models\AccessorOwnerDeclarationModel.cs" />
+    <Compile Include="Models\AnalyzeUnitModelBase.cs" />
+    <Compile Include="Models\ArgumentNullExceptionDescription.cs" />
+    <Compile Include="Models\BlockModelBase.cs" />
+    <Compile Include="Models\CatchClauseModel.cs" />
+    <Compile Include="Models\CatchVariableModel.cs" />
+    <Compile Include="Models\ConstructorDeclarationModel.cs" />
+    <Compile Include="Models\DocCommentBlockModel.cs" />
+    <Compile Include="Models\EventDeclarationModel.cs" />
+    <Compile Include="Models\ExceptionDocCommentModel.cs" />
+    <Compile Include="Models\ExceptionsOrigins\ConstructorInitializerModel.cs" />
+    <Compile Include="Models\ExceptionsOrigins\ExpressionExceptionsOriginModelBase.cs" />
+    <Compile Include="Models\ExceptionsOrigins\IExceptionsOriginModel.cs" />
+    <Compile Include="Models\ExceptionsOrigins\ObjectCreationExpressionModel.cs" />
+    <Compile Include="Models\ExceptionsOrigins\ReferenceExpressionModel.cs" />
+    <Compile Include="Models\ExceptionsOrigins\ThrowStatementModel.cs" />
+    <Compile Include="Models\IAnalyzeUnit.cs" />
+    <Compile Include="Models\IBlockModel.cs" />
+    <Compile Include="Models\MethodDeclarationModel.cs" />
+    <Compile Include="Models\ModelBase.cs" />
+    <Compile Include="Models\ThrownExceptionModel.cs" />
+    <Compile Include="Models\ThrownExceptionsReader.cs" />
+    <Compile Include="Models\TreeElementModelBase.cs" />
+    <Compile Include="Models\TryStatementModel.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="QuickFixes\AddExceptionDocumentationFix.cs" />
+    <Compile Include="QuickFixes\AddToOptionalMethodExceptionsFix.cs" />
+    <Compile Include="QuickFixes\CatchExceptionFix.cs" />
+    <Compile Include="QuickFixes\IncludeInnerExceptionFix.cs" />
+    <Compile Include="QuickFixes\RemoveExceptionDocumentationFix.cs" />
+    <Compile Include="QuickFixes\SingleActionFix.cs" />
+    <Compile Include="Resources.Designer.cs">
+      <DependentUpon>Resources.resx</DependentUpon>
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+    </Compile>
+    <Compile Include="Settings\ExceptionAccessorOverride.cs" />
+    <Compile Include="Settings\ExceptionalOptionsPage.cs" />
+    <Compile Include="Settings\ExceptionalSettings.cs" />
+    <Compile Include="Settings\OptionalExceptionConfiguration.cs" />
+    <Compile Include="Settings\OptionalExceptionReplacementType.cs" />
+    <Compile Include="Settings\OptionalMethodExceptionConfiguration.cs" />
+    <Compile Include="Settings\Views\SettingsView.xaml.cs">
+      <DependentUpon>SettingsView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Utilities\CodeElementFactory.cs" />
+    <Compile Include="Utilities\NameFactory.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="packages.config">
+      <SubType>Designer</SubType>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <ThemedIconPng Include="Images\ExceptionalSettings.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Page Include="Images\ThemedIcons.Unnamed.Generated.Xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Settings\Views\SettingsView.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Resources.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <Import Project="..\packages\Antlr2.Tools.2.7.6.4\build\Antlr2.Tools.targets" Condition="Exists('..\packages\Antlr2.Tools.2.7.6.4\build\Antlr2.Tools.targets')" />
+  <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
+    <PropertyGroup>
+      <ErrorText>This project references NuGet package(s) that are missing on this computer. Use NuGet Package Restore to download them.  For more information, see http://go.microsoft.com/fwlink/?LinkID=322105. The missing file is {0}.</ErrorText>
+    </PropertyGroup>
+    <Error Condition="!Exists('..\packages\Antlr2.Tools.2.7.6.4\build\Antlr2.Tools.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\Antlr2.Tools.2.7.6.4\build\Antlr2.Tools.targets'))" />
+    <Error Condition="!Exists('..\packages\JetBrains.Build.Platform.Tasks.ThemedIconsPacker.2.0.20151217.1\build\JetBrains.Build.Platform.Tasks.ThemedIconsPacker.Targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\JetBrains.Build.Platform.Tasks.ThemedIconsPacker.2.0.20151217.1\build\JetBrains.Build.Platform.Tasks.ThemedIconsPacker.Targets'))" />
+    <Error Condition="!Exists('..\packages\JetBrains.Platform.Interop.dotMemoryUnit.Framework.108.0.20170428.75756\build\JetBrains.Platform.Interop.dotMemoryUnit.Framework.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\JetBrains.Platform.Interop.dotMemoryUnit.Framework.108.0.20170428.75756\build\JetBrains.Platform.Interop.dotMemoryUnit.Framework.targets'))" />
+    <Error Condition="!Exists('..\packages\JetBrains.Platform.Core.Shell.108.0.20170427.83335\build\JetBrains.Platform.Core.Shell.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\JetBrains.Platform.Core.Shell.108.0.20170427.83335\build\JetBrains.Platform.Core.Shell.targets'))" />
+    <Error Condition="!Exists('..\packages\JetBrains.Platform.Core.Text.108.0.20170428.75756\build\JetBrains.Platform.Core.Text.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\JetBrains.Platform.Core.Text.108.0.20170428.75756\build\JetBrains.Platform.Core.Text.targets'))" />
+    <Error Condition="!Exists('..\packages\JetBrains.Platform.Interop.dotMemoryUnit.Interop.108.0.20170428.75756\build\JetBrains.Platform.Interop.dotMemoryUnit.Interop.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\JetBrains.Platform.Interop.dotMemoryUnit.Interop.108.0.20170428.75756\build\JetBrains.Platform.Interop.dotMemoryUnit.Interop.targets'))" />
+    <Error Condition="!Exists('..\packages\JetBrains.Platform.RdProtocol.108.0.20170428.75756\build\JetBrains.Platform.RdProtocol.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\JetBrains.Platform.RdProtocol.108.0.20170428.75756\build\JetBrains.Platform.RdProtocol.targets'))" />
+    <Error Condition="!Exists('..\packages\JetBrains.Platform.Core.Ide.108.0.20170428.75756\build\JetBrains.Platform.Core.Ide.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\JetBrains.Platform.Core.Ide.108.0.20170428.75756\build\JetBrains.Platform.Core.Ide.targets'))" />
+    <Error Condition="!Exists('..\packages\JetBrains.Platform.Interop.dotMemoryUnit.Interop.Ide.108.0.20170428.75756\build\JetBrains.Platform.Interop.dotMemoryUnit.Interop.Ide.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\JetBrains.Platform.Interop.dotMemoryUnit.Interop.Ide.108.0.20170428.75756\build\JetBrains.Platform.Interop.dotMemoryUnit.Interop.Ide.targets'))" />
+    <Error Condition="!Exists('..\packages\JetBrains.Platform.Symbols.108.0.20170428.75756\build\JetBrains.Platform.Symbols.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\JetBrains.Platform.Symbols.108.0.20170428.75756\build\JetBrains.Platform.Symbols.targets'))" />
+    <Error Condition="!Exists('..\packages\JetBrains.Platform.Tests.Framework.108.0.20170428.75756\build\JetBrains.Platform.Tests.Framework.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\JetBrains.Platform.Tests.Framework.108.0.20170428.75756\build\JetBrains.Platform.Tests.Framework.targets'))" />
+    <Error Condition="!Exists('..\packages\JetBrains.Psi.Features.Tasks.108.0.20170428.80128\build\JetBrains.Psi.Features.Tasks.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\JetBrains.Psi.Features.Tasks.108.0.20170428.80128\build\JetBrains.Psi.Features.Tasks.targets'))" />
+    <Error Condition="!Exists('..\packages\JetBrains.Psi.Features.Core.108.0.20170428.80128\build\JetBrains.Psi.Features.Core.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\JetBrains.Psi.Features.Core.108.0.20170428.80128\build\JetBrains.Psi.Features.Core.targets'))" />
+    <Error Condition="!Exists('..\packages\JetBrains.Psi.Features.src.108.0.20170428.80128\build\JetBrains.Psi.Features.src.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\JetBrains.Psi.Features.src.108.0.20170428.80128\build\JetBrains.Psi.Features.src.targets'))" />
+    <Error Condition="!Exists('..\packages\JetBrains.Psi.Features.UnitTesting.108.0.20170428.80128\build\JetBrains.Psi.Features.UnitTesting.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\JetBrains.Psi.Features.UnitTesting.108.0.20170428.80128\build\JetBrains.Psi.Features.UnitTesting.targets'))" />
+    <Error Condition="!Exists('..\packages\JetBrains.Psi.Features.test.Framework.108.0.20170428.80128\build\JetBrains.Psi.Features.test.Framework.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\JetBrains.Psi.Features.test.Framework.108.0.20170428.80128\build\JetBrains.Psi.Features.test.Framework.targets'))" />
+    <Error Condition="!Exists('..\packages\JetBrains.ReSharper.SDK.Internal.108.0.20170428.83402\build\JetBrains.ReSharper.SDK.Internal.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\JetBrains.ReSharper.SDK.Internal.108.0.20170428.83402\build\JetBrains.ReSharper.SDK.Internal.targets'))" />
+  </Target>
+  <Import Project="..\packages\JetBrains.Build.Platform.Tasks.ThemedIconsPacker.2.0.20151217.1\build\JetBrains.Build.Platform.Tasks.ThemedIconsPacker.Targets" Condition="Exists('..\packages\JetBrains.Build.Platform.Tasks.ThemedIconsPacker.2.0.20151217.1\build\JetBrains.Build.Platform.Tasks.ThemedIconsPacker.Targets')" />
+  <Import Project="..\packages\JetBrains.Platform.Interop.dotMemoryUnit.Framework.108.0.20170428.75756\build\JetBrains.Platform.Interop.dotMemoryUnit.Framework.targets" Condition="Exists('..\packages\JetBrains.Platform.Interop.dotMemoryUnit.Framework.108.0.20170428.75756\build\JetBrains.Platform.Interop.dotMemoryUnit.Framework.targets')" />
+  <Import Project="..\packages\JetBrains.Platform.Core.Shell.108.0.20170427.83335\build\JetBrains.Platform.Core.Shell.targets" Condition="Exists('..\packages\JetBrains.Platform.Core.Shell.108.0.20170427.83335\build\JetBrains.Platform.Core.Shell.targets')" />
+  <Import Project="..\packages\JetBrains.Platform.Core.Text.108.0.20170428.75756\build\JetBrains.Platform.Core.Text.targets" Condition="Exists('..\packages\JetBrains.Platform.Core.Text.108.0.20170428.75756\build\JetBrains.Platform.Core.Text.targets')" />
+  <Import Project="..\packages\JetBrains.Platform.Interop.dotMemoryUnit.Interop.108.0.20170428.75756\build\JetBrains.Platform.Interop.dotMemoryUnit.Interop.targets" Condition="Exists('..\packages\JetBrains.Platform.Interop.dotMemoryUnit.Interop.108.0.20170428.75756\build\JetBrains.Platform.Interop.dotMemoryUnit.Interop.targets')" />
+  <Import Project="..\packages\JetBrains.Platform.RdProtocol.108.0.20170428.75756\build\JetBrains.Platform.RdProtocol.targets" Condition="Exists('..\packages\JetBrains.Platform.RdProtocol.108.0.20170428.75756\build\JetBrains.Platform.RdProtocol.targets')" />
+  <Import Project="..\packages\JetBrains.Platform.Core.Ide.108.0.20170428.75756\build\JetBrains.Platform.Core.Ide.targets" Condition="Exists('..\packages\JetBrains.Platform.Core.Ide.108.0.20170428.75756\build\JetBrains.Platform.Core.Ide.targets')" />
+  <Import Project="..\packages\JetBrains.Platform.Interop.dotMemoryUnit.Interop.Ide.108.0.20170428.75756\build\JetBrains.Platform.Interop.dotMemoryUnit.Interop.Ide.targets" Condition="Exists('..\packages\JetBrains.Platform.Interop.dotMemoryUnit.Interop.Ide.108.0.20170428.75756\build\JetBrains.Platform.Interop.dotMemoryUnit.Interop.Ide.targets')" />
+  <Import Project="..\packages\JetBrains.Platform.Symbols.108.0.20170428.75756\build\JetBrains.Platform.Symbols.targets" Condition="Exists('..\packages\JetBrains.Platform.Symbols.108.0.20170428.75756\build\JetBrains.Platform.Symbols.targets')" />
+  <Import Project="..\packages\JetBrains.Platform.Tests.Framework.108.0.20170428.75756\build\JetBrains.Platform.Tests.Framework.targets" Condition="Exists('..\packages\JetBrains.Platform.Tests.Framework.108.0.20170428.75756\build\JetBrains.Platform.Tests.Framework.targets')" />
+  <Import Project="..\packages\JetBrains.Psi.Features.Tasks.108.0.20170428.80128\build\JetBrains.Psi.Features.Tasks.targets" Condition="Exists('..\packages\JetBrains.Psi.Features.Tasks.108.0.20170428.80128\build\JetBrains.Psi.Features.Tasks.targets')" />
+  <Import Project="..\packages\JetBrains.Psi.Features.Core.108.0.20170428.80128\build\JetBrains.Psi.Features.Core.targets" Condition="Exists('..\packages\JetBrains.Psi.Features.Core.108.0.20170428.80128\build\JetBrains.Psi.Features.Core.targets')" />
+  <Import Project="..\packages\JetBrains.Psi.Features.src.108.0.20170428.80128\build\JetBrains.Psi.Features.src.targets" Condition="Exists('..\packages\JetBrains.Psi.Features.src.108.0.20170428.80128\build\JetBrains.Psi.Features.src.targets')" />
+  <Import Project="..\packages\JetBrains.Psi.Features.UnitTesting.108.0.20170428.80128\build\JetBrains.Psi.Features.UnitTesting.targets" Condition="Exists('..\packages\JetBrains.Psi.Features.UnitTesting.108.0.20170428.80128\build\JetBrains.Psi.Features.UnitTesting.targets')" />
+  <Import Project="..\packages\JetBrains.Psi.Features.test.Framework.108.0.20170428.80128\build\JetBrains.Psi.Features.test.Framework.targets" Condition="Exists('..\packages\JetBrains.Psi.Features.test.Framework.108.0.20170428.80128\build\JetBrains.Psi.Features.test.Framework.targets')" />
+  <Import Project="..\packages\JetBrains.ReSharper.SDK.Internal.108.0.20170428.83402\build\JetBrains.ReSharper.SDK.Internal.targets" Condition="Exists('..\packages\JetBrains.ReSharper.SDK.Internal.108.0.20170428.83402\build\JetBrains.ReSharper.SDK.Internal.targets')" />
+</Project>
