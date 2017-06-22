@@ -19,6 +19,10 @@ Open the menu ReSharper / Options... / Exceptional to configure the extension.
 
 Check out the extension in the ReSharper plugin gallery: 
  
+- [Exceptional for ReSharper](https://resharper-plugins.jetbrains.com/packages/ExceptionalDevs.Exceptional/)
+
+Old versions: 
+
 - [Exceptional for ReSharper 8 in the plugin gallery](https://resharper-plugins.jetbrains.com/packages/Exceptional)
 - [Exceptional for ReSharper 9 in the plugin gallery](https://resharper-plugins.jetbrains.com/packages/Exceptional.R9)
 - [Exceptional for ReSharper 10 in the plugin gallery](https://resharper-plugins.jetbrains.com/packages/Exceptional.R10)
