@@ -17,7 +17,7 @@ Requires ReSharper v8.2, v9 or v10
 
 Open the menu ReSharper / Options... / Exceptional to configure the extension. 
 
-Check out the extension in the ReSharper plugin gallery: 
+Check out the extension in the ReSharper plugin gallery (targets the latest R# version): 
  
 - [Exceptional for ReSharper](https://resharper-plugins.jetbrains.com/packages/ExceptionalDevs.Exceptional/)
 
