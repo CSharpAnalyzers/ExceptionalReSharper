@@ -1,15 +1,11 @@
 using JetBrains.DocumentModel;
 using JetBrains.Application.Settings;
 using System;
-using System.Collections.Generic;
 using JetBrains.Application.Progress;
-using JetBrains.ReSharper.Daemon;
 using JetBrains.ReSharper.Daemon.CSharp.Stages;
-using JetBrains.ReSharper.Daemon.Stages;
 using JetBrains.ReSharper.Psi;
 using JetBrains.ReSharper.Psi.CSharp;
 using JetBrains.ReSharper.Psi.CSharp.Tree;
-using ReSharper.Exceptional.Settings;
 
 #if R9 || R10
 using JetBrains.ReSharper.Feature.Services.Daemon;
@@ -30,11 +26,7 @@ namespace ReSharper.Exceptional
         {
             _settings = settings;
 
-#if R2016_1 || R2016_2
             _consumer = new FilteringHighlightingConsumer(this, _settings, file);
-#else
-            _consumer = new DefaultHighlightingConsumer(this, _settings);
-#endif
         }
 
         public void AddHighlighting(IHighlighting highlighting, DocumentRange range)
