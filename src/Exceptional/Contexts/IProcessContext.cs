@@ -29,6 +29,9 @@ namespace ReSharper.Exceptional.Contexts
 #if R9 || R10
         void Process(IDocCommentBlock docCommentBlockNode);
 #endif
+#if R2017_1
+        void Process(IThrowExpression throwExpression);
+#endif
 
         void EnterAccessor(IAccessorDeclaration accessorDeclarationNode);
         void LeaveAccessor();

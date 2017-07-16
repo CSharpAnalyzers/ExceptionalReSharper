@@ -60,7 +60,14 @@ namespace ReSharper.Exceptional.Contexts
         {
 
         }
-        
+
+#if R2017_1
+        public void Process(IThrowExpression throwExpression)
+        {
+            
+        }
+#endif
+
         public void EnterAccessor(IAccessorDeclaration accessorDeclarationNode)
         {
         }
