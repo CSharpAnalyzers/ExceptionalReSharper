@@ -54,15 +54,37 @@ namespace ReSharper.Exceptional.Models
                 if (docCommentBlockNode == null)
                     return result;
 #endif
+                string accessor = null;
+                if (exceptionsOrigin is ReferenceExpressionModel &&
+                    exceptionsOrigin.ContainingBlock is AccessorDeclarationModel)
+                    accessor = ((AccessorDeclarationModel)exceptionsOrigin.ContainingBlock).Node.NameIdentifier.Name;
 
-                var docCommentBlockModel = new DocCommentBlockModel(null, docCommentBlockNode);
+                var docCommentBlockModel = new DocCommentBlockModel(exceptionsOrigin.ContainingBlock as IAnalyzeUnit, docCommentBlockNode);
                 foreach (var comment in docCommentBlockModel.DocumentedExceptions)
                 {
-                    result.Add(new ThrownExceptionModel(analyzeUnit, exceptionsOrigin, comment.ExceptionType,
-                        comment.ExceptionDescription, false, comment.Accessor));
+                    if (exceptionsOrigin is ReferenceExpressionModel &&
+                        exceptionsOrigin.ContainingBlock is AccessorDeclarationModel)
+                    {
+                        comment.AssociatedExceptionModel = new ThrownExceptionModel(analyzeUnit, exceptionsOrigin, comment.ExceptionType,
+                            comment.ExceptionDescription, false, accessor);
+                    }
+                    else
+                    {
+                        comment.AssociatedExceptionModel = new ThrownExceptionModel(analyzeUnit, exceptionsOrigin, comment.ExceptionType,
+                            comment.ExceptionDescription, false, comment.Accessor);
+                    }
+
+                    if (exceptionsOrigin is ReferenceExpressionModel)
+                    {
+                        if (((ReferenceExpressionModel)exceptionsOrigin).IsExceptionValid(comment) == false)
+                        {
+                            continue;
+                        }
+                    }
+
+                    result.Add(comment.AssociatedExceptionModel);
                 }
             }
-
             return result;
         }
 

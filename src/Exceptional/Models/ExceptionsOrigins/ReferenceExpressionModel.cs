@@ -6,6 +6,7 @@ using JetBrains.ReSharper.Psi.CSharp.Tree;
 using JetBrains.ReSharper.Psi.Modules;
 using JetBrains.ReSharper.Psi.Resolve;
 using JetBrains.ReSharper.Psi.Util;
+using JetBrains.Util;
 using ReSharper.Exceptional.Analyzers;
 
 namespace ReSharper.Exceptional.Models.ExceptionsOrigins
@@ -15,6 +16,7 @@ namespace ReSharper.Exceptional.Models.ExceptionsOrigins
         private IEnumerable<ThrownExceptionModel> _thrownExceptions;
         private bool? _isInvocation = null;
         private bool? _isEventInvocation = null;
+        private IAssignmentExpression _assignment = null;
 
         public ReferenceExpressionModel(IAnalyzeUnit analyzeUnit, IReferenceExpression invocationExpression, IBlockModel containingBlock)
             : base(analyzeUnit, invocationExpression, containingBlock)
@@ -106,6 +108,32 @@ namespace ReSharper.Exceptional.Models.ExceptionsOrigins
                 thrownExceptionModel.Accept(analyzer);
         }
 
+        public bool IsExceptionValid(ExceptionDocCommentModel comment)
+        {
+            if (comment.Accessor.IsNullOrWhitespace())
+                return true;
+
+            if (this.IsInvocation == false)
+                return false;
+
+            if (_assignment != null)
+            {
+                var exceptionOrigin = comment.AssociatedExceptionModel.ExceptionsOrigin.Node.GetText().TrimFromStart("this.");
+                var assignmentDestination = _assignment.Dest.LastChild.GetText();
+                if (assignmentDestination.Contains(exceptionOrigin) && comment.Accessor == "get")
+                {
+                    return false;
+                }
+
+                if (assignmentDestination.Contains(exceptionOrigin) == false && comment.Accessor == "set")
+                {
+                    return false;
+                }
+            }
+
+            return true;
+        }
+
         private ThrownExceptionModel CreateThrownSystemException()
         {
             var psiModule = Node.GetPsiModule();
@@ -140,6 +168,9 @@ namespace ReSharper.Exceptional.Models.ExceptionsOrigins
                     parent is IAccessorDeclaration)
                 {
                     var property = Node.Reference.Resolve().DeclaredElement as IProperty;
+                    if (parent is IAssignmentExpression)
+                        _assignment = (IAssignmentExpression)parent;
+
                     if (property != null)
                     {
                         var psiModule = Node.GetPsiModule();

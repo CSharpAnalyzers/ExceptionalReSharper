@@ -31,6 +31,8 @@ namespace ReSharper.Exceptional.Models
 
         public string ExceptionDescription { get; private set; }
 
+        public ThrownExceptionModel AssociatedExceptionModel { get; set; }
+
         public override DocumentRange DocumentRange
         {
             get { return GetCommentRange(); }
