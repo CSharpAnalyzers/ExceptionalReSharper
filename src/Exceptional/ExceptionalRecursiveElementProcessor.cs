@@ -104,6 +104,10 @@ namespace ReSharper.Exceptional
                 }
             }
 #endif
+#if R2017_1
+            else if (element is IThrowExpression)
+                _currentContext.Process(element as IThrowExpression);
+#endif
             else if (element is ITryStatement)
                 _currentContext.EnterTryBlock(element as ITryStatement);
             else if (element is ICatchClause)

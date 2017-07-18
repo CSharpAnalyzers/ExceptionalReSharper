@@ -182,6 +182,22 @@ namespace ReSharper.Exceptional.Contexts
             AnalyzeUnit.DocumentationBlock = new DocCommentBlockModel(AnalyzeUnit, docCommentBlockNode);
         }
 
+#if R2017_1
+        public void Process(IThrowExpression throwExpression)
+        {
+            if (IsValid() == false)
+                return;
+            if (throwExpression == null)
+                return;
+
+            Logger.Assert(BlockModelsStack.Count > 0, "[Exceptional] There is no block for throw expression.");
+
+            var containingBlockModel = BlockModelsStack.Peek();
+            containingBlockModel.ThrownExceptions.Add(
+                new ThrowExpressionModel(AnalyzeUnit, throwExpression, containingBlockModel));
+        }
+#endif
+
         public virtual void EnterAccessor(IAccessorDeclaration accessorDeclarationNode)
         {
         }

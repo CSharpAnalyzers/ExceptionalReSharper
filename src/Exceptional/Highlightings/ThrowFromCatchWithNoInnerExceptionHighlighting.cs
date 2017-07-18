@@ -34,8 +34,18 @@ namespace ReSharper.Exceptional.Highlightings
             ThrowStatement = throwStatement;
         }
 
+        /// <summary>Initializes a new instance of the <see cref="ThrowFromCatchWithNoInnerExceptionHighlighting"/> class. </summary>
+        /// <param name="throwExpression">The throw expression. </param>
+        internal ThrowFromCatchWithNoInnerExceptionHighlighting(ThrowExpressionModel throwExpression)
+        {
+            ThrowExpression = throwExpression;
+        }
+
         /// <summary>Gets the throw statement. </summary>
         internal ThrowStatementModel ThrowStatement { get; private set; }
+
+        /// <summary>Gets the throw expression. </summary>
+        internal ThrowExpressionModel ThrowExpression { get; private set; }
 
         /// <summary>Gets the message which is shown in the editor. </summary>
         protected override string Message

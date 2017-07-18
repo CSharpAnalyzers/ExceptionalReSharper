@@ -11,6 +11,10 @@ namespace ReSharper.Exceptional.Analyzers
         /// <param name="throwStatement">Throw statement model to analyze.</param>
         public virtual void Visit(ThrowStatementModel throwStatement) { }
 
+        /// <summary>Performs analyze of throw <paramref name="throwExpression"/>.</summary>
+        /// <param name="throwExpression">Throw expression model to analyze.</param>
+        public virtual void Visit(ThrowExpressionModel throwExpression) { }
+
         /// <summary>Performs analyze of <paramref name="catchClause"/>.</summary>
         /// <param name="catchClause">Catch clause to analyze.</param>
         public virtual void Visit(CatchClauseModel catchClause) { }

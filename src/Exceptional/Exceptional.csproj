@@ -276,6 +276,7 @@
     <Compile Include="Models\ExceptionsOrigins\IExceptionsOriginModel.cs" />
     <Compile Include="Models\ExceptionsOrigins\ObjectCreationExpressionModel.cs" />
     <Compile Include="Models\ExceptionsOrigins\ReferenceExpressionModel.cs" />
+    <Compile Include="Models\ExceptionsOrigins\ThrowExpressionModel.cs" />
     <Compile Include="Models\ExceptionsOrigins\ThrowStatementModel.cs" />
     <Compile Include="Models\IAnalyzeUnit.cs" />
     <Compile Include="Models\IBlockModel.cs" />

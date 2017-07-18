@@ -19,6 +19,17 @@ namespace ReSharper.Exceptional.Analyzers
             }
         }
 
+        /// <summary>Performs analyze of throw <paramref name="throwExpression"/>.</summary>
+        /// <param name="throwExpression">Throw statement model to analyze.</param>
+        public override void Visit(ThrowExpressionModel throwExpression)
+        {
+            if (throwExpression != null && RequiresInnerExceptionPassing(throwExpression))
+            {
+                var highlighting = new ThrowFromCatchWithNoInnerExceptionHighlighting(throwExpression);
+                ServiceLocator.StageProcess.AddHighlighting(highlighting, throwExpression.DocumentRange);
+            }
+        }
+
         private static bool RequiresInnerExceptionPassing(ThrowStatementModel throwStatementModel)
         {
             if (!throwStatementModel.IsDirectExceptionInstantiation)
@@ -38,6 +49,27 @@ namespace ReSharper.Exceptional.Analyzers
                 return true;
 
             return !throwStatementModel.IsInnerExceptionPassed(outerCatchClause.Variable.VariableName.Name);
+        }
+
+        private static bool RequiresInnerExceptionPassing(ThrowExpressionModel throwExpressionModel)
+        {
+            if (!throwExpressionModel.IsDirectExceptionInstantiation)
+                return false;
+
+            if (throwExpressionModel.IsRethrow)
+                return false;
+
+            var outerCatchClause = throwExpressionModel.FindOuterCatchClause();
+            if (outerCatchClause == null)
+                return false;
+
+            if (!outerCatchClause.IsExceptionTypeSpecified)
+                return true;
+
+            if (!outerCatchClause.HasVariable)
+                return true;
+
+            return !throwExpressionModel.IsInnerExceptionPassed(outerCatchClause.Variable.VariableName.Name);
         }
     }
 }
