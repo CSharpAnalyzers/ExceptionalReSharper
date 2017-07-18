@@ -70,6 +70,7 @@
     <Compile Include="Fixed\InnerExceptionNotBeingDetected.cs" />
     <Compile Include="Fixed\InterfaceAbstractExceptions.cs" />
     <Compile Include="Fixed\OptionalLinqCount.cs" />
+    <Compile Include="Fixed\DisableWarnings.cs" />
     <Compile Include="ThrowingSystemExceptionShowsWarning.cs" />
     <Compile Include="Fixed\RethrowInCatchClauseNotCorrectlyAnalyzed.cs" />
     <Compile Include="Fixed\WrongInnerExceptionWarning.cs" />
