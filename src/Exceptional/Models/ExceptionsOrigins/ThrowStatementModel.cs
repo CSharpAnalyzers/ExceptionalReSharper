@@ -162,8 +162,7 @@ namespace ReSharper.Exceptional.Models.ExceptionsOrigins
                 return false;
 
             return objectCreationExpressionNode.Arguments.Any(
-                a => a.GetText().Equals(variableName)
-                     || (a.GetText().Contains(":") && a.GetText().EndsWith(variableName)));
+                a => a.GetText().Equals(variableName) || a.GetText().Split(':').Last().Trim().Equals(variableName));
         }
 
         private IDeclaredType GetExceptionType()

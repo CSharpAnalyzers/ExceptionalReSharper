@@ -42,8 +42,10 @@
             }
             catch (FormatException fe)
             {
+                var newfe = new FormatException("123");
+
                 // warning, Caught Exception should be passed as inner exception
-                throw new InvalidOperationException(message: fe.Message, innerException: new Exception("123"));
+                throw new InvalidOperationException(message: fe.Message, innerException: newfe);
             }
             catch (OverflowException oe)
             {
