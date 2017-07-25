@@ -51,6 +51,7 @@
     <Compile Include="Fixed\ExceptionsOfCtorNotConsidered.cs" />
     <Compile Include="Fixed\IgnoreWarningShouldWork.cs" />
     <Compile Include="Fixed\InsertingArgumentNullExceptionDocumentation.cs" />
+    <Compile Include="Fixed\NamedArguments.cs" />
     <Compile Include="Fixed\NameOfSupportedWithArgumentNullException.cs" />
     <Compile Include="Fixed\WrongWarningOnCtor.cs" />
     <Compile Include="Fixed\PropertyInPropertyInvocation.cs" />
