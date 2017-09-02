@@ -75,8 +75,11 @@ namespace ReSharper.Exceptional.QuickFixes
             {
                 var hotspotSession = Shell.Instance.GetComponent<LiveTemplatesManager>()
                     .CreateHotspotSessionAtopExistingText(
-                        solution, TextRange.InvalidRange, textControl, LiveTemplatesManager.EscapeAction.LeaveTextAndCaret,
-                        new[] {fieldInfo});
+                        solution,
+                        DocumentRange.InvalidRange,
+                        textControl,
+                        LiveTemplatesManager.EscapeAction.LeaveTextAndCaret,
+                        fieldInfo);
 
                 hotspotSession.Execute();
             };
