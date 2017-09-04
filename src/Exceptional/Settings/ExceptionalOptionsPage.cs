@@ -1,10 +1,10 @@
 using System;
 using JetBrains.Annotations;
+using JetBrains.Application.UI.Components.UIApplication;
+using JetBrains.Application.UI.Options;
+using JetBrains.Application.UI.Options.OptionPages;
 using JetBrains.DataFlow;
-using JetBrains.UI.Application;
-using JetBrains.UI.Options;
-using JetBrains.UI.Options.Helpers;
-using JetBrains.UI.Options.OptionPages;
+
 using ReSharper.Exceptional.Settings.Views;
 
 namespace ReSharper.Exceptional.Settings

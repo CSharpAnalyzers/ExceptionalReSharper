@@ -1,10 +1,9 @@
-﻿using System;
-using System.Windows;
+﻿using System.Windows;
 using System.Windows.Controls;
 using JetBrains.Application.Settings;
+using JetBrains.Application.UI.Options;
 using JetBrains.DataFlow;
 using JetBrains.UI.Controls;
-using JetBrains.UI.Options;
 
 namespace ReSharper.Exceptional.Settings.Views
 {
