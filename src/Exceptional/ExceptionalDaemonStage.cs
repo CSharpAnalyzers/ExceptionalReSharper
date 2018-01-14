@@ -61,7 +61,7 @@ namespace ReSharper.Exceptional
 
             ServiceLocator.Process = process;
             ServiceLocator.Settings = exceptionalSettings;
-            ServiceLocator.StageProcess = new ExceptionalDaemonStageProcess(file, settings);
+            ServiceLocator.StageProcess = new ExceptionalDaemonStageProcess(file, process.SourceFile);
 
             return ServiceLocator.StageProcess;
         }
