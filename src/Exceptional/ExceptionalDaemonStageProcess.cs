@@ -1,5 +1,5 @@
 using JetBrains.DocumentModel;
-using JetBrains.Application.Settings;
+
 using System;
 using JetBrains.Application.Progress;
 using JetBrains.ReSharper.Daemon.CSharp.Stages;
@@ -18,15 +18,12 @@ namespace ReSharper.Exceptional
     /// This object is short-lived. It executes the target highlighting logic.</remarks>
     public class ExceptionalDaemonStageProcess : CSharpDaemonStageProcessBase
     {
-        private readonly IContextBoundSettingsStore _settings;
         private readonly IHighlightingConsumer _consumer;
 
-        public ExceptionalDaemonStageProcess(ICSharpFile file, IContextBoundSettingsStore settings)
+        public ExceptionalDaemonStageProcess(ICSharpFile file, IPsiSourceFile psiSourceFile)
             : base(ServiceLocator.Process, file)
         {
-            _settings = settings;
-
-            _consumer = new FilteringHighlightingConsumer(this, _settings, file);
+            _consumer = new FilteringHighlightingConsumer(psiSourceFile, file);
         }
 
         public void AddHighlighting(IHighlighting highlighting, DocumentRange range)

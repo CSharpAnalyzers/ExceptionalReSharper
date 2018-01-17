@@ -1,3 +1,4 @@
+using JetBrains.Application.Shell;
 using JetBrains.ReSharper.Psi;
 using JetBrains.ReSharper.Psi.Naming.Extentions;
 using JetBrains.ReSharper.Psi.Naming.Impl;
@@ -12,7 +13,7 @@ namespace ReSharper.Exceptional.Utilities
         public static string CatchVariableName(ITreeNode treeNode, IDeclaredType exceptionType)
         {
             var namingPolicyManager = new NamingPolicyManager(LanguageManager.Instance, treeNode.GetSolution());
-            var nameParser = new NameParser(treeNode.GetSolution(), namingPolicyManager);
+            var nameParser = new NameParser(treeNode.GetSolution(), namingPolicyManager, new HostCulture());
             var nameSuggestionManager = new NameSuggestionManager(treeNode.GetSolution(), nameParser, namingPolicyManager);
             var policy = namingPolicyManager.GetPolicy(NamedElementKinds.Locals, treeNode.Language, treeNode.GetSourceFile());
 
