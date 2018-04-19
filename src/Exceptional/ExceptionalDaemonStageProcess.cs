@@ -31,7 +31,7 @@ namespace ReSharper.Exceptional
             _consumer.AddHighlighting(highlighting, range);
         }
 
-        /// <exception cref="ProcessCancelledException">The process has been cancelled. </exception>
+        /// <exception cref="OperationCanceledException">The process has been cancelled. </exception>
         public override void Execute(Action<DaemonStageResult> commiter)
         {
             var file = ServiceLocator.Process.SourceFile.GetTheOnlyPsiFile(CSharpLanguage.Instance) as ICSharpFile;
@@ -42,7 +42,7 @@ namespace ReSharper.Exceptional
             file.ProcessDescendants(elementProcessor);
 
             if (ServiceLocator.Process.InterruptFlag)
-                throw new ProcessCancelledException();
+                throw new OperationCanceledException();
 
             commiter(new DaemonStageResult(_consumer.Highlightings));
         }

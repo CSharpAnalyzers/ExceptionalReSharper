@@ -44,11 +44,6 @@ namespace ReSharper.Exceptional
     [DaemonStage]
     public class ExceptionalDaemonStage : CSharpDaemonStageBase
     {
-        public override ErrorStripeRequest NeedsErrorStripe(IPsiSourceFile sourceFile, IContextBoundSettingsStore settings)
-        {
-            return ErrorStripeRequest.STRIPE_AND_ERRORS;
-        }
-
         protected override IDaemonStageProcess CreateProcess(
             IDaemonProcess process, IContextBoundSettingsStore settings,
             DaemonProcessKind processKind, ICSharpFile file)
