@@ -9,20 +9,20 @@
     <TabControl Margin="0,8,0,0">
         <TabItem Header="General">
             <StackPanel Margin="8">
-                <controls:CheckBoxDisabledNoCheck2 Content="Delegate invocations may throw System.Exception" Margin="0,0,0,12" 
+                <CheckBox Content="Delegate invocations may throw System.Exception" Margin="0,0,0,12" 
                                                    x:Name="DelegateInvocationsMayThrowExceptions" />
 
                 <TextBlock Text="Documentation of thrown exception's subtype is sufficient..." FontWeight="Bold" Margin="0,0,0,4" />
-                <controls:CheckBoxDisabledNoCheck2 Content="... for throw statements" Margin="0,0,0,4" 
+                <CheckBox Content="... for throw statements" Margin="0,0,0,4" 
                                                    x:Name="IsDocumentationOfExceptionSubtypeSufficientForThrowStatements" />
-                <controls:CheckBoxDisabledNoCheck2 Content="... for method or property invocations" Margin="0,0,0,12" 
+                <CheckBox Content="... for method or property invocations" Margin="0,0,0,12" 
                                                    x:Name="IsDocumentationOfExceptionSubtypeSufficientForReferenceExpressions" />
 
                 <TextBlock Text="Method and property visibility" FontWeight="Bold" Margin="0,0,0,4" />
-                <controls:CheckBoxDisabledNoCheck2 Content="Inspect public methods and properties" x:Name="InspectPublicMethods" Margin="0,0,0,4" />
-                <controls:CheckBoxDisabledNoCheck2 Content="Inspect internal methods and properties" x:Name="InspectInternalMethods" Margin="0,0,0,4" />
-                <controls:CheckBoxDisabledNoCheck2 Content="Inspect protected methods and properties" x:Name="InspectProtectedMethods" Margin="0,0,0,4" />
-                <controls:CheckBoxDisabledNoCheck2 Content="Inspect private methods and properties" x:Name="InspectPrivateMethods" Margin="0,0,0,8" />
+                <CheckBox Content="Inspect public methods and properties" x:Name="InspectPublicMethods" Margin="0,0,0,4" />
+                <CheckBox Content="Inspect internal methods and properties" x:Name="InspectInternalMethods" Margin="0,0,0,4" />
+                <CheckBox Content="Inspect protected methods and properties" x:Name="InspectProtectedMethods" Margin="0,0,0,4" />
+                <CheckBox Content="Inspect private methods and properties" x:Name="InspectPrivateMethods" Margin="0,0,0,8" />
             </StackPanel>
         </TabItem>
         <TabItem Header="Optional exceptions">
@@ -34,7 +34,7 @@
                 </Grid.RowDefinitions>
                 <StackPanel>
                     <TextBlock Text="Define exception types which are shown as hints instead of warnings. " Margin="0,0,0,16" />
-                    <controls:CheckBoxDisabledNoCheck2 Content="Use predefined optional exceptions" 
+                    <CheckBox Content="Use predefined optional exceptions" 
                                                        x:Name="UseOptionalExceptionsDefaults" Margin="0,0,0,8" />
                     <Button Content="Show predefined optional exceptions" Margin="0,0,0,8" Padding="4"
                             Click="ShowPredefinedOptionalExceptions" />
@@ -57,7 +57,7 @@
                     <TextBlock Text="Define exceptions that are thrown from methods or properties which are shown as hints instead of warnings. " 
                                Margin="0,0,0,16" />
 
-                    <controls:CheckBoxDisabledNoCheck2 Content="Use predefined optional method and property exceptions" 
+                    <CheckBox Content="Use predefined optional method and property exceptions" 
                                                        x:Name="UseOptionalMethodExceptionsDefaults" Margin="0,0,0,8"/>
                     <Button Content="Show predefined optional method and property exceptions" Margin="0,0,0,8" Padding="4"
                             Click="ShowPredefinedOptionalMethodAndPropertyExceptions" />
@@ -78,7 +78,7 @@
                 </Grid.RowDefinitions>
                 <StackPanel>
                     <TextBlock Text="Override the property accessors for thrown exceptions of existing types. " Margin="0,0,0,16" />
-                    <controls:CheckBoxDisabledNoCheck2 Content="Use predefined accessor overrides" 
+                    <CheckBox Content="Use predefined accessor overrides" 
                                                        x:Name="UseDefaultAccessorOverrides" Margin="0,0,0,8"/>
                     <Button Content="Show predefined accessor overrides" Margin="0,0,0,8" Padding="4"
                             Click="ShowPredefinedAccessorOverrides" />
