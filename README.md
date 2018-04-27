@@ -36,41 +36,45 @@ Old versions:
 
 **Warning:** Exceptions thrown outside the scope of method\property that are not documented in methods xml documentation (thrown with use of throw keyword).
 
-![](http://download-codeplex.sec.s-msft.com/Download?ProjectName=exceptional&DownloadId=922440)
+![](https://rawgit.com/CSharpAnalyzers/ExceptionalReSharper/master/assets/01.png)
 
 **Fix:** Document or catch thrown exception.
 
-![](http://download-codeplex.sec.s-msft.com/Download?ProjectName=exceptional&DownloadId=922441)
+![](https://rawgit.com/CSharpAnalyzers/ExceptionalReSharper/master/assets/01_fix.png)
 
 **Warning:** Exception thrown outside the scope of method\property that are not documented in methods xml documentation (thrown from another invocation).
 
-![](http://download-codeplex.sec.s-msft.com/Download?ProjectName=exceptional&DownloadId=922442)
+![](https://rawgit.com/CSharpAnalyzers/ExceptionalReSharper/master/assets/02.png)
 
 **Fix:** Document or catch thrown exception.
 
-![](http://download-codeplex.sec.s-msft.com/Download?ProjectName=exceptional&DownloadId=922443)
+![](https://rawgit.com/CSharpAnalyzers/ExceptionalReSharper/master/assets/02_fix.png)
 
 ### Documented exception is not thrown
 
 **Warning:** Exceptions documented in XML documentation that are not thrown from method/property.
 
-![](http://download-codeplex.sec.s-msft.com/Download?ProjectName=exceptional&DownloadId=922448)
+![](https://rawgit.com/CSharpAnalyzers/ExceptionalReSharper/master/assets/03.png)
 
 **Fix:** Remove documentation of not thrown exception.
 
-![](http://download-codeplex.sec.s-msft.com/Download?ProjectName=exceptional&DownloadId=922445)
+![](https://rawgit.com/CSharpAnalyzers/ExceptionalReSharper/master/assets/03_fix.png)
 
 ### Catch-all clauses
 
 **Warning:** General catch-all clauses should be avoided.
 
-![](http://download-codeplex.sec.s-msft.com/Download?ProjectName=exceptional&DownloadId=922446)
+![](https://rawgit.com/CSharpAnalyzers/ExceptionalReSharper/master/assets/04.png)
 
 ### Not passing inner exception
 
 **Warning:** Throwing new exception from catch clause should include message and inner exception.
 
-![](http://download-codeplex.sec.s-msft.com/Download?ProjectName=exceptional&DownloadId=922447)
+![](https://rawgit.com/CSharpAnalyzers/ExceptionalReSharper/master/assets/05.png)
+
+**Fix:** Include inner exception in ctor
+
+![](https://rawgit.com/CSharpAnalyzers/ExceptionalReSharper/master/assets/05_fix.png)
 
 ### Do not throw System.Exception
 
