@@ -43,6 +43,7 @@
     <Compile Include="CatchAllClause.cs" />
     <Compile Include="Demonstration.cs" />
     <Compile Include="EventMayThrowException.cs" />
+    <Compile Include="Fixed\CSharp7Features.cs" />
     <Compile Include="Fixed\EventRegistrationShowsWarning.cs" />
     <Compile Include="Fixed\AddingElementToListDoesNotShowException.cs" />
     <Compile Include="Fixed\ExceptionOnInterfaceMarkedAsUnnecessary.cs" />
@@ -50,6 +51,7 @@
     <Compile Include="Fixed\ExceptionsOfCtorNotConsidered.cs" />
     <Compile Include="Fixed\IgnoreWarningShouldWork.cs" />
     <Compile Include="Fixed\InsertingArgumentNullExceptionDocumentation.cs" />
+    <Compile Include="Fixed\NamedArguments.cs" />
     <Compile Include="Fixed\NameOfSupportedWithArgumentNullException.cs" />
     <Compile Include="Fixed\WrongWarningOnCtor.cs" />
     <Compile Include="Fixed\PropertyInPropertyInvocation.cs" />
@@ -70,6 +72,7 @@
     <Compile Include="Fixed\InnerExceptionNotBeingDetected.cs" />
     <Compile Include="Fixed\InterfaceAbstractExceptions.cs" />
     <Compile Include="Fixed\OptionalLinqCount.cs" />
+    <Compile Include="Fixed\DisableWarnings.cs" />
     <Compile Include="ThrowingSystemExceptionShowsWarning.cs" />
     <Compile Include="Fixed\RethrowInCatchClauseNotCorrectlyAnalyzed.cs" />
     <Compile Include="Fixed\WrongInnerExceptionWarning.cs" />

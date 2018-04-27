@@ -1,0 +1,19 @@
+﻿<?xml version="1.0"?>
+<package>
+    <metadata>
+        <id>ExceptionalDevs.Exceptional</id>
+        <version>0.13.0.0</version>
+        <title>Exceptional for ReSharper</title>
+        <description>Analyzes thrown and documented C# exceptions and suggests improvements. </description>
+        <authors>ExceptionalDevs</authors>
+        <projectUrl>https://github.com/CSharpAnalyzers/ExceptionalReSharper</projectUrl>
+        <copyright>Copyright &#x00A9; 2018 ExceptionalDevs</copyright>
+        <tags>Exception XMLdoc</tags>
+        <dependencies>
+            <dependency id="Wave" version="[12.0,13.0)" />
+        </dependencies>
+    </metadata>
+    <files>
+        <file src="..\src\Exceptional\bin\Release\ReSharper.Exceptional.dll" target="DotFiles" />
+    </files>
+</package>

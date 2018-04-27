@@ -16,7 +16,7 @@ namespace Exceptional.Playground
                 Console.WriteLine(exception.Message); // Warning: IOException not documented
             }
         }
-        
+
         public void Test02()
         {
             try
@@ -48,6 +48,34 @@ namespace Exceptional.Playground
             catch (Exception e) when (e is ArgumentNullException)
             {
                 // there shouldn't be any warnings in the catch
+            }
+        }
+
+        public void Test05()
+        {
+            try
+            {
+                throw new ArgumentNullException();
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e.Message);
+                throw; // one warning about un-documented Exception
+            }
+        }
+
+
+        /// <exception cref="Exception"></exception>
+        public void Test06()
+        {
+            try
+            {
+                throw new ArgumentNullException();
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e.Message);
+                throw; // no warnings
             }
         }
     }

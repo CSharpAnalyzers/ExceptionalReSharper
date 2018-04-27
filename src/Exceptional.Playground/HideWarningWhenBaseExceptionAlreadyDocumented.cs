@@ -15,14 +15,14 @@ namespace Exceptional.Playground
         /// <exception cref="DirectoryNotFoundException">The specified path is invalid, (for example, it is on an unmapped drive). </exception>
         public void Test1(int i)
         {
-          File.Open("a", FileMode.Open); // Hint: When IsDocumentationOfExceptionSubtypeSufficientForThrowStatements is enabled
+            File.Open("a", FileMode.Open); // Hint: When IsDocumentationOfExceptionSubtypeSufficientForThrowStatements is enabled
         }
 
         /// <exception cref="ArgumentException">Test. </exception>
         public void Test2(int i)
         {
             if (i == 0)
-              throw new ArgumentNullException(); // Hint: When IsDocumentationOfExceptionSubtypeSufficientForReferenceExpressions is enabled
+                throw new ArgumentNullException(); // Hint: When IsDocumentationOfExceptionSubtypeSufficientForReferenceExpressions is enabled
             throw new ArgumentException();
         }
     }
