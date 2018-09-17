@@ -8,7 +8,7 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>ReSharper.Exceptional</RootNamespace>
     <AssemblyName>ReSharper.Exceptional</AssemblyName>
-    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <NuGetPackageImportStamp>
     </NuGetPackageImportStamp>
@@ -54,7 +54,7 @@
     <Reference Include="WindowsBase" />
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="JetBrains.ReSharper.SDK" Version="2018.1.0" />
+    <PackageReference Include="JetBrains.ReSharper.SDK" Version="2018.2.3" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Analyzers\AnalyzerBase.cs" />
