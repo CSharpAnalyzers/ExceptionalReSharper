@@ -65,7 +65,7 @@ namespace ReSharper.Exceptional.QuickFixes
                 string.IsNullOrEmpty(insertedExceptionModel.ExceptionDescription) ||
                 insertedExceptionModel.ExceptionDescription.Contains("[MARKER]");
 
-            var exceptionDescription = copyExceptionDescription ? "Condition" : insertedExceptionModel.ExceptionDescription;
+            var exceptionDescription = copyExceptionDescription ? "Condition" : insertedExceptionModel.ExceptionDescription.Trim();
 
             var nameSuggestionsExpression = new NameSuggestionsExpression(new[] {exceptionDescription});
             var field = new TemplateField("name", nameSuggestionsExpression, 0);

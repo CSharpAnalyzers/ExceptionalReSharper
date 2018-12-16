@@ -57,15 +57,15 @@ namespace ReSharper.Exceptional.Models
             if (thrownException.ExceptionType == null)
                 return null;
 
-            var exceptionDescription = thrownException.ExceptionDescription;
+            var exceptionDescription = thrownException.ExceptionDescription.Trim();
 
             if (thrownException.ExceptionsOrigin is ThrowStatementModel)
             {
                 if (thrownException.ExceptionType.GetClrName().FullName == "System.ArgumentNullException")
-                    exceptionDescription = ArgumentNullExceptionDescription.CreateFrom(thrownException).GetDescription();
+                    exceptionDescription = ArgumentNullExceptionDescription.CreateFrom(thrownException).GetDescription().Trim();
             }
             else
-                exceptionDescription = Regex.Replace(exceptionDescription, "<paramref name=\"(.*?)\"/>", m => m.Groups[1].Value);
+                exceptionDescription = Regex.Replace(exceptionDescription, "<paramref name=\"(.*?)\"/>", m => m.Groups[1].Value).Trim();
 
             var exceptionDocumentation = string.IsNullOrEmpty(exceptionDescription)
                 ? string.Format("<exception cref=\"T:{0}\">" + Constants.ExceptionDescriptionMarker + ".</exception>{1}", thrownException.ExceptionType.GetClrName().FullName, Environment.NewLine)
