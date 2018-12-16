@@ -66,7 +66,7 @@ namespace ReSharper.Exceptional.Utilities
         /// <param name="variableName">A name for catch variable.</param>
         public ISpecificCatchClause CreateSpecificCatchClause(IDeclaredType exceptionType, IBlock catchBody, string variableName)
         {
-            var tryStatement = _factory.CreateStatement("try {} catch(Exception $0) {$2    // TODO: Handle the $1 $2}", variableName, exceptionType.GetClrName().FullName, Environment.NewLine) as ITryStatement;
+            var tryStatement = _factory.CreateStatement("try {} catch(Exception $0) {$2    // TODO: Handle the $1$2}", variableName, exceptionType.GetClrName().FullName, Environment.NewLine) as ITryStatement;
             if (tryStatement == null)
                 return null;
 
@@ -76,7 +76,7 @@ namespace ReSharper.Exceptional.Utilities
 
             if (catchBody == null)
             {
-                catchBody = _factory.CreateBlock("{$1    // TODO: Handle the $0 $1}",
+                catchBody = _factory.CreateBlock("{$1    // TODO: Handle the $0$1}",
                     exceptionType.GetClrName().FullName, Environment.NewLine);
             }
 
@@ -110,7 +110,7 @@ namespace ReSharper.Exceptional.Utilities
         /// <returns>The try statement. </returns>
         public ITryStatement CreateTryStatement(IDeclaredType exceptionType, string exceptionVariableName, ITreeNode context)
         {
-            var tryStatement = _factory.CreateStatement("try {} catch($0 $1) {$2    // TODO: Handle the $0 $2}",
+            var tryStatement = _factory.CreateStatement("try {} catch($0 $1) {$2    // TODO: Handle the $0$2}",
                 exceptionType.GetClrName().FullName, exceptionVariableName, Environment.NewLine) as ITryStatement;
             if (tryStatement == null)
                 return null;
