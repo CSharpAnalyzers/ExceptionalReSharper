@@ -110,8 +110,8 @@ namespace ReSharper.Exceptional.Utilities
         /// <returns>The try statement. </returns>
         public ITryStatement CreateTryStatement(IDeclaredType exceptionType, string exceptionVariableName, ITreeNode context)
         {
-            var tryStatement = _factory.CreateStatement("try {} catch($0 $1) {}",
-                exceptionType.GetClrName().FullName, exceptionVariableName) as ITryStatement;
+            var tryStatement = _factory.CreateStatement("try {} catch($0 $1) {$2    // TODO: Handle the $0 $2}",
+                exceptionType.GetClrName().FullName, exceptionVariableName, Environment.NewLine) as ITryStatement;
             if (tryStatement == null)
                 return null;
 
