@@ -26,7 +26,7 @@ namespace ReSharper.Exceptional.QuickFixes
 
         public override string Text
         {
-            get { return String.Format(Resources.QuickFixCatchException, Error.ThrownException.ExceptionType.GetClrName().ShortName); }
+            get { return String.Format(Resources.QuickFixCatchException, Error.ThrownException.ExceptionType.GetClrName().FullName); }
         }
 
         protected override Action<ITextControl> ExecutePsiTransaction(ISolution solution, IProgressIndicator progress)

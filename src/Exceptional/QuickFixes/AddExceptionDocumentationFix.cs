@@ -40,7 +40,7 @@ namespace ReSharper.Exceptional.QuickFixes
             get
             {
                 return String.Format(Resources.QuickFixInsertExceptionDocumentation,
-                    Error.ThrownException.ExceptionType.GetClrName().ShortName);
+                    Error.ThrownException.ExceptionType.GetClrName().FullName);
             }
         }
 

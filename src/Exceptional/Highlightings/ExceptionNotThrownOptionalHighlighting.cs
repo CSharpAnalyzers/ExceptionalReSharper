@@ -42,7 +42,7 @@ namespace ReSharper.Exceptional.Highlightings
             get
             {
                 return Constants.OptionalPrefix + String.Format(
-                    Resources.HighlightNotThrownDocumentedExceptions, ExceptionDocumentation.ExceptionType.GetClrName().ShortName);
+                    Resources.HighlightNotThrownDocumentedExceptions, ExceptionDocumentation.ExceptionType.GetClrName().FullName);
             }
         }
     }

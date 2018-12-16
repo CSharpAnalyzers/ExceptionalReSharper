@@ -38,7 +38,7 @@ namespace ReSharper.Exceptional.Highlightings
         {
             get
             {
-                return String.Format(Resources.HighlightNotThrownDocumentedExceptions, ExceptionDocumentation.ExceptionType.GetClrName().ShortName);
+                return String.Format(Resources.HighlightNotThrownDocumentedExceptions, ExceptionDocumentation.ExceptionType.GetClrName().FullName);
             }
         }
     }

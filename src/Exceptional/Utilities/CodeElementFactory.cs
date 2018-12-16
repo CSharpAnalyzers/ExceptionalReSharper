@@ -77,7 +77,7 @@ namespace ReSharper.Exceptional.Utilities
             if (catchBody == null)
             {
                 catchBody = _factory.CreateBlock("{$1    // TODO: Handle the $0 $1}",
-                    exceptionType.GetClrName().ShortName, Environment.NewLine);
+                    exceptionType.GetClrName().FullName, Environment.NewLine);
             }
 
             if (exceptionType != null)
@@ -111,7 +111,7 @@ namespace ReSharper.Exceptional.Utilities
         public ITryStatement CreateTryStatement(IDeclaredType exceptionType, string exceptionVariableName, ITreeNode context)
         {
             var tryStatement = _factory.CreateStatement("try {} catch($0 $1) {}", 
-                exceptionType.GetClrName().ShortName, exceptionVariableName) as ITryStatement;
+                exceptionType.GetClrName().FullName, exceptionVariableName) as ITryStatement;
             if (tryStatement == null) 
                 return null;
 
