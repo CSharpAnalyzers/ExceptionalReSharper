@@ -94,7 +94,7 @@ namespace ReSharper.Exceptional.Models
             var textRange = documentRange.TextRange;
 
             // TODO: Improve range finding
-            var tagStart = "<exception cref=\"T:";
+            var tagStart = "<exception cref=\"";
             var xml = tagStart + ExceptionTypeName + "\"";
             if (Accessor != null)
                 xml += " accessor=\"" + Accessor + "\"";
