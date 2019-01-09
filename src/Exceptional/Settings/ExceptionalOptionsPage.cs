@@ -1,11 +1,11 @@
 using System;
-using JetBrains.Annotations;
 using JetBrains.Application.UI.Components.UIApplication;
 using JetBrains.Application.UI.Options;
 using JetBrains.Application.UI.Options.OptionPages;
 using JetBrains.DataFlow;
 
 using ReSharper.Exceptional.Settings.Views;
+using yWorks.Support.Annotations;
 
 namespace ReSharper.Exceptional.Settings
 {

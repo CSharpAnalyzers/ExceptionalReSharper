@@ -4,8 +4,8 @@ namespace ReSharper.Exceptional.Models
     using System.Collections.ObjectModel;
     using System.Linq;
 
-    using JetBrains.Annotations;
     using JetBrains.ReSharper.Psi.CSharp.Tree;
+    using yWorks.Support.Annotations;
 
     /// <summary>
     /// Generates a description to use as the documentation of ArgumentNullException.
