@@ -57,26 +57,26 @@ namespace ReSharper.Exceptional.Models
             if (thrownException.ExceptionType == null)
                 return null;
 
-            var exceptionDescription = thrownException.ExceptionDescription;
+            var exceptionDescription = thrownException.ExceptionDescription.Trim();
 
             if (thrownException.ExceptionsOrigin is ThrowStatementModel)
             {
                 if (thrownException.ExceptionType.GetClrName().FullName == "System.ArgumentNullException")
-                    exceptionDescription = ArgumentNullExceptionDescription.CreateFrom(thrownException).GetDescription();
+                    exceptionDescription = ArgumentNullExceptionDescription.CreateFrom(thrownException).GetDescription().Trim();
             }
             else
-                exceptionDescription = Regex.Replace(exceptionDescription, "<paramref name=\"(.*?)\"/>", m => m.Groups[1].Value);
+                exceptionDescription = Regex.Replace(exceptionDescription, "<paramref name=\"(.*?)\"/>", m => m.Groups[1].Value).Trim();
 
             var exceptionDocumentation = string.IsNullOrEmpty(exceptionDescription)
-                ? string.Format("<exception cref=\"{0}\">" + Constants.ExceptionDescriptionMarker + ".</exception>{1}", thrownException.ExceptionType.GetClrName().ShortName, Environment.NewLine)
-                : string.Format("<exception cref=\"{0}\">{1}</exception>{2}", thrownException.ExceptionType.GetClrName().ShortName, exceptionDescription, Environment.NewLine);
+                ? string.Format("<exception cref=\"T:{0}\">" + Constants.ExceptionDescriptionMarker + ".</exception>{1}", thrownException.ExceptionType.GetClrName().FullName, Environment.NewLine)
+                : string.Format("<exception cref=\"T:{0}\">{1}</exception>{2}", thrownException.ExceptionType.GetClrName().FullName, exceptionDescription, Environment.NewLine);
 
             if (thrownException.ExceptionsOrigin.ContainingBlock is AccessorDeclarationModel)
             {
                 var accessor = ((AccessorDeclarationModel)thrownException.ExceptionsOrigin.ContainingBlock).Node.NameIdentifier.Name;
                 exceptionDocumentation = string.IsNullOrEmpty(exceptionDescription)
-                    ? string.Format("<exception cref=\"{0}\" accessor=\"{1}\">" + Constants.ExceptionDescriptionMarker + ".</exception>{2}", thrownException.ExceptionType.GetClrName().ShortName, accessor, Environment.NewLine)
-                    : string.Format("<exception cref=\"{0}\" accessor=\"{1}\">{2}</exception>{3}", thrownException.ExceptionType.GetClrName().ShortName, accessor, exceptionDescription, Environment.NewLine);
+                    ? string.Format("<exception cref=\"T:{0}\" accessor=\"{1}\">" + Constants.ExceptionDescriptionMarker + ".</exception>{2}", thrownException.ExceptionType.GetClrName().FullName, accessor, Environment.NewLine)
+                    : string.Format("<exception cref=\"T:{0}\" accessor=\"{1}\">{2}</exception>{3}", thrownException.ExceptionType.GetClrName().FullName, accessor, exceptionDescription, Environment.NewLine);
             }
 
             ChangeDocumentation(_documentationText + "\n" + exceptionDocumentation);

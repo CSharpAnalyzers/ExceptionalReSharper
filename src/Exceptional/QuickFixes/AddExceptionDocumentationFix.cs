@@ -40,7 +40,7 @@ namespace ReSharper.Exceptional.QuickFixes
             get
             {
                 return String.Format(Resources.QuickFixInsertExceptionDocumentation,
-                    Error.ThrownException.ExceptionType.GetClrName().ShortName);
+                    Error.ThrownException.ExceptionType.GetClrName().FullName);
             }
         }
 
@@ -65,7 +65,7 @@ namespace ReSharper.Exceptional.QuickFixes
                 string.IsNullOrEmpty(insertedExceptionModel.ExceptionDescription) ||
                 insertedExceptionModel.ExceptionDescription.Contains("[MARKER]");
 
-            var exceptionDescription = copyExceptionDescription ? "Condition" : insertedExceptionModel.ExceptionDescription;
+            var exceptionDescription = copyExceptionDescription ? "Condition" : insertedExceptionModel.ExceptionDescription.Trim();
 
             var nameSuggestionsExpression = new NameSuggestionsExpression(new[] {exceptionDescription});
             var field = new TemplateField("name", nameSuggestionsExpression, 0);
