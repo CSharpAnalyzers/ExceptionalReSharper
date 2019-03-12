@@ -5,7 +5,6 @@ namespace ReSharper.Exceptional.Models
     using System.Linq;
 
     using JetBrains.ReSharper.Psi.CSharp.Tree;
-    using yWorks.Support.Annotations;
 
     /// <summary>
     /// Generates a description to use as the documentation of ArgumentNullException.
@@ -39,7 +38,6 @@ namespace ReSharper.Exceptional.Models
         /// <returns>
         /// A new <see cref="ArgumentNullExceptionDescription"/> instance or <see langword="null"/> when the exception type is not an <see cref="System.ArgumentNullException"/>
         /// </returns>
-        [CanBeNull]
         public static ArgumentNullExceptionDescription CreateFrom(ThrownExceptionModel exception)
         {
             if ("System.ArgumentNullException".Equals(exception.ExceptionType.GetClrName().FullName))
