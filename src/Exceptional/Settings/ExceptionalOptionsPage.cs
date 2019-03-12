@@ -5,7 +5,6 @@ using JetBrains.Application.UI.Options.OptionPages;
 using JetBrains.DataFlow;
 
 using ReSharper.Exceptional.Settings.Views;
-using yWorks.Support.Annotations;
 
 namespace ReSharper.Exceptional.Settings
 {
@@ -14,7 +13,7 @@ namespace ReSharper.Exceptional.Settings
     {
         private const string Pid = "ExceptionalSettings";
 
-        public ExceptionalOptionsPage([NotNull] Lifetime lifetime, OptionsSettingsSmartContext settings, UIApplication environment)
+        public ExceptionalOptionsPage(Lifetime lifetime, OptionsSettingsSmartContext settings, UIApplication environment)
             : base(lifetime, environment, Pid)
         {
             if (lifetime == null)
