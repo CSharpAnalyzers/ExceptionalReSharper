@@ -2,7 +2,7 @@
 using System.Windows.Controls;
 using JetBrains.Application.Settings;
 using JetBrains.Application.UI.Options;
-using JetBrains.DataFlow;
+using JetBrains.Lifetimes;
 using JetBrains.UI.Controls;
 
 namespace ReSharper.Exceptional.Settings.Views

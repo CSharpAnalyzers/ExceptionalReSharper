@@ -11,7 +11,7 @@
     <tags>Exception XMLdoc</tags>
     <licenseUrl>https://github.com/CSharpAnalyzers/ExceptionalReSharper/blob/master/LICENSE.md</licenseUrl>
     <dependencies>
-      <dependency id="Wave" version="[183.0.0]" />
+      <dependency id="Wave" version="[191.0.0]" />
     </dependencies>
   </metadata>
   <files>
