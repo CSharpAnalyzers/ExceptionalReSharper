@@ -139,7 +139,8 @@ namespace ReSharper.Exceptional.Contexts
             if (IsValid() == false)
                 return;
 
-            if (invocationExpression == null)
+            var possibleNameofReferenceExpression = invocationExpression?.Parent?.Parent?.Parent?.FirstChild as IReferenceExpression;
+            if (invocationExpression == null || possibleNameofReferenceExpression?.NameIdentifier?.GetText() == "nameof")
                 return;
 
             Logger.Assert(BlockModelsStack.Count > 0, "[Exceptional] There is no block for invocation statement.");
