@@ -1,20 +1,26 @@
-﻿using System.Windows;
+﻿using System.ComponentModel;
+using System.Windows;
 using System.Windows.Controls;
 using JetBrains.Application.Settings;
 using JetBrains.Application.UI.Options;
+using JetBrains.Application.UI.Options.OptionPages;
 using JetBrains.Lifetimes;
 using JetBrains.UI.Controls;
 
 namespace ReSharper.Exceptional.Settings.Views
 {
     /// <summary>Interaction logic for SettingsView.xaml</summary>
-    public partial class SettingsView : UserControl
+    [OptionsPage(Pid, "Exceptional", typeof(UnnamedThemedIcons.ExceptionalSettings), ParentId = EnvironmentPage.Pid, Sequence = 100)]
+    public partial class SettingsView : UserControl, IOptionsPage
     {
+        private const string Pid = "ExceptionalSettings";
+
         private readonly OptionsSettingsSmartContext _settings;
         private readonly Lifetime _lifetime;
 
         public SettingsView(Lifetime lifetime, OptionsSettingsSmartContext settings)
         {
+            Id = Pid;
             InitializeComponent();
 
             _lifetime = lifetime;
@@ -22,7 +28,7 @@ namespace ReSharper.Exceptional.Settings.Views
 
             settings.SetBinding(lifetime, (ExceptionalSettings x) => x.DelegateInvocationsMayThrowExceptions,
                 DelegateInvocationsMayThrowExceptions, CheckBoxDisabledNoCheck2.IsCheckedLogicallyDependencyProperty);
-            
+
             settings.SetBinding(lifetime, (ExceptionalSettings x) => x.IsDocumentationOfExceptionSubtypeSufficientForThrowStatements,
                 IsDocumentationOfExceptionSubtypeSufficientForThrowStatements, CheckBoxDisabledNoCheck2.IsCheckedLogicallyDependencyProperty);
             settings.SetBinding(lifetime, (ExceptionalSettings x) => x.IsDocumentationOfExceptionSubtypeSufficientForReferenceExpressions,
@@ -59,19 +65,31 @@ namespace ReSharper.Exceptional.Settings.Views
             });
         }
 
+        public event PropertyChangedEventHandler PropertyChanged;
+
+        public bool OnOk()
+        {
+            // todo save settings
+            return true;
+        }
+
+        public string Id { get; }
+
+        private void ShowPredefinedOptionalMethodAndPropertyExceptions(object sender, RoutedEventArgs e)
+        {
+            MessageBox.Show(ExceptionalSettings.DefaultOptionalMethodExceptions);
+
+        }
+
         private void ShowPredefinedOptionalExceptions(object sender, RoutedEventArgs e)
         {
             MessageBox.Show(ExceptionalSettings.DefaultOptionalExceptions);
         }
 
-        private void ShowPredefinedOptionalMethodAndPropertyExceptions(object sender, RoutedEventArgs e)
-        {
-            MessageBox.Show(ExceptionalSettings.DefaultOptionalMethodExceptions);
-        }
-
         private void ShowPredefinedAccessorOverrides(object sender, RoutedEventArgs e)
-        {
+        { 
             MessageBox.Show(ExceptionalSettings.DefaultAccessorOverrides);
         }
+
     }
 }
