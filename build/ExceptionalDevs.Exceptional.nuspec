@@ -1,13 +1,13 @@
-﻿<?xml version="1.0"?>
+<?xml version="1.0"?>
 <package>
   <metadata>
-    <id>ExceptionalDevs.Exceptional</id>
-    <version>0.21.0.0</version>
-    <title>Exceptional for ReSharper</title>
+    <id>$PackageId$</id>
+    <version>0.22.0.0</version>
+    <title>$PackageTitle$</title>
     <description>Analyzes thrown and documented C# exceptions and suggests improvements. </description>
     <authors>ExceptionalDevs</authors>
     <projectUrl>https://github.com/CSharpAnalyzers/ExceptionalReSharper</projectUrl>
-    <copyright>Copyright &#x00A9; 2019 ExceptionalDevs</copyright>
+    <copyright>Copyright © 2019 ExceptionalDevs</copyright>
     <tags>Exception XMLdoc</tags>
     <licenseUrl>https://github.com/CSharpAnalyzers/ExceptionalReSharper/blob/master/LICENSE.md</licenseUrl>
     <dependencies>
