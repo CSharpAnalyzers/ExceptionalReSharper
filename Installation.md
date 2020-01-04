@@ -1,33 +1,51 @@
-How to use the source code: 
+# Local Build, Installation And Development Guide
 
-- **Before opening the solution, run the `build/00_RestorePackages.bat` file.** Explanation: The Exceptional.csproj needs a ReSharper msbuild target file which is available in the NuGet package. The NuGet package is not stored in the Git repository, this is why you need to restore the packages before you can build the project. 
+## Build And Pack Using Scripts
 
-How to debug the extension: 
-IMPORTANT: Uninstall the "Exceptional" extension first
+1. Change directory to the build directory `cd path\to\ExceptionalReSharper\build`
+2. Download dependencies `00_RestorePackages.bat`
+3. Trigger the build `01_Build.bat`
+4. Create a package `02_CreatePackages.bat`
+5. Now you should find a new package in `path\to\ExceptionalReSharper\build\Packages`
+6. Copy the *.nupkg file to your local repository
 
-1. Open the "Properties" of the "Exceptional" project in the solution
-2. Go to the "Debug" section, select "Debug" as configuration and change the following settings: 
-    - Start external program: Select your Visual Studio application "devenv.exe"
-    - Command line arguments: 
+## Build Using IDE
 
-		/ReSharper.Plugin "PATH/TO/SOURCES/Exceptional/bin/Debug/ReSharper.Exceptional.dll"
+1. Make sure allrequired packages are downloaded, e. g. by running `build\00_RestrePackages.bat`
+2. Build the project as usual
 
-How to release a new version: 
+## Download Latest Package from GitHub
 
-1. Update extension version in Exceptional.nuspec and AssemblyInfo.cs if necessary
-2. Rebuild the whole solution in "Release" configuration
-3. Run NuGet/Build.bat
-4. Upload new package version from NuGet/Packages
-5. Update extension version in Exceptional.nuspec and AssemblyInfo.cs to the next planned version 
-6. Push changes (also new NuGet package) to Git
+1. Open `https://github.com/ManticSic/ExceptionalReSharper/releases`
+2. Search for the latest release
+3. Download the attached *.nupkg file
+4. Copy the *.nupkg file to your local repository
 
-What to look for in pull requests: 
+## Setup your Environment
 
-- Check with community if feature makes sense
-- Check that the changes do not decrease performance (this is very important!)
+Your can find a full guide on [JetBrains.com](https://www.jetbrains.com/help/resharper/sdk/HowTo/Start/SetUpEnvironment.html).
 
-Log files to find problem why exception crashed:
+### Setup the IDE
 
-- The ReSharper log files can be found here: 
+1. Install ReSharper to a VS hive
+2. Run the experimental hive
+3. Add a local ReSharper Package Source
 
-	C:\Users\USERNAME\AppData\Local\JetBrains\ReSharper\v8.2\ExceptionStorage
+### Add a local ReSharper Package Source
+
+1. Open Visual Studio
+2. Open ReSharper Extension Manager
+3. Open Options
+4. Add a new package source
+   * Name: local
+   * Source: `path\to\a\local\directory`, e.g. `path\to\ExceptionalReSharper\build\Packages`
+5. Save 
+
+### Notes
+
+* You have to reinstall the plugin on changes
+* Instead of reinstalling the plugin, you can replace `ReSharper.Exceptional.dll` directly in `C:\Users\%username%\AppData\Local\JetBrains\Installations\{ReSharperInstallation}` with the new assembly in `path\to\ExceptionalReSharper\src\Exceptional\bin\{configuration}`
+
+## Running and Debugging
+
+Please read this [guide](https://www.jetbrains.com/help/resharper/sdk/Extensions/Plugins/Debugging.html).
