@@ -32,9 +32,11 @@ jobs:
       - name: Setup Environment Variables
         run: |
           $CurrentVersion = .\build\get-version.ps1
-          $NupkgFile = ".\build\packages\${env:PACKAGE_ID}\.${CurrentVersion}.nupkg"
+          $NupkgFileName = "${env:PACKAGE_ID}.${CurrentVersion}.nupkg"
+          $NupkgFile = ".\build\packages\${NupkgFileName}"
           $TagName = "v${CurrentVersion}_nightly"
           echo "::set-env name=VERSION::$CurrentVersion"
+          echo "::set-env name=NUPKG_FILE_NAME::$NupkgFileName"
           echo "::set-env name=NUPKG_FILE::$NupkgFile"
           echo "::set-env name=TAG_NAME::$TagName"
         
@@ -55,22 +57,27 @@ jobs:
         run: nuget pack .\build\ExceptionalDevs.Exceptional.nuspec -OutputDirectory .\build\packages -properties "PackageId=${env:PACKAGE_ID};PackageTitle=${env:PACKAGE_TITLE}"
 
       - name: Release
+        id: create_release
         if: success()
-        run: |
-          $Uri = "https://api.github.com/repos/${env:GITHUB_REPOSITORY}/releases"
-          $Body = @{
-            "tag_name" = ${env:TAG_NAME}
-            "name" = "Nightly Build (${env:VERSION})"
-            "prerelease" = $true
-          }
-          $Headers = @{
-            "Authorization" = "token ${env:token}"
-          }
-          $JsonBody = $Body | ConvertTo-Json -Depth 4
-          Invoke-WebRequest -Method "Post" -Uri $Uri -Body $JsonBody -Headers $Headers
+        uses: actions/create-release@v1
+        with:
+          tag_name: ${{ env.TAG_NAME }}
+          release_name: "Nightly Build (${{ env.VERSION }})"
+          draft: false
+          prerelease: true
         env:
-          token: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         
+      - name: Upload Release Asset
+        uses: actions/upload-release-asset@v1.0.1
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
+          asset_path: ${{ env.NUPKG_FILE }}
+          asset_name:  ${{ env.NUPKG_FILE_NAME }}
+          asset_content_type: application/octet-stream
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      
       - name: Update nightly.rev
         if: success()
         run: .\build\update-nightly-rev.ps1
