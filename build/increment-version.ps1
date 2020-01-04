@@ -14,6 +14,6 @@ $NewRevision = $OldVersion.Revision + $Incrementation.Revision
 
 $NewVersion = New-Object -TypeName Version -ArgumentList ($NewMajor, $NewMinor, $NewBuild, $NewRevision)
 
-$xml = [xml](Get-Content $NuspecFile)
-$xml.package.metadata.version = $NewVersion.ToString()
-$xml.Save($NuspecFile)
+$Xml = [xml](Get-Content $NuspecFile)
+$Xml.package.metadata.version = $NewVersion.ToString()
+$Xml.Save($NuspecFile)

@@ -1,7 +1,6 @@
 $ScriptDir = Split-Path $script:MyInvocation.MyCommand.Path
 $NightlyRevFile = Join-Path -Path $ScriptDir -ChildPath nightly.rev
 
-
 $PreviousHash = git rev-parse HEAD~1
 $HashOfLatestBuild = Get-Content -Path $NightlyRevFile -ErrorAction SilentlyContinue
 
