@@ -49,3 +49,9 @@ Your can find a full guide on [JetBrains.com](https://www.jetbrains.com/help/res
 ## Running and Debugging
 
 Please read this [guide](https://www.jetbrains.com/help/resharper/sdk/Extensions/Plugins/Debugging.html).
+
+## Troubleshooting
+
+### I cannot install my local version
+
+Uninstall previous installations of Exceptional for ReSharper and clear `C:\Users\%username%\AppData\Local\JetBrains\plugins` and `C:\Users\%username%\AppData\Local\NuGet\Cache`, after that restart VS.
