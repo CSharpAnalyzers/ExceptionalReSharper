@@ -29,22 +29,27 @@ jobs:
         if: success()
         run: .\build\precondition.ps1
         
-      - name: Setup Environment Variables
-        run: |
-          $CurrentVersion = .\build\get-version.ps1
-          $NupkgFileName = "${env:PACKAGE_ID}.${CurrentVersion}.nupkg"
-          $NupkgFile = ".\build\packages\${NupkgFileName}"
-          $TagName = "v${CurrentVersion}_nightly"
-          echo "::set-env name=VERSION::$CurrentVersion"
-          echo "::set-env name=NUPKG_FILE_NAME::$NupkgFileName"
-          echo "::set-env name=NUPKG_FILE::$NupkgFile"
-          echo "::set-env name=TAG_NAME::$TagName"
-        
       - name: Setup MSBuild
         uses: warrenbuckley/Setup-MSBuild@v1
         
       - name: Setup Nuget
         uses: warrenbuckley/Setup-Nuget@v1
+
+      - name: Setup SemVer
+        run: |
+          nuget install semver -Version 2.0.6
+        
+      - name: Setup Environment Variables
+        run: |
+          Add-Type -Path .\Semver.2.0.6\lib\netstandard1.1\Semver.dll
+          $Version = .\build\get-version.ps1
+          $NupkgFileName = "${env:PACKAGE_ID}.${Version}.nupkg"
+          $NupkgFile = ".\build\packages\${NupkgFileName}"
+          $TagName = "v${Version}"
+          echo "::set-env name=VERSION::$Version"
+          echo "::set-env name=NUPKG_FILE_NAME::$NupkgFileName"
+          echo "::set-env name=NUPKG_FILE::$NupkgFile"
+          echo "::set-env name=TAG_NAME::$TagName"
       
       - name: Build
         if: success()
@@ -54,7 +59,7 @@ jobs:
 
       - name: Pack
         if: success()
-        run: nuget pack .\build\ExceptionalDevs.Exceptional.nuspec -OutputDirectory .\build\packages -properties "PackageId=${env:PACKAGE_ID};PackageTitle=${env:PACKAGE_TITLE}"
+        run: nuget pack .\build\ExceptionalDevs.Exceptional.nuspec -OutputDirectory .\build\packages -properties "PackageId=${env:PACKAGE_ID};PackageTitle=${env:PACKAGE_TITLE}" -Version ${env:VERSION}
 
       - name: Release
         id: create_release
@@ -81,10 +86,6 @@ jobs:
       - name: Update nightly.rev
         if: success()
         run: .\build\update-nightly-rev.ps1
-      
-      - name: Increment Version
-        if: success()
-        run: .\build\increment-version.ps1 0.0.0.1
 
       - name: Add & Commit
         if: success()
