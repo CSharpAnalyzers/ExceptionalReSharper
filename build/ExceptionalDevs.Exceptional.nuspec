@@ -2,7 +2,7 @@
 <package>
   <metadata>
     <id>$PackageId$</id>
-    <version>0.22.0.0</version>
+    <version>0.22.0</version>
     <title>$PackageTitle$</title>
     <description>Analyzes thrown and documented C# exceptions and suggests improvements. </description>
     <authors>ExceptionalDevs</authors>
