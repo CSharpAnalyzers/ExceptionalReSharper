@@ -1,1 +1,0 @@
-nuget.exe pack ExceptionalDevs.Exceptional.nuspec -OutputDirectory "Packages" -properties PackageId="ExceptionalDevs.Exceptional";PackageTitle="Exceptional for ReSharper"

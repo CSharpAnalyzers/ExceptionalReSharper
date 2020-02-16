@@ -1,1 +1,0 @@
-nuget.exe restore ../src/Exceptional.sln
