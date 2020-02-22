@@ -1,52 +1,29 @@
 # Local Build, Installation And Development Guide
 
-## Build And Pack Using Scripts
+## Local Build
 
 1. Change directory to the build directory `cd path\to\ExceptionalReSharper\build`
-2. Download dependencies `00_RestorePackages.bat`
-3. Trigger the build `01_Build.bat`
-4. Create a package `02_CreatePackages.bat`
+2. Run `build.ps1`
 5. Now you should find a new package in `path\to\ExceptionalReSharper\build\Packages`
 6. Copy the *.nupkg file to your local repository
 
-## Build Using IDE
+## Development Build
 
-1. Make sure allrequired packages are downloaded, e. g. by running `build\00_RestrePackages.bat`
-2. Build the project as usual
+### Setup your Environment
 
-## Download Latest Package from GitHub
+You can find a full guide on [JetBrains.com](https://www.jetbrains.com/help/resharper/sdk/HowTo/Start/SetUpEnvironment.html).
 
-1. Open `https://github.com/ManticSic/ExceptionalReSharper/releases`
-2. Search for the latest release
-3. Download the attached *.nupkg file
-4. Copy the *.nupkg file to your local repository
+1. Install ReSharper to a experimental Visual Studio hive
+2. Install Exceptional to the hive
+3. Configure Debuging (`Exceptional project -> Properties -> Debug`)
+    1. Change `Start action` to `Start external program` and enter `devenv.exe` (Visual Studio, `Common7/\IDE\devenv.exe`)
+    2. Add `Command line arguments`: `/rootSufix {name of your experimental hive}`
+    3. Optional: Add `/ReSharper.Internal` and a path to a testing project
+4. Add `<PropertyGroup><HostFullIdentifier>{ReSharper installation of the experimental hive}</HostFullIdentifier></PropertyGroup>`
 
-## Setup your Environment
+Running MSBuild (e. g. by starting debugging) the assembly is copied to your ReSharper installation. Please see the `Build` log in your `Output` window for possible errors (e. g. ReSharper isntallation cannot be found).
 
-Your can find a full guide on [JetBrains.com](https://www.jetbrains.com/help/resharper/sdk/HowTo/Start/SetUpEnvironment.html).
-
-### Setup the IDE
-
-1. Install ReSharper to a VS hive
-2. Run the experimental hive
-3. Add a local ReSharper Package Source
-
-### Add a local ReSharper Package Source
-
-1. Open Visual Studio
-2. Open ReSharper Extension Manager
-3. Open Options
-4. Add a new package source
-   * Name: local
-   * Source: `path\to\a\local\directory`, e.g. `path\to\ExceptionalReSharper\build\Packages`
-5. Save 
-
-### Notes
-
-* You have to reinstall the plugin on changes
-* Instead of reinstalling the plugin, you can replace `ReSharper.Exceptional.dll` directly in `C:\Users\%username%\AppData\Local\JetBrains\Installations\{ReSharperInstallation}` with the new assembly in `path\to\ExceptionalReSharper\src\Exceptional\bin\{configuration}`
-
-## Running and Debugging
+## Debugging
 
 Please read this [guide](https://www.jetbrains.com/help/resharper/sdk/Extensions/Plugins/Debugging.html).
 
