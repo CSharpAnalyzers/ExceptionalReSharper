@@ -26,7 +26,7 @@ namespace ReSharper.Exceptional.Highlightings
     [ConfigurableSeverityHighlighting(Id, CSharpLanguage.Name)]
     public class ExceptionNotDocumentedHighlighting : ExceptionNotDocumentedOptionalHighlighting
     {
-        public const string Id = "ExceptionNotDocumented";
+        public new const string Id = "ExceptionNotDocumented";
 
         /// <summary>Initializes a new instance of the <see cref="ExceptionNotDocumentedHighlighting"/> class. </summary>
         /// <param name="thrownException">The thrown exception. </param>

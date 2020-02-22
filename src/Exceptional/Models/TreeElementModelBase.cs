@@ -23,7 +23,7 @@ namespace ReSharper.Exceptional.Models
 
         protected CSharpElementFactory GetElementFactory()
         {
-            return CSharpElementFactory.GetInstance(AnalyzeUnit.GetPsiModule());
+            return CSharpElementFactory.GetInstance(AnalyzeUnit.Node);
         }
     }
 }

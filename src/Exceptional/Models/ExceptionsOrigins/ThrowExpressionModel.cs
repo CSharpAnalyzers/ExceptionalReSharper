@@ -120,10 +120,10 @@ namespace ReSharper.Exceptional.Models.ExceptionsOrigins
 
             if (objectCreationExpressionNode.Arguments.Count == 0)
             {
-                var messageExpression = CSharpElementFactory.GetInstance(AnalyzeUnit.GetPsiModule())
+                var messageExpression = CSharpElementFactory.GetInstance(AnalyzeUnit.Node)
                     .CreateExpressionAsIs("\"See the inner exception for details.\"");
 
-                var messageArgument = CSharpElementFactory.GetInstance(AnalyzeUnit.GetPsiModule())
+                var messageArgument = CSharpElementFactory.GetInstance(AnalyzeUnit.Node)
                     .CreateArgument(ParameterKind.VALUE, messageExpression);
 
                 messageArgument = objectCreationExpressionNode.AddArgumentAfter(messageArgument, null);
@@ -133,10 +133,10 @@ namespace ReSharper.Exceptional.Models.ExceptionsOrigins
             {
                 var lastArgument = objectCreationExpressionNode.ArgumentList.Arguments.Last();
 
-                var innerExceptionExpression = CSharpElementFactory.GetInstance(AnalyzeUnit.GetPsiModule())
+                var innerExceptionExpression = CSharpElementFactory.GetInstance(AnalyzeUnit.Node)
                     .CreateExpressionAsIs(variableName);
 
-                var innerExpressionArgument = CSharpElementFactory.GetInstance(AnalyzeUnit.GetPsiModule())
+                var innerExpressionArgument = CSharpElementFactory.GetInstance(AnalyzeUnit.Node)
                     .CreateArgument(ParameterKind.VALUE, innerExceptionExpression);
 
                 innerExpressionArgument = objectCreationExpressionNode.AddArgumentAfter(innerExpressionArgument, lastArgument);
