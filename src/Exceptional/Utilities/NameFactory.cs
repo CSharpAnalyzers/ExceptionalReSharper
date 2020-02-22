@@ -1,3 +1,5 @@
+using System;
+using System.Linq;
 using JetBrains.Application.Shell;
 using JetBrains.ReSharper.Psi;
 using JetBrains.ReSharper.Psi.Naming.Extentions;
@@ -31,7 +33,14 @@ namespace ReSharper.Exceptional.Utilities
             namesCollection.Add(exceptionType, entryOptions);
             namesCollection.Prepare(policy.NamingRule, ScopeKind.Common, new SuggestionOptions());
 
-            return namesCollection.FirstName();
+            try
+            {
+                return namesCollection.GetRoots().FirstOrDefault()?.GetFinalPresentation() ?? String.Empty;
+            }
+            catch (ArgumentNullException)
+            {
+                return String.Empty;
+            }
         }
     }
 }
