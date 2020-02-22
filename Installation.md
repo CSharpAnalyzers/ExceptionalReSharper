@@ -16,12 +16,12 @@ You can find a full guide on [JetBrains.com](https://www.jetbrains.com/help/resh
 1. Install ReSharper to a experimental Visual Studio hive
 2. Install Exceptional to the hive
 3. Configure Debuging (`Exceptional project -> Properties -> Debug`)
-    1. Change `Start action` to `Start external program` and enter `devenv.exe` (Visual Studio, `Common7/\IDE\devenv.exe`)
-    2. Add `Command line arguments`: `/rootSufix {name of your experimental hive}`
+    1. Change `Start action` to `Start external program` and enter `devenv.exe` (Visual Studio, `Common7\IDE\devenv.exe`)
+    2. Add `Command line arguments`: `/rootSuffix {name of your experimental hive}`
     3. Optional: Add `/ReSharper.Internal` and a path to a testing project
 4. Add `<PropertyGroup><HostFullIdentifier>{ReSharper installation of the experimental hive}</HostFullIdentifier></PropertyGroup>`
 
-Running MSBuild (e. g. by starting debugging) the assembly is copied to your ReSharper installation. Please see the `Build` log in your `Output` window for possible errors (e. g. ReSharper isntallation cannot be found).
+Running MSBuild (e. g. by starting debugging) will copy the assembly to your ReSharper installation. Please see the `Build` log in your `Output` window for possible errors (e. g. ReSharper installation cannot be found).
 
 ## Debugging
 
