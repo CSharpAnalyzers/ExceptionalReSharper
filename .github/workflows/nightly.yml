@@ -1,9 +1,5 @@
 name: Nightly Build
 
-env:
-  PACKAGE_ID: ExceptionalDevs.Exceptional.Nightly
-  PACKAGE_TITLE: Exceptional for ReSharper (Nightly)
-
 on:
   repository_dispatch:
   push:
@@ -35,70 +31,43 @@ jobs:
       - name: Setup Nuget
         uses: warrenbuckley/Setup-Nuget@v1
 
-      - name: Setup SemVer
+      - name: Setup Git
         run: |
-          nuget install semver -Version 2.0.6
-        
-      - name: Setup Environment Variables
-        run: |
-          Add-Type -Path .\Semver.2.0.6\lib\netstandard1.1\Semver.dll
-          $Version = .\build\get-version.ps1
-          $NupkgFileName = "${env:PACKAGE_ID}.${Version}.nupkg"
-          $NupkgFile = ".\build\packages\${NupkgFileName}"
-          $TagName = "v${Version}"
-          echo "::set-env name=VERSION::$Version"
-          echo "::set-env name=NUPKG_FILE_NAME::$NupkgFileName"
-          echo "::set-env name=NUPKG_FILE::$NupkgFile"
-          echo "::set-env name=TAG_NAME::$TagName"
+          git config user.email actions@github.com
+          git config user.name "GitHub Actions"
       
       - name: Build
         if: success()
+        run: .\build\build.ps1 nightly Release pack 0
+
+      - name: Find NUPKG
+        if: success()
         run: |
-          nuget restore ./src/Exceptional.sln
-          msbuild ./src/Exceptional.sln /p:Configuration=Release /t:rebuild
+          $filesInPackDir = (Get-ChildItem -Path pack | Sort-Object -Property @{Expression="Name"; Descending=$true})
+          $nupkgFile = $filesInPackDir[0].FullName
+          echo "::set-env name=NUPKG_FILE::$nupkgFile"
 
-      - name: Pack
-        if: success()
-        run: nuget pack .\build\ExceptionalDevs.Exceptional.nuspec -OutputDirectory .\build\packages -properties "PackageId=${env:PACKAGE_ID};PackageTitle=${env:PACKAGE_TITLE}" -Version ${env:VERSION}
-
-      - name: Release
-        id: create_release
-        if: success()
-        uses: actions/create-release@v1
-        with:
-          tag_name: ${{ env.TAG_NAME }}
-          release_name: "Nightly Build (${{ env.VERSION }})"
-          draft: false
-          prerelease: true
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        
-      - name: Upload Release Asset
-        uses: actions/upload-release-asset@v1.0.1
-        with:
-          upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: ${{ env.NUPKG_FILE }}
-          asset_name:  ${{ env.NUPKG_FILE_NAME }}
-          asset_content_type: application/octet-stream
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      
       - name: Update nightly.rev
         if: success()
         run: .\build\update-nightly-rev.ps1
 
-      - name: Add & Commit
+      - name: Increment version
+        if: success()
+        run: .\build\increment-build-version.ps1
+
+      - name: Git Commit
         if: success()
         run: |
-          git config user.email actions@github.com
-          git config user.name "GitHub Actions"
-          git commit -a -m "Nightly Commit" --author="GitHub Actions<actions@github.com>"
-          git status
+          git add ./build/ExceptionalDevs.Exceptional.nuspec
+          git add ./build/nightly.rev
+          git commit -m "Nightly Commit" --author="GitHub Actions<actions@github.com>"
 
       - name: Git Push
         if: success()
         uses: ad-m/github-push-action@master
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
-        
-      
+
+      - name: Publish
+        if: success()
+        run: nuget push ${{ env.NUPKG_FILE }} ${{ secrets.JETBRAINS_TOKEN }} -source https://plugins.jetbrains.com

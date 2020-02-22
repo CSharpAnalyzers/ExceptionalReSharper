@@ -1,9 +1,9 @@
-<?xml version="1.0"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <package>
   <metadata>
-    <id>$PackageId$</id>
-    <version>0.22.0</version>
-    <title>$PackageTitle$</title>
+    <id>ExceptionalDevs.Exceptional</id>
+    <version>0.23.0</version>
+    <title>Exceptional for ReSharper</title>
     <description>Analyzes thrown and documented C# exceptions and suggests improvements. </description>
     <authors>ExceptionalDevs</authors>
     <projectUrl>https://github.com/CSharpAnalyzers/ExceptionalReSharper</projectUrl>
@@ -15,6 +15,7 @@
     </dependencies>
   </metadata>
   <files>
-    <file src="..\src\Exceptional\bin\Release\ReSharper.Exceptional.dll" target="DotFiles" />
+    <file src="..\src\Exceptional\bin\$configuration$\ReSharper.Exceptional.dll" target="DotFiles" />
+    <file src="..\src\Exceptional\bin\$configuration$\ReSharper.Exceptional.pdb" target="DotFiles" />
   </files>
 </package>
