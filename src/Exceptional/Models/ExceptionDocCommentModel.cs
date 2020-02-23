@@ -67,21 +67,13 @@ namespace ReSharper.Exceptional.Models
             var psiModule = DocumentationBlock.Node.GetPsiModule();
 
             if (exceptionReference == null)
-#if R10
                 return TypeFactory.CreateTypeByCLRName(exceptionType, psiModule);
-#else
-                return TypeFactory.CreateTypeByCLRName(exceptionType, psiModule, psiModule.GetContextFromModule());
-#endif
             else
             {
                 var resolveResult = exceptionReference.Resolve();
                 var declaredType = resolveResult.DeclaredElement as ITypeElement;
                 if (declaredType == null)
-#if R10
                     return TypeFactory.CreateTypeByCLRName(exceptionType, psiModule);
-#else
-                    return TypeFactory.CreateTypeByCLRName(exceptionType, psiModule, psiModule.GetContextFromModule());
-#endif
                 else
                     return TypeFactory.CreateType(declaredType);
             }

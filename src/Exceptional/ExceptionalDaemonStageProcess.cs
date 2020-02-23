@@ -1,16 +1,13 @@
 using JetBrains.DocumentModel;
 
 using System;
-using JetBrains.Application.Progress;
 using JetBrains.Application.Settings;
 using JetBrains.ReSharper.Daemon.CSharp.Stages;
 using JetBrains.ReSharper.Psi;
 using JetBrains.ReSharper.Psi.CSharp;
 using JetBrains.ReSharper.Psi.CSharp.Tree;
 
-#if R9 || R10
 using JetBrains.ReSharper.Feature.Services.Daemon;
-#endif
 
 namespace ReSharper.Exceptional
 {

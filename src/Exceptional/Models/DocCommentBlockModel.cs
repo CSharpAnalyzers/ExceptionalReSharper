@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text.RegularExpressions;
 using JetBrains.Application.Progress;
-using JetBrains.ReSharper.Psi;
 using JetBrains.ReSharper.Psi.CodeStyle;
 using JetBrains.ReSharper.Psi.CSharp.Tree;
 using JetBrains.ReSharper.Psi.ExtensionsAPI;
@@ -15,21 +14,11 @@ using ReSharper.Exceptional.Models.ExceptionsOrigins;
 namespace ReSharper.Exceptional.Models
 {
     /// <summary>Stores data about processed <see cref="IDocCommentBlockNode"/>. </summary>
-#if R8
-    internal class DocCommentBlockModel : TreeElementModelBase<IDocCommentBlockNode>
-#endif
-#if R9 || R10
     internal class DocCommentBlockModel : TreeElementModelBase<IDocCommentBlock>
-#endif
     {
         private string _documentationText;
 
-#if R8
-        public DocCommentBlockModel(IAnalyzeUnit analyzeUnit, IDocCommentBlockNode docCommentNode)
-#endif
-#if R9 || R10
         public DocCommentBlockModel(IAnalyzeUnit analyzeUnit, IDocCommentBlock docCommentNode)
-#endif
             : base(analyzeUnit, docCommentNode)
         {
             References = new List<IReference>();

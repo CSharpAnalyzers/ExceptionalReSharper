@@ -51,22 +51,15 @@ namespace ReSharper.Exceptional.Contexts
 
         }
 
-#if R8
-        public void Process(IDocCommentBlockNode docCommentBlockNode)
-#endif
-#if R9 || R10
         public void Process(IDocCommentBlock docCommentBlockNode)
-#endif
         {
 
         }
 
-#if R2017_1
         public void Process(IThrowExpression throwExpression)
         {
             
         }
-#endif
 
         public void EnterAccessor(IAccessorDeclaration accessorDeclarationNode)
         {

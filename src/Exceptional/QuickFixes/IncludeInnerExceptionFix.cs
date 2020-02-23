@@ -1,18 +1,11 @@
 using System;
 using JetBrains.Application.Progress;
 using JetBrains.ProjectModel;
-using JetBrains.ReSharper.Feature.Services.Bulbs;
 using JetBrains.ReSharper.Psi.CSharp.Tree;
 using JetBrains.TextControl;
 using ReSharper.Exceptional.Highlightings;
 using ReSharper.Exceptional.Utilities;
-
-#if R8
-using JetBrains.ReSharper.Intentions.Extensibility;
-#endif
-#if R9 || R10
 using JetBrains.ReSharper.Feature.Services.QuickFixes;
-#endif
 
 namespace ReSharper.Exceptional.QuickFixes
 {

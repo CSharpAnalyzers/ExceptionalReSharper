@@ -1,11 +1,5 @@
 using JetBrains.Util;
-
-#if R8
-using JetBrains.ReSharper.Intentions.Extensibility;
-#endif
-#if R9 || R10
 using JetBrains.ReSharper.Feature.Services.QuickFixes;
-#endif
 
 namespace ReSharper.Exceptional.QuickFixes
 {

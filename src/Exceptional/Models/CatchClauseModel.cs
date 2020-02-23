@@ -131,21 +131,12 @@ namespace ReSharper.Exceptional.Models
         {
             if (Node.ExceptionType == null)
                 return false;
-#if R9 || R10
 
-            bool hasConditionalClause = 
-#if !R2016_3 && !R2017_1
-            Node.ConditionClause?.WhenKeyword != null;
-#else
-            Node.Filter != null;
-#endif
+            bool hasConditionalClause = Node.Filter != null;
             bool rethrows = ContainsRethrowStatement(Node.Body);
             bool isSystemException = Node.ExceptionType.GetClrName().FullName == "System.Exception";
 
             return isSystemException && !hasConditionalClause && !rethrows;
-#else
-            return Node.ExceptionType.GetClrName().FullName == "System.Exception";
-#endif
         }
 
         private bool ContainsRethrowStatement(IBlock body)

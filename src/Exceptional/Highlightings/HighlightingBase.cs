@@ -1,16 +1,6 @@
 using System;
-using JetBrains.ReSharper.Daemon;
-using JetBrains.ReSharper.Daemon.CSharp.Errors;
-using JetBrains.ReSharper.Psi.CSharp;
-using ReSharper.Exceptional;
-using ReSharper.Exceptional.Highlightings;
-using ReSharper.Exceptional.Models;
 using JetBrains.DocumentModel;
-
-#if R9 || R10
-using JetBrains.ReSharper.Feature.Services.CSharp.Daemon;
 using JetBrains.ReSharper.Feature.Services.Daemon;
-#endif
 
 namespace ReSharper.Exceptional.Highlightings
 {
