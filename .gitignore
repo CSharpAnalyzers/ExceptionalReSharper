@@ -33,3 +33,5 @@ _ReSharper*/
 .vs/
 .vscode/
 pack/
+
+!build/MSBuildTasks/**

@@ -67,6 +67,11 @@
       <IncludeAssets>runtime; build; native; contentfiles; analyzers</IncludeAssets>
       <PrivateAssets>all</PrivateAssets>
     </PackageReference>
+    <PackageReference Include="MSBuildTasks">
+      <Version>1.5.0.235</Version>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+      <PrivateAssets>all</PrivateAssets>
+    </PackageReference>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Analyzers\AnalyzerBase.cs" />
@@ -166,5 +171,12 @@
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup />
+  <PropertyGroup>
+    <MSBuildCommunityTasksPath>$(SolutionDir)\..\build\MSBuildTasks</MSBuildCommunityTasksPath>
+  </PropertyGroup>
+  <Import Project="$(MSBuildCommunityTasksPath)\MSBuild.Community.Tasks.Targets" />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <Target Name="UpdateAssemblyInfo">
+    <AssemblyInfo CodeLanguage="CS" OutputFile="$(MSBuildProjectDirectory)\Properties\AssemblyInfo.cs" AssemblyTitle="$(Title)" AssemblyDescription="$(Description)" AssemblyProduct="Exceptional" AssemblyCompany="$(Authors)" AssemblyCopyright="$(Copyright)" AssemblyVersion="$(Version)" ComVisible="false" Guid="3628d589-e118-4c2c-bd8e-fdef6b6ed07c" />
+  </Target>
 </Project>

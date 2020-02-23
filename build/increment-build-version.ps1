@@ -1,18 +1,20 @@
 $workspace = ([System.IO.FileInfo] $PSCommandPath).Directory.Parent.FullName
-$buildDirectory = Join-Path $workspace "build"
-$nuspecFile = Join-Path $buildDirectory "ExceptionalDevs.Exceptional.nuspec"
+$solutionDirectory = Join-Path $workspace "src"
+$solutionPath = Join-Path $solutionDirectory "Exceptional.sln"
+$projectDirectory = Join-Path $solutionDirectory "Exceptional"
+$directoryBuildPropertiesPath = Join-Path $projectDirectory "Directory.Build.props"
 
-$xml = New-Object -TypeName System.Xml.XmlDocument
-$xml.Load($nuspecFile)
+# use object initialization to be able to read special characters like ©
+$directoryBuildProperties = New-Object -TypeName System.Xml.XmlDocument
+$directoryBuildProperties.Load($directoryBuildPropertiesPath)
 
-$oldVersion = [version]::Parse($xml.package.metadata.version)
+$oldVersion = [version]::Parse($directoryBuildProperties.Project.PropertyGroup.Version)
 
-$newMajor = $oldVersion.Major
-$newMinor = $oldVersion.Minor
-$newBuild = $oldVersion.Build + 1
+$newBuildVersion = $oldVersion.Build + 1
 
-$newVersion = [version]::new($newMajor, $newMinor, $newBuild)
+$newVersion = [version]::new($oldVersion.Major, $oldVersion.Minor, $newBuildVersion, 0)
 
-$xml.package.metadata.version = $newVersion.ToString()
+$directoryBuildProperties.Project.PropertyGroup.Version = $newVersion.ToString()
+$directoryBuildProperties.Save($directoryBuildPropertiesPath)
 
-$xml.Save($nuspecFile)
+MSBuild $solutionPath /t:Exceptional:UpdateAssemblyInfo
