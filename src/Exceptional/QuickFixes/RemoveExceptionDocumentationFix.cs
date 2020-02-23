@@ -1,13 +1,9 @@
 using System;
 using JetBrains.Application.Progress;
 using JetBrains.ProjectModel;
-using JetBrains.ReSharper.Feature.Services.Bulbs;
 using JetBrains.TextControl;
 using ReSharper.Exceptional.Highlightings;
-
-#if R9 || R10
 using JetBrains.ReSharper.Feature.Services.QuickFixes;
-#endif
 
 namespace ReSharper.Exceptional.QuickFixes
 {

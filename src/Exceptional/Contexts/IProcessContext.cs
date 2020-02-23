@@ -23,16 +23,8 @@ namespace ReSharper.Exceptional.Contexts
         void Process(ICatchVariableDeclaration catchVariableDeclaration);
         void Process(IReferenceExpression invocationExpression);
         void Process(IObjectCreationExpression objectCreationExpression);
-#if R8
-        void Process(IDocCommentBlockNode docCommentBlockNode);
-#endif
-#if R9 || R10
         void Process(IDocCommentBlock docCommentBlockNode);
-#endif
-#if R2017_1
         void Process(IThrowExpression throwExpression);
-#endif
-
         void EnterAccessor(IAccessorDeclaration accessorDeclarationNode);
         void LeaveAccessor();
     }

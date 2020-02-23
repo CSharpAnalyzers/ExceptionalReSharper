@@ -169,12 +169,7 @@ namespace ReSharper.Exceptional.Contexts
             return AnalyzeUnit != null;
         }
 
-#if R8
-        public void Process(IDocCommentBlockNode docCommentBlockNode)
-#endif
-#if R9 || R10
         public void Process(IDocCommentBlock docCommentBlockNode)
-#endif
         {
             if (IsValid() == false)
                 return;
@@ -182,7 +177,6 @@ namespace ReSharper.Exceptional.Contexts
             AnalyzeUnit.DocumentationBlock = new DocCommentBlockModel(AnalyzeUnit, docCommentBlockNode);
         }
 
-#if R2017_1
         public void Process(IThrowExpression throwExpression)
         {
             if (IsValid() == false)
@@ -196,7 +190,6 @@ namespace ReSharper.Exceptional.Contexts
             containingBlockModel.ThrownExceptions.Add(
                 new ThrowExpressionModel(AnalyzeUnit, throwExpression, containingBlockModel));
         }
-#endif
 
         public virtual void EnterAccessor(IAccessorDeclaration accessorDeclarationNode)
         {

@@ -1,21 +1,13 @@
 using System;
-using JetBrains.ReSharper.Daemon;
 using JetBrains.ReSharper.Psi.CSharp;
 using ReSharper.Exceptional;
 using ReSharper.Exceptional.Highlightings;
-
-#if R9 || R10
 using JetBrains.ReSharper.Feature.Services.Daemon;
-#endif
 
 [assembly: RegisterConfigurableSeverity(ThrowingSystemExceptionHighlighting.Id, Constants.CompoundName, HighlightingGroupIds.BestPractice,
     "Exceptional.ThrowingSystemException",
     "Exceptional.ThrowingSystemException",
     Severity.SUGGESTION
-#if !R2016_3 && !R2017_1
-    ,
-    false
-#endif
     )]
 
 namespace ReSharper.Exceptional.Highlightings

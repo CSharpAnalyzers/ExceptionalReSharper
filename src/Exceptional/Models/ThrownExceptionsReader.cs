@@ -3,9 +3,7 @@ using System.Linq;
 using System.Xml;
 using JetBrains.ReSharper.Psi;
 using JetBrains.ReSharper.Psi.CSharp.Tree;
-using JetBrains.ReSharper.Psi.Modules;
 using JetBrains.ReSharper.Psi.Tree;
-using JetBrains.Util.Logging;
 using ReSharper.Exceptional.Models.ExceptionsOrigins;
 
 namespace ReSharper.Exceptional.Models
@@ -36,16 +34,6 @@ namespace ReSharper.Exceptional.Models
 
             foreach (var declaration in declarations)
             {
-#if R8
-                var docCommentBlockOwnerNode = declaration as IDocCommentBlockOwnerNode;
-                if (docCommentBlockOwnerNode == null)
-                    return result;
-
-                var docCommentBlockNode = docCommentBlockOwnerNode.GetDocCommentBlockNode();
-                if (docCommentBlockNode == null)
-                    return result;
-#endif
-#if R9 || R10
                 var docCommentBlockOwnerNode = declaration as IDocCommentBlockOwner;
                 if (docCommentBlockOwnerNode == null)
                     return result;
@@ -53,7 +41,6 @@ namespace ReSharper.Exceptional.Models
                 var docCommentBlockNode = docCommentBlockOwnerNode.DocCommentBlock;
                 if (docCommentBlockNode == null)
                     return result;
-#endif
                 string accessor = null;
                 if (exceptionsOrigin is ReferenceExpressionModel &&
                     exceptionsOrigin.ContainingBlock is AccessorDeclarationModel)
@@ -133,11 +120,7 @@ namespace ReSharper.Exceptional.Models
                     if (exceptionType.StartsWith("T:"))
                         exceptionType = exceptionType.Substring(2);
 
-#if R10
                     var exceptionDeclaredType = TypeFactory.CreateTypeByCLRName(exceptionType, psiModule);
-#else
-                    var exceptionDeclaredType = TypeFactory.CreateTypeByCLRName(exceptionType, psiModule, psiModule.GetContextFromModule());
-#endif
 
                     result.Add(new ThrownExceptionModel(analyzeUnit, exceptionsOrigin, exceptionDeclaredType, 
                         exceptionNode.InnerXml, false, accessor));

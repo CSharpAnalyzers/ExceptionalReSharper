@@ -37,16 +37,8 @@ namespace ReSharper.Exceptional.Utilities
 
             if (exceptionType != null)
             {
-#if R8
-                var declaredTypeUsageNode = _factory.CreateDeclaredTypeUsageNode(exceptionType);
-#else
                 var declaredTypeUsageNode = _factory.CreateTypeUsage(exceptionType, context);
-#endif
-#if R2016_3 || R2017_1
                 catchClause.SetExceptionTypeUsage(declaredTypeUsageNode);
-#else
-                exceptionDeclaration.SetDeclaredTypeUsage(declaredTypeUsageNode);
-#endif
             }
 
             return exceptionDeclaration;
@@ -86,17 +78,8 @@ namespace ReSharper.Exceptional.Utilities
                 if (exceptionDeclaration == null)
                     return null;
 
-#if R8
-                var declaredTypeUsageNode = _factory.CreateDeclaredTypeUsageNode(exceptionType);
-#else
                 var declaredTypeUsageNode = _factory.CreateTypeUsage(exceptionType, catchBody);
-
-#endif
-#if R2016_3 || R2017_1
                 catchClause.SetExceptionTypeUsage(declaredTypeUsageNode);
-#else
-                exceptionDeclaration.SetDeclaredTypeUsage(declaredTypeUsageNode);
-#endif
             }
 
             catchClause.SetBody(catchBody);
@@ -123,16 +106,8 @@ namespace ReSharper.Exceptional.Utilities
             if (exceptionDeclaration == null)
                 return tryStatement;
 
-#if R8
-            var declaredTypeUsageNode = _factory.CreateDeclaredTypeUsageNode(exceptionType);
-#else
             var declaredTypeUsageNode = _factory.CreateTypeUsage(exceptionType, context);
-#endif
-#if R2016_3 || R2017_1
             catchClause.SetExceptionTypeUsage(declaredTypeUsageNode);
-#else
-                exceptionDeclaration.SetDeclaredTypeUsage(declaredTypeUsageNode);
-#endif
 
             return tryStatement;
         }

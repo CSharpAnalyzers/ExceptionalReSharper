@@ -1,23 +1,13 @@
-using System;
-using JetBrains.ReSharper.Daemon;
 using JetBrains.ReSharper.Psi.CSharp;
 using ReSharper.Exceptional;
 using ReSharper.Exceptional.Highlightings;
-using ReSharper.Exceptional.Models;
 using ReSharper.Exceptional.Models.ExceptionsOrigins;
-
-#if R9 || R10
 using JetBrains.ReSharper.Feature.Services.Daemon;
-#endif
 
 [assembly: RegisterConfigurableSeverity(ThrowFromCatchWithNoInnerExceptionHighlighting.Id, Constants.CompoundName, HighlightingGroupIds.BestPractice,
     "Exceptional.ThrowFromCatchWithNoInnerException",
     "Exceptional.ThrowFromCatchWithNoInnerException",
     Severity.WARNING
-#if !R2016_3 && !R2017_1
-    ,
-    false
-#endif
     )]
 
 namespace ReSharper.Exceptional.Highlightings

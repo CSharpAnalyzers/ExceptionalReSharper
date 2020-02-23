@@ -23,11 +23,7 @@ namespace ReSharper.Exceptional.Models.ExceptionsOrigins
             ConstructorDeclarationModel containingBlock)
             : base(
                 analyzeUnit,
-#if R2017_1
                 analyzeUnit.Node.TypeName
-#else
-                analyzeUnit.Node.Name
-#endif
             )
         {
             ContainingBlock = containingBlock;

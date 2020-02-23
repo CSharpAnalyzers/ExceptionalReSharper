@@ -1,26 +1,15 @@
 using System;
-using JetBrains.Application;
 using JetBrains.Application.Progress;
 using JetBrains.DocumentModel;
 using JetBrains.ProjectModel;
-using JetBrains.ReSharper.Feature.Services.Bulbs;
 using JetBrains.ReSharper.Feature.Services.LiveTemplates.Hotspots;
 using JetBrains.ReSharper.Feature.Services.LiveTemplates.LiveTemplates;
-using JetBrains.ReSharper.LiveTemplates;
 using JetBrains.TextControl;
-using JetBrains.Util;
 using ReSharper.Exceptional.Highlightings;
 using ReSharper.Exceptional.Models;
-using ReSharper.Exceptional.Models.ExceptionsOrigins;
-
-#if R8
-using JetBrains.ReSharper.Intentions.Extensibility;
-#endif
-#if R9 || R10
 using JetBrains.ReSharper.Feature.Services.LiveTemplates.Templates;
 using JetBrains.ReSharper.Feature.Services.QuickFixes;
 using JetBrains.ReSharper.Resources.Shell;
-#endif
 
 namespace ReSharper.Exceptional.QuickFixes
 {
