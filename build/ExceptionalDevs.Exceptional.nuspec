@@ -2,12 +2,12 @@
 <package>
   <metadata>
     <id>ExceptionalDevs.Exceptional</id>
-    <version>0.23.2</version>
-    <title>Exceptional for ReSharper</title>
-    <description>Analyzes thrown and documented C# exceptions and suggests improvements. </description>
-    <authors>ExceptionalDevs</authors>
+    <version>$Version$</version>
+    <title>$Title$</title>
+    <description>$Description$</description>
+    <authors>$Authors$</authors>
     <projectUrl>https://github.com/CSharpAnalyzers/ExceptionalReSharper</projectUrl>
-    <copyright>Copyright © 2019 ExceptionalDevs</copyright>
+    <copyright>$Copyright$</copyright>
     <tags>Exception XMLdoc</tags>
     <licenseUrl>https://github.com/CSharpAnalyzers/ExceptionalReSharper/blob/master/LICENSE.md</licenseUrl>
     <dependencies>
@@ -15,7 +15,7 @@
     </dependencies>
   </metadata>
   <files>
-    <file src="..\src\Exceptional\bin\$configuration$\ReSharper.Exceptional.dll" target="DotFiles" />
-    <file src="..\src\Exceptional\bin\$configuration$\ReSharper.Exceptional.pdb" target="DotFiles" />
+    <file src="..\src\Exceptional\bin\$Configuration$\ReSharper.Exceptional.dll" target="DotFiles" />
+    <file src="..\src\Exceptional\bin\$Configuration$\ReSharper.Exceptional.pdb" target="DotFiles" />
   </files>
 </package>

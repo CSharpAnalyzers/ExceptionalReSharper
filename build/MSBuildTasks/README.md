@@ -1,0 +1,1 @@
+[MSBuild Community Tasks by LoreSoft](https://github.com/loresoft/msbuildtasks)

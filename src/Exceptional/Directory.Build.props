@@ -1,0 +1,9 @@
+<Project>
+  <PropertyGroup>
+    <Version>0.23.2.0</Version>
+    <Title>Exceptional for ReSharper</Title>
+    <Description>Analyzes thrown and documented C# exceptions and suggests improvements.</Description>
+    <Authors>ExceptionalDevs</Authors>
+    <Copyright>Copyright © 2019 ExceptionalDevs</Copyright>
+  </PropertyGroup>
+</Project>
