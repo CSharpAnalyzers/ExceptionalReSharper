@@ -22,52 +22,63 @@ jobs:
         run: git checkout master
 
       - name: Precondition
+        id: precondition
         if: success()
-        run: .\build\precondition.ps1
+        run: |
+          $result = .\build\precondition.ps1
+          $previousHash = $result.PreviousHash
+          $latestBuildHash = $result.LatestBuildHash
+          $hasChanges = $result.HasChanges
+          echo "Previous hash:     $previousHash"
+          echo "Latest build hash: $latestBuildHash"
+          echo "::set-output name=has_changes::$hasChanges"
         
       - name: Setup MSBuild
+        if: steps.precondition.outputs.has_changes == 'true' && success()
         uses: warrenbuckley/Setup-MSBuild@v1
         
       - name: Setup Nuget
+        if: steps.precondition.outputs.has_changes == 'true' && success()
         uses: warrenbuckley/Setup-Nuget@v1
 
       - name: Setup Git
+        if: steps.precondition.outputs.has_changes == 'true' && success()
         run: |
           git config user.email actions@github.com
           git config user.name "GitHub Actions"
       
       - name: Build
-        if: success()
+        if: steps.precondition.outputs.has_changes == 'true' && success()
         run: .\build\build.ps1 nightly Release pack 0
 
       - name: Find NUPKG
-        if: success()
+        if: steps.precondition.outputs.has_changes == 'true' && success()
         run: |
           $filesInPackDir = (Get-ChildItem -Path pack | Sort-Object -Property @{Expression="Name"; Descending=$true})
           $nupkgFile = $filesInPackDir[0].FullName
           echo "::set-env name=NUPKG_FILE::$nupkgFile"
 
       - name: Update nightly.rev
-        if: success()
+        if: steps.precondition.outputs.has_changes == 'true' && success()
         run: .\build\update-nightly-rev.ps1
 
       - name: Increment version
-        if: success()
+        if: steps.precondition.outputs.has_changes == 'true' && success()
         run: .\build\increment-build-version.ps1
 
       - name: Git Commit
-        if: success()
+        if: steps.precondition.outputs.has_changes == 'true' && success()
         run: |
           git add ./build/ExceptionalDevs.Exceptional.nuspec
           git add ./build/nightly.rev
           git commit -m "Nightly Commit" --author="GitHub Actions<actions@github.com>"
 
       - name: Git Push
-        if: success()
+        if: steps.precondition.outputs.has_changes == 'true' && success()
         uses: ad-m/github-push-action@master
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Publish
-        if: success()
+        if: steps.precondition.outputs.has_changes == 'true' && success()
         run: nuget push ${{ env.NUPKG_FILE }} ${{ secrets.JETBRAINS_TOKEN }} -source https://plugins.jetbrains.com
