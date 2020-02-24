@@ -53,6 +53,7 @@
     <Compile Include="Fixed\InsertingArgumentNullExceptionDocumentation.cs" />
     <Compile Include="Fixed\NamedArguments.cs" />
     <Compile Include="Fixed\NameOfSupportedWithArgumentNullException.cs" />
+    <Compile Include="Fixed\OverflowException.cs" />
     <Compile Include="Fixed\WrongWarningOnCtor.cs" />
     <Compile Include="Fixed\PropertyInPropertyInvocation.cs" />
     <Compile Include="Fixed\IndexerGetDemo.cs" />
