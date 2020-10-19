@@ -4,14 +4,14 @@ using ReSharper.Exceptional.Highlightings;
 using ReSharper.Exceptional.Models.ExceptionsOrigins;
 using JetBrains.ReSharper.Feature.Services.Daemon;
 
-[assembly: RegisterConfigurableSeverity(ThrowFromCatchWithNoInnerExceptionHighlighting.Id, Constants.CompoundName, HighlightingGroupIds.BestPractice,
-    "Exceptional.ThrowFromCatchWithNoInnerException",
-    "Exceptional.ThrowFromCatchWithNoInnerException",
-    Severity.WARNING
-    )]
 
 namespace ReSharper.Exceptional.Highlightings
 {
+    [RegisterConfigurableSeverity(ThrowFromCatchWithNoInnerExceptionHighlighting.Id, Constants.CompoundName, HighlightingGroupIds.BestPractice,
+        "Exceptional.ThrowFromCatchWithNoInnerException",
+        "Exceptional.ThrowFromCatchWithNoInnerException",
+        Severity.WARNING
+    )]
     [ConfigurableSeverityHighlighting(Id, CSharpLanguage.Name)]
     public class ThrowFromCatchWithNoInnerExceptionHighlighting : HighlightingBase
     {

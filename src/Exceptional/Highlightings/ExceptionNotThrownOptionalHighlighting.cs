@@ -5,14 +5,14 @@ using ReSharper.Exceptional.Highlightings;
 using ReSharper.Exceptional.Models;
 using JetBrains.ReSharper.Feature.Services.Daemon;
 
-[assembly: RegisterConfigurableSeverity(ExceptionNotThrownOptionalHighlighting.Id, Constants.CompoundName, HighlightingGroupIds.BestPractice,
-    "Exceptional.ExceptionNotThrownOptional",
-    "Exceptional.ExceptionNotThrownOptional",
-    Severity.HINT
-    )]
 
 namespace ReSharper.Exceptional.Highlightings
 {
+    [RegisterConfigurableSeverity(ExceptionNotThrownOptionalHighlighting.Id, Constants.CompoundName, HighlightingGroupIds.BestPractice,
+        "Exceptional.ExceptionNotThrownOptional",
+        "Exceptional.ExceptionNotThrownOptional",
+        Severity.HINT
+    )]
     [ConfigurableSeverityHighlighting(Id, CSharpLanguage.Name)]
     public class ExceptionNotThrownOptionalHighlighting : HighlightingBase
     {
