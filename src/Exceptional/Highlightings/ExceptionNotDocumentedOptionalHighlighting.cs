@@ -5,16 +5,16 @@ using ReSharper.Exceptional.Highlightings;
 using ReSharper.Exceptional.Models;
 using JetBrains.ReSharper.Feature.Services.Daemon;
 
-[assembly: RegisterConfigurableSeverity(ExceptionNotDocumentedOptionalHighlighting.Id, Constants.CompoundName, HighlightingGroupIds.BestPractice,
-    "Exceptional.ExceptionNotDocumentedOptional",
-    "Exceptional.ExceptionNotDocumentedOptional",
-    Severity.HINT
-    )]
 
 
 
 namespace ReSharper.Exceptional.Highlightings
 {
+    [RegisterConfigurableSeverity(ExceptionNotDocumentedOptionalHighlighting.Id, Constants.CompoundName, HighlightingGroupIds.BestPractice,
+        "Exceptional.ExceptionNotDocumentedOptional",
+        "Exceptional.ExceptionNotDocumentedOptional",
+        Severity.HINT
+    )]
     [ConfigurableSeverityHighlighting(Id, CSharpLanguage.Name)]
     public class ExceptionNotDocumentedOptionalHighlighting : HighlightingBase
     {

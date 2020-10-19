@@ -1,17 +1,14 @@
 using System;
-using JetBrains.ReSharper.Psi.CSharp;
-using ReSharper.Exceptional;
-using ReSharper.Exceptional.Highlightings;
 using JetBrains.ReSharper.Feature.Services.Daemon;
-
-[assembly: RegisterConfigurableSeverity(ThrowingSystemExceptionHighlighting.Id, Constants.CompoundName, HighlightingGroupIds.BestPractice,
-    "Exceptional.ThrowingSystemException",
-    "Exceptional.ThrowingSystemException",
-    Severity.SUGGESTION
-    )]
+using JetBrains.ReSharper.Psi.CSharp;
 
 namespace ReSharper.Exceptional.Highlightings
 {
+    [RegisterConfigurableSeverity(Id, Constants.CompoundName, HighlightingGroupIds.BestPractice,
+        "Exceptional.ThrowingSystemException",
+        "Exceptional.ThrowingSystemException",
+        Severity.SUGGESTION
+    )]
     [ConfigurableSeverityHighlighting(Id, CSharpLanguage.Name)]
     public class ThrowingSystemExceptionHighlighting : HighlightingBase
     {
